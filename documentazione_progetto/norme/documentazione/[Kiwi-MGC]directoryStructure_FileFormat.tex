@@ -1,0 +1,52 @@
+\section{Struttura delle directory e formato file}
+Tutti i documenti risiedono in formato digitale (.tex) nella cartella \emph{"$/$documentazione\_progetto"} del server SVN del progetto (specificato negli strumenti usati). Definiamo la relazione fra tipi di modello e posizione nel file system:
+\begin{description}
+\item[diario] qui e' presente il file \emph{[Kiwi-MGC]diario.tex} che compone 
+le informazioni divise nelle successive directory. Inoltre viene committato
+anche il relativo \emph{[Kiwi-MGC]diario.pdf}, generato a partire dal file .tex,
+ ogni volta che il file sorgente viene committato.
+	\begin{description}
+		\item[archivio]
+		\item[consegne]
+	\end{description}
+\item[verbali] i file contenenti
+	\begin{description}
+		\item[riunioni\_committente] \quad
+			\begin{description}
+				\item[collaudo]
+				\item[incontri\_analisi]
+				\item[revisioni\_congiunte]	
+			\end{description}
+		\item[riunioni\_interne] \quad
+			\begin{description}
+				\item[collettive]
+				\item[parziali]
+			\end{description}
+		\item[riunioni\_SQ]
+	\end{description}
+\item[norme] \quad
+	\begin{description}
+		\item[comunicazioni\_interne] \quad
+		\item[documentazione]
+		\item[strumenti]	
+	\end{description}
+\item[images]
+\end{description}
+
+\subsection{Sintassi valide esclusi i verbali}
+I nomi dei file che non appartengono alle foglie della precedente struttura
+devono rispettare la seguente sintassi: \\ 
+$<$nome file$>$ ::= [$<$team$>$-$<$proj$>$]$<$file$>$.$<$ext$>$ \\
+$<$file$>$ ::= organigramma | diario | norme | requisiti | offerta | disegno\_sistema | piano\_prove | prova\_$<$data$>$ \\
+$<$ext$>$ ::= tex \\
+$<$data$>$ ::= AAAAMMGG (anno su quattro cifre, mese e giorno su due cifre per
+ far coincidere l'ordinsamento alfabetico con l'ordinamento cronologico) \\
+$<$team$>$ ::= Kiwi\\
+$<$proj$>$ ::= MGC
+
+\subsection{Sintassi per i verbali}
+nome della cartella: verbale\_$<$data$>$ \\
+nomi per i file:\\
+\quad[$<$team$>$-$<$proj$>$]verbale\_body\_$<$data$>$.tex\\
+\quad[$<$team$>$-$<$proj$>$]verbale\_$<$data$>$.pdf \\
+\quad[$<$team$>$-$<$proj$>$]verbale\_$<$data$>$.tex 

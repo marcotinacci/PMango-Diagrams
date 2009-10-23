@@ -1,0 +1,92 @@
+\documentclass[a4paper, 12pt]{report}
+
+\input{../templates/[Kiwi-MGC]template-usePackages.tex}
+
+\begin{titlepage}
+\title{Norme}
+\author{Release 0.0}
+\date{\today \\Firenze \\\begin{figure}[h] \centering \includegraphics[width=0.2\textwidth]{../images/logokiwi.png} \end{figure} }
+\end{titlepage}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\maketitle
+
+\section*{Approvazione, redazione, lista distribuzione}
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{approvato da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Marco Tinacci &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{redatto da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Massimo Nocentini &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{distribuito a} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Francesco Calabri &  &  \\
+    \hline
+	Manuele Paulantonio &  &  \\
+    \hline
+	Daniele Poggi &  &  \\
+    \hline
+	Massimo Nocentini &  &  \\
+    \hline
+	Niccol\'o Rogai &  &  \\
+    \hline
+	Marco Tinacci &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduzione}
+Le norme di progetto sono divise in categorie e sotto categorie, ad esempio 
+categorie: comunicazioni interne, documentazione, strumenti, ...
+sotto categorie documentazione: revisioni, verbali, diario, ...
+
+Nelle norme si avanza di major release sull'aggiunta di categorie significative mentre si avanza di minor per le modifiche e gli aggiornamenti minori di categorie e sotto categorie.
+
+\section{Struttura del documento}
+
+
+\chapter{Comunicazioni interne}
+\input{comunicazioni_interne/[Kiwi-MGC]gruppo_discussione.tex}
+
+\chapter{Documentazione}
+\input{documentazione/[Kiwi-MGC]directoryStructure_FileFormat.tex}
+\input{documentazione/[Kiwi-MGC]releases.tex}
+\input{documentazione/[Kiwi-MGC]commonsData.tex}
+\input{documentazione/[Kiwi-MGC]diario.tex}
+
+\chapter{Strumenti}
+\input{strumenti/[Kiwi-MGC]ides.tex}
+\input{strumenti/[Kiwi-MGC]versioning.tex}
+\input{strumenti/[Kiwi-MGC]projectManagements.tex}
+
+\end{document}

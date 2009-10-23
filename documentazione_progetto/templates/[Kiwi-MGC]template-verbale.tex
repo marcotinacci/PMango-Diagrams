@@ -1,0 +1,36 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{charter}
+\usepackage{makeidx}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[left=2cm, right=2cm]{geometry}
+\usepackage{latexsym}
+\usepackage{amsmath, amsthm, amssymb}
+
+\begin{titlepage}
+\title{
+	\begin{figure} 
+	 \centering 
+	 \includegraphics[width=0.9\textwidth]{../images/logo+wiki.png} 
+	 \caption{Kiwi logo} 
+	 \label{Kiwi_logo} 
+	\end{figure} \\
+	Primo verbale
+}
+\input{Massimo Nocentini}
+\date{\today \\Firenze}
+\end{titlepage}
+
+\pagestyle{fancy}
+\makeindex
+
+\begin{document}
+
+\maketitle
+
+\input{[Kiwi-MGC]template-verbale-body.tex}
+
+\end{document}
