@@ -1,0 +1,81 @@
+\documentclass[a4paper, 12pt]{report}
+
+\input{../templates/[Kiwi-MGC]template-usePackages.tex}
+
+\begin{titlepage}
+\title{Diario}
+\author{Release 0.0}
+\date{\today \\Firenze \\\begin{figure}[h] \centering \includegraphics[width=0.2\textwidth]{../images/logokiwi.png} \end{figure} }
+\end{titlepage}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\maketitle
+
+\section*{Approvazione, redazione, lista distribuzione}
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{approvato da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Marco Tinacci &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{redatto da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Massimo Nocentini &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{distribuito a} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Francesco Calabri &  &  \\
+    \hline
+	Manuele Paulantonio &  &  \\
+    \hline
+	Daniele Poggi &  &  \\
+    \hline
+	Massimo Nocentini &  &  \\
+    \hline
+	Niccol\'o Rogai &  &  \\
+    \hline
+	Marco Tinacci &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+
+%\section{Introduzione}
+
+%\section{Struttura del documento}
+
+\chapter{Archivio di progetto}
+\section{23/10/2009}
+\input{archivio/20091023/[Kiwi-MGC]diario_20091023.tex}
+\input{archivio/20091023/[Kiwi-MGC]norme_20091023.tex}
+\input{archivio/20091023/[Kiwi-MGC]verbale_20091019.tex}
+
+\chapter{Registro consegne}
+%\input{diario/consegne/[Kiwi-MGC]consegna-20091019-1.tex}
+\end{document}
+
