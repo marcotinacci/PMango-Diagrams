@@ -1,36 +1,73 @@
-\documentclass[a4paper, 12pt]{article}
+\documentclass[a4paper, 12pt]{report}
 
-\usepackage{charter}
-\usepackage{makeidx}
-\usepackage{fancyhdr}
-\usepackage{hyperref}
-\usepackage[utf8]{inputenc}
-\usepackage{graphicx}
-\usepackage[left=2cm, right=2cm]{geometry}
-\usepackage{latexsym}
-\usepackage{amsmath, amsthm, amssymb}
+% la lunghezza della sequenza di ../ dipende dalla profondita' della cartella
+% in cui viene inserito il verbale rispetto alla cartella che contiene le 
+% immagini.
+
+\input{../../../../templates/[Kiwi-MGC]template-usePackages.tex}
 
 \begin{titlepage}
-\title{
-	\begin{figure} 
-	 \centering 
-	 \includegraphics[width=0.9\textwidth]{../images/logo+wiki.png} 
-	 \caption{Kiwi logo} 
-	 \label{Kiwi_logo} 
-	\end{figure} \\
-	Primo verbale
-}
-\input{Massimo Nocentini}
-\date{\today \\Firenze}
+\title{<Nome della cartella che contiene il verbale>\\Verbale <data>}
+\date{ \\Firenze \\\begin{figure}[h] \centering \includegraphics[width=0.2\textwidth]{../../../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
 
 \pagestyle{fancy}
-\makeindex
 
 \begin{document}
 
 \maketitle
 
-\input{[Kiwi-MGC]template-verbale-body.tex}
+\newpage
+
+\section*{Approvazione, redazione, lista distribuzione}
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{approvato da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Marco Tinacci &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{redatto da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	<actual reviewer> &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{hanno partecipato} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Francesco Calabri &  &  \\
+    \hline
+	Manuele Paulantonio &  &  \\
+    \hline
+	Daniele Poggi &  &  \\
+    \hline
+	Massimo Nocentini &  &  \\
+    \hline
+	Niccol\'o Rogai &  &  \\
+    \hline
+	Marco Tinacci &  &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\newpage
+
+\input{[Kiwi-MGC]verbale_body_<data>.tex}
 
 \end{document}
