@@ -1,0 +1,48 @@
+\section{Make Left Column}
+\label{seq:GanttMakeLeftColumn}
+\subsection{Basic course}
+Il client prende un reference al GanttChartGenerator e domanda la funzionalit\'a
+per creare la colonna di sinistra del diagramma. \\
+Il sistema costruisce una colonna di larghezza di dimensione \emph{fissa}.
+Guarda se in UserOptionChoises \`e presente l'opzione TaskNameOption:
+\begin{itemize}
+  \item se \'e presente allora calcola la larghezza
+\begin{displaymath}
+	width_{nor}=lenght(max\lbrace id | \forall task: id =
+WBS\_identifier(task) \rbrace) 
+\end{displaymath}
+dove la funzione $WBS\_identifier$ restituisce il WBS identifier relativo al 
+parametro $task$ del dominio.
+
+Poi $\forall task$ scrive $WBS\_identifier(task)$, un task per ogni riga.
+
+\item altrimenti calcola
+\begin{eqnarray}
+width_{opt}=lenght(max\lbrace ::(id, task\_name) | \forall task: \\ id =
+WBS\_identifier(task), \\ task\_name = Get\_TaskName(task)
+\rbrace)
+\end{eqnarray}
+dove l'operatore $::$ concatena le stringhe passate come parametro, e
+l'operatore \\$Get\_TaskName$ restituisce il nome del parametro
+task.
+
+Poi $\forall task$ scrive $::(WBS\_identifier(task), Get\_TaskName(task)$, un
+task per ogni riga.
+\end{itemize}
+
+\subsection{Alternative course}
+\begin{description}
+\item[troncamento delle resourses] se $width_{opt} >
+\frac{width_{diagram}}{6}$, con $width_{diagram}$ uguale alla larghezza totale
+del diagramma, allora sia 
+\begin{equation}cutted = cut(::(WBS\_identifier(task),
+Get\_TaskName(task))\end{equation} 
+la funzione $cut$ cancella caratteri in coda alla stringa in ingresso e
+restituisce $cutted$, contenente i caratteri non cancellati, in modo che $cutted
+= \frac{width_{diagram}}{6}-3$. \\ Il sistema scrive 
+\begin{equation} 
+::(cut(::(WBS\_identifier(task), Get\_TaskName(task)), ''\ldots'')
+\end{equation}
+\item[troncamento del WBS identifier] se avessi un identifier troppo lungo
+dovrei fare lo stesso??
+\end{description}
