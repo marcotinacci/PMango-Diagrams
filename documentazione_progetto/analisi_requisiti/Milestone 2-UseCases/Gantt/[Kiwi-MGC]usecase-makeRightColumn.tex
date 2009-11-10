@@ -1,0 +1,26 @@
+\section{Make Right Column}
+\label{seq:GanttRightRepresentation}
+\subsection{Basic course}
+Il client prende un reference al GanttChartGenerator e domanda la funzionalit\'a
+per creare la colonna di destra del diagramma. \\
+Il sistema costruisce una colonna di larghezza di dimensione \emph{fissa} per 
+riempire lo spazio a destra restante del diagramma (per far posto alla colonna
+di sinistra). La generazione dell'immagine \`e guidata dall'appartenenza delle
+seguenti voci a UserOptionChoises:
+\begin{description}
+\item[ResourcesDetailOption] \quad
+\begin{itemize}
+  \item se \emph{non} \'e presente allora inserisci scrive le informazioni
+  sullo sforzo seguendo questo pattern \textbf{actual/planned effort}
+  \item altrimenti scrive le informazioni detailed for each resource assigned to
+  the task
+\end{itemize}
+\end{description}
+
+\subsection{Alternative course}
+\begin{description}
+\item[troncamento delle resourses] if the resourses string exceeds $\frac{1}{6}$
+of the whole diagram width then resource names are truncated and marked by ''...'', if
+needed the list is truncated too.
+
+\end{description}
