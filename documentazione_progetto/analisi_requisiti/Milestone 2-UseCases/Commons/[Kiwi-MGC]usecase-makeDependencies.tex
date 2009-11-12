@@ -1,0 +1,21 @@
+\section{Make Dependencies}
+\label{seq:makeDependencies}
+\subsection{Basic course}
+Il client prende un reference al GanttChartGenerator e domanda di creare la
+rappresentazione delle dipendenze \footnote{decidere se rappresentare: \emph{il
+Task dipende da} oppure \emph{il Task e' necessario per}} del \emph{Task}.
+
+Il sistema esegue questi passi:
+\begin{enumerate}
+  \item recupera il \emph{Task}.
+  \item se \emph{UserOptionChoice} contiene \emph{ShowDependenciesOption},
+        allora rappresenta le dipendenze cdns. 
+\end{enumerate}
+
+\subsection{Alternative course}
+\begin{description}
+\item[not well formed project] Se la struttura al albero WBS del progetto non
+\`e ben formata allora si deve cercare di dare la migliore euristica possibile
+per la rappresentazione delle dipendenze.
+
+\end{description}

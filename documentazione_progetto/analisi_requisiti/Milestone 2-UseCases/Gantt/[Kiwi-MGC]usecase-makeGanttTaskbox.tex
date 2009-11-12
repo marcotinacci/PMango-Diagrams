@@ -1,0 +1,30 @@
+\section{Make GanttTaskbox}
+\label{seq:makeGanttTaskbox}
+\subsection{Basic course}
+Il client prende un reference al GanttChartGenerator e domanda di creare la
+rappresentazione grafica di un \emph{Task}. 
+
+Il sistema esegue questi passi:
+\begin{enumerate}
+  \item recupera il \emph{Task} da rappresentare
+  \item costruisce la rappresentazione grafica, il \emph{GanttTaskBox}
+    in base alla scelta \emph{WBSTreeSpecification}.
+  \item \`E possibile codificare delle informazioni aggiuntive:
+    \begin{itemize}
+   	  \item se \emph{UserOptionChoice} contiene \emph{ResourcesDetailsOption},
+    	allora sul margine destro della \emph{GanttTaskBox} appendi la stringa
+    	contenente la lista delle risorse cdns.
+    	
+    	Altrimenti appendi sul margine destro l'effort cdns.
+    \end{itemize}
+  \item invoca lo use case \ref{seq:makeDependencies}
+    
+\end{enumerate}
+
+\subsection{Alternative course}
+\begin{description}
+\item[troncamento delle resourses] se le informazioni testuali aggiuntive
+superano la dimensione definita nel documento di specifica, allora si troncano
+cdns.
+
+\end{description}

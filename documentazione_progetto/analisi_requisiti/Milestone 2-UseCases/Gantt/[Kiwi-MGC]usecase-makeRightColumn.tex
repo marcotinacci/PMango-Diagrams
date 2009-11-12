@@ -1,26 +1,28 @@
 \section{Make Right Column}
 \label{seq:GanttRightRepresentation}
 \subsection{Basic course}
-Il client prende un reference al GanttChartGenerator e domanda la funzionalit\'a
-per creare la colonna di destra del diagramma. \\
-Il sistema costruisce una colonna di larghezza di dimensione \emph{fissa} per 
-riempire lo spazio a destra restante del diagramma (per far posto alla colonna
-di sinistra). La generazione dell'immagine \`e guidata dall'appartenenza delle
-seguenti voci a UserOptionChoises:
-\begin{description}
-\item[ResourcesDetailOption] \quad
-\begin{itemize}
-  \item se \emph{non} \'e presente allora inserisci scrive le informazioni
-  sullo sforzo seguendo questo pattern \textbf{actual/planned effort}
-  \item altrimenti scrive le informazioni detailed for each resource assigned to
-  the task
-\end{itemize}
-\end{description}
+Il client prende un reference al GanttChartGenerator e domanda di creare la
+colonna di destra del diagramma. 
+
+Il sistema esegue questi passi:
+\begin{enumerate}
+  \item costruisce una colonna di larghezza di dimensione \emph{fissa} che
+  viene calcolata cdns.
+  \item Il sistema effettua una ricerca per calcolare l'insieme dei \emph{Task}
+  necessari da rappresentare nella colonna.
+  \item Per ogni \emph{Task} trovato:
+  \begin{itemize}
+    \item invoca lo use case \ref{seq:makeGanttTaskbox}
+    
+    \item si posiziona il \emph{GanttTaskBox} creato nella giusta posizione
+    temporale in base alla scelta \emph{TimeGrainOption}.
+  \end{itemize}
+\end{enumerate}
 
 \subsection{Alternative course}
 \begin{description}
-\item[troncamento delle resourses] if the resourses string exceeds $\frac{1}{6}$
-of the whole diagram width then resource names are truncated and marked by ''...'', if
-needed the list is truncated too.
+\item[troncamento delle resourses] se le informazioni testuali aggiuntive
+superano la dimensione definita nel documento di specifica, allora si troncano
+cdns.
 
 \end{description}

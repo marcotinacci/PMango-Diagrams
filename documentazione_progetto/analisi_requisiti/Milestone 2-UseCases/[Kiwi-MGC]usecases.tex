@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Use cases}
-\author{Release 0.1}
+\author{Release 0.2}
 \date{\today \\Firenze \\\begin{figure}[h] \centering
 \includegraphics[width=0.2\textwidth]{../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
@@ -68,11 +68,18 @@
 Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \textbf{d}escritto \textbf{n}ella \textbf{s}pecifica''.
 
+\chapter{Commons}
+\input{Commons/[Kiwi-MGC]usecase-makeDependencies.tex}
+
 \chapter{Gantt}
+\section*{Overall UML diagram}
+\begin{figure}[h!] \centering
+\includegraphics[width=0.8\textwidth]{Gantt/img/MakePDF.png} 
+\end{figure}
+
 \input{Gantt/[Kiwi-MGC]usecase-makeLeftColumn.tex}
+\input{Gantt/[Kiwi-MGC]usecase-makeGanttTaskbox.tex}
 \input{Gantt/[Kiwi-MGC]usecase-makeRightColumn.tex}
-\input{Gantt/[Kiwi-MGC]usecase-TaskNameOptionToggle.tex}
-\input{Gantt/[Kiwi-MGC]usecase-ResourcesDetailOptionToggle.tex}
 \input{Gantt/[Kiwi-MGC]usecase-makePDF.tex}
 
 \end{document}
