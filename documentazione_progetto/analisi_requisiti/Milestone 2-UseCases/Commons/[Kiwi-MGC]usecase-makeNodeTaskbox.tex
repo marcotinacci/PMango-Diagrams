@@ -1,0 +1,64 @@
+\section{Make NodeTaskbox}
+\label{seq:makeNodeTaskbox}
+\subsection{Basic course}
+Il client prende un reference al \emph{WBSChartGenerator} e domanda di creare la
+rappresentazione grafica di un \emph{Task}.
+
+Il sistema esegue questi passi:
+\begin{enumerate}
+  \item recupera il \emph{Task} da rappresentare.
+  \item costruisce la rappresentazione grafica, il \emph{NodeTaskbox}
+    in base alla scelta \emph{WBSTreeSpecification}. Il \emph{NodeTaskbox} \`e
+    una composizione di \emph{Strip}. Il sistema costruisce una
+    biezione tra \emph{BoxedStrip} e le scelte presenti in 
+    \emph{UserOptionsChoice} in questo modo:
+    \begin{itemize}
+      % task name
+      \item se \emph{UserOptionsChoice} contiene
+      \emph{TaskNameOption}, allora costruisce una
+      \emph{Strip} contenente il nome del \emph{Task} cdns.
+      
+      % resources
+   	  \item se \emph{UserOptionsChoice} contiene \emph{ResourcesDetailsOption},
+    	allora sul margine destro della \emph{GanttTaskBox} appendi la stringa
+    	contenente la lista delle risorse cdns.
+    	
+    	Altrimenti appendi sul margine destro l'effort cdns.
+      
+      % planned time frame
+      \item	se \emph{UserOptionsChoice} contiene \emph{PlannedTimeFrameOption} 
+     allora costruisce due \emph{Strip} adiacenti contenenti rispettivamente le
+     date di inizio e fine \emph{Task} cdns.
+    	
+	  % actual time frame
+    	\item se \emph{UserOptionsChoice} contiene \emph{ActualTimeFrameOption}
+    	allora costruisce due \emph{Strip} adiacenti contenenti rispettivamente 
+    	le date di inizio e fine \emph{Task} reali cdns.
+    	
+		% planned data
+    	\item se \emph{UserOptionsChoice} contiene \emph{PlannedDataOption} allora
+    	costruisce tre \emph{Strip} adiacenti contenenti rispettivamente la durata
+    	pianificata, lo sforzo complessivo pianificato, il costo
+    	pianificato del \emph{Task} cdns.
+    	
+    	%actual data
+    	\item se \emph{UserOptionsChoice} contiene \emph{ActualDataOption} allora
+    	costruisce tre \emph{Strip} adiacenti contenenti rispettivamente la durata
+    	“dall’inizio ad oggi”, lo sforzo complessivo “ad oggi” effettuato, il
+    	costo complessivo “ad oggi” del \emph{Task} cdns.
+    	
+    	% completition bar
+		\item se \emph{UserOptionsChoice} contiene \emph{CompletitionBarOption}
+		allora costruisce la barra di completamento del \emph{Task} cdns.
+		
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Alternative course}
+\begin{description}
+  \item[troncamento del nome del \emph{Task}] se la stringa scritta supera la
+  dimensione fissata nel documento di specifica, allora il sistema la tronca
+  cdns.
+
+
+\end{description}

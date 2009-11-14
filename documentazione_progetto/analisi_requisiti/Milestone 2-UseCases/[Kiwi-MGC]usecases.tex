@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Use cases}
-\author{Release 0.2}
+\author{Release 0.4}
 \date{\today \\Firenze \\\begin{figure}[h] \centering
 \includegraphics[width=0.2\textwidth]{../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
@@ -68,10 +68,16 @@
 Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \textbf{d}escritto \textbf{n}ella \textbf{s}pecifica''.
 
+\chapter{Entire System UML diagram}
+\begin{figure}[h!] \centering
+\includegraphics[width=0.8\textwidth]{EntireSystem.png} 
+\end{figure}
+
 \chapter{Commons}
 \input{Commons/[Kiwi-MGC]usecase-makeDependencies.tex}
+\input{Commons/[Kiwi-MGC]usecase-makeNodeTaskbox.tex}
 
-\chapter{Gantt}
+\chapter{Gantt chart}
 \section*{Overall UML diagram}
 \begin{figure}[h!] \centering
 \includegraphics[width=0.8\textwidth]{Gantt/img/MakePDF.png} 
@@ -81,5 +87,13 @@ Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \input{Gantt/[Kiwi-MGC]usecase-makeGanttTaskbox.tex}
 \input{Gantt/[Kiwi-MGC]usecase-makeRightColumn.tex}
 \input{Gantt/[Kiwi-MGC]usecase-makePDF.tex}
+
+\chapter{WBS chart}
+\section*{Overall UML diagram}
+\begin{figure}[h!] \centering
+%\includegraphics[width=0.8\textwidth]{Gantt/img/MakePDF.png} 
+\end{figure}
+
+%\input{WBS/[Kiwi-MGC]usecase-makeLeftColumn.tex}
 
 \end{document}
