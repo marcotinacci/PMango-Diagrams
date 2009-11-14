@@ -1,0 +1,23 @@
+\section{Make Hierarchycal Dependencies}
+\label{seq:makeHierarchycalDependencies}
+\subsection{Basic course}
+Il client richiede la funzionalità di rappresentazione della relazione 
+gerarchica di un task.
+
+Il sistema esegue questi passi:
+\begin{enumerate}
+  \item in base alle informazioni in \emph{WBSTreeSpecification}, recupera i
+  figli del task (non l’intera discendenza, solo quelli di livello successivo) e
+  li dispone graficamente\footnote{OSS. Non tutte le opzioni, in questa
+  situazione hanno senso (resources detail?, alert marks?)} al di sotto di esso (top-down)\footnote{effettivamente non e' che e' lui che li crea, dovrebbe
+  solo aggiungerci le spezzate.}
+  \item Il sistema collega il task ai suoi figli con linee spezzate cdns.
+\end{enumerate}
+
+\subsection{Alternative course}
+\begin{description}
+\item[WBSExplosionLevel = 0] se il livello di visualizzazione della WBSStructure
+richiesto si limita alla root, crea il solo un \emph{NodeTaskbox} rappresentante
+l’intero progetto.
+\end{description}
+

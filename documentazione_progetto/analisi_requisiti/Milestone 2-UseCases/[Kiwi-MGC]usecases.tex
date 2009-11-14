@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Use cases}
-\author{Release 0.4}
+\author{Release 0.6}
 \date{\today \\Firenze \\\begin{figure}[h] \centering
 \includegraphics[width=0.2\textwidth]{../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
@@ -68,14 +68,19 @@
 Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \textbf{d}escritto \textbf{n}ella \textbf{s}pecifica''.
 
-\chapter{Entire System UML diagram}
+\chapter*{Entire System UML diagram}
 \begin{figure}[h!] \centering
 \includegraphics[width=0.8\textwidth]{EntireSystem.png} 
 \end{figure}
 
 \chapter{Commons}
+Per questo pacchetto di use case non riportiamo il diagramma UML in quanto gli
+use cases che vengono descritti non hanno relazione tra loro, e il diagramma
+risulterebbe non molto significativo in quanto composto solo da pallogrammi
+indipendenti tra loro.
 \input{Commons/[Kiwi-MGC]usecase-makeDependencies.tex}
 \input{Commons/[Kiwi-MGC]usecase-makeNodeTaskbox.tex}
+\input{Commons/[Kiwi-MGC]usecase-showUserOptions.tex}
 
 \chapter{Gantt chart}
 \section*{Overall UML diagram}
@@ -91,9 +96,9 @@ Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \chapter{WBS chart}
 \section*{Overall UML diagram}
 \begin{figure}[h!] \centering
-%\includegraphics[width=0.8\textwidth]{Gantt/img/MakePDF.png} 
+\includegraphics[width=0.8\textwidth]{WBS/WBSChart.png} 
 \end{figure}
 
-%\input{WBS/[Kiwi-MGC]usecase-makeLeftColumn.tex}
+\input{WBS/[Kiwi-MGC]usecase-makeHierarchycalDependecies.tex}
 
 \end{document}
