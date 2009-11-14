@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Use cases}
-\author{Release 0.6}
+\author{Release 0.7}
 \date{\today \\Firenze \\\begin{figure}[h] \centering
 \includegraphics[width=0.2\textwidth]{../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
@@ -85,7 +85,7 @@ indipendenti tra loro.
 \chapter{Gantt chart}
 \section*{Overall UML diagram}
 \begin{figure}[h!] \centering
-\includegraphics[width=0.8\textwidth]{Gantt/img/MakePDF.png} 
+\includegraphics[width=0.8\textwidth]{Gantt/img/GanttChart.png} 
 \end{figure}
 
 \input{Gantt/[Kiwi-MGC]usecase-makeLeftColumn.tex}
@@ -96,9 +96,12 @@ indipendenti tra loro.
 \chapter{WBS chart}
 \section*{Overall UML diagram}
 \begin{figure}[h!] \centering
-\includegraphics[width=0.8\textwidth]{WBS/WBSChart.png} 
+\includegraphics[width=0.8\textwidth]{WBS/WBSChart.png}
+\caption{UML diagram}
+\label{fig:WBSUsecases}
 \end{figure}
 
 \input{WBS/[Kiwi-MGC]usecase-makeHierarchycalDependecies.tex}
+\input{WBS/[Kiwi-MGC]usecase-makePDF.tex}
 
 \end{document}
