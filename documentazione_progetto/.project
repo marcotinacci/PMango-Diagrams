@@ -16,6 +16,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>analisi_requisiti/.tex</name>
+			<type>1</type>
+			<location>/usr/share/texmf-texlive/tex/latex/tools/.tex</location>
+		</link>
+		<link>
 			<name>analisi_requisiti/Milestone 1-DomainModel/paper/.tex</name>
 			<type>1</type>
 			<location>/usr/share/texmf-texlive/tex/latex/tools/.tex</location>
