@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Use cases}
-\author{Release 0.9}
+\author{Release 1.0}
 \date{\today \\Firenze \\\begin{figure}[h] \centering
 \includegraphics[width=0.2\textwidth]{../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
@@ -22,7 +22,7 @@
     \hline
     \textbf{approvato da} & \textbf{il giorno} & \textbf{firma} \\
 	\hline    
-	Marco Tinacci &  &  \\
+	Marco Tinacci & 16/09/2009 &  \\
     \hline
     \end{tabular}
   \end{center}
@@ -34,11 +34,11 @@
     \hline
     \textbf{redatto da} & \textbf{il giorno} & \textbf{firma} \\
     \hline
-    Francesco Calabri &  &  \\
+    Francesco Calabri & 16/09/2009 &  \\
     \hline
-	Manuele Paulantonio &  &  \\
+	Manuele Paulantonio & 16/09/2009 &  \\
     \hline    
-	Massimo Nocentini &  &  \\
+	Massimo Nocentini & 16/09/2009 &  \\
     \hline
     \end{tabular}
   \end{center}
@@ -50,11 +50,11 @@
     \hline
     \textbf{distribuito a} & \textbf{il giorno} & \textbf{firma} \\
 	\hline    
-	Daniele Poggi &  &  \\
+	Daniele Poggi & 16/09/2009 &  \\
     \hline
-	Niccol\'o Rogai &  &  \\
+	Niccol\'o Rogai & 16/09/2009 &  \\
     \hline
-	Marco Tinacci &  &  \\
+	Marco Tinacci & 16/09/2009 &  \\
     \hline
     \end{tabular}
   \end{center}
@@ -93,6 +93,7 @@ Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \input{Commons/[Kiwi-MGC]usecase-makePDF.tex}
 \input{Commons/[Kiwi-MGC]usecase-refreshChart.tex}
 \input{Commons/[Kiwi-MGC]usecase-selectUserOption.tex}
+\input{Commons/[Kiwi-MGC]usecase-OpenInNewWindow.tex}
 
 \chapter{Gantt chart}
 \section*{Overall UML diagram}
@@ -117,5 +118,16 @@ Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 
 \input{WBS/[Kiwi-MGC]usecase-makeHierarchycalDependecies.tex}
 \input{WBS/[Kiwi-MGC]usecase-makePDF.tex}
+
+\chapter{TaskNetwork chart}
+\section*{Overall UML diagram}
+\begin{figure}[h!] \centering
+\includegraphics[width=0.8\textwidth]{TaskNetwork/img/TNChart.png}
+\caption{TaskNetwork UML diagram}
+\label{fig:TNdiagram}
+\end{figure}
+
+\input{TaskNetwork/[Kiwi-MGC]usecase-generateTNChart.tex}
+\input{TaskNetwork/[Kiwi-MGC]usecase-criticalPathTable.tex}
 
 \end{document}

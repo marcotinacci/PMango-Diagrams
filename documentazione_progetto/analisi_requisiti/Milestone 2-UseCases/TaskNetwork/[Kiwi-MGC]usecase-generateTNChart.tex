@@ -1,0 +1,19 @@
+\section{Generate TaskNetwork Chart}
+\label{seq:generateTNChart}
+
+\subsection{Basic course}
+Il client richiede di generare un \emph{TaskNetworkChart}.\\
+Il sistema costruisce un oggetto in questo modo:
+\begin{itemize}
+   \item invoca lo use case \ref{seq:makeNodeTaskbox} per creare i
+  \emph{NodeTaskBox} del diagramma.
+  \item si possono aggiungere le seguenti informazioni:
+  \begin{itemize}
+    \item se \emph{UserOptionsChoice} contiene \emph{ShowCriticalPath} allora
+    	calcola il critical path rispetto al grafo rappresentato
+    \item se \emph{UserOptionsChoice} contiene \emph{ShowCriticalPathTable}
+    allora invoca lo use case \ref{seq:createCriticalPathTable}
+ 	\item se \emph{UserOptionsChoice} contiene \emph{ShowDependencies} allora per
+ 	 ogni \emph{TaskBox} rappresentata, invoca lo use case \ref{seq:makeDependencies}
+  \end{itemize}
+\end{itemize}
