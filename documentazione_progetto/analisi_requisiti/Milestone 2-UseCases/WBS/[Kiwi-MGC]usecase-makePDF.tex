@@ -1,14 +1,12 @@
-\section{Make PDF}
-\label{seq:WBSMakePDF}
+\section{Generate WBS Chart}
+\label{seq:generateWBSChart}
 
 \subsection{Basic course}
-Il client entra nella pagina relativa al diagramma WBS e clicca sulla 
-funzionalit\`a “Make PDF”. Il sistema costruisce un oggetto in questo modo:
+Il client richiede di generare un \emph{WBSChart}.\\
+Il sistema costruisce un oggetto in questo modo:
 \begin{itemize}
-  \item invoca lo use case \ref{seq:makeNodeTaskbox} per creare i nodi del 
-  diagramma
+  \item invoca lo use case \ref{seq:makeNodeTaskbox} per creare i
+  \emph{NodeTaskBox} del diagramma.
   \item invoca lo use case \ref{seq:makeHierarchycalDependencies} per creare le
   dipendenze gerarchiche
 \end{itemize}
-Il sistema invio la pagina di risposta al client, aggiungendo accanto ai
-pulsanti di reporting una icona per permettere il download del file generato.
