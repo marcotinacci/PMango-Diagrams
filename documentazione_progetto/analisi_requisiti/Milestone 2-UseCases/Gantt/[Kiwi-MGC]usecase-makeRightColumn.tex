@@ -17,6 +17,9 @@ Il sistema esegue questi passi:
     \item si posiziona il \emph{GanttTaskBox} creato nella giusta posizione
     temporale in base alla scelta \emph{TimeGrainOption}.
   \end{itemize}
+  \item se \emph{UserOptionsChoice} contiene \emph{ShowDependencies} allora per
+  ogni \emph{TaskBox} rappresentata, invoca lo use case 
+  \ref{seq:makeDependencies}
 \end{enumerate}
 
 \subsection{Alternative course}

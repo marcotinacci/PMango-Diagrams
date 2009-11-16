@@ -1,38 +1,7 @@
 \section{Show UserOptions}
 \label{seq:showUserOptions}
-\subsection{Basic course}
-Il client digita l'URL della \emph{ProjectPage}\footnote{TODO:definire
-ProjectPage nel documento dei Mockup}. 
-
-Il sistema invia in risposta la pagina richiesta con i tre tab relativi ai
-\emph{Chart} descritti nel documento \textbf{Domain Model}. 
-
-Il client fa click sul tab relativo al \emph{Chart} che vuole generare.
-
-Il sistema costruisce il contenuto del tab inserendo una sequenza di
-\emph{UserOption}. 
-
-Il client esegue la sua selezione delle informazioni che
-vuole visualizzare nel \emph{Chart} e clicca su un oggetto\footnote{come posso
-speficare questo oggetto?} per domandare la generazione del \emph{Chart}.
-
-Il sistema esegue questi passi:
-\begin{enumerate}
-  \item costruisce \emph{UserOptionsChoice} in base alle opzioni selezionate
-  dal client.
-  \item recupera i \emph{Task} da includere nel \emph{Chart}.
-  \item esegue la generazione\footnote{dire che la generazione astrae sui
-  formati: la richiesta potrebbe essere o la visualizzazione della gif nel
-  browser come attualmente fa mango, altrimenti la richiesta di generazione
-  pdf. Inserire questo paragrafo come un description sotto il punto a cui
-  appartiene questa nota.}
-\end{enumerate}
-
-\subsection{Alternative course}
-\begin{description}
-\item[Nessuna \emph{UserOption} selezionata] Il client invia un request con 
-selezione delle \emph{UserOption} vuota. Quindi il sistema genera il
-\emph{Chart} con delle \emph{UserOption} di default\footnote{dedicare un
-paragrafo in un qualche documento per definire quali sono le opzioni di
-default per ciascun chart.}.
-\end{description}
+Questo use case, come rappresentato nel diagramma UML
+\autoref{fig:commonsOverallDiagram}, fornisce il punto di astrazione per altri
+use case. Usiamo questo formalismo per permettere ad ogni specializzazione di
+esprimere solo quali sono le \emph{UserOption} disponibili per il relativo
+\emph{Chart}.

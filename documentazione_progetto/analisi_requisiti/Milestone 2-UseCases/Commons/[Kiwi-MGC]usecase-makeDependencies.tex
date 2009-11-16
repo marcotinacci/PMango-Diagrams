@@ -1,15 +1,18 @@
 \section{Make Dependencies}
 \label{seq:makeDependencies}
 \subsection{Basic course}
-Il client prende un reference al GanttChartGenerator e domanda di creare la
-rappresentazione delle dipendenze \footnote{decidere se rappresentare: \emph{il
-Task dipende da} oppure \emph{il Task e' necessario per}} del \emph{Task}.
+Si assume che l'insieme di \emph{TaskBox} sia gi\`a costruito.\\\\
+Il client richiede di rappresentare graficamente le
+\emph{Finish-ToStartDependency} relative all'insieme di \emph{TaskBox} gi\`a
+costruite.
 
 Il sistema esegue questi passi:
 \begin{enumerate}
-  \item recupera il \emph{Task}.
-  \item se \emph{UserOptionChoice} contiene \emph{ShowDependenciesOption},
-        allora rappresenta le dipendenze cdns. 
+  \item costruisce un insieme $Dep$ di coppie del tipo $(a,b)$, con $a,b \in
+  $\emph{TaskBox}, tale che $(a,b) \in Dep \Leftrightarrow b$ non pu\`o
+  iniziare finch\`e $a$ non \`e stata completata.
+  \item per ogni coppia $(a,b) \in Dep$ costruisci una linea
+  spezzata cdns.
 \end{enumerate}
 
 \subsection{Alternative course}

@@ -1,0 +1,15 @@
+\section{Show Project Page}
+\label{seq:showProjectPage}
+\subsection{Basic course}
+Il client digita l'URL della \emph{ProjectPage}\footnote{TODO:definire
+ProjectPage nel documento dei Mockup}. \\
+Il sistema invia in risposta la pagina richiesta aggiungendo all'insieme dei
+tab presenti, tre tab relativi ai \emph{Chart} descritti nel documento
+\textbf{Domain Model} e oggetto dell'appalto.\\
+Il client fa click sul tab relativo al \emph{Chart} che vuole generare.\\
+Il sistema invoca la specializzazione dello usecase \ref{seq:showUserOptions}
+relativa al \emph{Chart} scelto, per costruire l'insieme delle possibili
+\emph{UserOption}: dopo di che aggiunge questo insieme alla pagina di
+risposta.\\
+Il client effettua una azione, invocando una specializzazione di
+\ref{seq:userAction}.

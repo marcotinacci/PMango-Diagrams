@@ -1,0 +1,12 @@
+\section{Add to Report UserAction}
+\label{seq:addToReportUserAction}
+\subsection{Basic course}
+Si assume che il client stia interagendo con il tab relativo al \emph{Chart}
+che vuole generare.
+
+Il client fa click sul pulsante ``Add to Report''.\\
+Il sistema invoca lo use case \ref{seq:makeUserOptionsChoice} per costruirsi la
+\emph{UserOptionsChoice}. \\
+Il sistema aggiunge una \emph{ReportSection} per aggiungere alla reportistica
+il \emph{Chart} richiesto, con la relativa \emph{UserOptionsChoice}. Queste
+sezioni saranno elencate nella schermata della reportistica gi\`a esistente.

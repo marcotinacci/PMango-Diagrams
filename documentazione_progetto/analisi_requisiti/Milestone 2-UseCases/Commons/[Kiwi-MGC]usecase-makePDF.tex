@@ -1,0 +1,21 @@
+\section{Make PDF}
+\label{seq:commonsMakePDF}
+\subsection{Basic course}
+Si assume che il client stia interagendo con il tab relativo al \emph{Chart}
+che vuole generare.
+
+Il client fa click sul pulsante ``Make PDF''.\\
+Il sistema esegue questi passi:
+\begin{itemize}
+  \item invoca lo use case \ref{seq:makeUserOptionsChoice} per costruirsi la
+  \emph{UserOptionsChoice}.
+  \item esegue una ricerca dei \emph{Task} che devono essere inclusi nel
+  \emph{Chart}.  
+  \item invoca la specializzazione di \ref{seq:generateChart} per la
+  creazione del relativo \emph{Chart}
+  \item costruisce un file pdf aggiungendo al suo interno la rappresentazione
+  generata
+  \item invia al client una pagina di risposta con una \textbf{icona} accanto ai
+  due pulsanti della reportistica, per segnalare che il file PDF \`e
+  disponibile.
+\end{itemize}
