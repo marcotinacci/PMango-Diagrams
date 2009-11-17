@@ -1,0 +1,15 @@
+controllare se ci sono i log relativi alla consegna dei mockup il 6/11
+
+Add to norme: se ci sono piu rilasci al giorno di un documento versionato, si prende la release piu aggiornata del giorno.
+
+Add to norme: quando si modifica un documento versionato e le modifiche comportano un incremento della release, allora nel commento del commit si deve specificare questo pattern: release x.y of <versioned document name>, <other commit comment>
+
+Add to norme: se un documento versionato (come DomainModel.jude) sul quale non e' possibile attacare un nostra informazione di release, allora nel diario deve essere specificato il nome del file con la revision del repo.
+
+Check the norme: quando si inserisce nel diario una voce relativa a un evento (tipo per i verbali) che sono avvenuti realmente in data A, pero vengono resi disponibili sul repo in data B, allora l'inserimento della voce deve essere relativa alla data B.
+
+IMPORTANT FOR TOMORROW:
+1. commit the daniele verbale of 11/11/09
+2. print all the document (diary, pmango, last two verbals, norme is not needed)
+3. add a diary entry for the demand of 16/11/09 (put the .tex into "consegna" folder)
+4. add a new diary update voice with the new revision (and increment a release)
