@@ -3,8 +3,8 @@
 \input{../../templates/[Kiwi-MGC]template-usePackages.tex}
 
 \begin{titlepage}
-\title{Use cases}
-\author{Release 1.0}
+\title{Documento di Analisi}
+\author{Release 0.8}
 \date{\today \\Firenze \\\begin{figure}[h] \centering
 \includegraphics[width=0.2\textwidth]{../../images/logokiwi.png} \end{figure} }
 \end{titlepage}
@@ -70,66 +70,10 @@ Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 
 \part{Requisiti del prodotto}
 
-\chapter*{Entire System UML diagram}
-\begin{figure}[h!] \centering
-\includegraphics[width=0.7\textwidth]{../EntireSystem.png} 
-\caption{Entire system UML diagram}
-\label{fig:entireSystemDiagram}
-\end{figure}
+\input{../[Kiwi-MGC]requisiti_prodotto.tex}
 
-\chapter{Commons}
-\begin{figure}[h!] \centering
-\includegraphics[width=0.9\textwidth]{Commons/img/Overall.png} 
-\caption{Overall Commons UML diagram}
-\label{fig:commonsOverallDiagram}
-\end{figure}
+\part{Domain Model}
 
-\input{Commons/[Kiwi-MGC]usecase-makeDependencies.tex}
-\input{Commons/[Kiwi-MGC]usecase-makeNodeTaskbox.tex}
-\input{Commons/[Kiwi-MGC]usecase-showProjectPage.tex}
-\input{Commons/[Kiwi-MGC]usecase-generateChart.tex}
-\input{Commons/[Kiwi-MGC]usecase-showUserOptions.tex}
-\input{Commons/[Kiwi-MGC]usecase-makeUserOptionsChoice.tex}
-\input{Commons/[Kiwi-MGC]usecase-userAction.tex}
-\input{Commons/[Kiwi-MGC]usecase-addToReportUserAction.tex}
-\input{Commons/[Kiwi-MGC]usecase-makePDF.tex}
-\input{Commons/[Kiwi-MGC]usecase-refreshChart.tex}
-\input{Commons/[Kiwi-MGC]usecase-selectUserOption.tex}
-\input{Commons/[Kiwi-MGC]usecase-OpenInNewWindow.tex}
-
-\chapter{Gantt chart}
-\section*{Overall UML diagram}
-\begin{figure}[h!] \centering
-\includegraphics[width=0.8\textwidth]{Gantt/img/GanttChart.png} 
-\caption{Gantt Overall UML diagram}
-\label{fig:ganttDiagram}
-\end{figure}
-
-\input{Gantt/[Kiwi-MGC]usecase-makeLeftColumn.tex}
-\input{Gantt/[Kiwi-MGC]usecase-makeGanttTaskbox.tex}
-\input{Gantt/[Kiwi-MGC]usecase-makeRightColumn.tex}
-\input{Gantt/[Kiwi-MGC]usecase-makePDF.tex}
-
-\chapter{WBS chart}
-\section*{Overall UML diagram}
-\begin{figure}[h!] \centering
-\includegraphics[width=0.8\textwidth]{WBS/WBSChart.png}
-\caption{WBS UML diagram}
-\label{fig:WBSdiagram}
-\end{figure}
-
-\input{WBS/[Kiwi-MGC]usecase-makeHierarchycalDependecies.tex}
-\input{WBS/[Kiwi-MGC]usecase-makePDF.tex}
-
-\chapter{TaskNetwork chart}
-\section*{Overall UML diagram}
-\begin{figure}[h!] \centering
-\includegraphics[width=0.8\textwidth]{TaskNetwork/img/TNChart.png}
-\caption{TaskNetwork UML diagram}
-\label{fig:TNdiagram}
-\end{figure}
-
-\input{TaskNetwork/[Kiwi-MGC]usecase-generateTNChart.tex}
-\input{TaskNetwork/[Kiwi-MGC]usecase-criticalPathTable.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domain_model.tex}
 
 \end{document}

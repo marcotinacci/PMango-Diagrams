@@ -1,83 +1,10 @@
-\documentclass[a4paper, 12pt]{article}
+\chapter*{Release \textbf{1.1}}
 
-\input{../../../templates/[Kiwi-MGC]template-usePackages.tex}
+\chapter{Overall diagram}
 
-\begin{titlepage}
-\title{Domain Model}
-\author{Release 1.1}
-\date{\today \\Firenze \\\begin{figure}[h] \centering
-\includegraphics[width=0.2\textwidth]{../../../images/logokiwi.png} 
-\end{figure}
-}
-\end{titlepage}
-
-\pagestyle{fancy}
-
-\begin{document}
-
-\maketitle
-
-\newpage
-
-\section*{Approvazione, redazione, lista distribuzione}
-\begin{table}[h!]
-  \begin{center}
-    \begin{tabular}{| l | l | p{60mm} |}
-    \hline
-    \textbf{approvato da} & \textbf{il giorno} & \textbf{firma} \\
-	\hline    
-	Marco Tinacci & 16/11/2009 &  \\
-    \hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-\begin{table}[h!]
-  \begin{center}
-    \begin{tabular}{| l | l | p{60mm} |}
-    \hline
-    \textbf{redatto da} & \textbf{il giorno} & \textbf{firma} \\
-    \hline
-    Francesco Calabri & 16/11/2009 &  \\
-    \hline
-	Manuele Paulantonio & 16/11/2009 &  \\
-    \hline    
-	Massimo Nocentini & 16/11/2009 &  \\
-    \hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-\begin{table}[h!]
-  \begin{center}
-    \begin{tabular}{| l | l | p{60mm} |}
-    \hline
-    \textbf{distribuito a} & \textbf{il giorno} & \textbf{firma} \\
-	\hline    
-	Daniele Poggi & 16/11/2009 &  \\
-    \hline
-	Niccol\'o Rogai & 16/11/2009 &  \\
-    \hline
-	Marco Tinacci & 16/11/2009 &  \\
-    \hline
-    \end{tabular}
-  \end{center}
-\end{table}
-
-\newpage
-
-\tableofcontents
-
-\newpage
-
-\section*{Introduzione}
-
-\newpage
-
-\section{Overall diagram}
 \begin{figure}[h!] 
 	\centering
-	\includegraphics[width=1\textwidth]{../DomainModel.png}
+	\includegraphics[width=1\textwidth]{../Milestone1-DomainModel/DomainModel.png}
 	\caption{Overall UML diagram}
 	\label{fig:overallDiagram} 
 \end{figure}
@@ -97,13 +24,13 @@ Procediamo nel seguito del documento nella descrizione di piccole composizioni
 in modo da chiarire i motivi per cui sono stati creati concetti e relazioni fra
 essi.
 
+\chapter{Aspects descriptions}
 % from here every document which is included with the input command must have a
 % dedicated section whitin his body
-\input{[Kiwi-MGC]domainmodel-task.tex}
-\input{[Kiwi-MGC]domainmodel-Taskbox.tex}
-\input{[Kiwi-MGC]domainmodel-strip.tex}
-\input{[Kiwi-MGC]domainmodel-chart.tex}
-\input{[Kiwi-MGC]domainmodel-dependencies.tex}
-\input{[Kiwi-MGC]domainmodel-userOption.tex}
-\input{[Kiwi-MGC]domainmodel-reportSection.tex}
-\end{document}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-task.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-Taskbox.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-strip.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-chart.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-dependencies.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-userOption.tex}
+\input{../Milestone1-DomainModel/paper/[Kiwi-MGC]domainmodel-reportSection.tex}
