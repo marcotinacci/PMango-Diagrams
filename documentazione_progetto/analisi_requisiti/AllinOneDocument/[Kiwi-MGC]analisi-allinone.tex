@@ -65,6 +65,68 @@
 \newpage
 
 \section*{Introduzione}
+Questo documento riassume il processo di analisi con tutti i documenti che ogni
+singola componente del processo ha prodotto.
+
+Abbiamo cercato di approcciare il problema dell'analisi dei requisiti seguendo
+le idee del modello agile \textbf{ICONIX}. Questi sono i passi che abbiamo
+sviluppato in ordine cronologico:
+\begin{enumerate}
+  \item brainstroming iniziale sul problema leggendo il documento di specifica,
+  rilasciato dal committente. Questa fase ha portato alla scoperta dei concetti
+  che il problema richiede di trattare e li abbiamo catturati nel documento
+  \emph{Domain Model}. Questo documento \`e per definizione non corretto,
+  infatti con gli step successivi siamo stati in grado di raffinare la sua
+  granularit\`a, aggiungendo concetti che non erano stati modellati e
+  cancellando concetti simili, fattorizzandoli.
+  \item stesura degli \emph{use cases}, cercando di catturare i comportamenti e
+  le sequenze di interazione che un client vuole eseguire sul problema. Questo ci
+  ha portato ad una prima definizione un po troppo formale, dedicata pi\`u al 
+  ``come'' il sistema esegue il comportamento, invece che foaclizzarsi sul 
+  ``cosa'' avviene nei comportamenti. Quindi abbiamo corretto il tiro,
+  formulando degli use cases che modellano l'insieme delle posssibili
+  interazioni richieste dal committente, stando molto attenti a definire sia il
+  \emph{basic course}, ovvero la sequenza di azioni nel caso che non si creino
+  problemi durante la sequenza, sia un \emph{alternate course}, ovvero
+  modellare cosa accade se si verifica un errore. 
+  
+  Inoltre abbiamo cercato di raggruppare use case in pacchetti relativi al
+  contesto delle azioni che venivano modellate.
+\end{enumerate}
+
+Questo documento \`e diviso in tre parti indipendenti:
+\begin{description}
+\item[requisiti del prodotto] possiamo vedere questo documento come una mappa:
+mette in relazione le richieste espresse nei punti del capitolato di appalto
+con i nostri oggetti di analisi, quindi concetti del \emph{Domain Model} e
+\emph{use cases}. 
+
+Infatti abbiamo cercato di dargli proprio questo taglio: abbiamo due capitoli
+riferiti rispettivamente ai requisiti obbligatori e alle semplificazioni,
+metriche. Per ogni requisito abbiamo riportato la dicitura del documento di
+appalto, scrivendo poi per ogni richiesta, il relativo concetto della nostra
+analisi che la soddisfa.
+\item[Domain Model] questo \`e il dizionario di concetti che le successive fasi
+di sviluppo del problema condividono. In questo documento vengono catturari
+tutti i concetti e le relazioni di \emph{aggregazione} e
+\emph{generalizzazione} che esistono fra di essi. Sar\`a la base del diagramma
+delle classi, che verr\`a sviluppato nella fase di progettazione.
+
+La sua struttura \`e una sequenza di descrizioni di piccoli spaccati presi dal
+diagramma principale, per evidenziarne i punti fondamentali e mettendoli
+in relazione con altre parti del diagramma, senza doverle discrivere tutte
+insieme.
+\item[Use cases] questo documento invece cattura i comportamenti attesi che si
+possono eseguire a runtime con il problema. Abbiamo diviso questo documento in
+quattro parti, ognuna in relazione con la divisione in pacchetti degli stessi
+use case. Abbiamo una \emph{commons} e le successive tre, una per ogni
+\emph{Chart} che dovremo sviluppare. Per ogni parte riportiamo un diagramma che
+esprime con notazione UML le relazioni di \emph{precedes}, e successivamente i
+paragrafi che costruiscono veramente lo use case.
+\end{description}
+
+\subsection*{Alcune definizioni}
+
 Descrizione dell'acronimo: \textbf{cdns} sta per ''\textbf{c}ome
 \textbf{d}escritto \textbf{n}ella \textbf{s}pecifica''.
 
