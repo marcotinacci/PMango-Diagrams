@@ -178,7 +178,7 @@ Per i precedenti punti avremo che per rappresentare un mese saranno
 necessari\\ $year_{width} = \textbf{12.0cm}$. In totale saranno rappresentabili 
 almeno $years$ anni correttamente:
 \begin{displaymath}
-	years = \left \lfloor \frac{measure \frac{5}{6}PrintableArea_{width}
+	years = \left \lfloor \frac{ \frac{5}{6}PrintableArea_{width}
 	}{year_{width}}\right \rfloor
 \end{displaymath}
 
@@ -201,13 +201,11 @@ In totale saranno rappresentabili almeno $years$ anni correttamente:
 Il diagramma WBS ha a disposizione lo spazio offerto da una pagina per la
 stampa su carta (margini di stampa esclusi), si vuole quindi dare dei limiti dei parametri del diagramma entro i quali si garantisce che questo non uscir\'a dall'area di stampa. I parametri che andremo ad utilizzare sono i seguenti:
 \begin{itemize}
-	\item \emph{numero foglie} $n_{leaf}$: in quanto il diagramma WBS \'e una
-	struttura dati ad albero ad ariet\'a non fissata, le foglie sono i task che non
-	presentano sotto task figli,
-	\item \emph{numero livelli} $n_{level}$: il numero di livelli viene definito come il massimo numero di nodi che si incontrano percorrendo le relazioni nel solo verso padre-figlio, partendo dalla radice del diagramma,
-	\item \emph{altezza e larghezza nodi} $h_{node}$ $w_{node}$: le due dimensioni dei box contententi i task dipendono dalla quantità di informazioni che si vuole inserire,
-	\item \emph{margine orizzontale tra nodi} $hm$: la distanza minima che si deve avere tra due nodi adiacenti, fissata a \textbf{3mm} ma modificabile dalle opzioni di configurazione,
-	\item \emph{margine verticale tra nodi} $vm$: la distanza tra i livelli
+	\item \emph{foglie} $leaves$: l'insieme delle foglie. Dato che il diagramma WBS \'e una struttura dati ad albero ad ariet\'a non fissata, le foglie sono i task che non presentano sotto task figli,
+	\item \emph{livelli} $levels$: l'insieme dei livelli. Il numero di livelli $|levels|$ viene definito come il massimo numero di nodi che si incontrano percorrendo le relazioni nel solo verso padre-figlio, partendo dalla radice del diagramma,
+	\item \emph{altezza e larghezza nodi} $node_{height}$, $node_{width}$: le due dimensioni dei box contententi i task dipendono dalla quantità di informazioni che si vuole inserire,
+	\item \emph{margine orizzontale tra nodi} $HorizontalMargin$: la distanza minima che si deve avere tra due nodi adiacenti, fissata a \textbf{3mm} ma modificabile dalle opzioni di configurazione,
+	\item \emph{margine verticale tra nodi} $VerticalMargin$: la distanza tra i livelli
 	dell'albero, nei quali devono rientrare i rami di relazione tra i task, di default \'e fissata a \textbf{6mm} ma modificabile dalle opzioni di configurazione,
 	\item \emph{area stampabile} $PrintableArea_{width}$,
 	$PrintableArea_{height}$: rappresentano le dimensioni dell'area stampabile del foglio, rispettivamente larghezza e altezza, quindi considerando gi\'a eliminati i margini di stampa.
