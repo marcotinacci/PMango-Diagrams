@@ -216,11 +216,9 @@ stampa su carta (margini di stampa esclusi), si vuole quindi dare dei limiti dei
 Stabiliti i parametri passiamo a dichiarare le disequazioni rappresentanti i limiti entro i quali diamo garanzie:
 \begin{itemize}
 	\item garantiamo che un diagramma WBS rientri, per \emph{larghezza}, nell'area di stampa se:
-	$$ n_{leaf} \times w_{node} + (n_{leaf} - 1) \times hm \leq 
-	PrintableArea_{width} $$
+	$$ |leaves| \times node_{width} + (|leaves| - 1) \times HorizontalMargin \leq PrintableArea_{width} $$
 	\item garantiamo che un diagramma WBS rientri, per \emph{altezza}, nell'area di stampa se:
-	$$ n_{level} \times h_{node} + (n_{level} - 1) \times vm \leq 
-	PrintableArea_{height} $$
+	$$ |levels| \times node_{height} + (|levels| - 1) \times VerticalMargin \leq PrintableArea_{height} $$
 \end{itemize}
 Intuitivamente questi limiti tutelano i casi peggiori, per esempio quando si
 presenta un albero completo, il cui spazio occupato \`e il limite massimo espresso dalle formule.
@@ -230,24 +228,33 @@ Il diagramma task network pu\`o essere associato alla struttura dati grafo
 aciclico (esprimiamo quindi le metriche solo per i casi \emph{well formed}). Come anche per il diagramma WBS, si vuole dare dei limiti sui parametri della task network entro i quali assicuriamo la stampa su carta nei margini fissati. I parametri che andremo ad utilizzare sono i seguenti:
 \begin{itemize}
 	\item \emph{larghezza dei nodi di inizio e fine} $start_{width}$, $end_{width}$: misurano la larghezza occupata dai nodi di inizio e fine,
-	\item \emph{area stampabile} $PrintableArea_{width}$,
-	$PrintableArea_{height}$: rappresentano le dimensioni dell'area stampabile del foglio, rispettivamente larghezza e altezza, quindi considerando gi\`a eliminati i margini di stampa.
+	\item \emph{livelli} $levels$: l'insieme dei livelli. Ad ogni nodo viene associato un numero di livello e i nodi che hanno lo stesso numero si dicono appartenere allo stesso livello. L'etichettamento dei nodi col numero di livello inizia associando al nodo di inizio il valore zero e successivamente ad ogni nodo viene associato il numero di livello massimo tra quelli dei suoi padri incrementato di uno. Il numero di livelli $|levels|$ pu\`o quindi essere calcolato, dopo la fase di etichettamento, come il livello del nodo finale decrementato di uno,
+	\item \emph{nodi di un livello fissato i} $level_i$:
+	l'insieme di tutti i nodi appartenenti al livello $i$. La cardinalit\`a di questo insieme $|level_i|$ viene utilizzata per valutare che dimensioni pu\`o raggiungere in altezza il livello, e quindi il grafo,
+	\item \emph{altezza e larghezza nodi} $node_{height}$, $node_{width}$: 
+	analogo ai parametri dei diagrammi WBS,
+	\item \emph{margine orizzontale tra nodi} $HorizontalMargin$ ($HM$): 
+	analogo ai parametri dei diagrammi WBS,
+	\item \emph{margine verticale tra nodi} $VerticalMargin$ ($VM$): 
+	la distanza verticale minima tra i nodi, di default \`e fissata a \textbf{3mm} ma modificabile dalle opzioni di configurazione,
+	\item \emph{archi che cambiano quota} $ChangingHeightArcs$ ($CHA$): 
+	l'insieme di tutti gli archi che cambiano di quota, in quanto non riescono a raggiungere direttamente il nodo di arrivo. Il numero degli archi $|ChangingHeightArcs|$ che hanno questo comportamento \`e importante perch\'e ogni cambio di traiettoria viene fatto nello spazio tra due livelli adiacenti e non deve coincidere tra più archi al fine di evitare rappresentazioni ambigue. Il margine orizzontale tra due livelli aumenta quindi all'aumentare della cardinalit\`a di questo insieme,
+	\item \emph{archi che attraversano un livello fissato i} $ArcsTroughtLevel_i$ ($ATL_i$):
+	l'insieme di tutti gli archi che attraversano il livello $i$ per arrivare a un livello successivo o per entrare in una sotto attivit\`a di un task del livello $i$, come per i $ChangingHeightArcs$ il numero di questi archi $|ArcsTroughtLevel_i|$ \`e importante in quanto vanno ad aumentare l'altezza del livello che attraversano, e quindi la potenzale altezza dell'intero grafo,
+	\item \emph{margini tra archi} $ArcMargin$ ($AM$) : indica la distanza minima tra due archi o tra un arco e un nodo, per default fissata a \textbf{2mm} ma modificabile dalel opzioni di configurazione,
+	\item \emph{area stampabile} $PrintableArea_{width}$ ($PA_{width}$), $PrintableArea_{height}$ ($PA_{height}$): rappresentano le dimensioni dell'area stampabile del foglio, rispettivamente larghezza e altezza, quindi considerando gi\`a eliminati i margini di stampa.
 \end{itemize}
 
 Stabiliti i parametri passiamo a dichiarare le disequazioni rappresentanti i limiti entro i quali diamo garanzie:
 \begin{itemize}
 	\item garantiamo che un diagramma task network rientri, per \emph{larghezza}, nell'area di stampa se:
 	$$ start_{width} + end_{width} + |levels| \times node_{width} + 	
-	(|levels|+1) \times HorizontalMargin + |ChangingHeightArcs| \times
-	ArcMargin
-	\leq PrintableArea_{width} $$
+	(|levels|+1) \times HM + |CHA| \times AM
+	\leq PA_{width} $$
 	\item garantiamo che un diagramma task network rientri, per \emph{altezza}, nell'area di stampa se:
 	$$ max_{1 \leq i \leq |levels|}\{ |level_i| \times node_{height} +
-	(|level_i|-1) \times VerticalMargin + |ArcsTroughtLevel_i| \times 
-	ArcMargin \} 
-	\leq PrintableArea_{height} $$
+	(|level_i|-1) \times VM + |ATL_i| \times AM \} 
+	\leq PA_{height} $$
 \end{itemize}
-Intuitivamente questi limiti tutelano i casi peggiori, per esempio quando si
-presenta un albero completo, il cui spazio occupato \`e il limite massimo espresso dalle formule.
 
 
