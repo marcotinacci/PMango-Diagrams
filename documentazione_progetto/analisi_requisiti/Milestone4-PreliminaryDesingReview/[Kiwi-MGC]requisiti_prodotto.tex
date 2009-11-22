@@ -1,4 +1,4 @@
-\chapter*{Release \textbf{1.1}}
+\chapter*{Release \textbf{1.2}}
 
 \chapter{Requisiti obbligatori}
 
@@ -55,8 +55,8 @@ punti \emph{a), b), c)} nei momenti in cui verranno effettivamente implementati.
 \section{Semplificazioni e requisiti aggiuntivi}
 \begin{itemize}
   \item[a)] il nostro gruppo \textbf{non} prevede lo sviluppo di requisiti
-  aggiuntivi, preferendo implementare correttamente il processo di sviluppo adottato per
-  raggiungere i requisiti richiesti dal committente.
+  aggiuntivi, preferendo implementare correttamente il processo di sviluppo 
+  adottato per raggiungere i requisiti richiesti dal committente.
   \item[b)] abbiamo deciso di creare \textbf{solo} oggetti \textbf{gif} per
   usarli in modo interscambiabile sia nella visualizzazione da browser web, sia
   per aggiungerli in documenti PDF. Questo ci porta alcuni vantaggi:
@@ -72,3 +72,133 @@ punti \emph{a), b), c)} nei momenti in cui verranno effettivamente implementati.
 \end{itemize}
 
 \section{Metriche}
+
+\subsection{Metrica sulla grana temporale di un Gantt}
+Vogliamo fissare un limite minimo di informazioni che vengono rappresentate
+nella stampa su \emph{carta} di un \emph{Gantt chart} in base alla grana
+temporale scelta.
+
+Facciamo queste assunzioni:
+\begin{itemize}
+  \item la stampa del \emph{Gantt chart} \`e \textbf{landscape}.
+  \item \emph{PrintableArea} \`e l'area del foglio A4 su cui \`e effettivamente
+  possibile stampare. In \emph{PrintableArea} non rientrano i quattro margini
+  di stampa della stampante che viene utilizzata per la stampa.
+  
+  Su \emph{PrintableArea} sono definite tutte le classiche operazioni di misura
+  di cui potremo avere bisogno in seguito (esempio: misurare un lato di
+  \emph{PrintableArea} \`e un operazione possibile)
+  
+  \item Per la larghezza della colonna di sinistra del diagramma che ospita gli
+  id e i nomi dei vari \emph{Task} si suppone valga questa uguaglianza:
+  \begin{displaymath}
+  	width_{left\_column} = \frac{LandscapeMeasure(PrintableArea)}{6}
+  \end{displaymath}
+  
+   \item Si suppone che l'utente non abbia selezionato le \emph{UserOption} per
+   avere informazioni sulle risorse sulla destra della \emph{GanttTaskbox}.
+
+	\item Sia $GrainAvailable = \lbrace ora
+	, giorno, settimana, mese, anno	\rbrace$. Definiamo la relazione $\sqsubset$
+	come:
+	\begin{displaymath}
+	\sqsubset = \lbrace (a, b) \in GrainAvailable \times GrainAvailable : b \quad
+	aggregates \quad a
+	\rbrace
+	\end{displaymath}
+	l'operatore $b \quad aggregates \quad a$ esprime che $b$ \`e composto da alcuni
+	$a$.
+	
+	Usando la precedente relazione vale:
+	\begin{displaymath}
+  	 ora \sqsubset giorno \sqsubset settimana \sqsubset mese \sqsubset anno
+  	\end{displaymath}
+\end{itemize}
+
+Definiamo la metrica in base alle possibili grane temporali:
+\begin{description}
+\item[ora] \quad
+\begin{itemize}
+  \item fissiamo la dimensione del gap fra una linea verticale tratteggiata
+e la successiva uguale a \textbf{3mm}.
+  \item Si rappresentano \textbf{24} ore per giorno, per supportare progetti
+  mission critical, nei quali \`e possibile richiedere ore di lavoro maggiori delle 8 
+standard.
+\end{itemize}
+
+Per i precedenti punti avremo che per rappresentare un giorno saranno
+necessari\\ $day_{width} = \textbf{7.2cm}$. In totale saranno rappresentabili 
+almeno $days$ giorni correttamente:
+\begin{displaymath}
+	days = \left \lfloor \frac{measure \left (\frac{5}{6}PrintableArea
+	\right)}{day_{width}}\right \rfloor
+\end{displaymath}
+con $measure$ l'operatore che restituisce la misura in cm dell'argomento.
+
+\item[giorno] \quad
+\begin{itemize}
+  \item fissiamo la dimensione del gap fra una linea verticale tratteggiata
+e la successiva uguale a \textbf{5mm}.
+  \item Si rappresentano \textbf{7} giorni per settimana
+\end{itemize}
+
+Per i precedenti punti avremo che per rappresentare una settimana saranno
+necessari\\ $week_{width} = \textbf{3.5cm}$. In totale saranno rappresentabili 
+almeno $weeks$ settimane correttamente:
+\begin{displaymath}
+	weeks = \left \lfloor \frac{measure \left (\frac{5}{6}PrintableArea
+	\right)}{week_{width}}\right \rfloor
+\end{displaymath}
+con $measure$ l'operatore che restituisce la misura in cm dell'argomento.
+
+\item[settimana] \quad
+\begin{itemize}
+  \item fissiamo la dimensione del gap fra una linea verticale tratteggiata
+e la successiva uguale a \textbf{1cm}.
+  \item Si rappresentano \textbf{4} settimane per mese
+\end{itemize}
+
+Per i precedenti punti avremo che per rappresentare un mese saranno
+necessari\\ $month_{width} = \textbf{4.0cm}$. In totale saranno rappresentabili 
+almeno $months$ mesi correttamente:
+\begin{displaymath}
+	months = \left \lfloor \frac{measure \left (\frac{5}{6}PrintableArea
+	\right)}{month_{width}}\right \rfloor
+\end{displaymath}
+con $measure$ l'operatore che restituisce la misura in cm dell'argomento.
+
+\item[mese] \quad
+\begin{itemize}
+  \item fissiamo la dimensione del gap fra una linea verticale tratteggiata
+e la successiva uguale a \textbf{1cm}.
+  \item Si rappresentano \textbf{12} settimane per mese
+\end{itemize}
+
+Per i precedenti punti avremo che per rappresentare un mese saranno
+necessari\\ $year_{width} = \textbf{12.0cm}$. In totale saranno rappresentabili 
+almeno $years$ anni correttamente:
+\begin{displaymath}
+	years = \left \lfloor \frac{measure \left (\frac{5}{6}PrintableArea
+	\right)}{year_{width}}\right \rfloor
+\end{displaymath}
+con $measure$ l'operatore che restituisce la misura in cm dell'argomento.
+
+\item[anno] \quad
+\begin{itemize}
+  \item fissiamo la dimensione del gap fra una linea verticale tratteggiata
+e la successiva uguale a $year_{width}\textbf{3cm}$.
+\end{itemize}
+
+In totale saranno rappresentabili almeno $years$ anni correttamente:
+\begin{displaymath}
+	years = \left \lfloor \frac{measure \left (\frac{5}{6}PrintableArea
+	\right)}{year_{width}}\right \rfloor
+\end{displaymath}
+con $measure$ l'operatore che restituisce la misura in cm dell'argomento.
+\end{description}
+
+
+
+
+
+
