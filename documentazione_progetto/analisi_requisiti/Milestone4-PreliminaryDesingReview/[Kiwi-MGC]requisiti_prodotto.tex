@@ -197,8 +197,50 @@ In totale saranno rappresentabili almeno $years$ anni correttamente:
 con $measure$ l'operatore che restituisce la misura in cm dell'argomento.
 \end{description}
 
+\subsection{Metriche sullo spazio occupato dal diagramma WBS}
+Il diagramma WBS ha a disposizione lo spazio offerto da una pagina per la stampa su carta (margini di stampa esclusi), si vuole quindi dare dei limiti dei parametri del diagramma entro i quali si garantisce che questo non uscir\´a dall'area di stampa. 
+I parametri che andremo ad utilizzare sono i seguenti:
+\begin{itemize}
+	\item \emph{numero foglie} $n_{leaf}$: in quanto il diagramma WBS \´e una struttura dati ad albero ad ariet\´a non fissata, le foglie sono i task che non presentano sotto task figli,
+	\item \emph{numero livelli} $n_{level}$: il numero di livelli viene definito come il massimo numero di nodi che si incontrano percorrendo le relazioni nel solo verso padre-figlio, partendo dalla radice del diagramma,
+	\item \emph{altezza e larghezza nodi} $h_{node}$ $w_{node}$: le due dimensioni dei box contententi i task dipendono dalla quantità di informazioni che si vuole inserire,
+	\item \emph{margine orizzontale tra nodi} $hm$: la distanza minima che si deve avere tra due nodi adiacenti, fissata a \textbf{3mm} ma modificabile dalle opzioni di configurazione,
+	\item \emph{margine verticale tra nodi} $vm$: la distanza tra i livelli dell'albero, nei quali devono rientrare i rami di relazione tra i task, di default \´e fissata a \textbf{6mm} ma modificabile dalle opzioni di configurazione,
+	\item \emph{area stampabile} $PrintableArea_{width}$, $PrintableArea_{height}$: rappresentano le dimensioni dell'area stampabile del foglio, rispettivamente larghezza e altezza, quindi considerando gi\´a eliminati i margini di stampa.
+\end{itemize}
 
+Stabiliti i parametri passiamo a dichiarare le disequazioni rappresentanti i limiti entro i quali diamo garanzie:
+\begin{itemize}
+	\item garantiamo che un diagramma WBS rientri, per \emph{larghezza}, nell'area di stampa se:
+	$$ n_{leaf} \times w_{node} + (n_{leaf} - 1) \times hm \leq 
+	PrintableArea_{width} $$
+	\item garantiamo che un diagramma WBS rientri, per \emph{altezza}, nell'area di stampa se:
+	$$ n_{level} \times h_{node} + (n_{level} - 1) \times vm \leq 
+	PrintableArea_{height} $$
+\end{itemize}
+Intuitivamente questi limiti tutelano i casi peggiori, per esempio quando si presenta un albero completo, il cui spazio occupato \´e il limite massimo espresso dalle formule.
 
+\subsection{Metriche sullo spazio occupato dal diagramma Task Network}
+Il diagramma task network pu\´o essere associato alla struttura dati grafo aciclico (esprimiamo quindi le metriche solo per i casi \emph{well formed}). Come anche per il diagramma WBS, si vuole dare dei limiti sui parametri della task network entro i quali assicuriamo la stampa su carta nei margini fissati.
+I parametri che andremo ad utilizzare sono i seguenti:
+\begin{itemize}
+	\item \emph{larghezza dei nodi di inizio e fine} $start_{width}$, $end_{width}$: misurano la larghezza occupata dai nodi di inizio e fine,
+	\item \emph{area stampabile} $PrintableArea_{width}$, $PrintableArea_{height}$: rappresentano le dimensioni dell'area stampabile del foglio, rispettivamente larghezza e altezza, quindi considerando gi\´a eliminati i margini di stampa.
+\end{itemize}
 
+Stabiliti i parametri passiamo a dichiarare le disequazioni rappresentanti i limiti entro i quali diamo garanzie:
+\begin{itemize}
+	\item garantiamo che un diagramma task network rientri, per \emph{larghezza}, nell'area di stampa se:
+	$$ start_{width} + end_{width} + |levels| \times node_{width} + 	
+	(|levels|+1) \times HorizontalMargin + |ChangingHeightArcs| \times
+	ArcMargin
+	\leq PrintableArea_{width} $$
+	\item garantiamo che un diagramma task network rientri, per \emph{altezza}, nell'area di stampa se:
+	$$ max_{1 \leq i \leq |levels|}\{ |level_i| \times node_{height} +
+	(|level_i|-1) \times VerticalMargin + |ArcsTroughtLevel_i| \times 
+	ArcMargin \} 
+	\leq PrintableArea_{height} $$
+\end{itemize}
+Intuitivamente questi limiti tutelano i casi peggiori, per esempio quando si presenta un albero completo, il cui spazio occupato \´e il limite massimo espresso dalle formule.
 
 
