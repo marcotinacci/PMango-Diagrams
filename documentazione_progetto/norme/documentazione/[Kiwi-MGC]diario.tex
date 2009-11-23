@@ -1,9 +1,20 @@
 \section{Diario}
-Il diario dovrà contenere tutte le attività di archivio e di consegna in ordine per data in modo che i primi eventi notificati siano quelli più recenti.
-Per ogni prodotto o documento deve essere seguita la struttura:
 
-Documento non versionato: titolo, data, ricevuto da persona, ruolo. 
-Documento versionato: titolo, data, versione, revision, ricevuto da persona, ruolo. 
-Prodotto: nome, data, versione, revision, ricevuto da persona, ruolo.
+\begin{itemize}
+	
+	\item Il diario dovr\`a contenere tutte le attivit\`a di archivio e di consegna in ordine per data in modo che i primi eventi notificati siano quelli pi\`u recenti.
+	
+	\item Per ogni prodotto o documento deve essere seguita la struttura:
+	\begin{itemize}
+		\item \emph{Documento non versionato}: titolo, data, ricevuto da persona, ruolo. 
+		\item \emph{Documento versionato}: titolo, data, versione, revision, ricevuto da persona, ruolo. 
+		\item \emph{Documento versionato fuori struttura}: titolo, path del repository, data, versione, revisione, ricevuto da persona, ruolo.
+		\item \emph{Prodotto}: nome, data, versione, revision, ricevuto da persona, ruolo.
+	\end{itemize}
+	La data segnata sulle voci del diario \`e intesa come il giorno in cui il documento viene reso disponibile ai diretti interessati e non il giorno del particolare evento al quale il documento \`e riferito. Se per esempio la redazione di un verbale di una riunione in data A avviene in data B, il nome del documento deve contenere la data A mentre la voce del diario deve contenere la data di distribuzione su repository B.
+	\item Se ci sono pi\`u rilasci in una stessa data di un documento versionato, si prende la release pi\`u aggiornata del giorno.
+	
+	\item Il diario avanza di major quando viene stampato e approvato, per le modifiche e gli aggiornamenti si avanza di minor. 
+	
+\end{itemize}
 
-Il diario avanza di major quando viene stampato e approvato, per le modifiche e gli aggiornamenti si avanza di minor.
