@@ -24,8 +24,104 @@ Il progetto avr\`a tre livelli di testing:
   \item system/integration
   \item acceptance
 \end{itemize}
-I dettagli di ogni livello verranno definiti nella sezione \ref{sec:strategy} e
-negli specifici \emph{level plan}. \\ \\
+I dettagli di ogni livello verranno definiti nella sezione \ref{subsec:strategy}
+e negli specifici \emph{level plan}. \\ \\
 Il quanto temporale stimato per questo progetto \`e molto compatto, quindi
 \emph{ogni} ritardo nella fase di progettazione, sviluppo, installazione e
 verifica possono avere effetti significati sul deploy finale.
+
+\section{Elementi software sottoposti a test}
+
+\begin{itemize}
+  \item some components produced by the detailed desing team
+\end{itemize}
+
+\section{Funzionalit\`a che verranno testate}
+\begin{itemize}
+  \item processo per la generazione di \emph{Gantt chart}
+  \item processo per la generazione di \emph{WBS chart}
+  \item processo per la generazione di \emph{Task Network chart}
+  \item interfaccia grafica per la selezione delle nuove \emph{UserOption} per
+  ogni \emph{Chart}
+  \item aggiunta di ogni \emph{Chart} alla sezione di reportistica
+\end{itemize}
+
+\section{Software Risk Issues}
+Ci sono alcuni punti che ci portano a definire questa sezione:
+\begin{itemize}
+  \item Reverse engineering di codice sorgente esistente, documentato nei sorgenti
+ma non ha documenti ufficiali (apparte le tesi) che descrivino in modo chiaro
+la struttura statica e dinamica di tutto il lavoro esistente.
+  \item Uso di librerie esterne per la generazione delle immagini e dei
+  documenti pdf.
+\end{itemize}
+
+\section{Strategia}
+
+\subsection{Level plans}
+\label{subsec:strategy}
+Il processo di testing per il progetto \textbf{PMango} consiste nei livelli
+seguenti. Abbiamo una relazione di sequenza espressa dall'ordine in cui vengono
+descritti: l'idea principale \`e che l'insieme degli oggetti software parte dal
+livello \emph{unit} e avanza verso i successivi in base ai predicati espressi
+nelle seguenti descrizioni:
+\begin{description} 
+\item[unit] questo livello di testing viene effettuato da tutti gli
+sviluppatori e stilato dal team dei verificatori con un rapprensentante degli
+sviluppatori. 
+\\ \\
+Ogni motivazione riguardo ogni singolo unit test deve essere resa disponibile e
+documentata in modo chiaro nella relativa specifica oppure nel codice se viene
+utilizzato un tool automatico (phpunit??)
+\\ \\
+\`E il livello di partenza in cui ogni oggetto software che viene prodotto
+appartiene. \emph{identificare i livelli di gravita' di ogni test??}
+\\ \\
+Si puo passare al livello successivo solo quando tutti i difetti critici sono
+stati corretti.
+
+\item[system/integration] questo livello di testing viene eseguito dal
+team dei verificatori in presenza di un rappresentante degli sviluppatori
+se necessario. No specific test tools are available for this project. 
+
+% the following is important???
+% A program may have up to two Major defects as long as they do not impede
+ testing of the program (I.E. there is a work around for the error).
+\\ \\
+Si passa al livello successivo solo quando tutti i difetti critici e major sono
+stati corretti
+
+\item[acceptance] questo livello viene eseguito dal cliente in presenza di un
+rapprensentante dei verificatori.
+\\ \\
+Una volta terminato il livello di \emph{acceptance} il prodotto viene
+rilasciato al cliente il quale pu\`o continuare la fase di testing in parallelo
+alla fase di utilizzo.
+
+\end{description}
+
+\subsection{Configuration Management}
+L'insieme di oggetti software vengono testati sulle macchine con questa
+configurazione:
+\begin{itemize}
+  \item tutti i test che rientrano nel \emph{unit level plan} vengono eseguiti
+  in locale sulle macchine di sviluppo.
+  \item quando gli oggetti software raggiungono una certa stabilit\`a e vengono
+  soddisfatti i test di \emph{unit level}, i successivi test appartenenti al
+  \emph{integration level} vengono eseguiti su una macchina dedicata (che
+  sar\`a quella che verr\`a utilizzata nella seconda revisione congiunta)
+\end{itemize}
+
+\subsection{Test Tools}
+usare phpunit??
+
+\subsection{Item pass/fail criteria}
+\subsection{suspension criteria and resumption requirements}
+\subsection{Test deliverables}
+    * Acceptance test plan
+    * System/Integration test plan
+    * Unit test plans/turnover documentation
+    * Screen prototypes
+    * Report mock-ups
+    * Defect/Incident reports and summaries
+    * Test logs and turnover reports
