@@ -1,0 +1,81 @@
+\documentclass[a4paper, 12pt]{report}
+
+\input{../templates/[Kiwi-MGC]template-usePackages.tex}
+
+\begin{titlepage}
+\title{Disegno del sistema}
+\author{Release 0.3}
+\date{\today \\Firenze \\\begin{figure}[h] \centering \includegraphics[width=0.2\textwidth]{../images/logokiwi.png} \end{figure} }
+\end{titlepage}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\maketitle
+
+\section*{Approvazione, redazione, lista distribuzione}
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{approvato da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Marco Tinacci & \today &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{redatto da} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Francesco Calabri & \today &  \\
+    \hline
+	Niccol\`o Rogai & \today &  \\
+    \hline
+	Marco Tinacci & \today &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{distribuito a} & \textbf{il giorno} & \textbf{firma} \\
+	\hline    
+	Francesco Calabri & \today &  \\
+    \hline
+	Manuele Paulantonio & \today &  \\
+    \hline
+	Daniele Poggi & \today &  \\
+    \hline
+	Massimo Nocentini & \today &  \\
+    \hline
+	Niccol\`o Rogai & \today &  \\
+    \hline
+	Marco Tinacci & \today &  \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduzione}
+
+\chapter{Diagramma delle classi}
+\includegraphics[width=\textwidth]{diagramma_classe/chart.png}
+\includegraphics[width=\textwidth]{diagramma_classe/taskdatatree.png}
+\includegraphics[width=\textwidth]{diagramma_classe/useroptionschoice.png}
+
+\chapter{Diagrammi di sequenza}
+
+\end{document}
