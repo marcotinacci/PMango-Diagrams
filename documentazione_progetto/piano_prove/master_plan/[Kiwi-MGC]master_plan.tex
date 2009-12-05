@@ -112,16 +112,43 @@ configurazione:
   sar\`a quella che verr\`a utilizzata nella seconda revisione congiunta)
 \end{itemize}
 
-\subsection{Test Tools}
-usare phpunit??
+\subsection{Test failure's metrics}
+Possiamo associare ad ogni fallimento di un test un oggetto che ne esprime la
+gravit\`a:
+\begin{description}
+  \item[minor] il fallimento del test non \`e da considerarsi un evento grave.
+  Gli oggetti software che hanno prodotto questa failure possono essere cmq
+  inseriti nella release di \textbf{PMango 3}, non impediscono l'avanzare dello
+  sviluppo.
+  \item[critical] il fallimento del test \`e da considerarsi un evento grave.
+  Gli oggetti software che hanno prodotto questa failure non possono essere
+  inseriti nella release di \textbf{PMango 3}, necessitano di ricontrollare il
+  codice relativo a tali oggetti; non impediscono l'avanzare dello sviluppo.
+  \item[blocking] il fallimento del test \`e da considerarsi un evento grave.
+  Gli oggetti software che hanno prodotto questa failure non possono essere
+  inseriti nella release di \textbf{PMango 3}, necessitano di ricontrollare il
+  codice relativo a tali oggetti e, se necessario, ricontrollare il relativo
+  documento di progettazione; impediscono l'avanzare dello sviluppo.
+\end{description}
 
-\subsection{Item pass/fail criteria}
-\subsection{suspension criteria and resumption requirements}
-\subsection{Test deliverables}
-    * Acceptance test plan
-    * System/Integration test plan
-    * Unit test plans/turnover documentation
-    * Screen prototypes
-    * Report mock-ups
-    * Defect/Incident reports and summaries
-    * Test logs and turnover reports
+\section{Item pass/fail criteria}
+Il processo di testing verr\`a completato nella data in cui avverr\`a il
+collaudo con il committente nel caso i requisiti siano stati \emph{tutti}
+implementati. Da questo data in poi la nuova versione di PMango viene
+considerata \emph{live}. \\ \\
+Nel caso in cui il nostro team non riuscisse a portare a termini
+gli impegni presi entro la data del collaudo, il processo di testing
+proseguir\`a fino alla data in cui si considera terminato il tempo a 
+disposizione per eseguire l'esame.
+
+\section{Enviromental needs}
+I seguenti elementi sono richiesti per supportare l'intero processo di testing:
+\begin{itemize}
+  \item Sia \emph{develop machine} che \emph{acceptance machine} devono avere
+  installato una istanza di un server LAMP, con tutti i necessari permessi per la corretto
+  funzionamento, relativamente al sistema operativo presente
+  \item Sia \emph{develop machine} che \emph{acceptance machine} devono offrire
+  tutte quelle \emph{third party resources} necessarie per l'utilizzo della
+  nuova versione di PMango (fonts microsoft, \ldots) compresi tutte quelle
+  necessarie per la versione di PMango attuale.
+\end{itemize}
