@@ -58,38 +58,85 @@ la struttura statica e dinamica di tutto il lavoro esistente.
 
 \section{Strategia}
 
-\subsection{Level plans}
+\subsection{Testing machines}
+Identifichiamo due classi di macchine sulle quali viene condotto il processo di
+testing:
+\begin{itemize}
+  \item \emph{develop machine} macchine dove avviene sia lo sviluppo del codice
+  che parte del testing.
+  \item \emph{acceptance machine} macchine (molto probabilmente unica, a meno
+  di guasti) dove avviene solo il processo di testing.
+\end{itemize}
+
+\subsection{Strumenti}
+\label{subsec:testingTools}
+Durante il processo di testing usufruiamo dei seguenti strumenti:
+\begin{itemize}
+  \item controllo visivo umano per quanto riguarda il confronto dell'output
+  con l'output atteso (descritto nei documenti \emph{Test case specification})
+  per quanto riguarda immagini
+  \item utilizzo di verifica automatica di batterie di test usando l'insieme di
+  oggetti contenuti nella distribuzione di \emph{phpUnit} oppure attraverso
+  classi di test non appartenenti al precedente framework ma che hanno la
+  stessa idea di verifica (controllo automatico tra output e risultato
+  previsto).
+\end{itemize}
+
+\subsection{Test failure's metrics}
+Possiamo associare ad ogni fallimento di un test, un oggetto che ne esprime la
+gravit\`a:
+\begin{description}
+  \item[minor] il fallimento del test non \`e da considerarsi un evento grave.\\
+  Gli oggetti software che hanno prodotto questa failure possono essere comunque
+  inseriti nella release di \textbf{PMango 3}, non impediscono l'avanzare dello
+  sviluppo. Possiamo identificare di questa failure come un \emph{defect}.
+  \item[critical] il fallimento del test \`e da considerarsi un evento grave.\\
+  Gli oggetti software che hanno prodotto questa failure non possono essere
+  inseriti nella release di \textbf{PMango 3}, necessitano di ricontrollare il
+  codice relativo a tali oggetti; non impediscono l'avanzare dello sviluppo.
+  \item[blocking] il fallimento del test \`e da considerarsi un evento grave.\\
+  Gli oggetti software che hanno prodotto questa failure non possono essere
+  inseriti nella release di \textbf{PMango 3}, necessitano di ricontrollare il
+  codice relativo a tali oggetti e, se necessario, ricontrollare il relativo
+  documento di progettazione; impediscono l'avanzare dello sviluppo.
+\end{description}
+Queste misure sono valide per tutte le failure di test appartenenti a ogni
+level plan descritto in \ref{sec:levelPlans}.
+
+
+\section{Level plans}
+\label{sec:levelPlans}
+\subsection{Definitions}
 \label{subsec:strategy}
 Il processo di testing per il progetto \textbf{PMango} consiste nei livelli
-seguenti. Abbiamo una relazione di sequenza espressa dall'ordine in cui vengono
-descritti: l'idea principale \`e che l'insieme degli oggetti software parte dal
-livello \emph{unit} e avanza verso i successivi in base ai predicati espressi
-nelle seguenti descrizioni:
+seguenti.
 \begin{description} 
-\item[unit] questo livello di testing viene effettuato da tutti gli
+\item[unit] questo livello viene effettuato da tutti gli
 sviluppatori e stilato dal team dei verificatori con un rapprensentante degli
 sviluppatori. 
 \\ \\
 Ogni motivazione riguardo ogni singolo unit test deve essere resa disponibile e
-documentata in modo chiaro nella relativa specifica oppure nel codice se viene
-utilizzato un tool automatico (phpunit??)
-\\ \\
-\`E il livello di partenza in cui ogni oggetto software che viene prodotto
-appartiene. \emph{identificare i livelli di gravita' di ogni test??}
-\\ \\
-Si puo passare al livello successivo solo quando tutti i difetti critici sono
-stati corretti.
+documentata in modo chiaro o in un documento apposito\footnote{inserire un
+riferimento al relativo documento di test case specification} oppure nel codice
+nel caso che 
+\begin{itemize}
+	\item viene utilizzato un strumento indicato nelle sezione
+	\ref{subsec:testingTools}
+	\item la motivazione ha una dimensione ragionevolmente corta che \`e
+	possibile inserirla come commento nel codice 
+\end{itemize}
 
-\item[system/integration] questo livello di testing viene eseguito dal
+Questo livello viene esercitato su macchine di tipo \emph{develop machine}.
+
+\item[system/integration] questo livello viene eseguito dal
 team dei verificatori in presenza di un rappresentante degli sviluppatori
-se necessario. No specific test tools are available for this project. 
-
-% the following is important???
-% A program may have up to two Major defects as long as they do not impede
- testing of the program (I.E. there is a work around for the error).
+se necessario. 
 \\ \\
-Si passa al livello successivo solo quando tutti i difetti critici e major sono
-stati corretti
+Ogni motivazione e descrizione di questi test deve essere esposta nei documenti
+\emph{Test case specification}
+\\ \\
+Questo livello viene esercitato su macchine di tipo \emph{acceptance machine} e
+\emph{develop machine}.
 
 \item[acceptance] questo livello viene eseguito dal cliente in presenza di un
 rapprensentante dei verificatori.
@@ -97,39 +144,42 @@ rapprensentante dei verificatori.
 Una volta terminato il livello di \emph{acceptance} il prodotto viene
 rilasciato al cliente il quale pu\`o continuare la fase di testing in parallelo
 alla fase di utilizzo.
+\\ \\
+Questo livello viene esercitato su macchine di tipo \emph{develop machine}.
 
 \end{description}
 
-\subsection{Configuration Management}
-L'insieme di oggetti software vengono testati sulle macchine con questa
-configurazione:
-\begin{itemize}
-  \item tutti i test che rientrano nel \emph{unit level plan} vengono eseguiti
-  in locale sulle macchine di sviluppo.
-  \item quando gli oggetti software raggiungono una certa stabilit\`a e vengono
-  soddisfatti i test di \emph{unit level}, i successivi test appartenenti al
-  \emph{integration level} vengono eseguiti su una macchina dedicata (che
-  sar\`a quella che verr\`a utilizzata nella seconda revisione congiunta)
-\end{itemize}
+\subsection{Precedence Relation}
+Possiamo costruire la relazione di precedenza $\sqsubset$ fra level plans che
+permette ad un oggetto software di avanzare nel processo di testing, in modo
+da garantire il suo corretto funzionamento durante la fase di
+revisione congiunta oppure nel collaudo. 
 
-\subsection{Test failure's metrics}
-Possiamo associare ad ogni fallimento di un test un oggetto che ne esprime la
-gravit\`a:
+Definiamo $\sqsubset$ in questo modo: 
 \begin{description}
-  \item[minor] il fallimento del test non \`e da considerarsi un evento grave.
-  Gli oggetti software che hanno prodotto questa failure possono essere cmq
-  inseriti nella release di \textbf{PMango 3}, non impediscono l'avanzare dello
-  sviluppo.
-  \item[critical] il fallimento del test \`e da considerarsi un evento grave.
-  Gli oggetti software che hanno prodotto questa failure non possono essere
-  inseriti nella release di \textbf{PMango 3}, necessitano di ricontrollare il
-  codice relativo a tali oggetti; non impediscono l'avanzare dello sviluppo.
-  \item[blocking] il fallimento del test \`e da considerarsi un evento grave.
-  Gli oggetti software che hanno prodotto questa failure non possono essere
-  inseriti nella release di \textbf{PMango 3}, necessitano di ricontrollare il
-  codice relativo a tali oggetti e, se necessario, ricontrollare il relativo
-  documento di progettazione; impediscono l'avanzare dello sviluppo.
+  \item[unit $\sqsubset$ system/integration] ogni oggetto software entra nel 
+processo di testing dal level plan \emph{unit}. 
+
+Quando soddisfa tutti i suoi \emph{unit} test oppure, per ogni fallimento, la
+metrica misura \emph{minor}, allora pu\`o essere disponibile per il level plan 
+\emph{system/integration} se \`e richiesto da qualche \emph{system/integration}
+test.
+  \item[system/integration $\sqsubset$ acceptance] quando un oggetto (o gruppo
+  di oggetti) superano tutti i test oppure, per ogni fallimento, la metrica 
+  misura \emph{minor}, allora l'oggetto (o gruppo di oggetti) pu\`o avanzare
+  nel level plan \emph{acceptance}
 \end{description}
+La relazione $\sqsubset$ \`e riflessiva, in quanto un test permane in un level
+plan finche non soddisfa i requisiti per passare nel successivo; non \`e ne
+simmetrica ne transitiva, in quanto vogliamo garantire al committente la
+sequenzialit\`a del processo di testing.
+
+Osservazione: quando un test passa da un livello al successivo deve essere
+continuo rispetto alla batteria dei test specificata nel livello che lascia.
+Ovvero: se avanza di livello deve continuare a soddisfare le condizioni che gli
+hanno permesso di avanzare fino al livello corrente.
+
+
 
 \section{Item pass/fail criteria}
 Il processo di testing verr\`a completato nella data in cui avverr\`a il
@@ -145,8 +195,8 @@ disposizione per eseguire l'esame.
 I seguenti elementi sono richiesti per supportare l'intero processo di testing:
 \begin{itemize}
   \item Sia \emph{develop machine} che \emph{acceptance machine} devono avere
-  installato una istanza di un server LAMP, con tutti i necessari permessi per la corretto
-  funzionamento, relativamente al sistema operativo presente
+  installato una istanza di un server (L/W/M)AMP, con tutti i necessari permessi
+  per la corretto funzionamento, relativamente al sistema operativo presente
   \item Sia \emph{develop machine} che \emph{acceptance machine} devono offrire
   tutte quelle \emph{third party resources} necessarie per l'utilizzo della
   nuova versione di PMango (fonts microsoft, \ldots) compresi tutte quelle
