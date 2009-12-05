@@ -83,8 +83,11 @@ Durante il processo di testing usufruiamo dei seguenti strumenti:
 \end{itemize}
 
 \subsection{Test failure's metrics}
-Possiamo associare ad ogni fallimento di un test, un oggetto che ne esprime la
-gravit\`a:
+Modelliamo il concetto di \emph{failure} aggiungendo delle informazioni, in
+modo da specializzarlo per il nostro processo di testing. Ogni
+specializzazione ha il significato di esprimere la gravit\`a (importanza) del
+fallimento. Quindi, l'esito di un test pu\`o essere \emph{success} o
+\emph{failure}, nel secondo caso aggiungiamo queste specializzazioni:
 \begin{description}
   \item[minor] il fallimento del test non \`e da considerarsi un evento grave.\\
   Gli oggetti software che hanno prodotto questa failure possono essere comunque
