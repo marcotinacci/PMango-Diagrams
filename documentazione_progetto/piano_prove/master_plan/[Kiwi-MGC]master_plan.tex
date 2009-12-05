@@ -1,17 +1,8 @@
-\section{References}
-Questi documenti sono riferiti all'interno del \emph{Master Plan}.
-\begin{enumerate}
-  \item Domain model \label{reference:domain_model}
-  \item Use cases \label{reference:use_cases}
-  \item Requisiti del prodotto  \label{reference:requirements}
-\end{enumerate}
-
-\section{Introduction}
+\section{Scope}
 
 Questo \`e il \emph{Master Plan} per il progetto \textbf{PMango}. Questo piano
-considera solo gli elementi software relativi alle aggiunte/modifiche descritti
-nei documenti \ref{reference:domain_model} e \ref{reference:requirements}.
-\\ \\
+considera solo gli elementi software relativi alle aggiunte/modifiche descritte
+nel documento di analisi. \\ \\
 L'obiettivo primario di questo piano di test \`e quello di assicurare che la
 nuova versione di \textbf{PMango} offrir\`a lo stesso livello di informazioni e
 dettagli reso disponibile della versione corrente e aggiunger\`a tutte quelle
@@ -184,7 +175,28 @@ hanno permesso di avanzare fino al livello corrente.
 
 
 
-\section{Item pass/fail criteria}
+\section{Pass/fail criteria}
+Il risultato dell'intero piano delle prove \`e dato dalla seguente relazione:
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l |}
+    \hline
+    \textbf{risultato} & \textbf{criteri} \\
+	\hline    
+	success & numero di \emph{minor} failures $\leq 10$   \\
+    \hline
+    \emph{minor} failure & numero di \emph{minor} failures $> 10$ \\
+    \hline
+    \emph{critical} failure & almeno una \emph{critical} failure \\
+    \hline
+    \emph{blocking} failure & almeno una \emph{blocking} failure \\
+    \hline
+    \end{tabular}
+  \end{center}
+	\caption{La colonna \emph{criteri} si riferisce all'insieme dei \emph{design
+	specification} definite in \ref{part:DesignSpecification}}
+\end{table}
+
 Il processo di testing verr\`a completato nella data in cui avverr\`a il
 collaudo con il committente nel caso i requisiti siano stati \emph{tutti}
 implementati. Da questo data in poi la nuova versione di PMango viene
