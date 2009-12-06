@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Disegno del sistema}
-\author{Release 0.3}
+\author{Release 0.4}
 \date{\today \\Firenze \\\begin{figure}[h] \centering \includegraphics[width=0.2\textwidth]{../images/logokiwi.png} \end{figure} }
 \end{titlepage}
 
@@ -70,12 +70,62 @@
 \newpage
 
 \section{Introduzione}
+In questo documento viene illustrata l'architettura del modulo tramite le viste dei \emph{class diagrams} e i \emph{sequence diagrams}, come evoluzione naturale, rispettivamente di \emph{domain model} e \emph{use cases} appartenenti al linguaggio \emph{UML 2.0}. \\
+I diagrammi delle classi servono quindi a individuare le strutture dei dati e i metodi assiociati mentre quelli di sequenza evidenziano le comunicazioni che intercorrono tra le entit\`a. \\
+Per semplificare la rappresentazione del diagramma delle classi abbiamo deciso di scrivere gli attributi privati con la notazione di quelli pubblici ``+ attribute'' dando per assunto che siano provvisti dei metodi pubblici di ``getAttribute()'' e ``setAttribute()''. \\
 
-\chapter{Diagramma delle classi}
+\chapter{Class Diagrams}
+\section{Commons}
+\includegraphics[width=\textwidth]{diagramma_classe/commons.png}
+La classe common racchiude tutte le funzioni principali del modulo. Utilizza le classi
+\begin{itemize}
+	\item ChartGenerator
+	\item UserOptionsChoice
+	\item Reports
+	\item FPDF (esterna al modulo e gi\`a utilizzata in PMango)
+\end{itemize}
+A seconda di quale tab viene caricato, pu\`o essere usata l'estensione di Commons corrispondente: 
+\begin{itemize}
+	\item GanttTab
+	\item WBSTab
+	\item TaskNetworkTab
+\end{itemize}
+che implementano la generazione del diagramma, la creazione della maschera delle user options e l'acquisizione delle scelte dei parametri.
+\section{Chart Generator}
 \includegraphics[width=\textwidth]{diagramma_classe/chart.png}
+\section{Task Data}
 \includegraphics[width=\textwidth]{diagramma_classe/taskdatatree.png}
+\section{User Options}
 \includegraphics[width=\textwidth]{diagramma_classe/useroptionschoice.png}
-
-\chapter{Diagrammi di sequenza}
+\begin{itemize}
+	\item UserOptionsChoice: la classe che racchiude le scelte fatte dall'utente in un array associativo controllato dai metodi get e set.
+	\item OptionName: un'enumerate che vincola l'accesso all'array associativo ai soli campi specificati. Questa contiene le seguenti voci (associate ai possibili valori che possono assumere):
+	\begin{itemize}
+		\item TaskNameOption: boolean		
+		\item PlannedTimeFrameOption: boolean
+		\item ActualTimeFrameOption: boolean
+		\item PlannedDataOption: boolean
+		\item ActualDataOption: boolean
+		\item CompletitionBarOption: boolean
+		\item AlertMarkUserOption: boolean
+		\item WBSExplosionLevelUserOption: numeric
+		% da completare
+		\item WBSUserSpecificationUserLevel: ??
+		\item ReplicateArrowUserOption: ??
+		\item FindCriticalPathUserOption: boolean
+		\item CriticalPathTableUserOption: boolean
+		\item ResourcesDetailsOption: boolean
+		\item CompleteDiagramUserOptions: ??
+		\item WBSTreeSpecification: LevelSpecification, UserCustomSpecification
+		\item TimeGrain: HourlyGrain, DailyGrain, WeaklyGrain, MonthlyGrain, YearlyGrain
+		\item ImageDimensionUserOption: CustomDim, FitInWindowDim, OptionalDim, DefaultDim 
+		\item TimeRangeUserOption: CustomRange, WholeProjectRange, FromStartRange, ToEndRange
+	\end{itemize}
+	Il significato di questi parametri sono specificati nei casi d'uso.
+	% se inseriti valori errati ricondurre a quelli di default
+\end{itemize}
+\section{Reports}
+% diagramma
+\chapter{Sequence Diagrams}
 
 \end{document}
