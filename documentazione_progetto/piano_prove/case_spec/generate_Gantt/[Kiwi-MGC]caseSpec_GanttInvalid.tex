@@ -137,15 +137,27 @@ generazione, fissiamo queste \emph{UserOption}:
 See figure \ref{fig:generateGanttInvalidOutputMockup}.
 
 \section{Pass/fail criteria}
+See the figure \ref{table:passfailCriteriaGanttGeneration}.
 \begin{table}[h!]
   \begin{center}
     \begin{tabular}{| l | p{100mm} |}
     \hline
     \textbf{risultato} & \textbf{criteri} \\
 	\hline    
-	success & l'output dell'implementazione \`e sovrapponibile al modello a meno 
-di una tolleranza pari a circa \textbf{1mm}. I punti di stacco dei segmenti
+	success & 
+    \begin{itemize}
+  \item l'output dell'implementazione \`e sovrapponibile al modello a meno 
+di una tolleranza pari a circa \textbf{1mm}
+\item I punti di stacco dei segmenti
 delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
+\item I font possono essere di una famiglia e dimensione diversa in base anche alle
+UserOption scelte dall'utente.
+\item Le linee verticali rappresentanti un elemento appartenente alla
+\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in modo diverso.
+\item Tutte quelle linee che sono errori di imprecisione nella stesura del mockup non
+sono da considerarsi valide per il confronto (si lascia al buon senso capire
+quando un piccola sbavatura non \`e importante\ldots)      
+\end{itemize}
 \\
     \hline
     \emph{minor} failure & costruzione delle testata contenente le informazioni
@@ -167,5 +179,7 @@ delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
     \hline
     \end{tabular}
   \end{center}
-	\caption{La colonna \emph{criteri} si riferisce a\ldots}
+	\caption{La colonna \emph{criteri} si riferisce alla rappresentazione grafica
+	prodotta dall'implementazione}
+	\label{table:passfailCriteriaGanttGeneration}
 \end{table}
