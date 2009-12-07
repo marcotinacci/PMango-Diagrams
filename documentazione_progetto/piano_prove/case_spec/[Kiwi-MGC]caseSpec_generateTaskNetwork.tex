@@ -1,64 +1,50 @@
-\chapter{Generate WBS Case}
-\label{chap:generateWBS}
+\chapter{Generate Task Network Case}
+\label{chap:generateTaskNetwork}
 
 \section{Task representation}
-\label{sec:WBSTaskRepresentation}
-Testare la rappresentazione grafica di un task.
-\begin{description}
-\item[input] 
-\quad
-\begin{itemize}
-  \item task atomico, non suddiviso in sottotask. Per questa configurazione
-  almeno 3 esempi
-  \item task composto, visualizzando i sotto task del livello successivo. Per
-  questa configurazione almeno 2 esempi
-  \item task composto, collassando i sotto task.  Per questa configurazione
-  almeno 2 esempi
-  \item task con il contesto \emph{actual} coerente con il contesto
-  \emph{planned}, almeno 2 esempi
-  \item task con il contesto \emph{actual} non coerente con il contesto
-  \emph{planned}, sia in modo lieve (``good news'') sia in modo grave (``bad
-  news''), almeno 2 esempi per entrambe i tipi di incoerenza
-\end{itemize}
-\item[environment] le user option
-\emph{ActualTimeFrameOption, CompletitionBarOption, CompletitionBarOption, 
-ActualDataOption, AlertMarkUserOption, ResourcesDetailsOption, TaskNameOption}
-determinano i fields che verranno mostrati nella rappresentazione grafica del task.
-\item[output] come descritto nella sezione 2. del documento di specifica.
-\end{description}
+See \ref{sec:WBSTaskRepresentation}.
 
 \section{Dimension of Task representation}
-\label{sec:WBSDimensionRepresentation}
-Testare la dimensione della rappresentazione grafica di un task.
-\begin{description}
-\item[input] 
-\quad
-\begin{itemize}
-  \item task aventi un nome la cui larghezza entra nella dimensione specificata
-  nel documento di specifica, almeno 3 esempi
-  \item task aventi un nome la cui larghezza supera la dimensione specificata
-  nel documento di specifica, almeno 3 esempi
-  \item task aventi un numero di resources diverso per qualche coppia di task,
-  almeno 5 esempi
-\end{itemize}
-\item[environment] valorizzazione della user option
-\emph{ResourcesDetailsOption, TaskNameOption}, considerando la generazione sia
-mostrando i nomi dei task, sia non mostrandoli.
-\item[output] come descritto nella sezione 2
-\end{description}
+See \ref{sec:WBSDimensionRepresentation}
 
-\section{Composition relations representation}
-Testare la rappresentazione grafica delle dipendenze di composizione espresse
+\section{Dependency relations representation}
+Testare la rappresentazione grafica delle dipendenze di dipendenza espresse
 nel \emph{project plan}.
 \begin{description}
 \item[input]  \quad
 \begin{itemize}
-  \item almeno 10 task legati da relazioni di composizione
+  \item almeno 10 task divisi in 
+  \begin{itemize}
+  \item atomici
+  \item collapsed, non visualizzando i sotto task
+  \item not collapsed, visualizzando i sotto task 
+  \end{itemize} legati da relazioni di dipendenza ``finish to start''.
+  \item almeno 5 tasks (\emph{A, B, C, D, E}) che appartengon alla
+relazione ``finish to start'' $$\rightarrow = \lbrace (A, C), (B, C), \ldots
+\rbrace$$   
+  \item almeno 5 tasks (\emph{A, B, C, D, E}) che appartengon alla
+relazione ``finish to start'' $$\rightarrow = \lbrace (A, B), (A, C), \ldots
+\rbrace$$
 \end{itemize}
-\item[environment] valorizzazione della user option
-\emph{WBSTreeSpecification} con una delle sue due specializzazioni per
-esprimere il livello di dettaglio, pi\`u altre opzioni per avere la
-rappresentazione delle informazioni volute.
+\item[environment] si valorizzano queste user option
+\emph{ReplicateArrowUserOption, \\CompleteDiagraUserOption,
+ShowTimeGapUserOption} e i precedenti input vengono ripetuti per ogni
+combinazione dei possibili valori possibili per l'ambiente (8 casi in totale)
+\item[output] come descritto nella sezione 2. e nella figura 4. del
+documento di specifica.
+\end{description}
+
+\section{Critical path representation}
+Testare la rappresentazione grafica dei possibili critical path
+nel \emph{project plan}.
+\begin{description}
+\item[input]  \quad
+\begin{itemize}
+  \item almeno 10 task che producono un solo critical path
+  \item almeno 10 task che producono pi\`u di un critical path (provare con 3??)
+\end{itemize}
+\item[environment] si valorizzano queste user option
+\emph{ShowCriticalPath}
 \item[output] come descritto nella sezione 2. e nella figura 4. del
 documento di specifica.
 \end{description}
