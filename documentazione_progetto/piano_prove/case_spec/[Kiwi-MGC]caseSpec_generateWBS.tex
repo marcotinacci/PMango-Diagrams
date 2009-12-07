@@ -1,0 +1,110 @@
+\chapter{Generate WBS Case}
+\label{chap:generateWBS}
+
+\section{Task representation}
+Testare la rappresentazione grafica di un task.
+\begin{description}
+\item[input] 
+\quad
+\begin{itemize}
+  \item task atomico, non suddiviso in sottotask. Per questa configurazione
+  almeno 3 esempi
+  \item task composto, visualizzando i sotto task del livello successivo. Per
+  questa configurazione almeno 2 esempi
+  \item task composto, collassando i sotto task.  Per questa configurazione
+  almeno 2 esempi
+  \item task con il contesto \emph{actual} coerente con il contesto
+  \emph{planned}, almeno 2 esempi
+  \item task con il contesto \emph{actual} non coerente con il contesto
+  \emph{planned}, sia in modo lieve (``good news'') sia in modo grave (``bad
+  news''), almeno 2 esempi per entrambe i tipi di incoerenza
+\end{itemize}
+\item[environment] le user option
+\emph{ActualTimeFrameOption, CompletitionBarOption, CompletitionBarOption, 
+ActualDataOption, AlertMarkUserOption, ResourcesDetailsOption, TaskNameOption}
+determinano i fields che verranno mostrati nella rappresentazione grafica del task.
+\item[output] come descritto nella sezione 2. del documento di specifica.
+\end{description}
+
+\section{Dimension of Task representation}
+Testare la dimensione della rappresentazione grafica di un task.
+\begin{description}
+\item[input] 
+\quad
+\begin{itemize}
+  \item task aventi un nome la cui larghezza entra nella dimensione specificata
+  nel documento di specifica, almeno 3 esempi
+  \item task aventi un nome la cui larghezza supera la dimensione specificata
+  nel documento di specifica, almeno 3 esempi
+  \item task aventi un numero di resources diverso per qualche coppia di task,
+  almeno 5 esempi
+\end{itemize}
+\item[environment] valorizzazione della user option
+\emph{ResourcesDetailsOption, TaskNameOption}, considerando la generazione sia
+mostrando i nomi dei task, sia non mostrandoli.
+\item[output] come descritto nella sezione 2
+\end{description}
+
+\section{Composition relations representation}
+Testare la rappresentazione grafica delle dipendenze di composizione espresse
+nel \emph{project plan}.
+\begin{description}
+\item[input]  \quad
+\begin{itemize}
+  \item almeno 10 task legati da relazioni di composizione
+\end{itemize}
+\item[environment] valorizzazione della user option
+\emph{WBSTreeSpecification} con una delle sue due specializzazioni per
+esprimere il livello di dettaglio, pi\`u altre opzioni per avere la
+rappresentazione delle informazioni volute.
+\item[output] come descritto nella sezione 2. e nella figura 4. del
+documento di specifica.
+\end{description}
+
+\section*{Pass/fail criteria}
+See the figure \ref{table:passfailCriteriaGanttGeneration}.
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | p{100mm} |}
+    \hline
+    \textbf{risultato} & \textbf{criteri} \\
+	\hline    
+	success & 
+    \begin{itemize}
+  \item l'output dell'implementazione \`e sovrapponibile al modello a meno 
+di una tolleranza pari a circa \textbf{1mm}
+\item I punti di stacco dei segmenti
+delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
+\item I font possono essere di una famiglia e dimensione diversa in base anche alle
+UserOption scelte dall'utente.
+\item Le linee verticali rappresentanti un elemento appartenente alla
+\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in modo diverso.
+\item Tutte quelle linee che sono errori di imprecisione nella stesura del mockup non
+sono da considerarsi valide per il confronto (si lascia al buon senso capire
+quando un piccola sbavatura non \`e importante\ldots)      
+\end{itemize}
+\\
+    \hline
+    \emph{minor} failure & costruzione delle testata contenente le informazioni
+    sulla grana temporale non coincide a meno di una telleranza pari a circa 
+    \textbf{1mm} con quella descritta nel mockup
+    \\
+    \hline
+    \emph{critical} failure & 
+    \begin{itemize}
+    \item i blocchi rappresentanti le informazioni \emph{planned, actual} dei
+    tasks sono staccati fra di loro. 
+    \item non vengono rispettate le misure relative alla grana temporale
+    scelta espresse nella sezione \textbf{2.2.1} del documento delle metriche 
+    \end{itemize}\\
+    \hline
+    \emph{blocking} failure & La costruzione delle componenti del diagramma
+    non rispetta i vincoli definiti nella sezione \textbf{1} del documento di 
+   specifica rilasciato dal committente. \\
+    \hline
+    \end{tabular}
+  \end{center}
+	\caption{La colonna \emph{criteri} si riferisce alla rappresentazione grafica
+	prodotta dall'implementazione}
+	\label{table:passfailCriteriaGanttGeneration}
+\end{table}
