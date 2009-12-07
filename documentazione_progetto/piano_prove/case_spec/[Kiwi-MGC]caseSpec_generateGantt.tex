@@ -1,0 +1,137 @@
+\chapter{Generate Gantt Case}
+\label{chap:generateGantt}
+
+% the following lines must move to the structure of the document
+Ogni successiva sezione rappresenta la tripla di testing \emph{(Input,
+Environment, Output)}. Ogni tripla ha l'obiettivo di identificare un oggetto del
+diagramma che si vuole testare. Quando la componente \emph{Environment} non
+viene specificata significa che la funzionalit\`a non richiede condizioni
+particolari per il suo avvenimento (ad esempio le dipendenze vengono mostrate
+solo se l'utente seleziona \emph{ShowDependenciesUserOption}).
+
+\section{Basic task representation}
+Testare la rappresentazione grafica di un task atomico, non composto da sotto
+task.
+\begin{description}
+\item[input] almeno 4 esempi
+\item[environment] le \emph{UserOption} \emph{FromStartRange, ToEndRange}
+devono definire un intervallo di tempo nel quale l'input \`e almeno compreso.
+\item[output] come descritto nella sezione 1. del
+documento di specifica.
+\end{description}
+
+\section{Composed task representation}
+Testare la rappresentazione grafica di un task composto.
+\begin{description}
+\item[input] 
+\quad
+\begin{itemize}
+  \item si vogliono visualizzare i sottotask di livelli successivo al task
+  composto. Per questa configurazione almeno 2 esempi
+  \item si vuole una rappresentazione collassata dei sottotask del task
+  composto. Per questa configurazione almeno 2 esempi
+\end{itemize}
+\item[environment] valorizzazione della user option
+\emph{UserCustomSpecification = checked}, per permettere all'utente di
+collassare alcuni task
+\item[output] come descritto nella sezione 1
+\end{description}
+
+\section{Actual time representation}
+Testare la rappresentazione grafica delle informazione del contesto
+\emph{actual} di un task.
+\begin{description}
+\item[input]  \quad
+\begin{itemize}
+  \item un task terminato in base alle informazioni \emph{actual} prima della
+  linea verticale che indica \emph{today}. Almeno 4 esempi
+  \item un task non terminato in base alle informazioni \emph{actual} prima della
+  linea verticale che indica \emph{today}. Almeno 4 esempi
+\end{itemize}
+\item[environment] valorizzazione della user option
+\emph{UserCustomSpecification = checked}, per permettere all'utente di
+collassare alcuni task
+\item[output] come descritto nella sezione 1. e nella figura 2. del
+documento di specifica.
+\end{description}
+
+\section{Task identifier and name representation}
+Testare la rappresentazione grafica dell'identificativo e del nome di un task
+sulla colonna di sinistra.
+\begin{description}
+\item[input]  \quad
+\begin{itemize}
+  \item il nome non supera i limiti espressi nel documento di specifica. Almeno
+  2 esempi
+  \item il nome supera i limiti espressi nel documento di specifica. Almeno 4 
+  esempi
+\end{itemize}
+\item[environment] valorizzazione della user option
+\emph{ShowTaskName}, per permettere all'utente mostrare oppure no il nome del
+task
+\item[output] come descritto nella sezione 1. del
+documento di specifica.
+\end{description}
+
+\section{Task effort/resources representation}
+Testare la rappresentazione grafica dell'effort e delle resources sulla destra
+della \emph{Taskbox}.
+\begin{description}
+\item[input]  \quad
+\begin{itemize}
+  \item Supponiamo task composti. Almeno 3 esempi
+  \item Supponiamo task base. Almeno 4 esempi
+\end{itemize}
+\item[environment] valorizzazione della user option \emph{ShowEffort}
+\item[output] come descritto nella sezione 1. del
+documento di specifica.
+\end{description}
+
+
+\section*{Pass/fail criteria}
+See the figure \ref{table:passfailCriteriaGanttGeneration}.
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | p{100mm} |}
+    \hline
+    \textbf{risultato} & \textbf{criteri} \\
+	\hline    
+	success & 
+    \begin{itemize}
+  \item l'output dell'implementazione \`e sovrapponibile al modello a meno 
+di una tolleranza pari a circa \textbf{1mm}
+\item I punti di stacco dei segmenti
+delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
+\item I font possono essere di una famiglia e dimensione diversa in base anche alle
+UserOption scelte dall'utente.
+\item Le linee verticali rappresentanti un elemento appartenente alla
+\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in modo diverso.
+\item Tutte quelle linee che sono errori di imprecisione nella stesura del mockup non
+sono da considerarsi valide per il confronto (si lascia al buon senso capire
+quando un piccola sbavatura non \`e importante\ldots)      
+\end{itemize}
+\\
+    \hline
+    \emph{minor} failure & costruzione delle testata contenente le informazioni
+    sulla grana temporale non coincide a meno di una telleranza pari a circa 
+    \textbf{1mm} con quella descritta nel mockup
+    \\
+    \hline
+    \emph{critical} failure & 
+    \begin{itemize}
+    \item i blocchi rappresentanti le informazioni \emph{planned, actual} dei
+    tasks sono staccati fra di loro. 
+    \item non vengono rispettate le misure relative alla grana temporale
+    scelta espresse nella sezione \textbf{2.2.1} del documento delle metriche 
+    \end{itemize}\\
+    \hline
+    \emph{blocking} failure & La costruzione delle componenti del diagramma
+    non rispetta i vincoli definiti nella sezione \textbf{1} del documento di 
+   specifica rilasciato dal committente. \\
+    \hline
+    \end{tabular}
+  \end{center}
+	\caption{La colonna \emph{criteri} si riferisce alla rappresentazione grafica
+	prodotta dall'implementazione}
+	\label{table:passfailCriteriaGanttGeneration}
+\end{table}
