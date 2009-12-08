@@ -9,25 +9,72 @@ dettagli reso disponibile della versione corrente e aggiunger\`a tutte quelle
 informazioni necessarie per raggiungere gli obiettivi modellati dal processo di
 analisi.
 \\ \\
-Il progetto avr\`a tre livelli di testing: 
-\begin{itemize}
-  \item unit
-  \item system/integration
-  \item acceptance
-\end{itemize}
-I dettagli di ogni livello verranno definiti nella sezione \ref{subsec:strategy}
-e negli specifici \emph{level plan}. \\ \\
+Il progetto avr\`a tre livelli di testing i cui dettagli verranno definiti
+nella sezione \ref{subsec:strategy} e negli specifici \emph{level plan}. 
+\\ \\ 
 Il quanto temporale stimato per questo progetto \`e molto compatto, quindi
 \emph{ogni} ritardo nella fase di progettazione, sviluppo, installazione e
 verifica possono avere effetti significati sul deploy finale.
 
-\section{Elementi software sottoposti a test}
+\section{Struttura del documento}
+Il documento del piano delle prove viene diviso in tre macro parti:
+\begin{description}
+  \item[planning] vengono identificati gli aspetti necessari per
+  arrivare alla definizione della specifica dei singoli test. Si identificano
+  tutte le funzionalit\`a (sia \emph{technical side} che \emph{customer side}),
+  le risorse necessarie per eseguire il processo di test (soprattutto software 
+  in quanto non esistono procedure che richiedono grande potenza di elementi 
+  hardware), la strategia con cui si vuole portare avanti il progetto, i
+  criteri di \emph{success, failure} per valutare l'esecuzione di un test e la
+  divisione in livelli logici (\emph{fasi}) dell'intero processo.
+  \item[design specification] per ogni insieme di funzionalit\`a catturate
+  nella parte \emph{use cases} del documento di analisi, si crea un capitolo di
+  design nel quale si specifica quali use case si vogliono esercitare, si
+  raffina la strategia espressa nella parte di \emph{planning} e si
+  identificano l'insieme di documenti \emph{case} che effettivamente
+  implementano i test necessari per esercitare gli use cases scelti.
+  \item[case specification] ogni documento di questa parte mira ad esercitare 
+  un \emph{singolo} use case (o funzionalit\`a): si identificano l'insieme di
+  triple \emph{(input, environment, output)} che permettono di costruire un 
+  modello della batteria di test che verr\`a applicata sullo use case.
+  
+  Nella prima fase di stesura, non avendo ancora la possibilit\`a di
+  riferirci ai sorgenti e quindi testare effettivamente il comportamento della
+  funzionalit\`a (non possiamo creare dei task di prova con criteri atti a
+  testare il codice scritto), la componente \emph{input} di ogni tripla contiene
+  solo la quantit\`a di task del \emph{testing project} che verranno creati.
+  
+  Quando inizieremo la parte di codifica, la componente \emph{input} conterr\`a
+  l'identificatore dei tasks che sono stati creati nel \emph{testing project}
+  per esercitare la tripla.
+\end{description}
+Possiamo vedere i livelli sopra descritti come un test a tutti gli effetti, e
+attribuire ad ognuno di essi un risultato, codificato in base ai
+\emph{pass/fail criteria}. Per dare ogni singola valutazione, possiamo usare il
+concetto della composizione di documenti in modo da soddisfare queste
+relazioni $$panning \sqsubset desing_{specification} \sqsubset case_{
+specification}$$
+La relazione $\sqsubset$ definisce che nella coppia $a \sqsubset b$ la
+valutazione di $a$ dipende da alcune valutazioni di $b$. Nella nostra catena 
+abbiamo che il risultato atomico (non composto) dell'esecuzione di un test 
+viene espresso dai relativi documenti \emph{case}, mentre gli altri documenti 
+si limitano a comporre questi risultati per esprimere a loro volta il loro 
+risultato (il concetto \`e simile al \emph{bubble up} dei risultati dai case 
+dettagliati per tuple fino al piano totale).
 
+\section{Elementi software sottoposti a test}
+La seguente lista comprende oggetti software \emph{technical side}.
 \begin{itemize}
-  \item some components produced by the detailed desing team
+  \item la classe \emph{ChartGenerator} e le sue specializzazioni, pacch
+ etto \emph{Chart}, definite nella sezione \textbf{1.2} del documento
+ \emph{disegno del sistema}
+  \item la classe \emph{Commons} e le sue specializzazioni, pacchetto 
+  \emph{commons}, definite nella sezione \textbf{1.1} del documento 
+  \emph{disegno del sistema}
 \end{itemize}
 
 \section{Funzionalit\`a che verranno testate}
+La seguente lista comprende oggetti software \emph{customer side}.
 \begin{itemize}
   \item processo per la generazione di \emph{Gantt chart}
   \item processo per la generazione di \emph{WBS chart}
@@ -59,6 +106,45 @@ testing:
   di guasti) dove avviene solo il processo di testing.
 \end{itemize}
 
+\subsection{Testing project}
+Costruiamo un istanza di progetto contenente un insieme di tasks, con le
+relative dipendenze sia di composizione che di ``finish to start'', necessari per
+esercitare ogni tripla definita nella parte \ref{part:CaseSpecification} di 
+ogni \emph{case specification}.
+\\ \\
+Questo progetto conterr\`a tasks costruiti in modo da catturare la maggior
+parte dei contesti che potrebbero verificarsi nell'utilizzo a regime
+dell'applicazione:
+\begin{itemize}
+  \item task con informazioni coerenti e ben formate, per avere un contesto in
+  cui le informazioni appartengono al dominio e dovrebbero avere un output
+  corretto
+  \item task con informazioni non coerenti (avendo differenza fra le
+  \emph{planned, actual} data per esempio), per avere un contesto in cui
+  l'applicazione dovr\`a generare la notazione definita per i contesti anomali
+  \item relazioni tra task ben formate (sia di composizione che di dipendenza)
+  \item relazioni tra task non ben formate, in modo da verificare la bont\`a
+  dell'adattamento dell'algoritmi di generazione per i casi anomali
+\end{itemize} 
+Questo progetto viene creato nella \emph{acceptance
+machine} e su questa macchina sar\`a presente la versione completa del progetto necessaria per
+soddisfare tutte le triple. 
+\\ \\
+Nelle \emph{develop machine} invece non \`e
+richiesto necessariamente che sia presente l'istanza completa del progetto,
+bensi sar\`a sufficiente riportare solo un sottoinsieme del progetto
+sufficiente per testare il case che si vuole esercitare.
+\\ \\
+La struttura che possiamo dare al progetto al primo livello di dettaglio
+(quindi immediatamente successivo la \emph{root}), \`e di creare una macro
+attivit\`a relativa ad ogni \emph{case specification}, in modo che come sotto
+attivit\`a possiamo creare i task nella configurazione richiesta dalla sezione
+\emph{input} di ogni tripla. In questo modo otteniamo una struttura
+che dedica un ramo di attivit\`a per ogni \emph{case specification}, rendendola
+indipendente dalle altre. Allo stesso tempo triple di \emph{case specification}
+ diverse possono comunque esercitare le loro triple usando rami dedicati ad
+ altre \emph{case specification} (questo potrebbe essere un test di
+ \emph{robustness}).
 \subsection{Strumenti}
 \label{subsec:testingTools}
 Durante il processo di testing usufruiamo dei seguenti strumenti:
