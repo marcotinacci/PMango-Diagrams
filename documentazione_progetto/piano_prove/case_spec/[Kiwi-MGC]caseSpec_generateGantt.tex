@@ -87,9 +87,12 @@ della \emph{Taskbox}.
 documento di specifica.
 \end{description}
 
+\section{Dependency relations representation}
+See \ref{sec:TNDependencyrepresentation}.
 
 \section*{Pass/fail criteria}
-See the figure \ref{table:passfailCriteriaGanttGeneration}.
+La colonna \emph{criteri} si riferisce alla rappresentazione grafica prodotta
+dall'implementazione. 
 \begin{table}[h!]
   \begin{center}
     \begin{tabular}{| l | p{100mm} |}
@@ -98,27 +101,34 @@ See the figure \ref{table:passfailCriteriaGanttGeneration}.
 	\hline    
 	success & 
     \begin{itemize}
-  \item l'output dell'implementazione \`e sovrapponibile al modello a meno 
-di una tolleranza pari a circa \textbf{1mm}
-\item I punti di stacco dei segmenti
-delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
-\item I font possono essere di una famiglia e dimensione diversa in base anche alle
-UserOption scelte dall'utente.
+  \item la costruzione della rappresentazione grafica \`e coerente con le
+  notazioni espresse nel documento di specifica. Il posizionamento delle
+  informazioni sull'\emph{effort} e sulle \emph{resources} pu\`o essere fissato
+  dall'implementazione in quanto non vengono specificate dimensioni o gap
+  predefiniti
+  \item costruzione delle testata contenente le informazioni
+    sulla grana temporale pu\`o avere una formattazione diversa da quanto
+    mostrato nella sezione \emph{Mockups} del documento di analisi, basta che
+    vengano mostrati i campi relativamente alla grana scelta (vedere relazione 
+    descritta nella sezione \textbf{2.2.1} del documento  \emph{Requisiti del
+    prodotto}).
 \item Le linee verticali rappresentanti un elemento appartenente alla
-\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in modo diverso.
-\item Tutte quelle linee che sono errori di imprecisione nella stesura del mockup non
-sono da considerarsi valide per il confronto (si lascia al buon senso capire
-quando un piccola sbavatura non \`e importante\ldots)      
+\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in
+modo diverso dall'implementazione attuale di PMango.      
 \end{itemize}
 \\
     \hline
-    \emph{minor} failure & costruzione delle testata contenente le informazioni
-    sulla grana temporale non coincide a meno di una telleranza pari a circa 
-    \textbf{1mm} con quella descritta nel mockup
+    \emph{minor} failure & le \emph{Strip} che rappresentano le informazioni
+    come descritte nel documento di specifica possono avere delle differenze
+    con una tolleranza di \textbf{2mm} rispetto alla figura 2 del documento di
+    specifica. (quindi anche riguardo alle differenti altezze)
     \\
     \hline
     \emph{critical} failure & 
     \begin{itemize}
+     \item i punti di stacco dei segmenti e le spaziature
+delle dipendenze possono essere fissati in maniera diversa da come viene
+eseguito nella versione attuale di PMango
     \item i blocchi rappresentanti le informazioni \emph{planned, actual} dei
     tasks sono staccati fra di loro. 
     \item non vengono rispettate le misure relative alla grana temporale
@@ -127,11 +137,9 @@ quando un piccola sbavatura non \`e importante\ldots)
     \hline
     \emph{blocking} failure & La costruzione delle componenti del diagramma
     non rispetta i vincoli definiti nella sezione \textbf{1} del documento di 
-   specifica rilasciato dal committente. \\
+   specifica. \\
     \hline
     \end{tabular}
   \end{center}
-	\caption{La colonna \emph{criteri} si riferisce alla rappresentazione grafica
-	prodotta dall'implementazione}
 	\label{table:passfailCriteriaGanttGeneration}
 \end{table}

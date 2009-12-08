@@ -64,7 +64,9 @@ documento di specifica.
 \end{description}
 
 \section*{Pass/fail criteria}
-See the figure \ref{table:passfailCriteriaGanttGeneration}.
+\label{sec:wbsCasePassFailCriteria}
+La colonna \emph{criteri} si riferisce alla rappresentazione grafica prodotta 
+dall'implementazione. 
 \begin{table}[h!]
   \begin{center}
     \begin{tabular}{| l | p{100mm} |}
@@ -73,40 +75,31 @@ See the figure \ref{table:passfailCriteriaGanttGeneration}.
 	\hline    
 	success & 
     \begin{itemize}
-  \item l'output dell'implementazione \`e sovrapponibile al modello a meno 
-di una tolleranza pari a circa \textbf{1mm}
-\item I punti di stacco dei segmenti
-delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
-\item I font possono essere di una famiglia e dimensione diversa in base anche alle
-UserOption scelte dall'utente.
-\item Le linee verticali rappresentanti un elemento appartenente alla
-\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in modo diverso.
-\item Tutte quelle linee che sono errori di imprecisione nella stesura del mockup non
-sono da considerarsi valide per il confronto (si lascia al buon senso capire
-quando un piccola sbavatura non \`e importante\ldots)      
+  \item la costruzione della rappresentazione grafica \`e coerente con le
+  notazioni espresse nel documento di specifica. Il posizionamento del 
+ simbolo \emph{delta} (con la sua estensione negativa ``!'') pu\`o essere
+ fissato dall'implementazione in quanto non vengono specificate dimensioni o 
+ gap predefiniti
+ \item l'ordine con cui vengono mostrati i campi della \emph{TaskNodeBox} non
+ \`e significativo in quanto non esiste una sua definizione nel documento di
+ specifica. Ogni soluzione proposta dall'implementazione \`e corretta.
 \end{itemize}
 \\
     \hline
-    \emph{minor} failure & costruzione delle testata contenente le informazioni
-    sulla grana temporale non coincide a meno di una telleranza pari a circa 
-    \textbf{1mm} con quella descritta nel mockup
-    \\
-    \hline
     \emph{critical} failure & 
     \begin{itemize}
-    \item i blocchi rappresentanti le informazioni \emph{planned, actual} dei
-    tasks sono staccati fra di loro. 
-    \item non vengono rispettate le misure relative alla grana temporale
-    scelta espresse nella sezione \textbf{2.2.1} del documento delle metriche 
-    \end{itemize}\\
+    \item i field che compongono la \emph{Taskbox} sono staccati fra di loro.
+    \item la spaziatura, i punti di stacco dei segmenti rappresentanti le
+    relazioni di composizione e i punti di uscita/ingresso di tali segmenti n
+   elle \emph{Taskbox} non rispettano i requisiti espressi nella sezione
+   \textbf{3} del documento di specifica
+    \item non vengono rispettate le misure relative all gap minimo espresse
+    nella sezione \textbf{2.2.2} del documento delle metriche \end{itemize}\\
     \hline
     \emph{blocking} failure & La costruzione delle componenti del diagramma
-    non rispetta i vincoli definiti nella sezione \textbf{1} del documento di 
+    non rispetta i vincoli definiti nella sezione \textbf{2} del documento di 
    specifica rilasciato dal committente. \\
     \hline
     \end{tabular}
   \end{center}
-	\caption{La colonna \emph{criteri} si riferisce alla rappresentazione grafica
-	prodotta dall'implementazione}
-	\label{table:passfailCriteriaGanttGeneration}
 \end{table}

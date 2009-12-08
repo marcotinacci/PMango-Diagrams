@@ -8,12 +8,16 @@ See \ref{sec:WBSTaskRepresentation}.
 See \ref{sec:WBSDimensionRepresentation}
 
 \section{Dependency relations representation}
+\label{sec:TNDependencyrepresentation}
 Testare la rappresentazione grafica delle dipendenze di dipendenza espresse
 nel \emph{project plan}.
 \begin{description}
 \item[input]  \quad
 \begin{itemize}
-  \item almeno 10 task divisi in 
+  \item almeno 10 task divisi in (i seguenti sono tutti da intendersi come
+  foglie dell'esplosione del \emph{project plan} scelta per la generazione,
+  altrimenti non si potrebbero disegnare le dipendenze come espresso nella
+  sezione 4 del documento di specifica):
   \begin{itemize}
   \item atomici
   \item collapsed, non visualizzando i sotto task
@@ -59,35 +63,36 @@ See the figure \ref{table:passfailCriteriaGanttGeneration}.
 	\hline    
 	success & 
     \begin{itemize}
-  \item l'output dell'implementazione \`e sovrapponibile al modello a meno 
-di una tolleranza pari a circa \textbf{1mm}
-\item I punti di stacco dei segmenti
-delle dipendenze possono disposti in maniera diversa da quelli esposti nel test
-\item I font possono essere di una famiglia e dimensione diversa in base anche alle
-UserOption scelte dall'utente.
-\item Le linee verticali rappresentanti un elemento appartenente alla
-\emph{TimeGrain} possono essere rappresentate (oppure non comparire affatto) in modo diverso.
-\item Tutte quelle linee che sono errori di imprecisione nella stesura del mockup non
-sono da considerarsi valide per il confronto (si lascia al buon senso capire
-quando un piccola sbavatura non \`e importante\ldots)      
+  \item vedi la relativa sezione \emph{success} definita per il wbs case
+  specification \ref{sec:wbsCasePassFailCriteria}
+\item nel caso si vogliano disegnare i \emph{critical path} la tabella pu\`o
+essere posizionata ovunque nello spazio disponibile, in quanto nel documento di
+specifica non viene fissata una posizione precisa.
+\item la formattazione e la posizione dell'informazione \emph{Time gap} pu\`o
+variare, basta che sia vicina con una tolleranza di \textbf{3mm} al segmento a
+cui \`e riferita.
 \end{itemize}
 \\
     \hline
-    \emph{minor} failure & costruzione delle testata contenente le informazioni
-    sulla grana temporale non coincide a meno di una telleranza pari a circa 
-    \textbf{1mm} con quella descritta nel mockup
+    \emph{minor} failure & la posizione dei task che non hanno dipendenze con
+    altri task, (ma vengono solo completati, necessaria la scelta dell'opzione
+    \emph{CompleteDiagramUserOption}, associandoli alla \emph{start/end
+    milestone}), possono essere piazzati seguendo l'euristica proposta
+    dall'implementazione perch\`e nel documento di specifica non ne viene
+    richiesta una disposizione particolare.
     \\
     \hline
     \emph{critical} failure & 
     \begin{itemize}
-    \item i blocchi rappresentanti le informazioni \emph{planned, actual} dei
-    tasks sono staccati fra di loro. 
-    \item non vengono rispettate le misure relative alla grana temporale
-    scelta espresse nella sezione \textbf{2.2.1} del documento delle metriche 
-    \end{itemize}\\
+    \item i field che compongono la \emph{Taskbox} sono staccati fra di loro.
+    \item la spaziatura, i punti di stacco dei segmenti rappresentanti le
+    relazioni di dipendenza non rispettano i requisiti espressi nella sezione
+   \textbf{4} del documento di specifica
+    \item non vengono rispettate le misure relative all gap minimo espresse
+    nella sezione \textbf{2.2.3} del documento delle metriche \end{itemize}\\
     \hline
     \emph{blocking} failure & La costruzione delle componenti del diagramma
-    non rispetta i vincoli definiti nella sezione \textbf{1} del documento di 
+    non rispetta i vincoli definiti nella sezione \textbf{2} del documento di 
    specifica rilasciato dal committente. \\
     \hline
     \end{tabular}
