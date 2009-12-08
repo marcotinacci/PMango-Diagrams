@@ -4,7 +4,7 @@
 
 \begin{titlepage}
 \title{Disegno del sistema}
-\author{Release 0.5}
+\author{Release 0.6}
 \date{\today \\Firenze \\\begin{figure}[h] \centering \includegraphics[width=0.2\textwidth]{../images/logokiwi.png} \end{figure} }
 \end{titlepage}
 
@@ -48,18 +48,12 @@
     \begin{tabular}{| l | l | p{60mm} |}
     \hline
     \textbf{distribuito a} & \textbf{il giorno} & \textbf{firma} \\
-	\hline    
-	Francesco Calabri & \today &  \\
     \hline
 	Manuele Paulantonio & \today &  \\
     \hline
 	Daniele Poggi & \today &  \\
     \hline
 	Massimo Nocentini & \today &  \\
-    \hline
-	Niccol\`o Rogai & \today &  \\
-    \hline
-	Marco Tinacci & \today &  \\
     \hline
     \end{tabular}
   \end{center}
@@ -114,15 +108,32 @@ A seconda di quale tab viene caricato, pu\`o essere usata l'estensione di Common
 	\item WBSTab
 	\item TaskNetworkTab
 \end{itemize}
-che implementano la generazione del diagramma, la creazione della maschera delle user options e l'acquisizione delle scelte dei parametri.
+che implementano la generazione del diagramma, la creazione della maschera delle opzioni utente e l'acquisizione delle scelte dei parametri. Ovviamente la generazione di un diagramma specifico dovr\`a rifarsi alla corrispondente specializzazione del generatore dell'immagine, infatti GanttTab utilizzer\`a GanttChartGenerator, WBSTab utilizzer\`a WBSChartGenerator e TaskNetworkTab utilizzer\`a TaskNetworkChartGenerator.\\
+Di seguito viene riportato il diagramma di sequenza che illustra il procedimento di richiesta della pagina contenente il diagramma richiesto.
 
 \includegraphics[width=\textwidth]{chart/MainSequence.png}
 
 \section{Chart Generator}
 \includegraphics[width=\textwidth]{chart/ChartGenerator.png}
-
-\section{Task Data}
+Questa componente contiene le seguenti classi:
+\begin{itemize}
+	\item ChartGenerator: la classe specializzata nella generazione della gif contenente l'illustrazione del diagramma, \`e astratta per il metodo generateChart che verr\`a specializzato nelle sue specializzazioni.
+	\item GanttChartGenerator, WBSChartGenerator, TaskNetworkChartGenerator: specializzazioni di ChartGenerator che implementano il metodo generateChart. Seguendo la traccia descritta nei casi d'uso (capitoli 7,8 e 9 del documento di analisi) il metodo si compone delle procedure di makeLeftColumn e makeRightColumn che a sua volta utilizzer\`a i metodi makeGanttTaskBox e makeGanttDependencies per generare il diagramma. Il WBSChartGenerator a sua volta utilizzer\`a makeWBSTaskNode e makeWBSDependencies per creare nodi e dipendenze, e in modo analogo si comporter\`a la classe TaskNetworkChartGenerator. Mentre il generatore del gantt utilizza GifGanttTask per disegnare i nodi, i generatori di WBS e TaskNetwork usano GifTaskBox, in quanto la rappresentazione grafica \`e la stessa nei due casi.
+	\item TaskDataTreeGenerator, TaskDataTree, TaskData: queste classi sono presenti nella componente TaskDataTree.
+	\item GifGanttTask, GifTaskBox: queste classi sono presenti nella componente GifArea.
+\end{itemize}
+\section{Task Data Tree}
 \includegraphics[width=\textwidth]{chart/TaskDataTree.png}
+
+L'obiettivo di questa componente \`e quello di generare una struttura dati che contenga tutte le informazioni dei task che sono interessanti al fine della costruzione del diagramma specifico.
+\begin{itemize}
+	\item TaskDataTreeGenerator: questa classe ha il compito di costruire l'albero dei tasks (contenente anche le dipendenze \emph{finish-to-start}) richiedendo alla libDB i dati specificati nelle opzioni utente. L'oggetto generato sar\`a un TaskDataTree.
+	\item TaskDataTree: classe albero ad ariet\`a non fissata, contiene solo il nodo radice. I nodi in questione sono TaskData.
+	\item TaskData: sono i nodi del TaskDataTree, hanno un riferimento al padre e al vettore (dinamico) dei figli. \`E presente anche un vettore di nodi TaskData che indica le dipendenze finish-to-start. L'informazione contenuta nel nodo \`e di tipo Task.
+	\item Task: contiene le informazioni di base del task, memorizzate nell'array associativo \emph{data}
+\end{itemize}
+
+\includegraphics[width=\textwidth]{chart/TreeGeneratingSequence.png}
 
 \section{Gif Area}
 \includegraphics[width=\textwidth]{chart/GifArea.png}
