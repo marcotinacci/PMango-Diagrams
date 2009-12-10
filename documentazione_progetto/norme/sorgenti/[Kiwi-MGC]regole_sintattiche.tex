@@ -1,0 +1,14 @@
+\section{Regole Sintattiche}
+La sintassi dei nomi segue lo stile java ed \`e la seguente:
+\begin{itemize}
+	\item cartelle, package: lower case
+	\item classi, files: upper camel case
+	\item metodi e variabili: lower camel case
+\end{itemize}
+Per quanto riguarda i commenti, il programmatore \`e tenuto a commentare ogni metodo, ogni classe ed ogni variabile. Le uniche eccezioni sono i casi banali, cio\`e i metodi get e set con struttura tradizionale e le variabili che hanno un tempo di vita minore di quello dell'intera classe e che non sono globali. Si lascia a discrezione del programmatore il commentare le sezioni di codice difficilmente comprensibili. In generale i commenti devono precedere la dichiarazione del soggetto commentato e in particolare devono essere rispettate le seguenti regole:
+\begin{itemize}
+	\item classe: commento di tipo multilinea $/* <comments> */$ contenente una descrizione generale delle funzioni che offre la classe.
+	\item metodo: commento di tipo multilinea $/* <comments> */$ contenente la descrizione di ogni parametro in ingresso, del valore di ritorno, dei side effects, dell'algoritmo usato e se necessaria una descrizione informale. La descrizione di un parametro deve essere preceduta da $@param$, quella del valore di ritorno da $@return$ ed eventuali riferimenti da $@see$.
+	\item variabili: commento di tipo multilinea $/* <comments> */$ contenente la descrizione di cosa rappresenta la variabile.
+	\item altro: i commenti che non rientrano nelle categorie precedenti, come le spiegazioni delle parti di codice non facilmente comprensibili, vanno fatti con la notazione $// <comment>$ su riga singola, in modo che possano essere distinti dagli altri tipi di commenti.
+\end{itemize}
