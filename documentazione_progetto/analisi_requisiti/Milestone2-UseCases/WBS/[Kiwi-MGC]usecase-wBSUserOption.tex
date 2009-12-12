@@ -1,0 +1,36 @@
+\section{WBS User Options}
+\label{seq:wbsUserOption}
+\subsection{Basic course}
+Questo use case estende (specializza) lo use case \ref{seq:showUserOptions}.
+\\ \\
+Il sistema costruisce le \emph{UserOption} relative al \emph{WBSChart} in un
+unico passo, composto da queste azioni omogenee:
+\begin{itemize}
+  \item rappresenta \textbf{TaskNameUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{PlannedDataUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{PlannedTimeFrameUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ResourcesUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ActualTimeFrameUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ActualDataUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{AlertMarkUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta le istanze di \textbf{WBSTreeSpecification} come voci di una
+  combobox. Quando viene scelta la voce \textbf{LevelSpecificationUserOption}, allora
+  compare vicino alla combobox, un'altra combobox con i livelli disponibili
+  (come quella che esiste nell'attuale versione di PMango)
+  \item rappresenta le istanze di \textbf{ImageDimensionUserOption} come voci di
+  una combobox. Si aggiungo ulteriori controlli in base alle seguenti scelte:
+  \begin{description}
+    \item[CustomDimUserOption] allora costruisci accanto alla combo, due
+    textbox per specificare la coppia di interi rappresentate le dimensioni del
+    \emph{Chart} desiderate.
+  \end{description}
+  \item rappresenta \textbf{OpenInNewWindowUserOption} con una checkbox e associa una
+  label descrittiva
+\end{itemize}

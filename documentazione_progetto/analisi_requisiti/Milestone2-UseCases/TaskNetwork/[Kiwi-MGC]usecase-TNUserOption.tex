@@ -1,0 +1,51 @@
+\section{TaskNetwork User Options}
+\label{seq:tNUserOption}
+\subsection{Basic course}
+Questo use case estende (specializza) lo use case \ref{seq:showUserOptions}.
+\\ \\
+Il sistema costruisce le \emph{UserOption} relative al \emph{TaskNetworkChart}
+in un unico passo, composto da queste azioni omogenee:
+\begin{itemize}
+  \item rappresenta \textbf{TaskNameUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{PlannedDataUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{PlannedTimeFrameUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ResourcesUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ActualTimeFrameUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ActualDataUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{AlertMarkUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ReplicateArrowUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{UseDifferentPatternForCrossingLinesUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{TimeGapsUserOption} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta \textbf{ShowCompleteDiagramDependencies} con una checkbox e associa una
+  label descrittiva
+  \item rappresenta le istanze di \textbf{WBSTreeSpecification} come voci di una
+  combobox. Quando viene scelta la voce \textbf{LevelSpecificationUserOption}, allora
+  compare vicino alla combobox, un'altra combobox con i livelli disponibili
+  (come quella che esiste nell'attuale versione di PMango)
+  \item rappresenta \textbf{CriticalPathUserOption} con una checkbox e associa una
+  label descrittiva
+  \begin{description}
+    \item[MaxCriticalPathNumberUserOption] se la
+    \emph{CriticalPathUserOption} padre viene selezionata, allora
+    costruire vicino ad essa un textbox per permettere di specificare l'intero.
+  \end{description}
+  \item rappresenta le istanze di \textbf{ImageDimensionUserOption} come voci di
+  una combobox. Si aggiungo ulteriori controlli in base alle seguenti scelte:
+  \begin{description}
+    \item[CustomDimUserOption] allora costruisci accanto alla combo, due
+    textbox per specificare la coppia di interi rappresentate le dimensioni del
+    \emph{Chart} desiderate.
+  \end{description}
+  \item rappresenta \textbf{OpenInNewWindowUserOption} con una checkbox e associa una
+  label descrittiva
+\end{itemize}
