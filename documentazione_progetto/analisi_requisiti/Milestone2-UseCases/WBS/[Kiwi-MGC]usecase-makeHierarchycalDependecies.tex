@@ -8,9 +8,20 @@ Il sistema esegue questi passi:
 \begin{enumerate}
   \item in base alle informazioni in \emph{WBSTreeSpecification}, recupera i
   figli del task (non l’intera discendenza, solo quelli di livello successivo) e
-  li dispone graficamente\footnote{OSS. Non tutte le opzioni, in questa
-  situazione hanno senso (resources detail?, alert marks?)} al di sotto di esso (top-down)\footnote{effettivamente non e' che e' lui che li crea, dovrebbe
-  solo aggiungerci le spezzate.}
+  li dispone graficamente al di sotto di esso.
+  \item La distanze fra livelli e tra taskbox appartenenti allo stesso
+  livello rispettano queste regole:
+  \begin{itemize}
+    \item la distanza \emph{inter-Taskbox} fra coppie di
+    \emph{Taskbox} adiacenti, rappresentati sullo stesso livello, deve essere
+    equa ed uguale per ogni coppia (questa regola si ripete in modo iterativo
+    per ogni coppia appartenente ad un livello $l$)
+	\item la distanza \emph{inter-Level} fra coppie di livelli contenenti le 
+	rappresentazioni dei task padre e i suoi figli deve essere equa e uguale
+	per ogni coppia di livelli (questa regola si applica ricorsivamente al livello
+	dei figli, nel caso che almeno un figlio sia composto da subtask)
+  \end{itemize} 
+  
   \item Il sistema collega il task ai suoi figli con linee spezzate cdns.
 \end{enumerate}
 
