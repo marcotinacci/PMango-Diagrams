@@ -50,40 +50,146 @@ struttura di codifica:
 
 Le successive descrizioni sono relative al concetto di \emph{UserOption}:
 \begin{description}
-  \item[istanze]\footnote{inserire qui la il mapping sui vari Chart?}
-  \emph{WBSExplosionLevelUserOption, ActualTimeFrameOption, CompletitionBarOption, \\ PlannedDataOption, ActualDataOption,
-  AlertMarkUserOption, ReplicateArrowUserOption, FindCriticalPathUserOption,
-  WBSUserSpecificationUserLevel, \\WBSUserSpecificationUserLevel,
-  ResourcesDetailsOption, TaskNameOption, CompleteDiagramUserOptions,
-  ShowDependencies}
+  \item[istanze]\quad
+  \begin{description}
+	\item[TaskNameUserOption] genera una stringa contenente il nome del task.
+	Questa stringa si pu\`o usare, per esempio, per appenderla alla
+	rappresentazione dell'identificatore del task definito nel \emph{project plan}
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[EffortInformationUserOption] crea un stringa da inserire sulla destra
+	della reppresentazione \emph{GanttTaskbox}. la stringa viene costruita in modo
+	diverso in base al task (solo coppia di interi per task composti, mentre per
+	task atomici vengono aggiunte i dettagli di ogni risorsa assegnata, vedi
+	sezione 1, punto 2, pag 2 del documento di specifica)
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[PlannedDataUserOption] definisce la tripla \emph{(duration, effort,
+	cost)} per planned info.
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[PlannedTimeFrameUserOption] definisce la coppia \emph{(start date, end
+	date)} per planned info.
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[ResourcesUserOption] definisce la tripla \emph{(effort, person, role)}
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[ActualTimeFrameUserOption] definisce la coppia \emph{(start date, end
+	date)} per actual info.
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[ActualDataUserOption] definisce la tripla \emph{(duration, effort,
+	cost)} per actual info (questa opzione include anche la \emph{completition
+	bar}).
+	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[AlertMarkUserOption] notifica quando ci sono delle differenze fra le
+	informazioni planned e quelle actual
+	$$good_{news} \rightarrow
+ \Delta$$$$bad_{news} \rightarrow \Delta!$$ $a \rightarrow b$ rappresenta che
+ $a$ viene rappresentato con il simbolo $b$
+ 	\\ \emph{Dominio di valorizzazione = boolean}
+	\item[ReplicateArrowUserOption] nei punti in cui due freccie (rappresentanti
+	ciascuna una dipendenza) convergono verso un punto di incontro per
+ entrare nel task \emph{dipendente} (deve essere usato un punto di incontro nel
+ caso di dipendenze per un task perch\`e \`e un requisito del committente: in
+ ogni task entra \emph{al pi\`u} una freccia) 
+ 	\\ \emph{Dominio di valorizzazione = boolean}
+ 	\item[UseDifferentPatternForCrossingLinesUserOption] se due linee
+ 	rappresentanti una dipendenza di sovrappongono, allora \`e utile disegnarle
+ 	in modo diverso\footnote{non \`e ben specificato se rispetto al colore
+ 	(opzione non molto fattibile per la stampa su carta perch\`e si utilizza la
+ 	scala di grigi) oppure con pattern diversi (dotted, broken\ldots)} \`E
+ 	richiesto di distinguere coppie di linee che si sovrappongono, questo quindi
+ 	non vincola ad usare n pattern per ogni coppia di sovrapposizione: possiamo
+ 	ripetere il pattern per altre coppie che si sovrappongono, ma la cui
+ 	sovrapposizione non \`e con coppie che utilizzano lo stesso pattern per
+ 	distinguersi.
+ 	\\ \emph{Dominio di valorizzazione = boolean}
+ 	\item[TimeGapsUserOption] viene mostrata sopra la linea che rappresenta
+ 	la dipendenza, la differenza tra le date di fine \emph{needed} task e inizio
+ 	\emph{dependent} task.
+ 	\\ \emph{Dominio di valorizzazione = boolean}
+ 	\item[CriticalPathUserOption] calcolare e rappresentare i percorsi critici
+ 	\\ \emph{Dominio di valorizzazione = boolean}
+ 	\item[MaxCriticalPathNumberUserOption] indica il numero massimo di critical
+ 	path che si vogliono calcolare e visualizzare
+ 	\\ \emph{Dominio di valorizzazione = integer}
+ 	\item[OpenInNewWindowUserOption] apre la rappresentazione del \emph{Chart} in
+ 	una nuova finestra diversa da quella dove si \`e richiesta la generazione.
+ 	\\ \emph{Dominio di valorizzazione = boolean}
+  \end{description}
+
   \item[specializzazioni] \quad
-  \begin{itemize}
-    \item \emph{WBSTreeSpecification}
-    \begin{description}
-  \item[istanze] \emph{LevelSpecification, UserCustomSpecification}
-  \item[specializzazioni] nessuna
-\end{description}
+  \begin{description}
+    \item[WBSTreeSpecification] rappresenta il livello di dettaglio scelto per
+    la rappresentazione nel \emph{Chart}:
+	    \begin{description}
+	  		\item[istanze] \quad
+	  		\begin{description}
+				\item[LevelSpecificationUserOption] viene esploso il \emph{project plan}
+				al livello $l$ specificato
+				\\ \emph{Dominio di valorizzazione = integer}
+				\item[UserCustomSpecificationUserOption] viene rappresentato il
+				\emph{project plan} come selezionato nei tab \emph{(planned $\mid$ actual)
+				View}
+				\\ \emph{Dominio di valorizzazione = user interactive input}
+		  	\end{description}
+	  	\end{description}
 
-\item \emph{TimeGrainUserOption}
-    \begin{description}
-  \item[istanze] \emph{HourlyGrain, DailyGrain, WeaklyGrain, MonthlyGrain,
-  AnnuallyGrain}
-  \item[specializzazioni] nessuna
-\end{description}
+	\item[ShowDependenciesUserOption] rappresenta nel \emph{Chart} alcuni
+	tipi di dipendenze. Quelle disponibili sono:
+	    \begin{description}
+		  \item[istanze] \quad
+		  \begin{description}
+			\item[FinishToStartDependenciesUserOption] mostra la relazione di
+			\emph{finish to start} fra coppie di task
+			\\ \emph{Dominio di valorizzazione = boolean}
+			\item[CompositionDependenciesUserOption] mostra la relazione di
+			\emph{composition} fra coppie di task
+			\\ \emph{Dominio di valorizzazione = boolean}
+			\item[ShowCompleteDiagramDependencies] mostra la relazione di \emph{finish
+			to start} rispetto alle milestone \emph{start, end} project, per i
+			tasks che non sono necessari oppure dipendono da altri tasks.
+			\\ \emph{Dominio di valorizzazione = boolean} 
+		  \end{description}
+		 
+		\end{description}
 
-\item \emph{ImageDimensionUserOption}
-    \begin{description}
-  \item[istanze] \emph{CustomDim, FitInWindowDim, OptionalDim, DefaultDim}
-  \item[specializzazioni] nessuna
-\end{description}
+	\item[TimeGrainUserOption] indica la grana temporale con cui identificare i
+	passi verticali del \emph{GanttChart}:
+	    \begin{description}
+		  \item[istanze]\quad
+		  \begin{description}
+			\item[HourlyGrainUserOption] \emph{Dominio di valorizzazione = boolean}
+			\item[DailyGrainUserOption] \emph{Dominio di valorizzazione = boolean}
+			\item[WeaklyGrainUserOption] \emph{Dominio di valorizzazione = boolean}
+			\item[MonthlyGrainUserOption] \emph{Dominio di valorizzazione = boolean}
+			\item[AnnuallyGrainUserOption] \emph{Dominio di valorizzazione = boolean}
+		  \end{description}
+		\end{description}
 
-\item \emph{TimeRangeUserOption}
-    \begin{description}
-  \item[istanze] \emph{CustomRange, WholeProjectRange, FromStartRange, ToEndRange}
-  \item[specializzazioni] nessuna
-\end{description}
+	\item[ImageDimensionUserOption] rappresenta la dimensione dell'immagine che
+	\`e possibile rappresentare:
+	    \begin{description}
+	  	\item[istanze]\quad
+		  \begin{description}
+			\item[CustomDimUserOption] \emph{Dominio di valorizzazione = integer
+			$\times$ integer}
+			\item[FitInWindowDimUserOption] \emph{Dominio di valorizzazione = boolean}
+			\item[OptiomalDimUserOption] \emph{Dominio di valorizzazione = boolean}
+			\item[DefaultDimUserOption] \emph{Dominio di valorizzazione = boolean}
+		  \end{description}
+	\end{description}
+	
+	\item[TimeRangeUserOption] indica il range temporale che si vuole
+	rappresentare nel \emph{GanttChart}:
+	    \begin{description}
+	  		\item[istanze]\quad
+			  \begin{description}
+				\item[CustomRangeUserOption] \emph{Dominio di valorizzazione = date
+				$\times$ date}
+				\item[WholeProjectRangeUserOption] \emph{Dominio di valorizzazione = boolean}
+				\item[FromStartRangeUserOption] \emph{Dominio di valorizzazione = date}
+				\item[ToEndRangeUserOption] \emph{Dominio di valorizzazione = date}
+			  \end{description}
+		\end{description}
 
-  \end{itemize}
+  \end{description}
 \end{description}
 
 \subsection{\emph{UserOptionsChoice}}
