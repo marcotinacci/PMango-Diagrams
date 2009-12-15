@@ -3,15 +3,28 @@
 require_once "./lib/jpgraph/src/jpgraph.php";
 require_once "./lib/jpgraph/src/jpgraph_canvas.php";
 
+/*
+ * GifArea class is the base to draw something to a gif, all the inherited classes can be
+ * just a comosition of other extensions of GifAreas or a lowlevel graphic extension obtained
+ * ovverriding the method canvasDraw().
+*/
 class GifArea
 {
+	/* Coordinate X of the point where the area should be printed on the target image */
 	protected $x;
+	/* Coordinate Y of the point where the area should be printed on the target image */
 	protected $y;
+	/* Width of the area */
 	protected $width;
+	/* Height of the area */
 	protected $height;
 	
+	/* The canvas is a CanvasGraph of the jpGraph library, is the plae where we can draw 
+	* and it should be used in the method canvasDraw()
+	*/
 	protected $canvas;
 	
+	/* This is an array of GifArea, can be used to realize composition of extended GifArea */
 	protected $subAreas;
 	
 	protected function __construct($x, $y, $width, $height)
@@ -51,25 +64,20 @@ class GifArea
 		return $this->canvas;
 	}
 	
+	/* in this method we use the canvas of jpGraph library to draw */
 	protected function canvasDraw(){}
 	
-	public function drawOn($gifImage)
+	/* this is the method that add the area to the specified GifImage, it's recursive and add 
+	 * all the sub areas to the gif, so if the developer adds some subareas he will be shure 
+	 * that will be added to the gif. And the order of drawing is from the bottom level to
+	 * the top level of the inheritance.
+	*/
+	public final function drawOn($gifImage)
 	{
-		$this->enableTransparency();
-		for($i=0; $i<sizeOf($this->subAreas); $i++)
-		{
-			$sub=$this->subAreas[$i];
-			$sub->subDrawOn($gifImage,$this->x+$sub->getX(),$this->y+$sub->getY());
-			/*
-			$sub->enableTransparency();
-			$sub->canvasDraw();
-			$gifImage->addCanvas($sub->getCanvas(),$this->x+$sub->getX(),$this->y+$sub->getY());
-			*/
-		}
-		$this->canvasDraw();
-		$gifImage->addCanvas($this->canvas,$this->x,$this->y);
+		$this->subDrawOn($gifImage,$this->getX(),$this->getY());
 	}
 	
+	/* this is just to start the recursive process with specified x and y */
 	private function subDrawOn($gifImage,$x,$y)
 	{
 		$this->enableTransparency();
@@ -82,6 +90,9 @@ class GifArea
 		$gifImage->addCanvas($this->canvas,$x,$y);
 	}
 	
+	/* This is a method to enable transparency in the drawing, is protected beacouse it's 
+	 * not an option for the developer user but for the developer extender.
+	*/
 	protected function enableTransparency()
 	{
 		$this->canvas->img->SetColor("magenta");
