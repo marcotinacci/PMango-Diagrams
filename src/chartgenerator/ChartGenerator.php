@@ -1,8 +1,8 @@
 <?php
 
-require_once "../gifarea/GifImage.php"
-require_once "../taskdatatree/TaskDataTreeGenerator.php"
-require_once "../useroptionschoice/UserOptionsChoice.php"
+require_once "../gifarea/GifImage.php";
+require_once "../taskdatatree/TaskDataTreeGenerator.php";
+require_once "../useroptionschoice/UserOptionsChoice.php";
 
 /**
  * Questa classe astratta raccoglie i comportamenti comuni delle classi che 
