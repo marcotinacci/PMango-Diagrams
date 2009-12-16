@@ -138,14 +138,11 @@ sufficiente per testare il case che si vuole esercitare.
 \\ \\
 La struttura che possiamo dare al progetto al primo livello di dettaglio
 (quindi immediatamente successivo la \emph{root}), \`e di creare una macro
-attivit\`a relativa ad ogni \emph{case specification}, in modo che come sotto
-attivit\`a possiamo creare i task nella configurazione richiesta dalla sezione
-\emph{input} di ogni tripla. In questo modo otteniamo una struttura
-che dedica un ramo di attivit\`a per ogni \emph{case specification}, rendendola
-indipendente dalle altre. Allo stesso tempo triple di \emph{case specification}
- diverse possono comunque esercitare le loro triple usando rami dedicati ad
- altre \emph{case specification} (questo potrebbe essere un test di
- \emph{robustness}).
+attivit\`a relativa ad ogni tripla definita in un documento \emph{case
+specification}, in modo da esercitare il test in un contesto limitato, non
+avendo relazioni di composizione. In questo modo possiamo trattare ogni tripla
+in modo atomico; lo svantaggio di questo approccio \`e che avremo un
+\emph{project plan} degenere ad un solo livello.
  
  \item[acceptance project] Questo progetto permette di avere una istanza di
  progetto che si avvicina pi\'u ad una istanza che potrebbe essere creata nella
