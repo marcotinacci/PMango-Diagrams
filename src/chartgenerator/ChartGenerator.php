@@ -1,4 +1,9 @@
 <?php
+
+require_once "../gifarea/GifImage.php"
+require_once "../taskdatatree/TaskDataTreeGenerator.php"
+require_once "../useroptionschoice/UserOptionsChoice.php"
+
 /**
  * Questa classe astratta raccoglie i comportamenti comuni delle classi che 
  * generano i diagrammi Gantt, WBS e TasknetWork
@@ -10,7 +15,7 @@
  * @see TaskNetworkChartGenerator
  * 
  * @author: Marco Tinacci
- * @version: 0.1
+ * @version: 0.2
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -18,16 +23,28 @@
 abstract class ChartGenerator{
 	
 	/**
-	 * Variabile di tipo Gif, contiene l'ultimo diagramma generato
-	 * @var Gif
+	 * Contiene l'ultimo diagramma generato
+	 * @var GifImage
 	 */
 	protected $chart;
 	
 	/**
-	 * Struttura che contiene tutti i dati richiesti dei task del progetto
-	 * @var TaskDataTree
+	 * Generatore di struttura che contiene tutti i dati richiesti dei task del 
+	 * progetto
+	 * @var TaskDataTreeGenerator
 	 */
-	protected $taskDataTree;
+	protected $tdtGenerator;
+	
+	/**
+	 * Costruttore
+	 */
+	protected function __construct()
+	{
+		$tdtGenerator = new TaskDataTreeGenerator();
+		// TODO: dimensioni Gif da configurazione?
+		$chart = new GifImage(800,550);
+		
+	}
 	
 	/**
 	 * Metodo astratto di generazione del diagramma, come side effect questo 
@@ -38,8 +55,8 @@ abstract class ChartGenerator{
 	abstract public function generateChart();
 	
 	/**
-	 * metodo get della gif elaborata
-	 * @return Gif
+	 * Metodo get della gif elaborata
+	 * @return GifImage
 	 */
 	public function getChart(){
 		return $chart;
