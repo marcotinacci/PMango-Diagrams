@@ -38,16 +38,6 @@ class TaskData{
 	private $ftsDependencies;
 	
 	/**
-	 * Metodo che ritorna l'int pari al livello del nodo nella struttura.
-	 * Il livello è calcolato in base alla lunghezza dell'identifier di un task.
-	 * @return int 
-	 */
-	public function getLevel(){
-		//@TODO calcolo del livello
-		return $level;
-	}
-	
-	/**
 	 * Metodo che consente di aggiungere un figlio alla lista dei figli del this.
 	 * @param TaskData
 	 */
