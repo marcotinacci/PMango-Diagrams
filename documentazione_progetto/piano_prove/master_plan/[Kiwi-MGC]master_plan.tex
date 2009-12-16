@@ -106,9 +106,10 @@ testing:
   di guasti) dove avviene solo il processo di testing.
 \end{itemize}
 
-\subsection{Testing project}
-Costruiamo un istanza di progetto contenente un insieme di tasks, con le
-relative dipendenze sia di composizione che di ``finish to start'', necessari per
+\subsection{Testing projects}
+\begin{description}
+\item[testing project] Costruiamo un istanza di progetto contenente un insieme
+di tasks, con le relative dipendenze sia di composizione che di ``finish to start'', necessari per
 esercitare ogni tripla definita nella parte \ref{part:CaseSpecification} di 
 ogni \emph{case specification}.
 \\ \\
@@ -145,6 +146,21 @@ indipendente dalle altre. Allo stesso tempo triple di \emph{case specification}
  diverse possono comunque esercitare le loro triple usando rami dedicati ad
  altre \emph{case specification} (questo potrebbe essere un test di
  \emph{robustness}).
+ 
+ \item[acceptance project] Questo progetto permette di avere una istanza di
+ progetto che si avvicina pi\'u ad una istanza che potrebbe essere creata nella
+ realt\'a, differenziandosi dalla precedente istanza di test soprattutto nella
+ quantit\'a di informazioni che costituiscono il progetto. 
+ 
+ Per creare questo progetto possiamo utilizzare la nostra istanza di
+ \emph{Project Plan}, creando un backup e caricandolo sulla nostra macchina di
+ \emph{acceptance}. Appena la fase di implementazione fornisce insiemi di
+ elementi sufficienti per esercitare test su questo progetto, eseguiamo il
+ backup del nostro \emph{project plan}. Quindi come limite inferiore per questa
+ data, possiamo assumere la data odierna 15/12/2009.
+ 
+ \end{description}
+ 
 \subsection{Strumenti}
 \label{subsec:testingTools}
 Durante il processo di testing usufruiamo dei seguenti strumenti:

@@ -1,6 +1,29 @@
 \chapter{Generate WBS Case}
 \label{chap:generateWBS}
 
+\begin{paragraph}{Level plan relation}
+Le seguenti triple sono da considerarsi appartenenti ad un level plan in questo
+modo:
+\begin{description}
+\item[unit] se si stanno esercitando le triple
+\ref{sec:WBSTaskRepresentation},  \ref{sec:WBSDimensionRepresentation} sul
+\emph{testing project}, allora appartengono al \emph{unit level};  la
+componente su cui viene eseguito lo unit testing \`e la classe  \emph{GifArea}
+con le sue specializzazioni
+  \item[system/integration] tutte le triple possono considerarsi incluse al
+  \emph{system/integration level} in quanto i dati su cui vengono costruite le
+  rappresentazioni vengono recuperate secondo quanto descritto nel
+  \emph{sequence diagram} nella sezione \textbf{1.1 Commons, 1.3 Task Data
+  Tree}  del documento \emph{disegno del sistema}.
+  \item[acceptance] se si stanno esercitando le triple
+  \ref{sec:WBSTaskRepresentation}, \ref{sec:WBSDimensionRepresentation} sul 
+  \emph{acceptance testing project} allora appartengono al  \emph{acceptance
+  level}. Questo perch\`e nel \emph{acceptance testing project} ci possono 
+  essere task candidati per esercitare una tripla, per\`o inseriti in un 
+  contesto pi\`u grande.
+\end{description}
+\end{paragraph}
+
 \section{Task representation}
 \label{sec:WBSTaskRepresentation}
 Testare la rappresentazione grafica di un task.
