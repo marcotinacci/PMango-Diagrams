@@ -1,7 +1,10 @@
 <?php
 
+/* This class print a progress bar and is an example of high level composition, infacts
+ * there is no override of the method canvasDraw.
+ */
 class GifProgressBar extends GifArea
-{
+{	
 	function __construct($x, $y, $width, $height, $completed)
 	{
 		parent::__construct($x, $y, $width, $height);
@@ -12,6 +15,19 @@ class GifProgressBar extends GifArea
 		$this->subAreas[1]->setForeColor("gray");
 	}
 	
+	/* Set the forecolor of the filled bar */
+	public function setFilledForeColor($color)
+	{
+		$this->subAreas[0]->setForeColor($color);
+	}
+	
+	/* Set the forecolor of the empty bar */
+	public function setEmptyForeColor($color)
+	{
+		$this->subAreas[1]->setForeColor($color);
+	}
+	
+	/* Calculate the completed pixels in proportion */
 	private function getPercentagePixels($percentage,$maxPixels)
 	{
 		return ($percentage*$maxPixels)/100;

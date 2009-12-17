@@ -10,6 +10,11 @@ require_once "./lib/jpgraph/src/jpgraph_canvas.php";
 */
 class GifArea
 {
+	protected $transparencyColor = "magenta";
+	
+	/* Transparency enabled or not */
+	protected $transparent = true;
+	
 	/* Coordinate X of the point where the area should be printed on the target image */
 	protected $x;
 	/* Coordinate Y of the point where the area should be printed on the target image */
@@ -80,10 +85,13 @@ class GifArea
 	/* this is just to start the recursive process with specified x and y */
 	private function subDrawOn($gifImage,$x,$y)
 	{
-		$this->enableTransparency();
+		if($this->transparent)
+			$this->enableTransparency();
 		for($i=0; $i<sizeOf($this->subAreas); $i++)
 		{
 			$sub=$this->subAreas[$i];
+			if($sub->transparent)
+				$this->enableTransparency();
 			$sub->subDrawOn($gifImage,$x+$sub->getX(),$y+$sub->getY());
 		}
 		$this->canvasDraw();
@@ -95,9 +103,9 @@ class GifArea
 	*/
 	protected function enableTransparency()
 	{
-		$this->canvas->img->SetColor("magenta");
+		$this->canvas->img->SetColor($this->transparencyColor);
 		$this->canvas->img->FilledRectangle(0,0,$this->width+30, $this->height+30);
-		$this->canvas->img->SetTransparent("magenta");
+		$this->canvas->img->SetTransparent($this->transparencyColor);
 		$this->canvas->img->SetColor("black");
 	}
 	

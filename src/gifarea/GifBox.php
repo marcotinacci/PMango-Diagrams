@@ -2,6 +2,7 @@
 
 require_once "./GifArea.php";
 
+/* This is class print a rectangle to the gif */
 class GifBox extends GifArea
 {
 	private $foreColor = "magenta"; //default è trasparente
