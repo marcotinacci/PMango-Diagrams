@@ -196,6 +196,20 @@ fallimento. Quindi, l'esito di un test pu\`o essere \emph{success} o
 Queste misure sono valide per tutte le failure di test appartenenti a ogni
 level plan descritto in \ref{sec:levelPlans}.
 
+\subsection{Testing items and execution procedure}
+Gli elementi software disponibili per il testing vengono elencati nel
+capitolo \ref{chap:transmittal_report}. L'esecuzione di una tripla deve
+avvenire sul componente reperito alla \emph{revision} specificata nella
+relativa sezione e non considerare a priori la \emph{head revision} disponibile
+sul repository (a meno che non venga specificato esplicitamente nel documento
+transmittal report). Inoltre si deve considerare sempre la revision relativa
+alla data pi\`u recente, anche se \`e possibile testare revision precedenti, in
+modo da avere un incremento di codice da testare.
+\\ \\ 
+L'esecuzione di un test provoca la creazione di \emph{entry} relative ad un log
+\footnote{esiste una relazione biunivoca tra log e tripla da esercitare, i
+dettagli sono definiti meglio nel capitolo}, i quali vengono
+raggruppati nel capitolo \ref{chap:testsLogs}.
 
 \section{Level plans}
 \label{sec:levelPlans}
