@@ -15,6 +15,9 @@ class GifArea
 	/* Transparency enabled or not */
 	protected $transparent = true;
 	
+	/* Visibile or not */
+	protected $visible = true;
+	
 	/* Coordinate X of the point where the area should be printed on the target image */
 	protected $x;
 	/* Coordinate Y of the point where the area should be printed on the target image */
@@ -87,11 +90,12 @@ class GifArea
 	{
 		if($this->transparent)
 			$this->enableTransparency();
-		for($i=0; $i<sizeOf($this->subAreas); $i++)
+		if($this->visible==false)
+			return;
+		foreach ( $this->subAreas as $sub )
 		{
-			$sub=$this->subAreas[$i];
-			if($sub->transparent)
-				$this->enableTransparency();
+			//if($sub->transparent)
+				//$this->enableTransparency();
 			$sub->subDrawOn($gifImage,$x+$sub->getX(),$y+$sub->getY());
 		}
 		$this->canvasDraw();
