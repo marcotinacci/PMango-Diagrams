@@ -46,6 +46,11 @@
 			<location>/usr/share/texmf-texlive/tex/latex/tools/.tex</location>
 		</link>
 		<link>
+			<name>piano_prove/test_logs/.tex</name>
+			<type>1</type>
+			<location>/usr/share/texmf-texlive/tex/latex/tools/.tex</location>
+		</link>
+		<link>
 			<name>analisi_requisiti/Milestone1-DomainModel/paper/.tex</name>
 			<type>1</type>
 			<location>/usr/share/texmf-texlive/tex/latex/tools/.tex</location>
