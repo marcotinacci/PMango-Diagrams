@@ -18,6 +18,9 @@ class TaskDataTree {
 	 */
 	private $root;
 	
+	public function __construct(){
+		$root = new TaskData();
+	} //??
 	/**
 	 * Metodo accessore alla struttura
 	 * @return TaskData

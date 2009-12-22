@@ -27,7 +27,7 @@ class TaskData{
 	 * riferimento all'insieme dei nodi figli.
 	 * @var TaskData[]
 	 */
-	private $children;
+	private $children = array();
 	
 	/**
 	 * Variabile vettore di tipo TaskData,
@@ -35,7 +35,7 @@ class TaskData{
 	 * finish-to-start dependencies.
 	 * @var TaskData[]
 	 */
-	private $ftsDependencies;
+	private $ftsDependencies = array();
 	
 	/**
 	 * Metodo che consente di aggiungere un figlio alla lista dei figli del this.
