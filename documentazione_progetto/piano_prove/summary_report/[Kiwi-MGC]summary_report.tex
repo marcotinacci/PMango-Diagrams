@@ -1,0 +1,99 @@
+\chapter{Summary report}
+\label{chap:summary_report}
+
+Questo capitolo riassume l'esito dell'intero piano di test e delle sue
+componenti:
+
+\section{Case Specification \ref{chap:generateGantt}}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{triples} & \textbf{esito} & \textbf{causes' logs} \\
+	\hline    
+	\nameref{sec:ganttBasicTaskRepresentation} & \emph{failure} & none \\
+    \hline
+	\nameref{sec:ganttComposedTaskRepresentation} & \emph{failure} & none \\
+    \hline
+	\nameref{sec:actualTimeTaskRepresentation} & \emph{failure} & none \\
+    \hline
+    \nameref{sec:identifierNameTaskRepresentation} & \emph{failure} & none \\
+    \hline
+    \nameref{sec:ganttResourcesTaskRepresentation} & \emph{failure} & none \\
+    \hline
+    \nameref{sec:TNDependencyrepresentation} & \emph{failure} & none \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\section{Case Specification \ref{chap:generateWBS}}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{triples} & \textbf{esito} & \textbf{causes' logs} \\
+	\hline    
+	\nameref{sec:WBSTaskRepresentation} & \emph{failure} & none \\
+    \hline
+	\nameref{sec:WBSDimensionRepresentation} & \emph{failure} & none \\
+    \hline
+	\nameref{sec:wbs_compositionRelationsRepresentation} & \emph{failure} & none \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\section{Case Specification \ref{chap:generateTaskNetwork}}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{triples} & \textbf{esito} & \textbf{causes' logs} \\
+	\hline    
+	\nameref{sec:TNTaskRepresentation} & \emph{failure} & none \\
+    \hline
+	\nameref{sec:dimensionTaskRepresentation} & \emph{failure} & none \\
+    \hline
+	\nameref{sec:TNDependencyrepresentation} & \emph{failure} & none \\
+    \hline
+    \nameref{sec:tn_criticalPathRepresentation} & \emph{failure} & none \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\section{Design Specification \ref{sec:GenerateChart}}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{case specification} & \textbf{esito} & \textbf{causes' logs} \\
+	\hline    
+	\nameref{chap:generateGantt} & \emph{failure} & none \\
+    \hline
+	\nameref{chap:generateWBS} & \emph{failure} & none \\
+    \hline
+	\nameref{chap:generateTaskNetwork} & \emph{failure} & none \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\section{Master Plan}
+
+\begin{table}[h!]
+  \begin{center}
+    \begin{tabular}{| l | l | p{60mm} |}
+    \hline
+    \textbf{desing specification} & \textbf{esito} & \textbf{causes' logs} \\
+	\hline    
+	\nameref{chap:generateChartDesingSpecification} & \emph{failure} & none \\
+    \hline
+    \end{tabular}
+  \end{center}
+\end{table}

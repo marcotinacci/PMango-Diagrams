@@ -69,11 +69,13 @@
 \part{Planning}
 
 \chapter{Master Plan}
+\label{chap:master_plan}
 \input{master_plan/[Kiwi-MGC]master_plan.tex}
 
 \part{Desing Specification}
 \label{part:DesignSpecification}
 \chapter{Generate Chart Design}
+\label{chap:generateChartDesingSpecification}
 \input{desing_spec/[Kiwi-MGC]desingSpec_generateChart.tex}
 
 \part{Case Specification}
@@ -81,4 +83,18 @@
 \input{case_spec/[Kiwi-MGC]caseSpec_generateGantt.tex}
 \input{case_spec/[Kiwi-MGC]caseSpec_generateWBS.tex}
 \input{case_spec/[Kiwi-MGC]caseSpec_generateTaskNetwork.tex}
+
+\part{Reporting}
+\label{part:reporting}
+\input{transmittal_report/[Kiwi-MGC]transmittal_report.tex}
+
+\chapter{Tests logs}
+\label{chap:testsLogs}
+Questo capitolo \`e un contenitore di log. Ogni log \`e in relazione one-to-one
+con una tripla definita in un case specification, nella parte
+\ref{part:CaseSpecification}, ed ogni log viene descritto in una sezione
+indipendente dalla altre.
+\input{test_logs/[Kiwi-MGC]log_ganttBasicTaskRepresentation.tex}
+
+\input{summary_report/[Kiwi-MGC]summary_report.tex}
 \end{document}
