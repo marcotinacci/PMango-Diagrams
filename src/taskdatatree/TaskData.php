@@ -63,7 +63,7 @@ class TaskData{
 	public function getParent(){
 		return $this->parent;
 	}
-	
+
 	public function getInfo(){
 		return $this->info;
 	}
@@ -82,8 +82,7 @@ class TaskData{
 	 */
 	public function addChild($td){
 		$td.setParent($this);
-		$this->children.append($td -> $td.getInfo.getTaskName());
+		$this->children->append($td -> $td->getInfo->getTaskName());
 		//@TODO (ricordarsi di settare opportunamente anche parent di $td
 	}
-
 }

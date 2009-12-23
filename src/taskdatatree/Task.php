@@ -15,7 +15,7 @@ class Task{
 	
 	private $data;
 	
-	private function setData(){
+	public function setData(){
 		//@TODO vedere come sistemare le informazioni tirate su da
 		//TaskDataTreeGenerator in $data.
 		$data = getData();

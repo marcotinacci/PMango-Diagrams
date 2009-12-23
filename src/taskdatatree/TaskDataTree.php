@@ -18,15 +18,31 @@ class TaskDataTree {
 	 */
 	private $root;
 	
-	public function __construct(){
+	/*
+	 * public function __construct(){
 		$root = new TaskData();
 	}
-
+	*/
+	
+	
 	/**
 	 * Metodo accessore alla struttura
 	 * @return TaskData
 	 */
 	public function getTaskDataTree(){
 		return $root;
+	}
+	
+	public function setRoot($root){
+		$this->root = $root;
+	}
+	
+	public function deepVisit(){
+		$res = array();
+		$currentNode = $root;
+		foreach($currentNode->getChildren() as $son){
+			$res[sizeOf($res)] = $son;
+		}
+		return $res;
 	}
 }

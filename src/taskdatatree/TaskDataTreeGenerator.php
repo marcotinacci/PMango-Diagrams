@@ -12,7 +12,9 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 
+	require_once "TaskDataTree.php";
 	require_once "TaskData.php";
+	require_once "Task.php";
 
 class TaskDataTreeGenerator{
 	
@@ -24,7 +26,19 @@ class TaskDataTreeGenerator{
 	 */
 	public function generateTaskDataTree($uoc){
 		//@TODO
+		$array = getData();
+		$root = new TaskData();
+		$d1 = new Task();
+		$d1->setData($array[0]);
+		$d2 = new Task();
+		$d2->setData($array[1]);
+		$td1 = new taskData();
+		$td1->setInfo($d1);
+		$td2 = new taskData();
+		$td2->setInfo($d2);
+		$root->setChildren(array($td1, $td2));
 		$tdt = new TaskDataTree();
+		$tdt->setRoot($root);
 		return $tdt;
 	}
 	
@@ -34,6 +48,8 @@ class TaskDataTreeGenerator{
 	 */
 	public function getData(){
 		//@TODO
-		return $dataRecoverd;
+		$array = array(array("id"=>1, "nome"=> "Analisi"), array("id"=>2, "nome"=>"Sviluppo"));
+		return $array;
 	}
 }
+
