@@ -18,14 +18,26 @@ class TaskDataTree {
 	 */
 	private $root;
 	
+	/**
+	 * Variabile di tipo String, nome della struttura
+	 * @var String
+	 */
+	private $name;
+	
 	public function __construct(){
 		$root = new TaskData();
-	} //??
+		//@TODO completare con una sequenza di set a senconda dei parametri
+	}
+
 	/**
 	 * Metodo accessore alla struttura
 	 * @return TaskData
 	 */
 	public function getTaskDataTree(){
 		return $root;
+	}
+	
+	public function getName(){
+		return $name;
 	}
 }

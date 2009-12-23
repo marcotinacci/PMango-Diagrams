@@ -37,11 +37,53 @@ class TaskData{
 	 */
 	private $ftsDependencies = array();
 	
+	public function __construct(){
+		$parent=null;
+		$info=null;
+		$children=null;
+		$ftsDependencies=null;
+	}
+	
+	public function setParent($parent){
+		$this->parent = $parent;
+	}
+	
+	public function setInfo($info){
+		$this->info = $info;
+	}
+	
+	public function setChildren($children){
+		$this->children = $children;
+	}
+	
+	public function setFtsDependencies($ftsDependencies){
+		$this->ftsDependencies = $ftsDependencies;
+	}
+	
+	public function getParent(){
+		return $this->parent;
+	}
+	
+	public function getInfo(){
+		return $this->info;
+	}
+
+	public function getChildren(){
+		return $this->children;
+	}
+
+	public function getFtsDependencies(){
+		return $this->ftsDependencies;
+	}
+	
 	/**
 	 * Metodo che consente di aggiungere un figlio alla lista dei figli del this.
 	 * @param TaskData
 	 */
 	public function addChild($td){
+		$td.setParent($this);
+		$this->children.append($td -> $td.getInfo.getTaskName());
 		//@TODO (ricordarsi di settare opportunamente anche parent di $td
 	}
+
 }

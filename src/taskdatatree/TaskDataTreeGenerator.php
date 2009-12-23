@@ -22,6 +22,7 @@ class TaskDataTreeGenerator{
 	 */
 	public function generateTaskDataTree($uoc){
 		//@TODO
+		$tdt = new TaskDataTree(/*...*/);
 		return $tdt;
 	}
 	
