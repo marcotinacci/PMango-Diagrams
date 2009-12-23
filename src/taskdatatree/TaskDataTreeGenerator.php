@@ -12,6 +12,8 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 
+	require_once "TaskData.php";
+
 class TaskDataTreeGenerator{
 	
 	/**
@@ -22,7 +24,7 @@ class TaskDataTreeGenerator{
 	 */
 	public function generateTaskDataTree($uoc){
 		//@TODO
-		$tdt = new TaskDataTree(/*...*/);
+		$tdt = new TaskDataTree();
 		return $tdt;
 	}
 	
