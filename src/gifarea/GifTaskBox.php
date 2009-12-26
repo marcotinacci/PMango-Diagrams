@@ -1,6 +1,10 @@
 <?php
 
 require_once("./../taskdatatree/Task.php");
+require_once "./GifArea.php";
+require_once "./GifBox.php";
+require_once "./GifLabel.php";
+require_once "./GifProgressBar.php";
 
 class GifTaskBox extends GifArea
 {

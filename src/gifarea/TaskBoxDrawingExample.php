@@ -1,10 +1,6 @@
 <?php
 
 require_once "./GifImage.php";
-require_once "./GifBox.php";
-require_once "./GifLabel.php";
-require_once "./BoxedLabel.php";
-require_once "./GifProgressBar.php";
 require_once "./GifTaskBox.php";
 require_once "./DrawingHelper.php";
 

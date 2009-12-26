@@ -3,6 +3,10 @@
 /* This class print a progress bar and is an example of high level composition, infacts
  * there is no override of the method canvasDraw.
  */
+
+require_once "./GifArea.php";
+require_once "./GifBox.php";
+
 class GifProgressBar extends GifArea
 {	
 	function __construct($x, $y, $width, $height, $completed)
