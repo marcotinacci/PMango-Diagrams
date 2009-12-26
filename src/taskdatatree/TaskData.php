@@ -82,7 +82,5 @@ class TaskData{
 	 */
 	public function addChild($td){
 		$td.setParent($this);
-		$this->children->append($td -> $td->getInfo->getTaskName());
-		//@TODO (ricordarsi di settare opportunamente anche parent di $td
-	}
+		$this->children[sizeOf($this->children)] = $td;
 }

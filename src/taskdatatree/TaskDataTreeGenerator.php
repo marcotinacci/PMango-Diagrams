@@ -19,8 +19,8 @@
 class TaskDataTreeGenerator{
 	
 	/**
-	 * Questo metodo genera un TaskDataTree passando i dati
-	 * recuperati dal DB considerando le uoc.
+	 * Questo metodo genera un TaskDataTree utilizzando getData() per 
+	 * recuperare i dati dal DB (considerando le uoc).
 	 * @param UserOptionsChoice $uoc
 	 * @return TaskDataTree $tdt
 	 */
@@ -44,12 +44,12 @@ class TaskDataTreeGenerator{
 	
 	/**
 	 * Metodo per l'accesso ai dati dei task.
-	 * @return $dataRecovered sono i dati recuperati riguardanti i task
+	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
 		//@TODO
-		$array = array(array("id"=>1, "nome"=> "Analisi"), array("id"=>2, "nome"=>"Sviluppo"));
-		return $array;
+		$recovered_data = array(array("id"=>1, "nome"=> "Analisi"), array("id"=>2, "nome"=>"Sviluppo"));
+		return $recovered_data;
 	}
 }
 
