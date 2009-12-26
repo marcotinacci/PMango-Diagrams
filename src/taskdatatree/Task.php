@@ -1,5 +1,7 @@
 <?php
 
+	require_once "TaskDataTreeGenerator.php";
+
 /**
  * Questa classe organizza le informazioni da incapsulare nei nodi della struttura,
  * Per ogni task.
@@ -15,10 +17,10 @@ class Task{
 	
 	private $data;
 	
-	public function setData(){
+	public function setData($data){
 		//@TODO vedere come sistemare le informazioni tirate su da
 		//TaskDataTreeGenerator in $data.
-		$data = getData();
+		$this->data = $data;
 	}
 	
 	public function getTaskName(){

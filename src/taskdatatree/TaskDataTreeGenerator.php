@@ -26,7 +26,7 @@ class TaskDataTreeGenerator{
 	 */
 	public function generateTaskDataTree($uoc){
 		//@TODO
-		$array = getData();
+		$array = $this->getData();
 		$root = new TaskData();
 		$d1 = new Task();
 		$d1->setData($array[0]);
