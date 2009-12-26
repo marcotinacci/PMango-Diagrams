@@ -37,13 +37,25 @@ class GifLabel extends GifArea
 
 	protected function canvasDraw()
 	{
+		$txt = $this->TruncateText($this->text,$this->width,10);
 		$this->canvas->img->SetTransparent("white");
-		$t = new Text( $this->text,$this->width/2,$this->height/2 );
+		$t = new Text( $txt,$this->width/2,$this->height/2 );
 		$t->SetFont( FF_VERDANA, FS_NORMAL,10);
 		$t->SetColor($this->color);
 		$t->Align('center','center');
 		$t->ParagraphAlign( 'center');
 		$this->canvas->add($t);
+	}
+	
+	private function TruncateText($txt,$width,$size)
+	{
+		$offset = $size*(8/10);
+		if( ($width - strlen($txt)*$offset) > 0)
+			return $txt;
+		
+		$optimal = $width/$offset;
+		$ret = substr($txt,0,$optimal-2);
+		return $ret."...";
 	}
 }
 

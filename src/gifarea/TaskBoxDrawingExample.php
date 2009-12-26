@@ -8,10 +8,10 @@ $gif = new GifImage(800,550);
 
 $areas=array();
 
-$areas[] = new GifTaskBox(0,300,100,80,null);
-$areas[] = new GifTaskBox(200,300,100,80,null);
-$areas[] = new GifTaskBox(400,300,100,80,null);
-$areas[] = new GifTaskBox(600,300,100,80,null);
+$areas[] = new GifTaskBox(0,300,100,100,null);
+$areas[] = new GifTaskBox(200,300,100,100,null);
+$areas[] = new GifTaskBox(400,300,100,100,null);
+$areas[] = new GifTaskBox(600,300,100,100,null);
 
 $xs[]=50; $ys[]=300;
 $xs[]=250; $ys[]=300;

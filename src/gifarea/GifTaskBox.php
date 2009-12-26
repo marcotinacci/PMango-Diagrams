@@ -16,24 +16,31 @@ class GifTaskBox extends GifArea
 	{
 		parent::__construct($x, $y, $width, $height);
 		
-		$row=$height/6;
+		$row=intval($height/6,10);
 		
-		$this->subAreas['TaskName_box'] = new GifBox(0,0,$width,$row);
-		$this->subAreas['TaskName_label'] = new GifLabel(2,2,$width-2,$row-2,"TaskName");
+		$curY = 0;
 		
-		$this->subAreas['Effort_box'] = new GifBox(0,$row,$width,$row);
-		$this->subAreas['Effort_label'] = new GifLabel(2,$row+2,$width-2,$row-2,"Effort");
+		$this->subAreas['TaskName_box'] = new GifBox(0,$curY,$width,$row);
+		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"TaskName");
 		
-		$this->subAreas['PlannedData_box'] = new GifBox(0,2*$row,$width,$row);
-		$this->subAreas['PlannedData_label'] = new GifLabel(2,2*$row+2,$width-2,$row-2,"PlannedData");
+		$curY += $row;
+		$this->subAreas['Effort_box'] = new GifBox(0,$curY,$width,$row);
+		$this->subAreas['Effort_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"Effort");
 		
-		$this->subAreas['PlannedTimeFrame_box'] = new GifBox(0,3*$row,$width,$row);
-		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,3*$row+2,$width-2,$row-2,"PlannedTimeFrame");
+		$curY += $row;
+		$this->subAreas['PlannedData_box'] = new GifBox(0,$curY,$width,$row);
+		$this->subAreas['PlannedData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedData");
 		
-		$this->subAreas['ActualData_box'] = new GifBox(0,4*$row,$width,$row);
-		$this->subAreas['ActualData_label'] = new GifLabel(2,4*$row+2,$width-2,$row-2,"ActualData");
+		$curY += $row;
+		$this->subAreas['PlannedTimeFrame_box'] = new GifBox(0,$curY,$width,$row);
+		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedTimeFrame");
 		
-		$this->subAreas['Percentage']= new GifProgressBar(0, 5*$row ,$width, $row,30);
+		$curY += $row;
+		$this->subAreas['ActualData_box'] = new GifBox(0,$curY,$width,$row);
+		$this->subAreas['ActualData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"ActualData");
+		
+		$curY += $row;
+		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, $row,30);
 		
 		$this->task = $task;
 	}
