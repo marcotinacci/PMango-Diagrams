@@ -83,4 +83,26 @@ class TaskData{
 	public function addChild($td){
 		$td.setParent($this);
 		$this->children[sizeOf($this->children)] = $td;
+	}
+	
+	public function deepVisit(){
+		$res = array();
+		foreach($this->getChildren() as $son){
+			$res[sizeOf($res)] = $son;
+			$son->deepVisit();
+		}
+		return $res;
+	}
+	
+	public function getLeaves(){
+		$leaves = array();
+		if($this->getChildren()==null){
+			$leaves[sizeOf($leaves)]=$this;
+		}
+		else {
+			foreach($this->getChildren() as $son){
+				$son->getLeaves();
+			}
+		}
+	}
 }
