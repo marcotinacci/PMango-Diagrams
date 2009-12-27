@@ -4,5 +4,5 @@
 
 	$treeg = new TaskDataTreeGenerator();
 	$tdt = $treeg->generateTaskDataTree(null);
-	echo $tdt
+	echo $tdt;
 ?>
