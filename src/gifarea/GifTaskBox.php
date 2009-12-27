@@ -5,6 +5,7 @@ require_once "./GifArea.php";
 require_once "./GifBox.php";
 require_once "./GifLabel.php";
 require_once "./GifProgressBar.php";
+require_once "./GifMark.php";
 
 class GifTaskBox extends GifArea
 {
@@ -16,33 +17,51 @@ class GifTaskBox extends GifArea
 	{
 		parent::__construct($x, $y, $width, $height);
 		
-		$row=intval($height/6,10);
+		$row=intval($height/6);
+		$module = $height%6;
+		$fontHeight = $row-6;
 		
 		$curY = 0;
 		
 		$this->subAreas['TaskName_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"TaskName");
+		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"TaskName",$fontHeight);
 		
 		$curY += $row;
 		$this->subAreas['Effort_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['Effort_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"Effort");
+		$this->subAreas['Effort_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"Effort",$fontHeight);
 		
 		$curY += $row;
 		$this->subAreas['PlannedData_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['PlannedData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedData");
+		$this->subAreas['PlannedData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedData",$fontHeight);
 		
 		$curY += $row;
 		$this->subAreas['PlannedTimeFrame_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedTimeFrame");
+		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedTimeFrame",$fontHeight);
 		
 		$curY += $row;
 		$this->subAreas['ActualData_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['ActualData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"ActualData");
+		$this->subAreas['ActualData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"ActualData",$fontHeight);
 		
 		$curY += $row;
-		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, $row,30);
+		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, $row+$module,30);
+
+		$this->subAreas['Mark']= new GifMark($width, 0 ,$width/5, 1);
 		
 		$this->task = $task;
+	}
+	
+	public function getFontsize()
+	{
+		return $this->subAreas['TaskName_label']->getFontSize();
+	}
+	
+	public function setFontSize($size)
+	{
+		$this->subAreas['TaskName_label']->setFontSize($size);
+		$this->subAreas['Effort_label']->setFontSize($size);
+		$this->subAreas['PlannedData_label']->setFontSize($size);
+		$this->subAreas['PlannedTimeFrame_label']->setFontSize($size);
+		$this->subAreas['ActualData_label']->setFontSize($size);
 	}
 
 	public function showTaskName($bool){
@@ -70,10 +89,13 @@ class GifTaskBox extends GifArea
 		$this->subAreas['ActualData_label']->visible = $bool;
 	}	
 
-	private function showPercentage($bool){
+	public function showPercentage($bool){
 		$this->subAreas['Percentage']->visible = $bool;
 	}
 	
+	public function showMark($bool,$priority=0){
+		$this->subAreas['Mark']->visible = $bool;
+	}
 }
 
 ?>

@@ -4,10 +4,9 @@ require_once("./LineStyle.php");
 
 class DrawingHelper
 {
-	//TODO Adjust the method to draw good for every coordinate
+	/* This method draw a line from the point ($x1,$y1) to point ($x2,$y2). */
 	public static function LineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
 	{
-		
 		$x_min = min(array($x1,$x2));
 		$y_min = min(array($y1,$y2));
 		$x_max = max(array($x1,$x2));
@@ -16,9 +15,37 @@ class DrawingHelper
 		$canvas = new CanvasGraph ($x_max-$x_min+30, $y_max-$y_min+30, 'auto');
 		
 		DrawingHelper::initLineStyle($canvas,$lineStyle);
-		
-		$canvas->img->Line(abs($x1-$x_min) ,abs($y1-$y_min) ,abs($x2-$x_min) ,abs($y2-$y_min));
+
+		$canvas->img->StyleLine(abs($x1-$x_min) ,abs($y1-$y_min) ,abs($x2-$x_min) ,abs($y2-$y_min));
 		$gifImage->addCanvas($canvas,$x_min,$y_min);
+	}
+	
+	/* This method draw a line that pass trough the points described by 
+	 * the $xs array and $ys array. */
+	public static function LineTrough($xs ,$ys ,$gifImage ,$lineStyle = null)
+	{
+		$lastX = $xs[0];
+		$lastY = $ys[0];
+		for($i=1;$i<sizeof($xs);$i++)
+		{
+			DrawingHelper::LineFromTo($lastX ,$lastY ,$xs[$i] ,$ys[$i],$gifImage,$lineStyle);
+			$lastX = $xs[$i];
+			$lastY = $ys[$i];
+		}
+	}
+	
+	/* This method draw an up rectangular line that pass trough the points described by 
+	 * the $xs array and $ys array. */
+	public static function UpRectangularLineTrough($xs ,$ys ,$gifImage ,$lineStyle = null)
+	{
+		$lastX = $xs[0];
+		$lastY = $ys[0];
+		for($i=1;$i<sizeof($xs);$i++)
+		{
+			DrawingHelper::UpRectangularLineFromTo($lastX ,$lastY ,$xs[$i] ,$ys[$i],$gifImage,$lineStyle);
+			$lastX = $xs[$i];
+			$lastY = $ys[$i];
+		}
 	}
 	
 	/* This method draw a line from the point ($x1,$y1) to every point described by 
@@ -106,7 +133,7 @@ class DrawingHelper
 		}
 	}
 	
-	private function initLineStyle(&$canvas,&$lineStyle)
+	private function initLineStyle(&$canvas,$lineStyle)
 	{
 		$w = $canvas->img->width;
 		$h = $canvas->img->height;
@@ -117,11 +144,35 @@ class DrawingHelper
 		if($lineStyle == null)
 			$lineStyle = new LineStyle();
 			
+		//$canvas->img->SetAntiAliasing(false);
 		$canvas->img->SetColor($lineStyle->color);
 		$canvas->img->SetLineStyle($lineStyle->style);
+		$canvas->img->SetLineWeight($lineStyle->weight);
+	}
+	
+	public static function drawArrow($x,$y,$width,$height,$angle,$gifImage ,$lineStyle = null)
+	{	
+		$canvas = new CanvasGraph ($width, $height, 'auto');
+		
 		$w = $canvas->img->width;
 		$h = $canvas->img->height;
+		$canvas->img->SetColor("magenta");
+		$canvas->img->FilledRectangle(0,0,$w, $h);
+		$canvas->img->SetTransparent("magenta");
 		
+		$xoffset = $width/2;
+		$yoffset = $height/2;
+		
+		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
+		$points[2]=0+$width/2+$xoffset; $points[3]=$height/2+$yoffset;
+		$points[4]=0-$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		
+		$canvas->img->SetAngle($angle);
+		$canvas->img->SetColor("black");
+		$canvas->img->Rectangle(0,0,$width,$height);
+		//$canvas->img->Circle(0+$width/2,0+$height,$width/2);
+		$canvas->img->FilledPolygon($points);
+		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
 	}
 }
 

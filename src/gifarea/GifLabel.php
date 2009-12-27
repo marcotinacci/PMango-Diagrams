@@ -7,12 +7,24 @@ class GifLabel extends GifArea
 {
 	private $color = "black";
 	private $text = "";
+	private $size = 10;
 
-	public function __construct($x, $y, $width, $height, $text)
+	public function __construct($x, $y, $width, $height, $text, $size)
 	{
 		parent::__construct($x,$y,$width,$height);
 		$this->text = $text;
+		$this->size = $size;
 		$this->transparent = false;
+	}
+	
+	public function getFontsize()
+	{
+		return $this->size;
+	}
+	
+	public function setFontSize($size)
+	{
+		$this->size=$size;
 	}
 	
 	public function setText($txt)
@@ -37,10 +49,14 @@ class GifLabel extends GifArea
 
 	protected function canvasDraw()
 	{
-		$txt = $this->TruncateText($this->text,$this->width,10);
+		$txt = $this->TruncateText($this->text,$this->width,$this->size);
 		$this->canvas->img->SetTransparent("white");
-		$t = new Text( $txt,$this->width/2,$this->height/2 );
-		$t->SetFont( FF_VERDANA, FS_NORMAL,10);
+		
+		$xc = intval($this->width/2);
+		$yc = intval($this->height/2);
+		
+		$t = new Text( $txt,$xc,$yc-2 );
+		$t->SetFont( FF_VERDANA, FS_NORMAL,$this->size);
 		$t->SetColor($this->color);
 		$t->Align('center','center');
 		$t->ParagraphAlign( 'center');
@@ -49,14 +65,22 @@ class GifLabel extends GifArea
 	
 	private function TruncateText($txt,$width,$size)
 	{
+		$clear = $this->DeleteSpecialCharacters($txt);
 		$offset = $size*(8/10);
-		if( ($width - strlen($txt)*$offset) > 0)
+		if( ($width - strlen($clear)*$offset) > 0)
 			return $txt;
 		
 		$optimal = $width/$offset;
 		$ret = substr($txt,0,$optimal-2);
 		return $ret."...";
 	}
+	
+	private function DeleteSpecialCharacters($txt)
+	{
+		$res = preg_replace("/(&#[0-9]+;)/"," ",$txt);
+		return $res;
+	}
+	
 }
 
 ?>

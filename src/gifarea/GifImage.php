@@ -10,9 +10,13 @@ class GifImage
 {
 	//It's a MGraph of the jpGraph library
 	private $mgraph;
+	private $width;
+	private $height;
 	
 	function __construct($width,$height)
 	{
+		$this->width = $width;
+		$this->height = $height;
 		$this->mgraph = new MGraph($width,$height);
 	}	
 	
@@ -32,6 +36,16 @@ class GifImage
 	function draw()
 	{
 		$this->mgraph->Stroke();
+	}
+	
+	public function getWidth()
+	{
+		return $this->width;
+	}
+
+	public function getHeight()
+	{
+		return $this->height;
 	}
 	
 }
