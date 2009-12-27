@@ -89,7 +89,10 @@ class TaskData{
 		$res = array();
 		foreach($this->getChildren() as $son){
 			$res[sizeOf($res)] = $son;
-			$son->deepVisit();
+			$add = $son->deepVisit();
+		}
+		for ($i=0; $i<sizeOf($add); $i++){
+			$res[sizeOf($res)] = $add[$i];
 		}
 		return $res;
 	}

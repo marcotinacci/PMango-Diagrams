@@ -38,7 +38,10 @@ class TaskDataTree {
 		$res = array();
 		foreach($root->getChildren() as $son){
 			$res[sizeOf($res)] = $son;
-			$son->deepVisit(); //@TODO gestire il return della deepVisit
+			$add = $son->deepVisit();
+		}
+		for ($i=0; $i<sizeOf($add); $i++){
+			$res[sizeOf($res)] = $add[$i];
 		}
 		return $res;
 	}

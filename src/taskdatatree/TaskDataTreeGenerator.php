@@ -26,19 +26,19 @@ class TaskDataTreeGenerator{
 	 */
 	public function generateTaskDataTree($uoc){
 		//@TODO
-		$array = $this->getData();
+		$array = $this->getData(); //preleva le info
 		$root = new TaskData();
 		$d1 = new Task();
 		$d1->setData($array[0]);
 		$d2 = new Task();
-		$d2->setData($array[1]);
+		$d2->setData($array[1]); //le informazioni sono incapsulate nei task
 		$td1 = new taskData();
 		$td1->setInfo($d1);
 		$td2 = new taskData();
-		$td2->setInfo($d2);
-		$root->setChildren(array($td1, $td2));
+		$td2->setInfo($d2); //i task vengono incapsulati nei nodi task_data
+		$root->setChildren(array($td1, $td2)); //costruzione dell'albero
 		$tdt = new TaskDataTree();
-		$tdt->setRoot($root);
+		$tdt->setRoot($root); //costruzione dell'albero
 		return $tdt;
 	}
 	
