@@ -26,7 +26,7 @@ class TaskDataTree {
 	 * Metodo accessore alla struttura
 	 * @return TaskData
 	 */
-	public function getTaskDataTree(){
+	public function getRoot(){
 		return $root;
 	}
 	
@@ -50,18 +50,7 @@ class TaskDataTree {
 		$res = array(); //@TODO
 	}
 	
-	public function show(){
-		echo "Root -> ";
-		if(sizeOF($root->getChildren())!= 0){
-			echo "(";
-		}
-		foreach($root->getChildren() as $son){
-			echo $son."-> ";
-		}
-		//@TODO completare
-	}
-	
 	public function getLeaves(){
-		$this->getTaskDataTree()->getLeaves();
+		$this->getRoot()->getLeaves();
 	}
 }
