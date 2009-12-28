@@ -97,6 +97,22 @@ class TaskData{
 		return $res;
 	}
 	
+	public function wideVisit(){
+		$res = array();
+		$step = $this->getChildren();
+		for($i=0; $i<sizeOf($step); $i++){
+			$res[sizeOf($res)] = $step[$i];
+		}
+		for($i=0; $i<sizeOf($step); $i++){
+			$current_node = $step[$i];
+			$add = $current_node->wideVisit();
+			for ($i=0; $i<sizeOf($add); $i++){
+				$res[sizeOf($res)] = $add[$i];
+			}
+		}
+		return $res;
+	}
+	
 	public function getLeaves(){
 		$leaves = array();
 		if($this->getChildren()==null){
@@ -104,8 +120,13 @@ class TaskData{
 		}
 		else {
 			foreach($this->getChildren() as $son){
-				$son->getLeaves();
-			}
+				$add = $son->getLeaves();
+				for ($i=0; $i<sizeOf($add); $i++){
+					$leaves[sizeOf($leaves)] = $add[$i];
+				}
+			}	
 		}
+		return $leaves;
 	}
+
 }
