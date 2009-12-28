@@ -24,7 +24,7 @@ class DataArrayKeyEnumeration {
 	public static $assigned_to_task = "assigned_to_task";
 	public static $planned_data = "planned_data";
 	public static $plan_duration = "plan_duration";
-	public static $plan_effort = "plan_effort";
+	//public static $plan_effort = "plan_effort";
 	public static $plan_cost = "plan_cost";
 	public static $planned_time_frame = "planned_time_frame";
 	public static $start_date = "start_date";
