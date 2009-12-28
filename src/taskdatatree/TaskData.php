@@ -90,6 +90,7 @@ class TaskData{
 	
 	public function deepVisit(){
 		$res = array();
+		$add = array();
 		foreach($this->getChildren() as $son){
 			$res[sizeOf($res)] = $son;
 			$add = $son->deepVisit();
@@ -102,6 +103,7 @@ class TaskData{
 	
 	public function wideVisit(){
 		$res = array();
+		$add = array();
 		$step = $this->getChildren();
 		for($i=0; $i<sizeOf($step); $i++){
 			$res[sizeOf($res)] = $step[$i];
@@ -118,6 +120,7 @@ class TaskData{
 	
 	public function getLeaves(){
 		$leaves = array();
+		$add = array();
 		if($this->getChildren()==null){
 			$leaves[sizeOf($leaves)]=$this;
 		}

@@ -36,6 +36,7 @@ class TaskDataTree {
 	
 	public function deepVisit(){
 		$res = array();
+		$add = array();
 		foreach($this->root->getChildren() as $son){
 			$res[sizeOf($res)] = $son;
 			$add = $son->deepVisit();
@@ -48,6 +49,7 @@ class TaskDataTree {
 	
 	public function wideVisit(){
 		$res = array();
+		$add = array();
 		$first_step = $this->root->getChildren();
 		for($i=0; $i<sizeOf($first_step); $i++){
 			$res[sizeOf($res)] = $first_step[$i];
