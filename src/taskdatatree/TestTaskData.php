@@ -21,5 +21,25 @@
 	
 	echo "<br><br>L'id della seconda attività: ".$data_id_2;
 	echo "<br> Il nome della seconda attività :".$data_name_2;
-
+	
+	$deep = $tdt->deepVisit();
+	echo "<br><br>Visita in profondità<br>";
+	for($i=0; $i<sizeOf($deep); $i++){
+		$current_info = $deep[$i]->getInfo();
+		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
+	}
+	
+	$wide = $tdt->wideVisit();
+	echo "<br><br>Visita in ampiezza<br>";
+	for($i=0; $i<sizeOf($wide); $i++){
+		$current_info = $wide[$i]->getInfo();
+		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
+	}
+	
+	$leaves = $tdt->getLeaves();
+	echo "<br><br>Solo le foglie<br>";
+	for($i=0; $i<sizeOf($leaves); $i++){
+		$current_info = $leaves[$i]->getInfo();
+		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
+	}
 ?>

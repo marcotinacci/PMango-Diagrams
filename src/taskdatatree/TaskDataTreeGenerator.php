@@ -28,17 +28,63 @@ class TaskDataTreeGenerator{
 		//@TODO
 		$array = $this->getData(); //preleva le info
 		$root = new TaskData();
+		//----------------------------//
 		$d1 = new Task();
 		$d1->setData($array[0]);
+		
 		$d2 = new Task();
-		$d2->setData($array[1]); //le informazioni sono incapsulate nei task
+		$d2->setData($array[1]);
+		
+		$d1_1 = new Task();
+		$d1_1->setData($array[2]);
+		
+		$d1_2 = new Task();
+		$d1_2->setData($array[3]);
+		
+		$d1_3 = new Task();
+		$d1_3->setData($array[4]);
+		
+		$d2_1 = new Task();
+		$d2_1->setData($array[5]);
+		
+		$d2_2 = new Task();
+		$d2_2->setData($array[6]);
+		
+		$d2_1_1 = new Task();
+		$d2_1_1->setData($array[7]);	//le informazioni sono incapsulate nei task
+		//---------------------------//
 		$td1 = new taskData();
 		$td1->setInfo($d1);
+		
 		$td2 = new taskData();
-		$td2->setInfo($d2); //i task vengono incapsulati nei nodi task_data
-		$root->setChildren(array($td1, $td2)); //costruzione dell'albero
+		$td2->setInfo($d2);
+		
+		$td1_1 = new taskData();
+		$td1_1->setInfo($d1_1);
+		
+		$td1_2 = new taskData();
+		$td1_2->setInfo($d1_2);
+		
+		$td1_3 = new taskData();
+		$td1_3->setInfo($d1_3);
+		
+		$td2_1 = new taskData();
+		$td2_1->setInfo($d2_1);
+		
+		$td2_2 = new taskData();
+		$td2_2->setInfo($d2_2);
+		
+		$td2_1_1 = new taskData();
+		$td2_1_1->setInfo($d2_1_1);		//i task vengono incapsulati nei nodi task_data
+		
+		 //costruzione dell'albero
+		$td2_1->setChildren($td2_1_1);
+		$td2->setChildren(array($td2_1, $td2_2));
+		$td1->setChildren(array($td1_1, $td1_2, $td1_3));
+		$root->setChildren(array($td1, $td2));
+		
 		$tdt = new TaskDataTree();
-		$tdt->setRoot($root); //costruzione dell'albero
+		$tdt->setRoot($root);
 		return $tdt;
 	}
 	
@@ -50,7 +96,7 @@ class TaskDataTreeGenerator{
 		//@TODO
 		//IMPORTANTE: concordare i nomi dei campi, con i nomi di accesso presenti nei get della
 		//classe Task.php
-		$recovered_data = array(array("id"=>"1", "name"=> "Analisi"), array("id"=>"2", "name"=>"Sviluppo"));
+		$recovered_data = array(array("id"=>"1", "name"=> "Analisi"), array("id"=>"2", "name"=>"Sviluppo"), array("id"=>"1.1", "name"=>"Incontri con il committente"), array("id"=>"1.2", "name"=>"Definizione dei requisiti"), array("id"=>"1.3", "name"=>"Preparazione offerta"), array("id"=>"2.1", "name"=>"Progettazione"), array("id"=>"2.2", "name"=>"Progettazione delle prove"), array("id"=>"2.1.1", "name"=>"Prima riunione organizzativa progettisti"));
 		return $recovered_data;
 	}
 }

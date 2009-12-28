@@ -53,6 +53,9 @@ class TaskData{
 	}
 	
 	public function setChildren($children){
+		for($i=0; $i<sizeOf($children); $i++){
+			$children[$i]->setParent($this);
+		}
 		$this->children = $children;
 	}
 	
