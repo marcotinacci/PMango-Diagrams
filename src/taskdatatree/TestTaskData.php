@@ -39,8 +39,9 @@
 	$info_6 = $deep[6]->getInfo();
 	$name_6 = $info_6->getTaskName();
 	echo $name_6.".";
-	echo " La settima non la prende (la 2.1.1).. come mai???<br>";
+	echo " La settima non la prende (la 2.1.1).. come mai???<br><br>";
 	
+	echo "col ciclo...<br>";
 	for($i=0; $i<sizeOf($deep); $i++){
 		$current_info = $deep[$i]->getInfo();
 		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
