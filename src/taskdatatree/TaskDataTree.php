@@ -27,7 +27,7 @@ class TaskDataTree {
 	 * @return TaskData
 	 */
 	public function getRoot(){
-		return $root;
+		return $this->root;
 	}
 	
 	public function setRoot($root){

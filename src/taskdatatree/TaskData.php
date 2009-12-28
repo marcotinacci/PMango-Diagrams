@@ -81,7 +81,7 @@ class TaskData{
 	 * @param TaskData
 	 */
 	public function addChild($td){
-		$td.setParent($this);
+		$td->setParent($this);
 		$this->children[sizeOf($this->children)] = $td;
 	}
 	

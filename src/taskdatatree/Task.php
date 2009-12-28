@@ -20,19 +20,19 @@ class Task{
 	}
 	
 	public function getAll(){
-		return $data;
+		return $this->data;
 	}
 	
 	public function getWBSId(){
-		return $data["id"];
+		return $this->data["id"];
 	}
 	
 	public function getTaskName(){
-		return $data["name"];
+		return $this->data["name"];
 	}
 		
 	public function getEffort(){
-		return $data["plan_effort"];
+		return $this->data["plan_effort"];
 	}
 	
 	/*
@@ -43,7 +43,7 @@ class Task{
 	 * riguardante la prima risorsa assegnata al task.
 	 */
 	public function getResources(){
-		return $data["assigned_to_task"];
+		return $this->data["assigned_to_task"];
 	}
 	
 	public function getPlannedData(){
@@ -53,6 +53,7 @@ class Task{
 	
 	public function getPlannedTimeFrame(){
 		$planned_time_frame = array("start_date"=>$data["start_date"], "finish_date"=>$data["finish_date"]);
+		return $planned_time_frame;
 	}	
 	
 	public function getActualData(){
@@ -73,6 +74,6 @@ class Task{
 	private function calculatePercentage(){
 		//@TODO se necessario, calcolare lo stato di avanzamento del task dalla comparazione
 		//di actual/planned start e finish date.
-		return $data["percentage"];
+		return $this->data["percentage"];
 	}
 }
