@@ -1,8 +1,8 @@
 <?php
 
-require_once "../gifarea/GifImage.php";
-require_once "../gifarea/GifTaskBox.php";
-require_once "../gifarea/DrawingHelper.php";
+require_once "./GifImage.php";
+require_once "./GifTaskBox.php";
+require_once "./DrawingHelper.php";
 
 /**
  * Questa classe implementa il metodo di generazione delle WBS
@@ -75,8 +75,6 @@ $gif->saveToFile("./prova.gif");
 		
 	}
 }
-$prova = new WBSChartGenerator();
-$prova->makeWBSTaskNode();
 
 
 ?>
