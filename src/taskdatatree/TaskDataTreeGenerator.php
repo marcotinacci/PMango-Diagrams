@@ -78,7 +78,7 @@ class TaskDataTreeGenerator{
 		$td2_1_1->setInfo($d2_1_1);		//i task vengono incapsulati nei nodi task_data
 		
 		 //costruzione dell'albero
-		$td2_1->setChildren($td2_1_1);
+		$td2_1->setChildren(array($td2_1_1));
 		$td2->setChildren(array($td2_1, $td2_2));
 		$td1->setChildren(array($td1_1, $td1_2, $td1_3));
 		$root->setChildren(array($td1, $td2));
