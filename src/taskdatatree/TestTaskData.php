@@ -1,7 +1,7 @@
 <?php
 		
 	require_once "TaskDataTreeGenerator.php";
-	require_once "taskDataTree.php";
+	require_once "TaskDataTree.php";
 
 	$treeg = new TaskDataTreeGenerator();
 	$tdt = $treeg->generateTaskDataTree(null);
