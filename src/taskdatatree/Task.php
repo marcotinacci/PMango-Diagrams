@@ -58,11 +58,11 @@ class Task{
 	}
 
 	public function getTaskName(){
-		return $this->data["name"];
+		return $this->data[DataArrayKeyEnumeration::$name];
 	}
 
 	public function getEffort(){
-		return $this->data["plan_effort"];
+		return $this->data[DataArrayKeyEnumeration::$plan_effort];
 	}
 
 	/*
@@ -73,38 +73,30 @@ class Task{
 	 * riguardante la prima risorsa assegnata al task.
 	 */
 	public function getResources(){
-		return $this->data["assigned_to_task"];
+		return $this->data[DataArrayKeyEnumeration::$assigned_to_task];
 	}
 
 	public function getPlannedData(){
-		$planned_data = array ("duration"=>$data["plan_duration"], "effort"=>$data["plan_effort"], "cost"=>$data["plan_cost"]);
+		$planned_data = array ("duration"=>$this->data[DataArrayKeyEnumeration::$plan_duration], "effort"=>$this->data[DataArrayKeyEnumeration::$plan_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$plan_cost]);
 		return $planned_data;
 	}
 
 	public function getPlannedTimeFrame(){
-		$planned_time_frame = array("start_date"=>$data["start_date"], "finish_date"=>$data["finish_date"]);
+		$planned_time_frame = array("start_date"=>$this->data[DataArrayKeyEnumeration::$start_date], "finish_date"=>$this->data[DataArrayKeyEnumeration::$finish_date]);
 		return $planned_time_frame;
 	}
 
 	public function getActualData(){
-		$actual_data = array ("duration"=>$data["act_duration"], "effort"=>$data["act_effort"], "cost"=>$data["act_cost"]);
+		$actual_data = array ("duration"=>$this->data[DataArrayKeyEnumeration::$act_duration], "effort"=>$this->data[DataArrayKeyEnumeration::$act_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$act_cost]);
 		return $actual_data;
 	}
 
 	public function getLevel(){
-		//@TODO calcolare la lunghezza dell'identifier
-		//$level = length($this->getWBSId())- floor(length($this->getWBSId())/2).
-		//dove length conta i caratteri, floor prende la parte intera del valore tra parentesi,
-		//(considerando i punti divisori degli id come caratteri:
-		//es: 1.2.3 è un attività di terzo livello; length() = 5; length()/2 = 2.5; floor(2.5) = 2;
-		//length - floor = 3 = livello del task.
-		return $level;
+		return $this->data[DataArrayKeyEnumeration::$level];
 	}
 
 	private function calculatePercentage(){
-		//@TODO se necessario, calcolare lo stato di avanzamento del task dalla comparazione
-		//di actual/planned start e finish date.
-		return $this->data["percentage"];
+		return $this->data[DataArrayKeyEnumeration::$percentage];
 	}
 }
 
