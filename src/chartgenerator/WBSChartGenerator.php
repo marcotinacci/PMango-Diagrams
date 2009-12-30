@@ -1,14 +1,15 @@
 <?php
 
-require_once "./GifImage.php";
-require_once "./GifTaskBox.php";
-require_once "./DrawingHelper.php";
+require_once "../gifarea/GifTaskBox.php";
+require_once "../gifarea/DrawingHelper.php";
+require_once "../chartgenerator/ChartGenerator.php";
+require_once "../useroptionschoice/UserOptionsChoice.php";
 
 /**
  * Questa classe implementa il metodo di generazione delle WBS
  *
  * @author: Daniele Poggi
- * @version: 0.1
+ * @version: 0.3
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -19,6 +20,9 @@ class WBSChartGenerator extends ChartGenerator{
 	 * Funzione di generazione grafica delle WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
+	
+	
+	
 	public function generateChart(){
 		
 		//$tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
@@ -33,48 +37,76 @@ class WBSChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	public function makeWBSTaskNode(){
-
-		$gif = new GifImage(800,550);
-
+		//AL MOMENTO NON TIENE CONTO DELLE DIPENDENZE E QUINDI STAMPA I NODI SOLO PER LIVELLO
+		
+		$tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
+		
+		$gif = new GifImage(800,800);
 		$areas=array();
+		
+		/*
+		$nodi = array();
+		$nodi=$tdt->deepVisit();
+		for($i=0;$i<Count($nodi);$i++)
+		{
+			 $livello[$i]=$nodi[$i]->getLevel();
+		}		
+		*/
 
-		$areas[] = new GifTaskBox(300,50,100,100,null);
+		// Questa parte serve per avere un input utile a visualizzare qualcosa,
+		// in particolar modo per la visualizzazione su livelli.
+		$height=800;
+		$levelMax=4;
 
-		$areas[] = new GifTaskBox(0,350,100,100,null);
-		$areas[] = new GifTaskBox(200,350,100,100,null);
-		$areas[] = new GifTaskBox(400,350,100,100,null);
-		$areas[] = new GifTaskBox(600,350,100,100,null);
-
-		$xs[]=50; $ys[]=350;
-		$xs[]=250; $ys[]=350;
-		$xs[]=450; $ys[]=350;
-		$xs[]=650; $ys[]=350;
-
-		$s = new LineStyle();
-		$s->style = "longdashed";
-		$s->weight = 2;
-		$s->color = "black";
-
-		//DrawingHelper::ExplodedLineFromTo(350,100,$xs,$ys,$gif);
-		DrawingHelper::ExplodedUpRectangularLineFromTo(350,150,$xs,$ys,$gif,$s);
-
+		$nodi=array('A','B','C','D','E','F','G','H','I',"L");
+		$livello=array('1','2','2','3','3','3','4','4','4','4');
+		
+		$nliv=array();
+		for($i=0;$i<Count($livello);$i++)
+		{
+			$nlive[$livello[$i]-1]++;	
+		}	
+		
+		$lev=1;
+		$h=1;
+		$alt=50;
+		///////////FINE SEZIONE TEST/////////////////////////////////////////////
+		
+		/*
+		 * Questo ciclo for al momento si occupa di stampare per livelli i TaskNode.
+		 * Appena sarà possibile ottenere le dipendenze verrà ampliato per stampare correttamente
+		 * i blocchi 
+		 */
+		
+		for($i=0;$i<Count($nodi);$i++)
+		{	
+			if($livello[$i]==$lev)
+			{
+				$areas[] = new GifTaskBox(($h*$height)/($nlive[($livello[$i]-1)]+1)-75,$alt,150,100,null);	
+				$h++;		
+			}
+			else
+			{
+				$alt+=150;
+				$lev++;
+				$h=1;
+				$areas[] = new GifTaskBox($h*$height/($nlive[($livello[$i]-1)]+1)-75,$alt,150,100,null);
+				$h++;
+			}	
+		}		
 		foreach($areas as $a)
 			$a->drawOn($gif);
 	
-		DrawingHelper::drawArrow(50,350,30,30,0,$gif);
-
 		$gif->draw();
-		$gif->saveToFile("./prova.gif");
+		$gif->saveToFile("./provagrossa.gif");
 	}
-	
 	/**
 	 * Funzione che assegna le dipendenze ai nodi della WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	protected function makeWBSDependencies(){
-		
+			
 	}
 }
-
 
 ?>
