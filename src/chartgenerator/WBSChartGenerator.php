@@ -2,7 +2,7 @@
 
 require_once "../gifarea/GifTaskBox.php";
 require_once "../gifarea/DrawingHelper.php";
-require_once "../chartgenerator/ChartGenerator.php";
+require_once "./ChartGenerator.php";
 require_once "../useroptionschoice/UserOptionsChoice.php";
 
 /**
