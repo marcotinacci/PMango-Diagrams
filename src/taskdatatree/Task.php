@@ -2,6 +2,7 @@
 require_once 'DataArrayBuilder.php';
 require_once 'DataArrayDirector.php';
 require_once 'DataArrayKeyEnumeration.php';
+require_once './modules/MangoGanttCPM/useroptionschoice/UserOptionsChoice.php';
 /**
  * Questa classe organizza le informazioni da incapsulare nei nodi della struttura,
  * Per ogni task.
@@ -113,6 +114,19 @@ foreach($tasks_opened as $open_task) {
 }
 
 print "note that task ids = {" . implode(",", $tasks_opened) . "} are the task ids" .
-" of the tasks that are exploded " . "into the view tab that you have modified";
+" of the tasks that are exploded " . "into the view tab that you have modified<br>";
+
+foreach($tasks_closed as $close_task) {
+	print $close_task . " - ";
+}
+
+print "<br>The wbs plan was exploded at " . $AppUI->getState('ExplodeTasks', '1') . " level";
+
+print "I'm going to check the wbs explosion:<br>";
+print "The following id will be draw: {" . implode(" - ", 
+	UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
+		$AppUI->getState('ExplodeTasks', '1'), 
+		$AppUI->getState("tasks_opened"),
+		$AppUI->getState("tasks_closed"))->getDrawableTasks()) . "}";
 
 ?>
