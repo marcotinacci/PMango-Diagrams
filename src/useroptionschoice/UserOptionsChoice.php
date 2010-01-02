@@ -226,6 +226,7 @@ interface ITaskInformationRetriever {
 	public function getDeepChildren($task_id);
 }
 
+// this class need to refactor because the meaning is quite the same of the class DataArrayBuilder
 class DefaultTaskInformationRetriever implements ITaskInformationRetriever {
 	private function loadTask($task_id) {
 		$tmpTask = new CTask();
