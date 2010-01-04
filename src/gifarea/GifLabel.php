@@ -56,7 +56,7 @@ class GifLabel extends GifArea
 		$yc = intval($this->height/2);
 		
 		$t = new Text( $txt,$xc,$yc-2 );
-		$t->SetFont( FF_VERDANA, FS_NORMAL,$this->size);
+		$t->SetFont( FF_ARIAL, FS_NORMAL,$this->size);
 		$t->SetColor($this->color);
 		$t->Align('center','center');
 		$t->ParagraphAlign( 'center');
