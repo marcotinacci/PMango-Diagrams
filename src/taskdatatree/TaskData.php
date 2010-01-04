@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__)."/DeltaInfoEnum.php";
+
 /**
  * Questa classe rappresenta i singoli nodi della struttura TaskDataTree.
  *
