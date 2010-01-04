@@ -1,9 +1,9 @@
 <?php
 
-require_once "../gifarea/GifTaskBox.php";
-require_once "../gifarea/DrawingHelper.php";
-require_once "./ChartGenerator.php";
-require_once "../useroptionschoice/UserOptionsChoice.php";
+require_once dirname(__FILE__)."/../gifarea/GifTaskBox.php";
+require_once dirname(__FILE__)."/../gifarea/DrawingHelper.php";
+require_once dirname(__FILE__)."/./ChartGenerator.php";
+require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 
 /**
  * Questa classe implementa il metodo di generazione delle WBS
