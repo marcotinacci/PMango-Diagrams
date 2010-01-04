@@ -1,8 +1,12 @@
 <?php
-require_once("./classes/query.class.php");
-require_once("./includes/main_functions.php");
-require_once("./includes/db_connect.php");
-require_once("./modules/tasks/tasks.class.php");
+
+/*
+require_once dirname(__FILE__)."./classes/query.class.php";
+require_once dirname(__FILE__)."./includes/main_functions.php";
+require_once dirname(__FILE__)."./includes/db_connect.php";
+require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
+*/
+
 /**
  * Questa classe racchiude le scelte fatte dall’utente
  * in un array associativo controllato dai metodi get e set.

@@ -34,11 +34,8 @@ class GifTaskBox extends GifArea
 		$Planned_PH = $planned["effort"];
 		$Planned_Money = $planned["cost"];
 		$this->subAreas['PlannedData_box_D'] = new GifBox(0,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['PlannedData_label_D'] = new GifLabel(2,$curY+2,$tripleSubBoxWidth-2,$row-2,$Planned_D,$fontHeight);
 		$this->subAreas['PlannedData_box_PH'] = new GifBox($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['PlannedData_label_PH'] = new GifLabel($tripleSubBoxWidth+2,$curY+2,$tripleSubBoxWidth-2,$row-2,$Planned_PH,$fontHeight);
 		$this->subAreas['PlannedData_box_Money'] = new GifBox(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['PlannedData_label_Money'] = new GifLabel(2*$tripleSubBoxWidth+2,$curY+2,$tripleSubBoxWidth-2,$row-2,$Planned_Money,$fontHeight);
 		
 		$curY += $row;
 		$this->subAreas['PlannedTimeFrame_box'] = new GifBox(0,$curY,$width,$row);

@@ -8,7 +8,6 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 class DeltaInfoEnum{
-	public function __construct(){}
 	
 	public static final $no_mark = "no mark";
 	public static final $good_news = "good news";

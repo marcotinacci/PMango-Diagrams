@@ -14,8 +14,8 @@ class GifBoxedLabel extends GifArea
 	{
 		parent::__construct($x,$y,$width,$height);
 		
-		$this->subAreas['Box']= new GifBox($x, $y, $width, $height);
-		$this->subAreas['Label']= new GifLabel($x+2, $y+2, $width, $height, $text, $fontSize);
+		$this->subAreas['Box']= new GifBox(0, 0, $width, $height);
+		$this->subAreas['Label']= new GifLabel(2, 2, $width-2, $height-2, $text, $fontSize);
 	}
 
 	public function getBox()
