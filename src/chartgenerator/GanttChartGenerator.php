@@ -1,7 +1,6 @@
 <?php
 
-// TODO: includere drawer del box, quando presente
-require_once "../gifarea/GifGanttTask.php";
+require_once dirname(__FILE__)."/../gifarea/GifBox.php";
 
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
