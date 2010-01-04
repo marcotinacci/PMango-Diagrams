@@ -30,7 +30,7 @@ $taskData->setInfo($task);
 
 
 $areas[] = new GifTaskBox(300,50,150,30,$taskData);
-$areas[0]->setFontsize(14);
+//$areas[0]->setFontsize(14);
 
 $areas[] = new GifTaskBox(0,350,200,10,$taskData);
 $areas[] = new GifTaskBox(200,350,200,10,$taskData);
@@ -48,7 +48,7 @@ $s->weight = 2;
 $s->color = "black";
 
 //DrawingHelper::ExplodedLineFromTo(350,100,$xs,$ys,$gif);
-DrawingHelper::ExplodedUpRectangularLineFromTo(350,150,$xs,$ys,$gif,$s);
+//DrawingHelper::ExplodedUpRectangularLineFromTo(350,150,$xs,$ys,$gif,$s);
 
 foreach($areas as $a)
 	$a->drawOn($gif);

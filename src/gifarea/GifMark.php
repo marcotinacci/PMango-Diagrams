@@ -16,6 +16,7 @@ class GifMark extends GifArea
 	
 		$this->subAreas[0]=new GifCircle(0,0,$width/2);
 		$this->subAreas[0]->setForeColor("white");
+		$this->subAreas[0]->setBorderThickness(2);
 		
 		$delta = '&#916;';
 		

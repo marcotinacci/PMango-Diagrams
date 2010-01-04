@@ -7,6 +7,7 @@ class GifBox extends GifArea
 {
 	private $foreColor = "magenta"; //default è trasparente
 	private $borderColor = "black";
+	private $borderThickness = 1;
 
 	public function __construct($x, $y, $width, $height)
 	{
@@ -33,12 +34,23 @@ class GifBox extends GifArea
 		$this->foreColor=$color;
 	}
 	
+	public function getBorderThickness()
+	{
+		return $this->borderThickness;
+	}
+	
+	public function setBorderThickness($borderThickness)
+	{
+		$this->borderThickness=$borderThickness;
+	}
+	
 	protected function canvasDraw()
 	{
 		$this->canvas->img->SetColor($this->borderColor);
-		$this->canvas->img->Rectangle(0, 0, $this->width, $this->height);
+		$this->canvas->img->Bevel(0,0, $this->width, $this->height,2,"black","black");
+		//$this->canvas->img->Rectangle(0, 0, $this->width, $this->height);
 		$this->canvas->img->SetColor($this->foreColor);
-		$this->canvas->img->FilledRectangle(1, 1, $this->width-1, $this->height-1);
+		$this->canvas->img->FilledRectangle($this->borderThickness, $this->borderThickness, $this->width-$this->borderThickness, $this->height-$this->borderThickness);
 	}
 }
 

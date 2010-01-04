@@ -45,8 +45,22 @@ class GifTaskBox extends GifArea
 		$this->subAreas['PlannedData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$Planned_D,$fontHeight);
 		$this->subAreas['PlannedData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$Planned_PH,$fontHeight);
 		$this->subAreas['PlannedData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$Planned_Money,$fontHeight);
-	
+		
 		$curY += $row;
+		$res=$task->getInfo()->getResources();
+		$resRowSize = $row-($row/3);
+		$resHeight = $resRowSize*sizeOf($res);
+		$this->subAreas['ResourcesBox'] = new GifBox(0,$curY,$width,$resHeight);
+		$curY += 4;
+		for($i=0; $i<sizeOf($res); $i++)
+		{
+			$txt = $res[$i]['PlannedEffort'].", ".$res[$i]['ResourceName'].", ".$res[$i]['Role'];
+			
+			$index = "ResourceLabel_".$i;
+			$this->subAreas[$index] = new GifLabel(2,$curY,$width-2,$resRowSize,$txt,$fontHeight);
+			$curY += $resRowSize-4;
+		}
+		$curY += 4;
 		$atf = $task->getInfo()->getActualTimeFrame();
 		$ActualTimeFrame_start = $atf['start_date'];
 		$ActualTimeFrame_finish = $atf['finish_date'];
@@ -64,7 +78,10 @@ class GifTaskBox extends GifArea
 		
 		$curY += $row;
 		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, intval($row/4),$task->getInfo()->getPercentage());
-
+		
+		$this->subAreas['CompleteBox'] = new GifBox(0,0,$width,$curY+intval($row/4));
+		$this->subAreas['CompleteBox']->setBorderThickness(2);
+		
 		$this->subAreas['Mark']= new GifMark($width, 0 ,$row, 1);
 		
 		$this->task = $task;

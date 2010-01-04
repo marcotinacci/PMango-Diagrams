@@ -7,6 +7,7 @@ class GifCircle extends GifArea
 {
 	private $foreColor = "magenta"; //default è trasparente
 	private $borderColor = "black";
+	private $borderThickness = 1;
 
 	public function __construct($x, $y, $r)
 	{
@@ -33,15 +34,25 @@ class GifCircle extends GifArea
 		$this->foreColor=$color;
 	}
 	
+	public function getBorderThickness()
+	{
+		return $this->borderThickness;
+	}
+	
+	public function setBorderThickness($borderThickness)
+	{
+		$this->borderThickness=$borderThickness;
+	}
+	
 	protected function canvasDraw()
 	{
 		$xc = intval($this->width/2,10);
 		$yc = intval($this->height/2,10);
 		
 		$this->canvas->img->SetColor($this->borderColor);
-		$this->canvas->img->Circle($xc,$yc,$xc);
+		$this->canvas->img->FilledCircle($xc,$yc,$xc);
 		$this->canvas->img->SetColor($this->foreColor);
-		$this->canvas->img->FilledCircle($xc, $yc, $xc-1);
+		$this->canvas->img->FilledCircle($xc, $yc, $xc-$this->borderThickness);
 	}
 }
 
