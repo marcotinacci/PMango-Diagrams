@@ -35,37 +35,17 @@ class TaskDataTree {
 	}
 	
 	public function deepVisit(){
-		$res = array();
-		$add = array();
-		foreach($this->root->getChildren() as $son){
-			$res[sizeOf($res)] = $son;
-			$add = $son->deepVisit();
-			for ($i=0; $i<sizeOf($add); $i++){
-				$res[sizeOf($res)] = $add[$i];
-			}
-		}
+		$res = $this->root->deepVisit();
 		return $res;
 	}
 	
 	public function wideVisit(){
-		$res = array();
-		$add = array();
-		$first_step = $this->root->getChildren();
-		for($i=0; $i<sizeOf($first_step); $i++){
-			$res[sizeOf($res)] = $first_step[$i];
-		}
-		for($i=0; $i<sizeOf($first_step); $i++){
-			$current_node = $first_step[$i];
-			$add = $current_node->wideVisit();
-			for ($i=0; $i<sizeOf($add); $i++){
-				$res[sizeOf($res)] = $add[$i];
-			}
-		}
+		$res = $this->root->wideVisit();
 		return $res;
 	}
 	
 	public function getLeaves(){
-		$leaves = $this->getRoot()->getLeaves();
+		$leaves = $this->root->getLeaves();
 		return $leaves;
 	}
 }

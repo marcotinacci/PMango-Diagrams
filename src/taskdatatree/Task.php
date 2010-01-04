@@ -53,8 +53,6 @@ class Task{
 	}
 
 	public function getWBSId(){
-		// TODO: replace every string coded directly with the relative
-		// static entry in DataArrayKeyEnumeration class
 		return $this->data[DataArrayKeyEnumeration::$wbsIdentifier];
 	}
 
