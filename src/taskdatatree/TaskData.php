@@ -37,11 +37,18 @@ class TaskData{
 	 */
 	private $ftsDependencies = array();
 	
+	/**
+	 * 
+	 * @var boolean
+	 */
+	private $collapsed;
+	
 	public function __construct(){
 		$parent=null;
 		$info=null;
 		$children=null;
 		$ftsDependencies=null;
+		$collapsed = false;
 	}
 	
 	public function setParent($parent){
@@ -63,6 +70,10 @@ class TaskData{
 		$this->ftsDependencies = $ftsDependencies;
 	}
 	
+	public function setCollapsed($collapsed){
+		$this->collapsed = $collapsed;
+	}
+	
 	public function getParent(){
 		return $this->parent;
 	}
@@ -79,6 +90,10 @@ class TaskData{
 		return $this->ftsDependencies;
 	}
 	
+	public function getCollapsed(){
+		return $this->collapsed;
+	}
+	
 	/**
 	 * Metodo che consente di aggiungere un figlio alla lista dei figli del this.
 	 * @param TaskData
@@ -86,6 +101,46 @@ class TaskData{
 	public function addChild($td){
 		$td->setParent($this);
 		$this->children[sizeOf($this->children)] = $td;
+	}
+	/**
+	 * Il metodo controlla vari campi del task.
+	 * A seconda della risposta si può settare l'alert mark più appropriato (se risulta necessario)
+	 * @return DeltaInfoEnum
+	 */
+	public function isMarked(){
+		$actual_time = $this->info->getActualTimeFrame();
+		$planned_time = $this->info->getPlannedTimeFrame();
+		$actual_eff = $this->info->getActualEffort();
+		$planned_eff = $this->info->getPlannedEffort();
+		$actual_cost = $this->info->getActualCost();
+		$planned_cost = $this->info->getPlannedCost();
+		
+		if($actual_time["start_date"]>$planned_time["start_date"]){
+			return DeltaInfoEnum::$bad_news;
+		}
+		if($actual_time["start_date"]>$planned_time["start_date"]){
+			return DeltaInfoEnum::$bad_news;
+		}
+		if($actual_eff>$planned_eff){
+			return DeltaInfoEnum::$bad_news;
+		}
+		if($actual_cost>$planned_cost){
+			return DeltaInfoEnum::$bad_news;
+		}		
+		
+		if($actual_time["start_date"]<$planned_time["start_date"]){
+			return DeltaInfoEnum::$good_news;
+		}
+		if($actual_time["finish_date"]<$planned_time["finish_date"]){
+			return DeltaInfoEnum::$good_news;
+		}
+		if($actual_eff<$planned_eff){
+			return DeltaInfoEnum::$good_news;
+		}
+		if($actual_cost<$planned_cost){
+			return DeltaInfoEnum::$good_news;
+		}
+		return DeltaInfoEnum::$no_marks;
 	}
 	
 	public function deepVisit(){

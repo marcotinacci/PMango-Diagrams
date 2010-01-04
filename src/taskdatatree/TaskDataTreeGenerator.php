@@ -100,8 +100,6 @@ class TaskDataTreeGenerator{
 	 */
 	public function getData(){
 		//@TODO
-		//IMPORTANTE: concordare i nomi dei campi, con i nomi di accesso presenti nei get della
-		//classe Task.php
 		$recovered_data = array(array("id"=>"1", "name"=> "Analisi"), array("id"=>"2", "name"=>"Sviluppo"), array("id"=>"1.1", "name"=>"Incontri con il committente"), array("id"=>"1.2", "name"=>"Definizione dei requisiti"), array("id"=>"1.3", "name"=>"Preparazione offerta"), array("id"=>"2.1", "name"=>"Progettazione"), array("id"=>"2.2", "name"=>"Progettazione delle prove"), array("id"=>"2.1.1", "name"=>"Prima riunione organizzativa progettisti"), array("id"=>"2.1.2", "name"=>"Progettazione WBS"));
 		return $recovered_data;
 	}

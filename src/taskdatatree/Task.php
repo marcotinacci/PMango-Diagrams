@@ -60,10 +60,21 @@ class Task{
 		return $this->data[DataArrayKeyEnumeration::$name];
 	}
 
-	public function getEffort(){
+	public function getPlannedEffort(){
 		return $this->data[DataArrayKeyEnumeration::$plan_effort];
 	}
+	
+	public function getActualEffort(){
+		return $this->data[DataArrayKeyEnumeration::$act_effort];
+	}
 
+	public function getPlannedCost(){
+		return $this->data[DataArrayKeyEnumeration::$plan_cost];
+	}
+	
+	public function getActualCost(){
+		return $this->data[DataArrayKeyEnumeration::$act_cost];
+	}
 	/*
 	 * Si pensa alla strutturazione dei dati delle risorse assegnate al task,
 	 * come un vettore di vettori interno a $data.
@@ -81,7 +92,7 @@ class Task{
 	}
 
 	public function getPlannedTimeFrame(){
-		$planned_time_frame = array("start_date"=>$this->data[DataArrayKeyEnumeration::$start_date], "finish_date"=>$this->data[DataArrayKeyEnumeration::$finish_date]);
+		$planned_time_frame = array("start_date"=>$this->data[DataArrayKeyEnumeration::$planned_start_date], "finish_date"=>$this->data[DataArrayKeyEnumeration::$planned_finish_date]);
 		return $planned_time_frame;
 	}
 
@@ -90,6 +101,11 @@ class Task{
 		return $actual_data;
 	}
 
+	public function getActualTimeFrame(){
+		$actual_time_frame = array("start_date"=>$this->data[DataArrayKeyEnumeration::$actual_start_date], "finish_date"=>$this->data[DataArrayKeyEnumeration::$actual_finish_date]);
+		return $actual_time_frame;
+	}
+	
 	public function getLevel(){
 		return $this->data[DataArrayKeyEnumeration::$level];
 	}
