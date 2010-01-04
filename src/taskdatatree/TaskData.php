@@ -38,7 +38,7 @@ class TaskData{
 	private $ftsDependencies = array();
 	
 	/**
-	 * 
+	 * Variabile boolean settata a vero quando il task è collassato.
 	 * @var boolean
 	 */
 	private $collapsed;
@@ -51,9 +51,14 @@ class TaskData{
 		$collapsed = false;
 	}
 	
+	/**
+	 * 
+	 * @param TaskData $parent
+	 */
 	public function setParent($parent){
 		$this->parent = $parent;
 	}
+	
 	
 	public function setInfo($info){
 		$this->info = $info;
@@ -81,7 +86,7 @@ class TaskData{
 	public function getInfo(){
 		return $this->info;
 	}
-
+	
 	public function getChildren(){
 		return $this->children;
 	}
