@@ -24,7 +24,7 @@ class Task{
 	 * correct because the array with the info is empty
 	 * @return unknown_type
 	 */
-	private function __construct() { }
+	private function __construct(){	}
 
 	/**
 	 * Static method that create a correct task, querying a db
@@ -110,7 +110,7 @@ class Task{
 		return $this->data[DataArrayKeyEnumeration::$level];
 	}
 
-	private function calculatePercentage(){
+	public function getPercentage(){
 		return $this->data[DataArrayKeyEnumeration::$percentage];
 	}
 }

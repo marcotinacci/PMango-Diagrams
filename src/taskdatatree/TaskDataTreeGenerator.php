@@ -25,10 +25,10 @@ class TaskDataTreeGenerator{
 	 * @return TaskDataTree $tdt
 	 */
 	public function generateTaskDataTree($uoc){
-		//@TODO
-		$array = $this->getData(); //preleva le info
+		$tasks = $this->getData(); //preleva le info
 		$root = new TaskData();
-		//----------------------------//
+		
+		
 		$d1 = new Task();
 		$d1->setData($array[0]);
 		
@@ -95,12 +95,19 @@ class TaskDataTreeGenerator{
 	}
 	
 	/**
-	 * Metodo per l'accesso ai dati dei task.
+	 * Metodo per l'accesso ai dati dei task. Si prende i task_id (differenza tra task_id e wbs_id)
+	 * e si utilizza il metodo makeTask passando gli id dei task per ritornare un array di Task.
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
-		//@TODO
-		$recovered_data = array(array("id"=>"1", "name"=> "Analisi"), array("id"=>"2", "name"=>"Sviluppo"), array("id"=>"1.1", "name"=>"Incontri con il committente"), array("id"=>"1.2", "name"=>"Definizione dei requisiti"), array("id"=>"1.3", "name"=>"Preparazione offerta"), array("id"=>"2.1", "name"=>"Progettazione"), array("id"=>"2.2", "name"=>"Progettazione delle prove"), array("id"=>"2.1.1", "name"=>"Prima riunione organizzativa progettisti"), array("id"=>"2.1.2", "name"=>"Progettazione WBS"));
+		$recovered_data = array();
+		$task_ids = array();
+		//@TODO query per tirare su dal DB i task_id,
+		//da mettere nella variabile $task_ids.
+		for ($i=0; $i<sizeOf($task_ids); $i++){
+			$current_task = Task::makeTask($task_ids[$i]);
+			$recovered_data[sizeOf($recovered_data)] = $current_task;
+		}
 		return $recovered_data;
 	}
 }
