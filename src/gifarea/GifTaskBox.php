@@ -1,6 +1,6 @@
 <?php
 
-//require_once dirname(__FILE__)."/../taskdatatree/Task.php";
+require_once dirname(__FILE__)."/../taskdatatree/TaskData.php";
 require_once dirname(__FILE__)."/GifArea.php";
 require_once dirname(__FILE__)."/GifBox.php";
 require_once dirname(__FILE__)."/GifLabel.php";
@@ -23,13 +23,13 @@ class GifTaskBox extends GifArea
 		$curY = 0;
 		
 		$this->subAreas['TaskName_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,$task->getTaskName(),$fontHeight);
+		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,$task->getInfo()->getTaskName(),$fontHeight);
 		
 		$curY += $row;
 		$tripleSubBoxWidth = int_val($width/3);
 		$tripleSubBoxPixelCarry = $width%3;
 		
-		$planned = $task->getPlannedData();
+		$planned = $task->getInfo()->getPlannedData();
 		$Planned_D = $planned["duration"];
 		$Planned_PH = $planned["effort"];
 		$Planned_Money = $planned["cost"];
@@ -45,7 +45,7 @@ class GifTaskBox extends GifArea
 		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedTimeFrame",$fontHeight);
 		
 		$curY += $row;
-		$actual = $task->getActualData();
+		$actual = $task->getInfo()->getActualData();
 		$actual_D = $actual["duration"];
 		$actual_PH = $actual["effort"];
 		$actual_Money = $actual["cost"];

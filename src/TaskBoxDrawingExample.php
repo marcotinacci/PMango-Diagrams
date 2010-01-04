@@ -1,11 +1,18 @@
 <?php
 
-require_once "./GifImage.php";
-require_once "./GifTaskBox.php";
-require_once "./DrawingHelper.php";
+//require_once dirname(__FILE__)."/taskdatatree/Task.php";
+require_once dirname(__FILE__)."/taskdatatree/TaskData.php";
+require_once dirname(__FILE__)."/gifarea/GifImage.php";
+//require_once dirname(__FILE__)."/gifarea/GifTaskBox.php";
+//require_once dirname(__FILE__)."/gifarea/DrawingHelper.php";
+require_once dirname(__FILE__)."/gifarea/GifBoxedLabel.php";
 
 $gif = new GifImage(800,550);
 
+$boxedLabel = new GifBoxedLabel(0,0,100,20,"Ciao",10);
+$boxedLabel->drawOn($gif);
+
+/*
 $areas=array();
 
 $task = new Task();
@@ -34,7 +41,7 @@ foreach($areas as $a)
 	$a->drawOn($gif);
 	
 DrawingHelper::drawArrow(50,350,30,30,0,$gif);
-
+*/
 $gif->draw();
 
 ?>
