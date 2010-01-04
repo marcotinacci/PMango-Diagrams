@@ -9,9 +9,9 @@
  */
 class DeltaInfoEnum{
 	
-	public static final $no_mark = "no mark";
-	public static final $good_news = "good news";
-	public static final $bad_news = "bad news";
+	public static $no_mark = "no mark";
+	public static $good_news = "good news";
+	public static $bad_news = "bad news";
 }
 
 ?>
