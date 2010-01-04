@@ -25,7 +25,7 @@ class GifMark extends GifArea
 		if($priority==1)
 			$txt.="!";
 		
-		$xc = (0-$width/2)-4;
+		$xc = (0-$width/2)-6;
 		$yc = (0-$width/2)+2;
 		
 		$this->subAreas[1]=new GifLabel($xc,$yc,$width+10,$width,$txt,$fontsize);

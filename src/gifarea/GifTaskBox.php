@@ -11,43 +11,63 @@ class GifTaskBox extends GifArea
 {
 	private $task;
 	private $marked;
-	private $collapsed;
 	
-	function __construct($x, $y, $width, $height, $task)
+	function __construct($x, $y, $width, $singleRowHeight, $task)
 	{
 		parent::__construct($x, $y, $width, $height);
 		
-		$row=intval($height/6);
-		$module = $height%6;
+		$row=$singleRowHeight;
+		//$module = $height%6;
 		$fontHeight = $row-6;
 		
 		$curY = 0;
 		
 		$this->subAreas['TaskName_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"TaskName",$fontHeight);
+		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,$task->getTaskName(),$fontHeight);
 		
 		$curY += $row;
-		$this->subAreas['Effort_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['Effort_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"Effort",$fontHeight);
+		$tripleSubBoxWidth = int_val($width/3);
+		$tripleSubBoxPixelCarry = $width%3;
 		
-		$curY += $row;
-		$this->subAreas['PlannedData_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['PlannedData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedData",$fontHeight);
+		$planned = $task->getPlannedData();
+		$Planned_D = $planned["duration"];
+		$Planned_PH = $planned["effort"];
+		$Planned_Money = $planned["cost"];
+		$this->subAreas['PlannedData_box_D'] = new GifBox(0,$curY,$tripleSubBoxWidth,$row);
+		$this->subAreas['PlannedData_label_D'] = new GifLabel(2,$curY+2,$tripleSubBoxWidth-2,$row-2,$Planned_D,$fontHeight);
+		$this->subAreas['PlannedData_box_PH'] = new GifBox($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
+		$this->subAreas['PlannedData_label_PH'] = new GifLabel($tripleSubBoxWidth+2,$curY+2,$tripleSubBoxWidth-2,$row-2,$Planned_PH,$fontHeight);
+		$this->subAreas['PlannedData_box_Money'] = new GifBox(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
+		$this->subAreas['PlannedData_label_Money'] = new GifLabel(2*$tripleSubBoxWidth+2,$curY+2,$tripleSubBoxWidth-2,$row-2,$Planned_Money,$fontHeight);
 		
 		$curY += $row;
 		$this->subAreas['PlannedTimeFrame_box'] = new GifBox(0,$curY,$width,$row);
 		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedTimeFrame",$fontHeight);
 		
 		$curY += $row;
-		$this->subAreas['ActualData_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['ActualData_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"ActualData",$fontHeight);
+		$actual = $task->getActualData();
+		$actual_D = $actual["duration"];
+		$actual_PH = $actual["effort"];
+		$actual_Money = $actual["cost"];
+		$this->subAreas['ActualData_box_D'] = new GifBox(0,$curY,$tripleSubBoxWidth,$row);
+		$this->subAreas['ActualData_label_D'] = new GifLabel(2,$curY+2,$tripleSubBoxWidth-2,$row-2,$actual_D,$fontHeight);
+		$this->subAreas['ActualData_box_PH'] = new GifBox($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
+		$this->subAreas['ActualData_label_PH'] = new GifLabel($tripleSubBoxWidth+2,$curY+2,$tripleSubBoxWidth-2,$row-2,$actual_PH,$fontHeight);
+		$this->subAreas['ActualData_box_Money'] = new GifBox(2*$tripleSubBoxWidth,$curY,$width,$row);
+		$this->subAreas['ActualData_label_Money'] = new GifLabel(2,$curY+2,$tripleSubBoxWidth-2,$row-2,$actual_Money,$fontHeight);
 		
 		$curY += $row;
-		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, $row+$module,30);
+		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, int_val($row/2),30);
 
 		$this->subAreas['Mark']= new GifMark($width, 0 ,$width/5, 1);
 		
 		$this->task = $task;
+	}
+	
+	public function setVisiblesFromOptionsChoice($userOptionsChoice)
+	{
+		//TODO: Appena Ema ha fatto setta la roba basandosi su userOptionsChoice
+		
 	}
 	
 	public function getFontsize()

@@ -8,6 +8,8 @@ $gif = new GifImage(800,550);
 
 $areas=array();
 
+$task = new Task();
+
 $areas[] = new GifTaskBox(300,50,100,100,null);
 
 $areas[] = new GifTaskBox(0,350,100,100,null);
