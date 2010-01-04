@@ -56,9 +56,9 @@ class UserOptionsChoice {
 	 * This method search the task identifiers needed to generate the chart.
 	 * The search criterion is based on the user wbs exploding/collapsing activity
 	 * on the planned/actual view tab.
-	 * @param integer $explodeLevel wbs level to explode the porject plan
-	 * @param array of integer $openedTasks tasks that user had choiced to explode
-	 * @param unknown_type $closedTasks tasks that user had choiced to collapse
+	 * @param integer $explodeLevel wbs level to explode the project plan
+	 * @param array of integer $openedTasks tasks that user had chosed to explode
+	 * @param unknown_type $closedTasks tasks that user had chosed to collapse
 	 * @return UserOptionChoice reference to the userOptionChoice instance to chain a request
 	 */
 	public function retrieveDrawableTasks($explodeLevel, $openedTasks, $closedTasks) {
