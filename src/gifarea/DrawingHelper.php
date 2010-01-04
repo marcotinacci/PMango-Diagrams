@@ -1,6 +1,6 @@
 <?php
 
-require_once("./LineStyle.php");
+require_once dirname(__FILE__)."/LineStyle.php";
 
 class DrawingHelper
 {

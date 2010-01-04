@@ -4,9 +4,9 @@
  * there is no override of the method canvasDraw.
  */
 
-require_once "./GifArea.php";
-require_once "./GifCircle.php";
-require_once "./GifLabel.php";
+require_once dirname(__FILE__)."/GifArea.php";
+require_once dirname(__FILE__)."/GifCircle.php";
+require_once dirname(__FILE__)."/GifLabel.php";
 
 class GifMark extends GifArea
 {	

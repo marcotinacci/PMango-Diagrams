@@ -4,8 +4,8 @@
  * there is no override of the method canvasDraw.
  */
 
-require_once "./GifArea.php";
-require_once "./GifBox.php";
+require_once dirname(__FILE__)."/GifArea.php";
+require_once dirname(__FILE__)."/GifBox.php";
 
 class GifProgressBar extends GifArea
 {	

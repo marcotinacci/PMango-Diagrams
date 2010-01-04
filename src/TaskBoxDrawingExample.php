@@ -1,10 +1,10 @@
 <?php
 
-//require_once dirname(__FILE__)."/taskdatatree/Task.php";
-//require_once dirname(__FILE__)."/taskdatatree/TaskData.php";
+require_once dirname(__FILE__)."/taskdatatree/StubTask.php";
+require_once dirname(__FILE__)."/taskdatatree/TaskData.php";
 require_once dirname(__FILE__)."/gifarea/GifImage.php";
-//require_once dirname(__FILE__)."/gifarea/GifTaskBox.php";
-//require_once dirname(__FILE__)."/gifarea/DrawingHelper.php";
+require_once dirname(__FILE__)."/gifarea/GifTaskBox.php";
+require_once dirname(__FILE__)."/gifarea/DrawingHelper.php";
 require_once dirname(__FILE__)."/gifarea/GifBoxedLabel.php";
 
 $gif = new GifImage(800,550);
@@ -25,15 +25,17 @@ $boxedLabel2->drawOn($gif);
 $areas=array();
 
 $task = new StubTask();
-$task = new TaskData();
+$taskData = new TaskData();
+$taskData->setInfo($task);
 
 
-$areas[] = new GifTaskBox(300,50,100,100,null);
+$areas[] = new GifTaskBox(300,50,150,30,$taskData);
+$areas[0]->setFontsize(14);
 
-$areas[] = new GifTaskBox(0,350,100,100,null);
-$areas[] = new GifTaskBox(200,350,100,100,null);
-$areas[] = new GifTaskBox(400,350,100,100,null);
-$areas[] = new GifTaskBox(600,350,100,100,null);
+$areas[] = new GifTaskBox(0,350,200,10,$taskData);
+$areas[] = new GifTaskBox(200,350,200,10,$taskData);
+$areas[] = new GifTaskBox(400,350,200,10,$taskData);
+$areas[] = new GifTaskBox(600,350,200,10,$taskData);
 
 $xs[]=50; $ys[]=350;
 $xs[]=250; $ys[]=350;

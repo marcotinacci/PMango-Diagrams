@@ -12,51 +12,60 @@ class GifTaskBox extends GifArea
 	private $task;
 	private $marked;
 	
-	function __construct($x, $y, $width, $singleRowHeight, $task)
+	function __construct($x, $y, $width, $singleRowHeight, $task, $useroptionchoise=null)
 	{
-		parent::__construct($x, $y, $width, $height);
+		parent::__construct($x, $y, $width, $singleRowHeight*7);
 		
 		$row=$singleRowHeight;
 		//$module = $height%6;
-		$fontHeight = $row-6;
+		$fontHeight = $row/3;
 		
 		$curY = 0;
 		
-		$this->subAreas['TaskName_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['TaskName_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,$task->getInfo()->getTaskName(),$fontHeight);
+		$this->subAreas['TaskName_box'] = new GifBoxedLabel(0,$curY,$width,$row,$task->getInfo()->getWBSId()." ".$task->getInfo()->getTaskName(),$fontHeight);
 		
-		$curY += $row;
-		$tripleSubBoxWidth = int_val($width/3);
+		$doubleSubBoxWidth = intval($width/2);
+		$doubleSubBoxPixelCarry = $width%2;
+		
+		$tripleSubBoxWidth = intval($width/3);
 		$tripleSubBoxPixelCarry = $width%3;
 		
+		$curY += $row;
+		$ptf = $task->getInfo()->getPlannedTimeFrame();
+		$PlannedTimeFrame_start = $ptf['start_date'];
+		$PlannedTimeFrame_finish = $ptf['finish_date'];
+		$this->subAreas['PlannedTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_start,$fontHeight);
+		$this->subAreas['PlannedTimeFrame_box_finish'] = new GifBoxedLabel($doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_finish,$fontHeight);
+		
+		$curY += $row;
 		$planned = $task->getInfo()->getPlannedData();
 		$Planned_D = $planned["duration"];
 		$Planned_PH = $planned["effort"];
 		$Planned_Money = $planned["cost"];
-		$this->subAreas['PlannedData_box_D'] = new GifBox(0,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['PlannedData_box_PH'] = new GifBox($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['PlannedData_box_Money'] = new GifBox(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
-		
+		$this->subAreas['PlannedData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$Planned_D,$fontHeight);
+		$this->subAreas['PlannedData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$Planned_PH,$fontHeight);
+		$this->subAreas['PlannedData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$Planned_Money,$fontHeight);
+	
 		$curY += $row;
-		$this->subAreas['PlannedTimeFrame_box'] = new GifBox(0,$curY,$width,$row);
-		$this->subAreas['PlannedTimeFrame_label'] = new GifLabel(2,$curY+2,$width-2,$row-2,"PlannedTimeFrame",$fontHeight);
+		$atf = $task->getInfo()->getActualTimeFrame();
+		$ActualTimeFrame_start = $atf['start_date'];
+		$ActualTimeFrame_finish = $atf['finish_date'];
+		$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
+		$this->subAreas['ActualTimeFrame_box_finish'] = new GifBoxedLabel($doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_finish,$fontHeight);
 		
 		$curY += $row;
 		$actual = $task->getInfo()->getActualData();
 		$actual_D = $actual["duration"];
 		$actual_PH = $actual["effort"];
 		$actual_Money = $actual["cost"];
-		$this->subAreas['ActualData_box_D'] = new GifBox(0,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['ActualData_label_D'] = new GifLabel(2,$curY+2,$tripleSubBoxWidth-2,$row-2,$actual_D,$fontHeight);
-		$this->subAreas['ActualData_box_PH'] = new GifBox($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row);
-		$this->subAreas['ActualData_label_PH'] = new GifLabel($tripleSubBoxWidth+2,$curY+2,$tripleSubBoxWidth-2,$row-2,$actual_PH,$fontHeight);
-		$this->subAreas['ActualData_box_Money'] = new GifBox(2*$tripleSubBoxWidth,$curY,$width,$row);
-		$this->subAreas['ActualData_label_Money'] = new GifLabel(2,$curY+2,$tripleSubBoxWidth-2,$row-2,$actual_Money,$fontHeight);
+		$this->subAreas['ActualData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$actual_D,$fontHeight);
+		$this->subAreas['ActualData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$actual_PH,$fontHeight);
+		$this->subAreas['ActualData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$actual_Money,$fontHeight);
 		
 		$curY += $row;
-		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, int_val($row/2),30);
+		$this->subAreas['Percentage']= new GifProgressBar(0, $curY ,$width, intval($row/4),$task->getInfo()->getPercentage());
 
-		$this->subAreas['Mark']= new GifMark($width, 0 ,$width/5, 1);
+		$this->subAreas['Mark']= new GifMark($width, 0 ,$row, 1);
 		
 		$this->task = $task;
 	}
@@ -74,44 +83,17 @@ class GifTaskBox extends GifArea
 	
 	public function setFontSize($size)
 	{
-		$this->subAreas['TaskName_label']->setFontSize($size);
-		$this->subAreas['Effort_label']->setFontSize($size);
-		$this->subAreas['PlannedData_label']->setFontSize($size);
-		$this->subAreas['PlannedTimeFrame_label']->setFontSize($size);
-		$this->subAreas['ActualData_label']->setFontSize($size);
-	}
-
-	public function showTaskName($bool){
-		$this->subAreas['TaskName_box']->visible = $bool;
-		$this->subAreas['TaskName_label']->visible = $bool;
-	}
-		
-	public function showEffort($bool){
-		$this->subAreas['Effort_box']->visible = $bool;
-		$this->subAreas['Effort_label']->visible = $bool;
-	}	
-	
-	public function showPlannedData($bool){
-		$this->subAreas['PlannedData_box']->visible = $bool;
-		$this->subAreas['PlannedData_label']->visible = $bool;
-	}	
-	
-	public function showPlannedTimeFrame($bool){
-		$this->subAreas['PlannedTimeFrame_box']->visible = $bool;
-		$this->subAreas['PlannedTimeFrame_label']->visible = $bool;	
-	}
-	
-	public function showActualData($bool){
-		$this->subAreas['ActualData_box']->visible = $bool;
-		$this->subAreas['ActualData_label']->visible = $bool;
-	}	
-
-	public function showPercentage($bool){
-		$this->subAreas['Percentage']->visible = $bool;
-	}
-	
-	public function showMark($bool,$priority=0){
-		$this->subAreas['Mark']->visible = $bool;
+		$this->subAreas['TaskName_box']->getLabel()->setFontSize($size);
+		$this->subAreas['PlannedTimeFrame_box_start']->getLabel()->setFontSize($size);
+		$this->subAreas['PlannedTimeFrame_box_finish']->getLabel()->setFontSize($size);
+		$this->subAreas['PlannedData_box_D']->getLabel()->setFontSize($size);
+		$this->subAreas['PlannedData_box_PH']->getLabel()->setFontSize($size);
+		$this->subAreas['PlannedData_box_Money']->getLabel()->setFontSize($size);
+		$this->subAreas['ActualTimeFrame_box_start']->getLabel()->setFontSize($size);
+		$this->subAreas['ActualTimeFrame_box_finish']->getLabel()->setFontSize($size);
+		$this->subAreas['ActualData_box_D']->getLabel()->setFontSize($size);
+		$this->subAreas['ActualData_box_PH']->getLabel()->setFontSize($size);
+		$this->subAreas['ActualData_box_Money']->getLabel()->setFontSize($size);
 	}
 }
 

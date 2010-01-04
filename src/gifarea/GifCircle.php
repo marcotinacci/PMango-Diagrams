@@ -1,6 +1,6 @@
 <?php
 
-require_once "./GifArea.php";
+require_once dirname(__FILE__)."/GifArea.php";
 
 /* This is class print a rectangle to the gif */
 class GifCircle extends GifArea
