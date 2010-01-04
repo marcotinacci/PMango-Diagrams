@@ -9,6 +9,16 @@ class LineStyle
 	public $patternInitialFinalLength = 0;
 	//public $endArrow = true;
 	//public $startArrow = true;
+	
+	public function __construct($color = "black", $weight = 1, $style = "solid", 
+	$patterNumberOfDots = 0, $patternInitialFinalLength = 0)
+	{
+		$this->color = $color;
+		$this->weight = $weight;
+		$this->style = $style; 
+		$this->patterNumberOfDots = $patterNumberOfDots;
+		$this->patternInitialFinalLength = $patternInitialFinalLength;
+	}
 }
 
 ?>
