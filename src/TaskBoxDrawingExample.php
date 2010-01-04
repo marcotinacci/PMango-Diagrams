@@ -9,7 +9,7 @@ require_once dirname(__FILE__)."/gifarea/GifBoxedLabel.php";
 
 $gif = new GifImage(800,550);
 
-
+/*
 $boxedLabel = new GifBoxedLabel(6,6,100,20,"Ciao",10);
 $boxedLabel->drawOn($gif);
 
@@ -18,11 +18,14 @@ $boxedLabel1->drawOn($gif);
 
 $boxedLabel2 = new GifBox(6,6,100,20);
 $boxedLabel2->drawOn($gif);
+*/
 
-/*
+
+
 $areas=array();
 
-$task = new Task();
+$task = new StubTask();
+$task = new TaskData();
 
 
 $areas[] = new GifTaskBox(300,50,100,100,null);
@@ -49,7 +52,7 @@ foreach($areas as $a)
 	$a->drawOn($gif);
 	
 DrawingHelper::drawArrow(50,350,30,30,0,$gif);
-*/
+
 $gif->draw();
 
 ?>
