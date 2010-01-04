@@ -15,6 +15,7 @@
 	require_once dirname(__FILE__)."/TaskDataTree.php";
  	require_once dirname(__FILE__)."/TaskData.php";
 	require_once dirname(__FILE__)."/Task.php";
+	//require_once "query.class.php";
 
 class TaskDataTreeGenerator{
 	
