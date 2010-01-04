@@ -77,7 +77,7 @@ class Task{
 	}
 	/*
 	 * Si pensa alla strutturazione dei dati delle risorse assegnate al task,
-	 * come un vettore di vettori interno a $data.
+	 * come una matrice interna a $data.
 	 * Avremo il vettore delle risorse assegnate in $data["assigned_to_task"].
 	 * $data["assigned_to_task"][0] è il vettore di informazioni (personal_effort, name, role)
 	 * riguardante la prima risorsa assegnata al task.
