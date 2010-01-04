@@ -104,6 +104,15 @@ class TaskDataTreeGenerator{
 		$task_ids = array();
 		//@TODO query per tirare su dal DB i task_id,
 		//da mettere nella variabile $task_ids.
+		//la query dovrebbe risultare
+		
+		//SELECT task_id
+		//FROM nome tabella AS alias
+		
+		$q =& new DBQuery();
+		$q->addTable(/*nome tabella, alias*/);
+		$q->addQuery(/*'task_id'*/);
+		$task_ids = $q->exec();
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]);
 			$recovered_data[sizeOf($recovered_data)] = $current_task;
