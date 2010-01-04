@@ -1,11 +1,11 @@
 <?php
 
-require_once("./../taskdatatree/Task.php");
-require_once "./GifArea.php";
-require_once "./GifBox.php";
-require_once "./GifLabel.php";
-require_once "./GifProgressBar.php";
-require_once "./GifMark.php";
+//require_once dirname(__FILE__)."/../taskdatatree/Task.php";
+require_once dirname(__FILE__)."/GifArea.php";
+require_once dirname(__FILE__)."/GifBox.php";
+require_once dirname(__FILE__)."/GifLabel.php";
+require_once dirname(__FILE__)."/GifProgressBar.php";
+require_once dirname(__FILE__)."/GifMark.php";
 
 class GifTaskBox extends GifArea
 {

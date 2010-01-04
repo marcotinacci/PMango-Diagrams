@@ -1,12 +1,11 @@
 <?php
 
-require_once "./GifImage.php";
-require_once "./GifBox.php";
-require_once "./GifLabel.php";
-require_once "./BoxedLabel.php";
-require_once "./GifProgressBar.php";
-require_once "./GifTaskBox.php";
-require_once "./DrawingHelper.php";
+require_once dirname(__FILE__)."/GifImage.php";
+require_once dirname(__FILE__)."/GifBox.php";
+require_once dirname(__FILE__)."/GifLabel.php";
+require_once dirname(__FILE__)."/GifProgressBar.php";
+require_once dirname(__FILE__)."/GifTaskBox.php";
+require_once dirname(__FILE__)."/DrawingHelper.php";
 
 $gif = new GifImage(800,550);
 

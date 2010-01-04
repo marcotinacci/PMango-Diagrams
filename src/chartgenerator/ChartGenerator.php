@@ -1,8 +1,8 @@
 <?php
 
 require_once dirname(__FILE__)."/../gifarea/GifImage.php";
-require_once dirname(__FILE__)."/../taskdatatree/TaskDataTreeGenerator.php";
-require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
+//require_once dirname(__FILE__)."/../taskdatatree/TaskDataTreeGenerator.php";
+//require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 
 /**
  * Questa classe astratta raccoglie i comportamenti comuni delle classi che 
@@ -15,7 +15,7 @@ require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
  * @see TaskNetworkChartGenerator
  * 
  * @author: Marco Tinacci
- * @version: 0.2
+ * @version: 0.3
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -40,9 +40,10 @@ abstract class ChartGenerator{
 	 */
 	protected function __construct()
 	{
-		$tdtGenerator = new TaskDataTreeGenerator();
+		// TODO: wait for working tdtg
+		//$tdtGenerator = new TaskDataTreeGenerator();
 		// TODO: dimensioni Gif da configurazione?
-		$chart = new GifImage(800,550);
+		$this->chart = new GifImage(800,550);
 		
 	}
 	
@@ -59,7 +60,7 @@ abstract class ChartGenerator{
 	 * @return GifImage
 	 */
 	public function getChart(){
-		return $chart;
+		return $this->chart;
 	}
 	
 }

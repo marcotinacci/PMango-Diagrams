@@ -12,9 +12,9 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 
-	require_once "TaskDataTree.php";
-	require_once "TaskData.php";
-	require_once "Task.php";
+	require_once dirname(__FILE__)."/TaskDataTree.php";
+ 	require_once dirname(__FILE__)."/TaskData.php";
+	require_once dirname(__FILE__)."/Task.php";
 
 class TaskDataTreeGenerator{
 	

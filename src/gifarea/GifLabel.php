@@ -1,6 +1,6 @@
 <?php
 
-require_once "./GifArea.php";
+require_once dirname(__FILE__)."/GifArea.php";
 
 /* This class print a text label on the gif. */
 class GifLabel extends GifArea
@@ -56,7 +56,7 @@ class GifLabel extends GifArea
 		$yc = intval($this->height/2);
 		
 		$t = new Text( $txt,$xc,$yc-2 );
-		$t->SetFont( FF_ARIAL, FS_NORMAL,$this->size);
+		$t->SetFont( FF_VERDANA, FS_NORMAL,$this->size);
 		$t->SetColor($this->color);
 		$t->Align('center','center');
 		$t->ParagraphAlign( 'center');

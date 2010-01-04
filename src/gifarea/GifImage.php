@@ -1,7 +1,7 @@
 <?php
 
-require_once "./lib/jpgraph/src/jpgraph.php";
-require_once "./lib/jpgraph/src/jpgraph_utils.inc";
+require_once dirname(__FILE__)."/lib/jpgraph/src/jpgraph.php";
+require_once dirname(__FILE__)."/lib/jpgraph/src/jpgraph_utils.inc";
 
 /* This class is the conceptual idea of the gif, it contains a MultiGraph (used to compose
  *  the canvas of the gifareas) and has methods to save it to file or to print it directly.

@@ -1,7 +1,8 @@
 <?php
 
+require_once dirname(__FILE__)."/ChartGenerator.php";
 require_once dirname(__FILE__)."/../gifarea/GifBox.php";
-
+require_once dirname(__FILE__)."/../gifarea/GifLabel.php";
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
@@ -39,16 +40,30 @@ class GanttChartGenerator extends ChartGenerator{
 	protected $leftColumnSpace = 0.2;
 	
 	/**
+	 * Tolleranza
+	 * @var int
+	 */
+	protected $tol = 5;
+	
+	/**
+	 * Costruttore
+	 */
+	public function __construct(){
+		parent::__construct();
+	}
+	
+	/**
 	 * Funzione di generazione grafica del diagramma Gantt
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	public function generateChart(){
 		// parent o this??
-		// TODO: tdt var di istanza
-		$tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
+		// TODO: stub tree generator
+		// $tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
+		
 		$this->makeLeftColumn();
 		$this->makeRightColumn();
-		$chart->draw();
+		$this->chart->draw();
 	}
 	
 	/**
@@ -57,31 +72,43 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function makeLeftColumn(){
 		// larghezza della colonna sinistra
-		$lcWidth = $chart->getHeight()*$leftColumnSpace;
+		// TODO: stub larghezza
+		$lcWidth = $this->chart->getWidth()*$this->leftColumnSpace;
 		
 		// disegno il box della colonna sinistra
-		$leftCol = new GifBox(0,0,$chart->getWidth(),
-			$lcWidth);
-		$leftCol->drawOn($chart);
+		// TODO: stub altezza
+		$leftCol = new GifBox(
+			$this->tol,
+			$this->tol,
+			$lcWidth,
+			$this->chart->getHeight() - 2*$this->tol
+		);
+		$leftCol->drawOn($this->chart);
 		
-		// TODO: visita in profondità: delegare a $tdt! $visit è vettore di TaskData
-		$visit = $tdt->deepFirstVisit();
+		// TODO: visita in profondità: attendere implementazione
+		//$visit = $tdt->deepFirstVisit();
 		// contatore della riga
 		$row = 1;
-		for($i = 0; $i < sizeOf($visit); $i++, $row++)
+		// TODO: stub numero elementi
+		//for($i = 0; $i < sizeOf($visit); $i++, $row++)
+		for($i = 0; $i < 5; $i++, $row++)
 		{
 			// profondità indentatura
-			$indent = $visit[$i]->getLevel()*$horizontalSpace;
+			// TODO: stub livello
+			//$indent = $visit[$i]->getLevel()*$this->horizontalSpace;
+			$indent = ($i%3)*$this->horizontalSpace;
 			// TODO: modellare metodi getter di id e name in classe Task
 			$label = new GifLabel(
 				$indent, // x
-				$verticalSpace + ($i * ($verticalSpace + $labelHeight)), // y
+				$this->verticalSpace + ($i * ($this->verticalSpace + $this->labelHeight)), // y
 				$lcWidth - $indent, // width
-				$labelHeight, // height
-				$visit[$i]->getInfo()->getID() + 
-					$visit[$i]->getInfo()->getName() // label
+				$this->labelHeight, // height
+				// TODO: stub stringa
+				// $visit[$i]->getInfo()->getID() + $visit[$i]->getInfo()->getName()
+				($i+1) . ". task numero " . $i, //label
+				$this->labelHeight-2 //size
 				);
-			$label->drawOn($chart);
+			$label->drawOn($this->chart);
 		}
 	}
 	
@@ -90,7 +117,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 * destra
 	 */
 	protected function makeRightColumn(){
-		// TODO: not implemented yet		
+		// TODO: not implemented yet
 	}
 	
 	/**

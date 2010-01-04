@@ -1,8 +1,8 @@
 <?php
-require_once 'DataArrayBuilder.php';
-require_once 'DataArrayDirector.php';
-require_once 'DataArrayKeyEnumeration.php';
-require_once './modules/MangoGanttCPM/useroptionschoice/UserOptionsChoice.php';
+require_once dirname(__FILE__).'/DataArrayBuilder.php';
+require_once dirname(__FILE__).'/DataArrayDirector.php';
+require_once dirname(__FILE__).'/DataArrayKeyEnumeration.php';
+require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 /**
  * Questa classe organizza le informazioni da incapsulare nei nodi della struttura,
  * Per ogni task.
