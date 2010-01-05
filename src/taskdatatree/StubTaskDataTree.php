@@ -40,6 +40,7 @@ class StubTaskDataTree {
 	public function getRoot(){
 		return $this->root;
 	}
+	
 
 	public function setRoot($root){
 		$this->root = $root;
