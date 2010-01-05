@@ -129,7 +129,7 @@ class DrawingHelper
 		DrawingHelper::LineFromTo($x1 ,$y1 ,$x_half ,$y_half,$gifImage,$lineStyle);
 		for($i=0; $i < sizeOf($xs); $i++)
 		{
-			DrawingHelper::UpRectangularLineFromTo($x_half ,$y_half ,$xs[$i] ,$ys[$i],$gifImage,$lineStyle);
+			DrawingHelper::UpRectangularLineFromTo($x_half ,$y_half ,$xs[$i] ,$ys[$i],$gifImage, $lineStyle);
 		}
 	}
 	
@@ -150,6 +150,23 @@ class DrawingHelper
 		$canvas->img->SetLineWeight($lineStyle->weight);
 	}
 	
+	public static function segmentedOffsetLine($x,$y,$hOffset,$vOffset,$xEnd,$yEnd,$gifImage,$lineStyle=null)
+	{
+		$ys[] = $y;
+		$ys[] = $yEnd;
+		$xs[] = $x;
+		$xs[] = $xEnd;
+		
+		$y_max = max($ys);
+		$y_min = min($ys);
+		$x_max = max($xs);
+		$x_min = min($xs);
+		
+		DrawingHelper::LineFromTo($x,$y,$x+$hOffset,$y,$gifImage,$lineStyle);
+		DrawingHelper::LineFromTo($x+$hOffset,$y,$x+$hOffset,$y+$vOffset,$gifImage,$lineStyle);
+		DrawingHelper::LineFromTo($x+$hOffset,$y+$vOffset,$xEnd,$yEnd,$gifImage,$lineStyle);
+	}
+	
 	public static function drawArrow($x,$y,$width,$height,$angle,$gifImage ,$lineStyle = null)
 	{	
 		$canvas = new CanvasGraph ($width, $height, 'auto');
@@ -167,9 +184,8 @@ class DrawingHelper
 		$points[2]=0+$width/2+$xoffset; $points[3]=$height/2+$yoffset;
 		$points[4]=0-$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
 		
-		$canvas->img->SetAngle($angle);
 		$canvas->img->SetColor("black");
-		$canvas->img->Rectangle(0,0,$width,$height);
+		//$canvas->img->Rectangle(0,0,$width,$height);
 		//$canvas->img->Circle(0+$width/2,0+$height,$width/2);
 		$canvas->img->FilledPolygon($points);
 		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);

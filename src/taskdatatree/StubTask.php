@@ -11,10 +11,15 @@ class StubTask{
 
 	private $data = array();
 
+	private static $id=0;
+	
 	public function __construct()
 	{
-		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="1.1";
-		$this->data[DataArrayKeyEnumeration::$name]="Task1";
+		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="".StubTask::$id;
+		$this->data[DataArrayKeyEnumeration::$name]="Task_".StubTask::$id;
+		
+		StubTask::$id++;
+		
 		$this->data[DataArrayKeyEnumeration::$planned_start_date]="12.09.10";
 		
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][0]['PlannedEffort']="20";

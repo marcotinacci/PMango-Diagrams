@@ -20,7 +20,7 @@ $boxedLabel2 = new GifBox(6,6,100,20);
 $boxedLabel2->drawOn($gif);
 */
 
-
+DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
 
 $areas=array();
 
