@@ -34,22 +34,22 @@ Class UserOptionEnumeration {
 	
 	// Gantt
 	
-	public static final $EffortInformationUserOption = "EffortInformationUserOption";
-	public static final $FinishToStartDependenciesUserOption = "FinishToStartDependenciesUserOption";
-	public static final $TimeGrainUserOption = "TimeGrainUserOption";
-	public static final $TimeRangeUserOption = "TimeRangeUserOption";
-	public static final $CustomRangeUserOption = "CustomRangeUserOption";
-	public static final $FromStartRangeUserOption = "FromStartRangeUserOption";
-	public static final $ToEndRangeUserOption = "ToEndRangeUserOption";
+	public static $EffortInformationUserOption = "EffortInformationUserOption";
+	public static $FinishToStartDependenciesUserOption = "FinishToStartDependenciesUserOption";
+	public static $TimeGrainUserOption = "TimeGrainUserOption";
+	public static $TimeRangeUserOption = "TimeRangeUserOption";
+	public static $CustomRangeUserOption = "CustomRangeUserOption";
+	public static $FromStartRangeUserOption = "FromStartRangeUserOption";
+	public static $ToEndRangeUserOption = "ToEndRangeUserOption";
 	
 	
 	
 	// Task Network
 	
-	public static final $TimeGapsUserOption = "TimeGapsUserOption";
-	public static final $ShowCompleteDiagramDependencies = "ShowCompleteDiagramDependencies";
-	public static final $CriticalPathUserOption = "CriticalPathUserOption";
-	public static final $MaxCriticalPathNumberUserOption = "MaxCriticalPathNumberUserOption";
+	public static $TimeGapsUserOption = "TimeGapsUserOption";
+	public static $ShowCompleteDiagramDependencies = "ShowCompleteDiagramDependencies";
+	public static $CriticalPathUserOption = "CriticalPathUserOption";
+	public static $MaxCriticalPathNumberUserOption = "MaxCriticalPathNumberUserOption";
 } 
 
 ?>
