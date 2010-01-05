@@ -2,7 +2,6 @@
 
 /**
  * Questa classe lavora sul'array che contiene le scelte fatte dall'utente. 
- * (non riesco a capire come gestire l'enumerate)
  *
  *
  * @author: Manuele Paolantonio

@@ -56,6 +56,7 @@ private function __construct($array) {
 	}
 	
 	
+	// metodi che mostrano quali useroption ha selezionato l'utente
 	
 	function showTaskNameUserOption() {
 		return isset($this->array[UserOptionEnumeration::$TaskNameUserOption]);
