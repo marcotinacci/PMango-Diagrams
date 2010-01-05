@@ -34,6 +34,10 @@ class TaskDataTree {
 		$this->root = $root;
 	}
 	
+	/**
+	 * 
+	 * @return vettore di TaskData
+	 */
 	public function deepVisit(){
 		$res = $this->root->deepVisit();
 		return $res;

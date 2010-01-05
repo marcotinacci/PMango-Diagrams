@@ -24,7 +24,8 @@ class Task{
 	 * correct because the array with the info is empty
 	 * @return unknown_type
 	 */
-	private function __construct(){	}
+	//@TODO set private
+	public function __construct(){	}
 
 	/**
 	 * Static method that create a correct task, querying a db

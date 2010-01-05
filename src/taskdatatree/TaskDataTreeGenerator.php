@@ -42,20 +42,15 @@ class TaskDataTreeGenerator{
 		$d1_2 = new Task();
 		$d1_2->setData($array[3]);
 		
-		$d1_3 = new Task();
-		$d1_3->setData($array[4]);
-		
 		$d2_1 = new Task();
-		$d2_1->setData($array[5]);
+		$d2_1->setData($array[4]);
 		
 		$d2_2 = new Task();
-		$d2_2->setData($array[6]);
+		$d2_2->setData($array[5]);
 		
 		$d2_1_1 = new Task();
-		$d2_1_1->setData($array[7]);
-
-		$d2_1_2 = new Task();
-		$d2_1_2->setData($array[8]);//le informazioni sono incapsulate nei task
+		$d2_1_1->setData($array[6]);
+		//le informazioni sono incapsulate nei task
 		//---------------------------//
 		$td1 = new TaskData();
 		$td1->setInfo($d1);
@@ -69,9 +64,6 @@ class TaskDataTreeGenerator{
 		$td1_2 = new TaskData();
 		$td1_2->setInfo($d1_2);
 		
-		$td1_3 = new TaskData();
-		$td1_3->setInfo($d1_3);
-		
 		$td2_1 = new TaskData();
 		$td2_1->setInfo($d2_1);
 		
@@ -80,14 +72,12 @@ class TaskDataTreeGenerator{
 		
 		$td2_1_1 = new TaskData();
 		$td2_1_1->setInfo($d2_1_1);		
-		
-		$td2_1_2 = new TaskData();
-		$td2_1_2->setInfo($d2_1_2);//i task vengono incapsulati nei nodi task_data
+		//i task vengono incapsulati nei nodi task_data
 		
 		 //costruzione dell'albero
-		$td2_1->setChildren(array($td2_1_1, $td2_1_2));
+		$td2_1->setChildren(array($td2_1_1));
 		$td2->setChildren(array($td2_1, $td2_2));
-		$td1->setChildren(array($td1_1, $td1_2, $td1_3));
+		$td1->setChildren(array($td1_1, $td1_2));
 		$root->setChildren(array($td1, $td2));
 		
 		$tdt = new TaskDataTree();
@@ -101,6 +91,9 @@ class TaskDataTreeGenerator{
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
+		$recovered_data=array(array("id"=>"1", "name"=>"Analisi"),array("id"=>"2", "name"=>"Sviluppo"),array("id"=>"1.1", "name"=>"Use Case"),array("id"=>"1.2", "name"=>"Domain Model"),array("id"=>"2.1", "name"=>"Progettazione"),array("id"=>"2.2", "name"=>"Codifica"),array("id"=>"2.1.1", "name"=>"TaskBox"));
+		
+		/*
 		$recovered_data = array();
 		$task_ids = array();
 		//@TODO query per tirare su dal DB i task_id,
@@ -111,13 +104,13 @@ class TaskDataTreeGenerator{
 		//FROM nome tabella AS alias
 		
 		$q =& new DBQuery();
-		$q->addTable(/*nome tabella, alias*/);
-		$q->addQuery(/*'task_id'*/);
+		$q->addTable(nome tab, alias);
+		$q->addQuery(field);
 		$task_ids = $q->exec();
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]);
 			$recovered_data[sizeOf($recovered_data)] = $current_task;
-		}
+		}*/
 		return $recovered_data;
 	}
 }
