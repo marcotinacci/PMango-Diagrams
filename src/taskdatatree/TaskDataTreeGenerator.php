@@ -31,25 +31,28 @@ class TaskDataTreeGenerator{
 		
 		
 		$d1 = new Task();
-		$d1->setData($array[0]);
+		$d1->setData($tasks[0]);
 		
 		$d2 = new Task();
-		$d2->setData($array[1]);
+		$d2->setData($tasks[1]);
 		
 		$d1_1 = new Task();
-		$d1_1->setData($array[2]);
+		$d1_1->setData($tasks[2]);
 		
 		$d1_2 = new Task();
-		$d1_2->setData($array[3]);
+		$d1_2->setData($tasks[3]);
 		
 		$d2_1 = new Task();
-		$d2_1->setData($array[4]);
+		$d2_1->setData($tasks[4]);
 		
 		$d2_2 = new Task();
-		$d2_2->setData($array[5]);
+		$d2_2->setData($tasks[5]);
 		
 		$d2_1_1 = new Task();
-		$d2_1_1->setData($array[6]);
+		$d2_1_1->setData($tasks[6]);
+
+		$d2_1_2 = new Task();
+		$d2_1_2->setData($tasks[7]);
 		//le informazioni sono incapsulate nei task
 		//---------------------------//
 		$td1 = new TaskData();
@@ -71,11 +74,14 @@ class TaskDataTreeGenerator{
 		$td2_2->setInfo($d2_2);
 		
 		$td2_1_1 = new TaskData();
-		$td2_1_1->setInfo($d2_1_1);		
+		$td2_1_1->setInfo($d2_1_1);
+
+		$td2_1_2 = new TaskData();
+		$td2_1_2->setInfo($d2_1_2);	
 		//i task vengono incapsulati nei nodi task_data
 		
 		 //costruzione dell'albero
-		$td2_1->setChildren(array($td2_1_1));
+		$td2_1->setChildren(array($td2_1_1, $td2_1_2));
 		$td2->setChildren(array($td2_1, $td2_2));
 		$td1->setChildren(array($td1_1, $td1_2));
 		$root->setChildren(array($td1, $td2));
@@ -91,8 +97,7 @@ class TaskDataTreeGenerator{
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
-		$recovered_data=array(array("id"=>"1", "name"=>"Analisi"),array("id"=>"2", "name"=>"Sviluppo"),array("id"=>"1.1", "name"=>"Use Case"),array("id"=>"1.2", "name"=>"Domain Model"),array("id"=>"2.1", "name"=>"Progettazione"),array("id"=>"2.2", "name"=>"Codifica"),array("id"=>"2.1.1", "name"=>"TaskBox"));
-		
+		$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
 		/*
 		$recovered_data = array();
 		$task_ids = array();
