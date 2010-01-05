@@ -23,6 +23,7 @@ class GifTaskBox extends GifArea
 		$curY = 0;
 		
 		$this->subAreas['TaskName_box'] = new GifBoxedLabel(0,$curY,$width,$row,$task->getInfo()->getWBSId()." ".$task->getInfo()->getTaskName(),$fontHeight);
+		$this->subAreas['TaskName_box']->getLabel()->setBold(true);
 		
 		$doubleSubBoxWidth = intval($width/2);
 		$doubleSubBoxPixelCarry = $width%2;

@@ -8,6 +8,7 @@ class GifLabel extends GifArea
 	private $color = "black";
 	private $text = "";
 	private $size = 10;
+	private $bold = false;
 
 	public function __construct($x, $y, $width, $height, $text, $size)
 	{
@@ -37,6 +38,16 @@ class GifLabel extends GifArea
 		return $this->text;
 	}
 	
+	public function setBold($bold)
+	{
+		$this->bold=$bold;
+	}
+	
+	public function getBold()
+	{
+		return $this->bold;
+	}
+	
 	public function setTextColor($color)
 	{
 		$this->color=$color;
@@ -55,8 +66,12 @@ class GifLabel extends GifArea
 		$xc = intval($this->width/2);
 		$yc = intval($this->height/2);
 		
+		$style=FS_NORMAL;
+		if($this->bold)
+			$style=FS_BOLD;
+		
 		$t = new Text( $txt,$xc,$yc-2 );
-		$t->SetFont( FF_VERDANA, FS_NORMAL,$this->size);
+		$t->SetFont( FF_VERDANA, $style,$this->size);
 		$t->SetColor($this->color);
 		$t->Align('center','center');
 		$t->ParagraphAlign( 'center');
