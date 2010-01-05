@@ -33,6 +33,11 @@ class DrawingHelper
 		$gifImage->addCanvas($canvas,$x_min,$y_min);
 	}
 	
+	private static function calculateHOffset($m,$d)
+	{
+		return (sqrt(1+pow($m,2)))/$d;
+	}
+	
 	/* This method draw a pattern line from the point ($x1,$y1) to point ($x2,$y2). */
 	private static function PatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
 	{	
@@ -41,12 +46,9 @@ class DrawingHelper
 		$dottedStyle = new LineStyle();
 		$dottedStyle->style = "dotted";
 		$dottedStyle->weight = $lineStyle->weight;
+		$dottedStyle->color = $lineStyle->color = "red";
 		
-		$totalDistance = sqrt(pow($x2-$x1,2)+pow($y2-$y1,2));
-		$dottedLength = 6*$lineStyle->patterNumberOfDots;
-		$dottedDistance = intval(sqrt(pow($dottedLength,2)-pow(($y2-$y1),2)));
-		DrawingHelper::debug("dottedDistance = sqrt(pow($dottedLength,2)-pow(($y2-$y1),2))");
-		
+		//Calcolo m e q
 		$m = 1;
 		$q = 0;
 		if( ($x2-$x1)!=0)
@@ -57,43 +59,52 @@ class DrawingHelper
 		DrawingHelper::debug("m:".$m);
 		DrawingHelper::debug("q:".$q);
 		
+		//Calcolo la distanza del segmento dotted
+		$dottedLength = 2.5 * $lineStyle->patterNumberOfDots;
+		
+		//Calcolo gli HOffset per disegnare la retta a pezzetti
+		$hDottedOffset = DrawingHelper::calculateHOffset($m,$dottedLength);
+		DrawingHelper::debug("hDottedOffset = ".$hDottedOffset);
+		$hNormalOffset = DrawingHelper::calculateHOffset($m,$lineStyle->patternInitialFinalLength);
+		DrawingHelper::debug("hNormalOffset = ".$hNormalOffset);
+		
+		//Calcolo quante volte ripetere il pattern per raggiungere la distanza
+		$parts = intval(($x2-$x1)/(2*$hNormalOffset+$hDottedOffset));
+		DrawingHelper::debug("parts:".$parts);
+		
+		//Preparo i dati per il primo lineto
 		$curStartX = $x1;
 		$curStartY = $y1;
-		$curEndX   = $curStartX + $lineStyle->patternInitialFinalLength;
+		$curEndX   = $curStartX+$hNormalOffset;
 		$curEndY   = $m*$curEndX+$q;
-		
-		$parts = intval($totalDistance/(2*$lineStyle->patternInitialFinalLength+$dottedLength));
-		$carry = $totalDistance%(2*$lineStyle->patternInitialFinalLength+$dottedLength);
-		
-		DrawingHelper::debug("parts:".$parts);
-		DrawingHelper::debug("carry:".$carry);
-		
-		for($i=0;$i<$parts;$i++)
+		//Avvio i lineto
+		for($i=0; $i<$parts; $i++)
 		{			
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$lineStyle);
 			
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
-			$curEndX   = $curStartX + $dottedDistance;
+			$curEndX   = $curStartX+$hDottedOffset;
 			$curEndY   = $m*$curEndX+$q;
 			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$dottedStyle);
 			
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
-			$curEndX   = $curStartX + $lineStyle->patternInitialFinalLength;
+			$curEndX   = $curStartX+$hNormalOffset;
 			$curEndY   = $m*$curEndX+$q;
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$lineStyle);
 			
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
-			$curEndX   = $curStartX + $lineStyle->patternInitialFinalLength;
+			$curEndX   = $curStartX+$hNormalOffset;
 			$curEndY   = $m*$curEndX+$q;
 		}
 		$lineStyle->color = "red";
-		DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$x2,$y2,$gifImage,$lineStyle);
+		//Aggiuntina per i restanti pixellini
+		//DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$x2,$y2,$gifImage,$lineStyle);
 	}
 	
 	

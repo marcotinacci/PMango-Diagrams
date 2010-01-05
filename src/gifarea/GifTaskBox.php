@@ -114,6 +114,12 @@ class GifTaskBox extends GifArea
 		$this->subAreas['ActualData_box_PH']->getLabel()->setFontSize($size);
 		$this->subAreas['ActualData_box_Money']->getLabel()->setFontSize($size);
 	}
+	
+	public function getEffectiveHeight()
+	{
+		//TODO: farlo per davvero!
+		return 200;
+	}
 }
 
 ?>

@@ -23,12 +23,14 @@ $boxedLabel2->drawOn($gif);
 //DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
 
 $pStyle = new LineStyle();
-$pStyle->patterNumberOfDots = 2;
-$pStyle->patternInitialFinalLength = 5;
-$pStyle->weight = 2;
+$pStyle->patterNumberOfDots = 3;
+$pStyle->patternInitialFinalLength = 10;
+$pStyle->weight = 1;
 //DrawingHelper::segmentedOffsetLine(100,100,80,-80,180,20,$gif,$pStyle);
 
-DrawingHelper::LineFromTo(0,0,100,100,$gif,$pStyle);
+DrawingHelper::LineFromTo(0,0,100,200,$gif,$pStyle);
+$c = new GifCircle(100,200,5);
+$c->drawOn($gif);
 //DrawingHelper::LineFromTo(100,100,200,0,$gif,$pStyle);
 //DrawingHelper::LineFromTo(200,0,400,0,$gif,$pStyle);
 //DrawingHelper::LineFromTo(0,0,100,100,$gif,$pStyle);

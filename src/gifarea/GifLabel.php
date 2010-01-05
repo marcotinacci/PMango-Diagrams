@@ -9,7 +9,9 @@ class GifLabel extends GifArea
 	private $text = "";
 	private $size = 10;
 	private $bold = false;
-
+	private $vAlign = "center";
+	private $hAlign = "center";
+	
 	public function __construct($x, $y, $width, $height, $text, $size)
 	{
 		parent::__construct($x,$y,$width,$height);
@@ -36,6 +38,26 @@ class GifLabel extends GifArea
 	public function getText()
 	{
 		return $this->text;
+	}
+	
+	public function setVAlign($align)
+	{
+		$this->vAlign=$align;
+	}
+	
+	public function getVAlign()
+	{
+		return $this->vAlign;
+	}
+	
+	public function setHAlign($align)
+	{
+		$this->hAlign=$align;
+	}
+	
+	public function getHAlign()
+	{
+		return $this->hAlign;
 	}
 	
 	public function setBold($bold)
@@ -73,7 +95,7 @@ class GifLabel extends GifArea
 		$t = new Text( $txt,$xc,$yc-2 );
 		$t->SetFont( FF_VERDANA, $style,$this->size);
 		$t->SetColor($this->color);
-		$t->Align('center','center');
+		$t->Align($this->hAlign,$this->vAlign);
 		$t->ParagraphAlign( 'center');
 		$this->canvas->add($t);
 	}
