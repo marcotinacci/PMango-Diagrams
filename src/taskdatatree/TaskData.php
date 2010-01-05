@@ -155,16 +155,19 @@ class TaskData{
 	public function deepVisit(){
 		$res = array();
 		$add = array();
-		foreach($this->getChildren() as $son){
-			$res[sizeOf($res)] = $son;
-			$add = $son->deepVisit();
-			for ($i=0; $i<sizeOf($add); $i++){
-				$res[sizeOf($res)] = $add[$i];
+		if($this->getChildren() != null){
+			foreach($this->getChildren() as $son){
+				$res[sizeOf($res)] = $son;
+				$add = $son->deepVisit();
+				for ($i=0; $i<sizeOf($add); $i++){
+					$res[sizeOf($res)] = $add[$i];
+				}
 			}
 		}
 		return $res;
 	}
 	
+	// TODO: non funziona
 	public function wideVisit(){
 		$res = array();
 		$add = array();
