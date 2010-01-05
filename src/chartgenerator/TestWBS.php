@@ -32,10 +32,10 @@ foreach($nodi as $n){
 }
 
 //Altezza della pagina, calcolata dinamicamente	
-$height=($CLiv+1)*150;
+$height=($CLiv+1)*200;
 
 //Spazio tra un livello ed un altro
-$alt=$height-120;
+$alt=$height-220;
 
 $dimBlocco=$width/$numleaves;
 
@@ -52,7 +52,7 @@ for($i=0;$i<2;$i++)
 			$leav[$j]='G';
 	}
 	$CLiv--;
-	$alt-=150;
+	$alt-=250;
 }
 
 
