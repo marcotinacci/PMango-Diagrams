@@ -15,7 +15,7 @@ require_once dirname(__FILE__).'/../taskdatatree/StubTaskDataTree.php';
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.4
+ * @version: 0.5
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -43,7 +43,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Misura in pixel del tab di indentazione dei nomi dei task
 	 * @var int
 	 */
-	protected $horizontalSpace = 5;
+	protected $horizontalSpace = 10;
 	
 	/**
 	 * Frazione dello spazio orizzontale dedicato alla colonna sinistra (il 
@@ -235,11 +235,10 @@ class GanttChartGenerator extends ChartGenerator{
 		);
 		$leftCol->drawOn($this->chart);
 
+		// TODO: spostare a variabili di istanza
 		$visit = $this->tdt->deepVisit();
-		// contatore della riga
-		$row = 1;
 
-		for($i = 0; $i < sizeOf($visit); $i++, $row++)
+		for($i = 0; $i < sizeOf($visit); $i++)
 		{
 			// profondità indentatura
 			$indent = $visit[$i]->getInfo()->getLevel() * $this->horizontalSpace;
@@ -252,7 +251,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$visit[$i]->getInfo()->getWBSiD().' '.$visit[$i]->getInfo()->getTaskName(), // label
 				$this->fontSize //size
 				);
-			$label->setHAlign('right');
+			$label->setHAlign('left');
 			$label->drawOn($this->chart);
 		}
 	}
@@ -296,15 +295,36 @@ class GanttChartGenerator extends ChartGenerator{
 			DrawingHelper::LineFromTo($i,$yGrid,$i,$yfGrid,$this->chart,
 				new LineStyle("gray"));
 		}
-		
 	}
 	
 	/**
 	 * Funzione di generazione grafica dei task box
 	 */
 	protected function makeGanttTaskBox(){
+		// TODO: spostare a variabili di istanza
 		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
 		$yGrid = $this->granLevel * $this->labelHeight + $this->tol;
+		$xfGrid = $this->chart->getWidth() - $this->tol;
+		$yfGrid = $this->chart->getHeight() - $this->tol;
+		
+		$hBox = ($this->labelHeight * 2 )/ 3;
+		$hProgress = $this->labelHeight -$hBox;
+		
+		// TODO: spostare a variabili di istanza
+		$visit = $this->tdt->deepVisit();
+
+		for($i = 0; $i < sizeOf($visit); $i++)
+		{
+			$box = new GifBox(
+				$xGrid + $i*50 + 10, // x // TODO: 
+				$yGrid + $this->verticalSpace + 
+				($i * ($this->verticalSpace + $this->labelHeight)), // y
+				100, // width
+				$this->labelHeight // height
+				);
+			$box->setForeColor('white');
+			$box->drawOn($this->chart);
+		}		
 
 	}
 	
@@ -312,6 +332,6 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Funzione di generazione grafica di una dipendenza tra due task
 	 */
 	protected function makeGanttDependencies(){
-		// TODO: not implemented yet		
+		// TODO: not implemented yet
 	}
 }
