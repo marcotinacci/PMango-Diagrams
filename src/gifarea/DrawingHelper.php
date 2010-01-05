@@ -2,10 +2,21 @@
 
 require_once dirname(__FILE__).'/LineStyle.php';
 
+$debugging = false;
+
 class DrawingHelper
 {
 	/* This method draw a line from the point ($x1,$y1) to point ($x2,$y2). */
 	public static function LineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
+	{
+		if($lineStyle == null || $lineStyle->patterNumberOfDots == 0)
+			DrawingHelper::NormalLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+		else
+			DrawingHelper::PatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+	}
+	
+	/* This method draw a normal line from the point ($x1,$y1) to point ($x2,$y2). */
+	private static function NormalLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
 	{
 		$x_min = min(array($x1,$x2));
 		$y_min = min(array($y1,$y2));
@@ -16,9 +27,74 @@ class DrawingHelper
 		
 		DrawingHelper::initLineStyle($canvas,$lineStyle);
 
+		//DrawingHelper::debug($lineStyle->style!=null?$lineStyle->style:"null");
+		
 		$canvas->img->StyleLine(abs($x1-$x_min) ,abs($y1-$y_min) ,abs($x2-$x_min) ,abs($y2-$y_min));
 		$gifImage->addCanvas($canvas,$x_min,$y_min);
 	}
+	
+	/* This method draw a pattern line from the point ($x1,$y1) to point ($x2,$y2). */
+	private static function PatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
+	{	
+		DrawingHelper::debug("PatternLineFrom ($x1,$y1) to ($x2,$y2)");
+		
+		$dottedStyle = new LineStyle();
+		$dottedStyle->style = "dotted";
+		$dottedStyle->weight = $lineStyle->weight;
+		
+		$totalDistance = sqrt(pow($x2-$x1,2)+pow($y2-$y1,2));
+		$dottedLength = 6*$lineStyle->patterNumberOfDots;
+		
+		$m = 1;
+		$q = 0;
+		if( ($x2-$x1)!=0)
+		{
+			$m = ($y2-$y1)/($x2-$x1);
+			$q = (($x2*$y1)-($x1*$y2))/($x2-$x1);
+		}
+		DrawingHelper::debug("m:".$m);
+		DrawingHelper::debug("q:".$q);
+		
+		$curStartX = $x1;
+		$curStartY = $y1;
+		$curEndX   = $curStartX + $lineStyle->patternInitialFinalLength;
+		$curEndY   = $m*$curEndX+$q;
+		
+		$parts = intval($totalDistance/(2*$lineStyle->patternInitialFinalLength+$dottedLength));
+		$carry = $totalDistance%(2*$lineStyle->patternInitialFinalLength+$dottedLength);
+		
+		DrawingHelper::debug("parts:".$parts);
+		DrawingHelper::debug("carry:".$carry);
+		
+		for($i=0;$i<$parts;$i++)
+		{			
+			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$lineStyle);
+			
+			$curStartX = $curEndX;
+			$curStartY = $curEndY;
+			$curEndX   = $curStartX + intval(sqrt(pow($dottedLength,2)-pow(($y2-$y1),2)));
+			DrawingHelper::debug("sqrt(pow($dottedLength,2)-pow(($y2-$y1),2))");
+			$curEndY   = $m*$curEndX+$q;
+			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$dottedStyle);
+			
+			$curStartX = $curEndX;
+			$curStartY = $curEndY;
+			$curEndX   = $curStartX + $lineStyle->patternInitialFinalLength;
+			$curEndY   = $m*$curEndX+$q;
+			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$lineStyle);
+			
+			$curStartX = $curEndX;
+			$curStartY = $curEndY;
+			$curEndX   = $curStartX + $lineStyle->patternInitialFinalLength;
+			$curEndY   = $m*$curEndX+$q;
+		}
+		$lineStyle->color = "red";
+		DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$x2,$y2,$gifImage,$lineStyle);
+	}
+	
 	
 	/* This method draw a line that pass trough the points described by 
 	 * the $xs array and $ys array. */
@@ -189,6 +265,13 @@ class DrawingHelper
 		//$canvas->img->Circle(0+$width/2,0+$height,$width/2);
 		$canvas->img->FilledPolygon($points);
 		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
+	}
+	
+	private function debug($msg)
+	{
+		global $debugging;
+		if($debugging)
+		print $msg."<br>";
 	}
 }
 

@@ -20,7 +20,18 @@ $boxedLabel2 = new GifBox(6,6,100,20);
 $boxedLabel2->drawOn($gif);
 */
 
-DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
+//DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
+
+$pStyle = new LineStyle();
+$pStyle->patterNumberOfDots = 2;
+$pStyle->patternInitialFinalLength = 5;
+$pStyle->weight = 2;
+//DrawingHelper::segmentedOffsetLine(100,100,80,-80,180,20,$gif,$pStyle);
+
+DrawingHelper::LineFromTo(0,0,100,100,$gif,$pStyle);
+//DrawingHelper::LineFromTo(100,100,200,0,$gif,$pStyle);
+//DrawingHelper::LineFromTo(200,0,400,0,$gif,$pStyle);
+//DrawingHelper::LineFromTo(0,0,100,100,$gif,$pStyle);
 
 $areas=array();
 

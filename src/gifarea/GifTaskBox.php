@@ -6,6 +6,7 @@ require_once dirname(__FILE__)."/GifBox.php";
 require_once dirname(__FILE__)."/GifLabel.php";
 require_once dirname(__FILE__)."/GifProgressBar.php";
 require_once dirname(__FILE__)."/GifMark.php";
+require_once dirname(__FILE__)."/GifBoxedLabel.php";
 
 class GifTaskBox extends GifArea
 {

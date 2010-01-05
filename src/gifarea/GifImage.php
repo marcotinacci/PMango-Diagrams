@@ -35,6 +35,8 @@ class GifImage
 	//Draw the gif directly in the webpage
 	function draw()
 	{
+		global $debugging;
+		if(!$debugging)
 		$this->mgraph->Stroke();
 	}
 	
