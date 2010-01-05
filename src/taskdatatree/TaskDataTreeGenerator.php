@@ -15,9 +15,19 @@
 	require_once dirname(__FILE__)."/TaskDataTree.php";
  	require_once dirname(__FILE__)."/TaskData.php";
 	require_once dirname(__FILE__)."/Task.php";
+	require_once dirname(__FILE__).'/StubTaskDataTree.php';	
 	//@TODOrequire_once "query.class.php";
 
 class TaskDataTreeGenerator{
+
+	/**
+	 * Questo metodo genera un TaskDataTree utilizzando getData() per 
+	 * recuperare i dati dal DB (considerando le uoc).
+	 * @return TaskDataTree
+	 */	
+	public function stubGenerateTaskDataTree(){
+		return new StubTaskDataTree();
+	}
 	
 	/**
 	 * Questo metodo genera un TaskDataTree utilizzando getData() per 

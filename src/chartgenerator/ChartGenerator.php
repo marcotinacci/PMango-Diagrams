@@ -1,7 +1,7 @@
 <?php
 
 require_once dirname(__FILE__)."/../gifarea/GifImage.php";
-//require_once dirname(__FILE__)."/../taskdatatree/TaskDataTreeGenerator.php";
+require_once dirname(__FILE__)."/../taskdatatree/TaskDataTreeGenerator.php";
 //require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 
 /**
@@ -41,7 +41,7 @@ abstract class ChartGenerator{
 	protected function __construct()
 	{
 		// TODO: wait for working tdtg
-		//$tdtGenerator = new TaskDataTreeGenerator();
+		$this->tdtGenerator = new TaskDataTreeGenerator();
 		
 	}
 	

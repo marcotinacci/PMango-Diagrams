@@ -19,6 +19,9 @@ class StubTaskDataTree {
 		$F = new TaskData(new StubTask());		
 		$G = new TaskData(new StubTask());		
 
+		// Radice
+		$this->setRoot($A);
+
 		// Dipendenze gerarchiche
 		$A->addChild($B); $A->addChild($C); $A->addChild($D);
 		$B->addChild($E);

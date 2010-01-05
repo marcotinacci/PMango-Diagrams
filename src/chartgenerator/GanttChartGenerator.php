@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/../gifarea/GifLabel.php';
 require_once dirname(__FILE__).'/../gifarea/GifBoxedLabel.php';
 require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
-require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
+//require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 
 // TODO: eliminare require stubs quando non servono più
 require_once dirname(__FILE__).'/../taskdatatree/StubTaskDataTree.php';
@@ -73,10 +73,17 @@ class GanttChartGenerator extends ChartGenerator{
 	protected $numTasks = 0;
 	
 	/**
+	 * Albero dei task
+	 * @var TaskDataTree
+	 */
+	protected $tdt;
+	
+	
+	/**
 	 * Costruttore
 	 */
 	public function __construct(){
-
+		parent::__construct();
 	}
 	
 	/**
@@ -84,13 +91,10 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	public function generateChart(){
-		// TODO: stub tree generator
-		// $tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
-		$this->tdt = new StubTaskDataTree();
+		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree(null);
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
-		
 		$this->makeCanvas();
 		$this->makeBorder();
 		$this->makeRightColumn();
@@ -230,29 +234,23 @@ class GanttChartGenerator extends ChartGenerator{
 			- 2*$this->tol // altezza
 		);
 		$leftCol->drawOn($this->chart);
-		
-		// TODO: visita in profondità: attendere implementazione
-		//$visit = $tdt->deepFirstVisit();
+
+		$visit = $this->tdt->deepVisit();
 		// contatore della riga
 		$row = 1;
-		// TODO: stub numero elementi
-		//for($i = 0; $i < sizeOf($visit); $i++, $row++)
-		for($i = 0; $i < 5; $i++, $row++)
+
+		for($i = 0; $i < sizeOf($visit); $i++, $row++)
+//		for($i = 0; $i < 8; $i++, $row++)
 		{
 			// profondità indentatura
-			// TODO: stub livello
-			//$indent = $visit[$i]->getLevel()*$this->horizontalSpace;
-			$indent = ($i%3)*$this->horizontalSpace;
-			// TODO: modellare metodi getter di id e name in classe Task
+			$indent = $visit[$i]->getInfo()->getLevel() * $this->horizontalSpace;
 			$label = new GifLabel(
 				$xLeftCol + $indent, // x
 				$this->verticalSpace + $yLeftCol + 
 				($i * ($this->verticalSpace + $this->labelHeight)), // y
 				$wLeftCol - $indent, // width
 				$this->labelHeight, // height
-				// TODO: stub stringa
-				// $visit[$i]->getInfo()->getID() + $visit[$i]->getInfo()->getName()
-				($i+1) . ". task numero task numero task numero " . $i, //label
+				$visit[$i]->getInfo()->getWBSiD().' '.$visit[$i]->getInfo()->getTaskName(), // label
 				$this->fontSize //size
 				);
 			$label->drawOn($this->chart);
