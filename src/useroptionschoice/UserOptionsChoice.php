@@ -49,11 +49,11 @@ class UserOptionsChoice {
 	
 	
 	private $array;
-	
+	/*
 private function __construct($array) {
 	
 		$this->array = $array;
-	}
+	}*/
 	
 	
 	// metodi che mostrano quali useroption ha selezionato l'utente

@@ -115,7 +115,7 @@ class Task{
 		return $this->data[DataArrayKeyEnumeration::$percentage];
 	}
 }
-
+/*
 // the following lines are for testing...as soon as possible I move them
 // into a more appropriate place...
 global $AppUI;
@@ -143,7 +143,7 @@ print "The following id will be draw: {" . implode(" - ",
 		$AppUI->getState('ExplodeTasks', '1'), 
 		$AppUI->getState("tasks_opened"),
 		$AppUI->getState("tasks_closed"))->getDrawableTasks()) . "}";
-
+*/
 
 
 ?>
