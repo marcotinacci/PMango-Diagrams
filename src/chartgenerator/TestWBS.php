@@ -1,10 +1,10 @@
 <?php
 
-require_once "C:\\Program Files\\EasyPHP5.3.0\\www\\[KiwiTeam]MangoGanttCPM\\gifarea\\GifImage.php";
-require_once "C:\\Program Files\\EasyPHP5.3.0\\www\\[KiwiTeam]MangoGanttCPM\\gifarea\\GifTaskBox.php";
-require_once "C:\\Program Files\\EasyPHP5.3.0\\www\\[KiwiTeam]MangoGanttCPM\\gifarea\\DrawingHelper.php";
-require_once "C:\\Program Files\\EasyPHP5.3.0\\www\\[KiwiTeam]MangoGanttCPM\\taskdatatree\\StubTask.php";
-require_once "C:\\Program Files\\EasyPHP5.3.0\\www\\[KiwiTeam]MangoGanttCPM\\taskdatatree\\TaskData.php";
+require_once dirname(__FILE__)."/../gifarea/GifImage.php";
+require_once dirname(__FILE__)."/../gifarea/GifTaskBox.php";
+require_once dirname(__FILE__)."/../gifarea/DrawingHelper.php";
+require_once dirname(__FILE__)."/../taskdatatree/StubTask.php";
+require_once dirname(__FILE__)."/../taskdatatree/TaskData.php";
 
 $areas=array();
 
@@ -44,7 +44,7 @@ for($i=0;$i<2;$i++)
 	for($j=0;$j<$numleaves;$j++){
 		if(getLevel($leav[$j])==$CLiv)
 		{
-			$areas[] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-75,$alt,150,100,$taskData);
+			$areas[] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-75,$alt,150,30,$taskData);
 		}
 		if($leav[$j]=='H')
 			$leav[$j]='E';

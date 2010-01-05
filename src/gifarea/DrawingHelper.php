@@ -44,6 +44,8 @@ class DrawingHelper
 		
 		$totalDistance = sqrt(pow($x2-$x1,2)+pow($y2-$y1,2));
 		$dottedLength = 6*$lineStyle->patterNumberOfDots;
+		$dottedDistance = intval(sqrt(pow($dottedLength,2)-pow(($y2-$y1),2)));
+		DrawingHelper::debug("dottedDistance = sqrt(pow($dottedLength,2)-pow(($y2-$y1),2))");
 		
 		$m = 1;
 		$q = 0;
@@ -73,8 +75,7 @@ class DrawingHelper
 			
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
-			$curEndX   = $curStartX + intval(sqrt(pow($dottedLength,2)-pow(($y2-$y1),2)));
-			DrawingHelper::debug("sqrt(pow($dottedLength,2)-pow(($y2-$y1),2))");
+			$curEndX   = $curStartX + $dottedDistance;
 			$curEndY   = $m*$curEndX+$q;
 			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$dottedStyle);
