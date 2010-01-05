@@ -240,7 +240,6 @@ class GanttChartGenerator extends ChartGenerator{
 		$row = 1;
 
 		for($i = 0; $i < sizeOf($visit); $i++, $row++)
-//		for($i = 0; $i < 8; $i++, $row++)
 		{
 			// profondità indentatura
 			$indent = $visit[$i]->getInfo()->getLevel() * $this->horizontalSpace;
@@ -253,6 +252,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$visit[$i]->getInfo()->getWBSiD().' '.$visit[$i]->getInfo()->getTaskName(), // label
 				$this->fontSize //size
 				);
+			$label->setHAlign('right');
 			$label->drawOn($this->chart);
 		}
 	}
@@ -300,11 +300,12 @@ class GanttChartGenerator extends ChartGenerator{
 	}
 	
 	/**
-	 * Funzione di generazione grafica di un singolo task 
+	 * Funzione di generazione grafica dei task box
 	 */
 	protected function makeGanttTaskBox(){
-		// TODO: not implemented yet
-		
+		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
+		$yGrid = $this->granLevel * $this->labelHeight + $this->tol;
+
 	}
 	
 	/**

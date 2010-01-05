@@ -115,6 +115,11 @@ class StubTask{
 		return $this->data[DataArrayKeyEnumeration::$level];
 	}
 
+	// funzione solo di stub
+	public function setLevel($l){
+		$this->data[DataArrayKeyEnumeration::$level] = $l ;
+	}
+	
 	private function calculatePercentage(){
 		return $this->data[DataArrayKeyEnumeration::$percentage];
 	}

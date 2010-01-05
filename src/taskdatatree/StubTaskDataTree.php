@@ -17,7 +17,16 @@ class StubTaskDataTree {
 		$D = new TaskData(new StubTask());		
 		$E = new TaskData(new StubTask());		
 		$F = new TaskData(new StubTask());		
-		$G = new TaskData(new StubTask());		
+		$G = new TaskData(new StubTask());
+		
+		// Gestione livelli
+		$A->getInfo()->setLevel(0);
+		$B->getInfo()->setLevel(1);
+		$C->getInfo()->setLevel(1);
+		$D->getInfo()->setLevel(1);
+		$E->getInfo()->setLevel(2);
+		$F->getInfo()->setLevel(2);
+		$G->getInfo()->setLevel(2);
 
 		// Radice
 		$this->setRoot($A);
