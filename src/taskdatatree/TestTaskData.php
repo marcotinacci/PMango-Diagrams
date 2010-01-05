@@ -7,50 +7,63 @@
 	$treeg = new TaskDataTreeGenerator();
 	$tdt = $treeg->generateTaskDataTree(null);
 
-	echo "<b><h3>WBS</h3></b><br>";
-	echo "livello 1<br>";
-	$lev1 = $tdt->getRoot()->getChildren();
-	echo "<b>".$lev1[0]->getInfo()->getWBSId()."->".$lev1[0]->getInfo()->getTaskName()."</b><br>";
-	echo "<b>".$lev1[1]->getInfo()->getWBSId()."->".$lev1[1]->getInfo()->getTaskName()."</b><br>";
-
-	$lev2 = $lev1[0]->getChildren();
-	echo "livello 2<br>";
-	echo "<b>".$lev2[0]->getInfo()->getWBSId()."->".$lev2[0]->getInfo()->getTaskName()."</b><br>";
-	echo "<b>".$lev2[1]->getInfo()->getWBSId()."->".$lev2[1]->getInfo()->getTaskName()."</b><br>";
-	$lev2 = $lev1[1]->getChildren();
-	echo "<b>".$lev2[0]->getInfo()->getWBSId()."->".$lev2[0]->getInfo()->getTaskName()."</b><br>";
-	echo "<b>".$lev2[1]->getInfo()->getWBSId()."->".$lev2[1]->getInfo()->getTaskName()."</b><br>";
-
-
-	$lev3 = $lev2[0]->getChildren();
-	echo "livello 3<br>";
-	echo "<b>".$lev3[0]->getInfo()->getWBSId()."->".$lev3[0]->getInfo()->getTaskName()."</b><br>";
-	echo "<b>".$lev3[1]->getInfo()->getWBSId()."->".$lev3[1]->getInfo()->getTaskName()."</b><br>";
+	echo "<h3>WBS</h3>";
 	
+	$lev1 = $tdt->getRoot()->getChildren();
+	echo "livello 1";
+	echo " (numero task = ".sizeOf($lev1).")<br>";
+	for ($i=0; $i<sizeOf($lev1); $i++){
+		echo "<b>".$lev1[$i]->getInfo()->getWBSId()."->".$lev1[$i]->getInfo()->getTaskName()."</b><br>";
+	}
+
+	$lev2 = array();
+	for($i=0; $i<sizeOf($lev1); $i++){
+		$tmp = $lev1[$i]->getChildren();
+		for($j=0; $j<sizeOf($tmp); $j++){
+			$lev2[] = $tmp[$j];
+		}
+	}
+	echo "livello 2";
+	echo " (numero task = ".sizeOf($lev2).")<br>";
+	for ($i=0; $i<sizeOf($lev2); $i++){
+		echo "<b>".$lev2[$i]->getInfo()->getWBSId()."->".$lev2[$i]->getInfo()->getTaskName()."</b><br>";
+	}
+
+	$lev3 = array();
+	for($i=0; $i<sizeOf($lev2); $i++){
+		$tmp = $lev2[$i]->getChildren();
+		for($j=0; $j<sizeOf($tmp); $j++){
+			$lev3[] = $tmp[$j];
+		}
+	}
+	echo "livello 3";
+	echo " (numero task = ".sizeOf($lev3).")<br>";
+	for ($i=0; $i<sizeOf($lev3); $i++){
+		echo "<b>".$lev3[$i]->getInfo()->getWBSId()."->".$lev3[$i]->getInfo()->getTaskName()."</b><br>";
+	}
+	
+	//VISITA IN PROFONDITA'
 	$deep = $tdt->deepVisit();
-	echo "<br><br>Visita in profondità<br>";
+	echo "<h3>Visita in profondità</h3>";
 
 	for($i=0; $i<sizeOf($deep); $i++){
-		$current_info = $deep[$i]->getInfo();
-		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
+		echo "<b>".$deep[$i]->getInfo()->getWBSId()."</b>: <b>".$deep[$i]->getInfo()->getTaskName()."</b> --- ";
 	}
-	echo " END<br>";
+	echo " <b>END</b><br>";
 
-	/*
+	
 	$wide = $tdt->wideVisit();
-	echo "<br><br>Visita in ampiezza<br>";
+	echo "<h3>Visita in ampiezza</h3>";
 	for($i=0; $i<sizeOf($wide); $i++){
-		$current_info = $wide[$i]->getInfo();
-		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
+		echo "<b>".$wide[$i]->getInfo()->getWBSId()."</b>: <b>".$wide[$i]->getInfo()->getTaskName()."</b> --- ";
 	}
-	echo " END<br>";
-	*/
+	echo " <b>END</b><br>";
+	
 	
 	$leaves = $tdt->getLeaves();
-	echo "<br><br>Solo le foglie<br>";
+	echo "<h3>Foglie</h3>";
 	for($i=0; $i<sizeOf($leaves); $i++){
-		$current_info = $leaves[$i]->getInfo();
-		echo "Task ".$current_info->getWBSId().": ".$current_info->getTaskName()."  ->";
+		echo "<b>".$leaves[$i]->getInfo()->getWBSId()."</b>: <b>".$leaves[$i]->getInfo()->getTaskName()."</b> --- ";
 	}
-	
+	echo " <b>END</b><br>";
 ?>

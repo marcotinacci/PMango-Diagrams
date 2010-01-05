@@ -155,31 +155,31 @@ class TaskData{
 	public function deepVisit(){
 		$res = array();
 		$add = array();
-		if($this->getChildren() != null){
-			foreach($this->getChildren() as $son){
-				$res[sizeOf($res)] = $son;
+		if($this->children != null){
+			foreach($this->children as $son){
+				$res[] = $son;
 				$add = $son->deepVisit();
 				for ($i=0; $i<sizeOf($add); $i++){
-					$res[sizeOf($res)] = $add[$i];
+					$res[] = $add[$i];
 				}
 			}
 		}
 		return $res;
 	}
 	
-	// TODO: non funziona
 	public function wideVisit(){
 		$res = array();
 		$add = array();
-		$step = $this->getChildren();
-		for($i=0; $i<sizeOf($step); $i++){
-			$res[sizeOf($res)] = $step[$i];
-		}
-		for($i=0; $i<sizeOf($step); $i++){
-			$current_node = $step[$i];
-			$add = $current_node->wideVisit();
-			for ($i=0; $i<sizeOf($add); $i++){
-				$res[sizeOf($res)] = $add[$i];
+		if($this->children != null){
+			$step = $this->children;
+			for($i=0; $i<sizeOf($step); $i++){
+				$res[] = $step[$i];
+			}
+			for($i=0; $i<sizeOf($step); $i++){
+				$add = $step[$i]->wideVisit();
+				for ($j=0; $j<sizeOf($add); $j++){
+					$res[] = $add[$j];
+				}
 			}
 		}
 		return $res;
@@ -188,14 +188,14 @@ class TaskData{
 	public function getLeaves(){
 		$leaves = array();
 		$add = array();
-		if($this->getChildren()==null){
-			$leaves[sizeOf($leaves)]=$this;
+		if($this->children == null){
+			$leaves[]=$this;
 		}
 		else {
-			foreach($this->getChildren() as $son){
+			foreach($this->children as $son){
 				$add = $son->getLeaves();
 				for ($i=0; $i<sizeOf($add); $i++){
-					$leaves[sizeOf($leaves)] = $add[$i];
+					$leaves[] = $add[$i];
 				}
 			}	
 		}
