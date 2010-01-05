@@ -42,8 +42,6 @@ abstract class ChartGenerator{
 	{
 		// TODO: wait for working tdtg
 		//$tdtGenerator = new TaskDataTreeGenerator();
-		// TODO: dimensioni Gif da configurazione?
-		$this->chart = new GifImage(800,550);
 		
 	}
 	

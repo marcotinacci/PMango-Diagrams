@@ -45,12 +45,13 @@ class TaskData{
 	 */
 	private $collapsed;
 	
-	public function __construct(){
-		$parent=null;
-		$info=null;
-		$children=null;
-		$ftsDependencies=null;
-		$collapsed = false;
+	public function __construct($info = null){
+
+		$this->parent = null;
+		$this->info = $info;
+		$this->children = null;
+		$this->ftsDependencies = null;
+		$this->collapsed = false;
 	}
 	
 	/**
@@ -107,7 +108,8 @@ class TaskData{
 	 */
 	public function addChild($td){
 		$td->setParent($this);
-		$this->children[sizeOf($this->children)] = $td;
+		//$this->children[sizeOf($this->children)] = $td; 
+		$this->children[] = $td; // stessa cosa, append più leggibile
 	}
 	/**
 	 * Il metodo controlla vari campi del task.
@@ -198,5 +200,4 @@ class TaskData{
 		}
 		return $leaves;
 	}
-
 }

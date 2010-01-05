@@ -8,6 +8,9 @@ require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
 require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 
+// TODO: eliminare require stubs quando non servono più
+require_once dirname(__FILE__).'/../taskdatatree/StubTaskDataTree.php';
+
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
@@ -56,18 +59,24 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected $tol = 5;
 	
-	//TODO: prendere grain level da uoc
+	// TODO: prendere grain level da uoc
 	/**
 	 * Livello della granularità
 	 * @var int
 	 */
 	protected $granLevel = 5;
+
+	/**
+	 * Numero dei Tasks
+	 * @var int
+	 */
+	protected $numTasks = 0;
 	
 	/**
 	 * Costruttore
 	 */
 	public function __construct(){
-		parent::__construct();
+
 	}
 	
 	/**
@@ -75,14 +84,30 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	public function generateChart(){
-		// parent o this??
 		// TODO: stub tree generator
 		// $tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
+		$this->tdt = new StubTaskDataTree();
 		
+		// calcola una sola volta il numero dei task dell'albero
+		$this->numTasks = sizeOf($this->tdt->deepVisit());
+		
+		$this->makeCanvas();
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
 		$this->chart->draw();
+	}
+	
+	/**
+	 * Funzione di generazione del canvas
+	 */	
+	protected function makeCanvas(){
+		// TODO: stub granLevel
+		$granLevel = 5;
+		// TODO: prendere la larghezza dalla dimensione della finestra
+		$this->chart = new GifImage(800, 
+			$granLevel * $this->labelHeight + $this->numTasks*($this->verticalSpace +
+			$this->labelHeight) + $this->verticalSpace + 2*$this->tol);
 	}
 
 	/**
