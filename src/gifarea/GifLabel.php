@@ -87,16 +87,24 @@ class GifLabel extends GifArea
 		
 		$xc = intval($this->width/2);
 		$yc = intval($this->height/2);
+		if(strtoupper($this->hAlign)=="LEFT")
+			$xc = 0;
+		if(strtoupper($this->hAlign)=="RIGHT")
+			$xc = $this->width;
+		if(strtoupper($this->vAlign)=="TOP")
+			$yc = 0;
+		if(strtoupper($this->vAlign)=="BOTTOM")
+			$yc = $this->height;	
 		
 		$style=FS_NORMAL;
 		if($this->bold)
 			$style=FS_BOLD;
 		
-		$t = new Text( $txt,$xc,$yc-2 );
+		$t = new Text( $txt,$xc,$yc );
 		$t->SetFont( FF_VERDANA, $style,$this->size);
 		$t->SetColor($this->color);
 		$t->Align($this->hAlign,$this->vAlign);
-		$t->ParagraphAlign( 'center');
+		//$t->ParagraphAlign($this->vAlign);
 		$this->canvas->add($t);
 	}
 	

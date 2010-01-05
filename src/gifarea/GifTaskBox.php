@@ -60,6 +60,7 @@ class GifTaskBox extends GifArea
 			
 			$index = "ResourceLabel_".$i;
 			$this->subAreas[$index] = new GifLabel(2,$curY,$width-2,$resRowSize,$txt,$fontHeight);
+			$this->subAreas[$index]->setHAlign("left");
 			$curY += $resRowSize-4;
 		}
 		$curY += 4;

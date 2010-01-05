@@ -29,8 +29,12 @@ $pStyle->weight = 1;
 //DrawingHelper::segmentedOffsetLine(100,100,80,-80,180,20,$gif,$pStyle);
 
 DrawingHelper::LineFromTo(0,0,100,200,$gif,$pStyle);
-$c = new GifCircle(100,200,5);
+$c = new GifCircle(100,250,5);
 $c->drawOn($gif);
+$l = new GifLabel(100,200,100,50,"LTTTTT",10);
+$l->setHAlign("left");
+$l->setVAlign("bottom");
+$l->drawOn($gif);
 //DrawingHelper::LineFromTo(100,100,200,0,$gif,$pStyle);
 //DrawingHelper::LineFromTo(200,0,400,0,$gif,$pStyle);
 //DrawingHelper::LineFromTo(0,0,100,100,$gif,$pStyle);
