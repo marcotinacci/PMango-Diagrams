@@ -4,27 +4,31 @@
  * this class model the concept of enumeration of a fixed list of item, in 
  * particular with this abstraction we capture the useroption choices to use in
  * UserOptionChoice class. 
- * 
+ *
+ * @author: Manuele Paolantonio
+ * @version: 0.1
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @copyright Copyright (c) 2009, Kiwi Team
  */
 
 Class UserOptionEnumeration {
 	
 	// Common
 	
-	public static final $TaskNameUserOption = "TaskNameUserOption";
-	public static final $WBSTreeSpecification = "WBSTreeSpecification";
-	public static final $LevelSpecificationUserOption = "LevelSpecificationUserOption";
-	public static final $ImageDimensionUserOption = "ImageDimensionUserOption";
-	public static final $CustomDimUserOption = "CustomDimUserOption";
-	public static final $OpenInNewWindowUserOption = "OpenInNewWindowUserOption";
-	public static final $PlannedDataUserOption = "PlannedDataUserOption";
-	public static final $PlannedTimeFrameUserOption = "PlannedTimeFrameUserOption";
-	public static final $ResourcesUserOption = "ResourcesUserOption";
-	public static final $ActualTimeFrameUserOption = "ActualTimeFrameUserOption";
-	public static final $ActualDataUserOption = "ActualDataUserOption";
-	public static final $AlertMarkUserOption = "AlertMarkUserOption";
-	public static final $ReplicateArrowUserOption = "ReplicateArrowUserOption";
-	public static final $UseDifferentPatternForCrossingLinesUserOption = "UseDifferentPatternForCrossingLinesUserOption";
+	public static  $TaskNameUserOption = "TaskNameUserOption";
+	public static  $WBSTreeSpecification = "WBSTreeSpecification";
+	public static  $LevelSpecificationUserOption = "LevelSpecificationUserOption";
+	public static  $ImageDimensionUserOption = "ImageDimensionUserOption";
+	public static  $CustomDimUserOption = "CustomDimUserOption";
+	public static  $OpenInNewWindowUserOption = "OpenInNewWindowUserOption";
+	public static  $PlannedDataUserOption = "PlannedDataUserOption";
+	public static  $PlannedTimeFrameUserOption = "PlannedTimeFrameUserOption";
+	public static  $ResourcesUserOption = "ResourcesUserOption";
+	public static  $ActualTimeFrameUserOption = "ActualTimeFrameUserOption";
+	public static  $ActualDataUserOption = "ActualDataUserOption";
+	public static  $AlertMarkUserOption = "AlertMarkUserOption";
+	public static  $ReplicateArrowUserOption = "ReplicateArrowUserOption";
+	public static  $UseDifferentPatternForCrossingLinesUserOption = "UseDifferentPatternForCrossingLinesUserOption";
 	
 	
 	

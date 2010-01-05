@@ -8,9 +8,6 @@ require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
 */
 
 /**
- * Questa classe racchiude le scelte fatte dall’utente
- * in un array associativo controllato dai metodi get e set.
- * (...)
  *
  * This class has all requirements to be implemented like a singleton.
  * Because the user cannot generate multiple chart concurrently, specifying
@@ -48,7 +45,119 @@ class UserOptionsChoice {
 		// setting only once the retriever
 		$this->taskInformationRetriever = new DefaultTaskInformationRetriever();
 	}
-
+	
+	
+	
+	private $array;
+	
+private function __construct($array) {
+	
+		$this->array = $array;
+	}
+	
+	
+	
+	function showTaskNameUserOption() {
+		return isset($this->array[UserOptionEnumeration::$TaskNameUserOption]);
+	}
+	
+	function showWBSTreeSpecification() {
+		return isset($this->array[UserOptionEnumeration::$WBSTreeSpecification]);
+	}
+	
+	function showLevelSpecificationUserOption() {
+		return $this->array[UserOptionEnumeration::$LevelSpecificationUserOption];
+	}
+	
+	function showCustomDimUserOption() {
+		return isset($this->array[UserOptionEnumeration::$CustomDimUserOption]);
+	}
+	
+	function showOpenInNewWindowUserOption() {
+		return isset($this->array[UserOptionEnumeration::$OpenInNewWindowUserOption]);
+	}
+	
+	function showPlannedDataUserOption() {
+		return isset($this->array[UserOptionEnumeration::$PlannedDataUserOption]);
+	}
+	
+	function showPlannedTimeFrameUserOption() {
+		return isset($this->array[UserOptionEnumeration::$PlannedTimeFrameUserOption]);
+	}
+	
+	function showResourcesUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ResourcesUserOption]);
+	}
+	
+	function showActualTimeFrameUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ActualTimeFrameUserOption]);
+	}
+	
+	function showActualDataUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ActualDataUserOption]);
+	}
+	
+	function showAlertMarkUserOption() {
+		return isset($this->array[UserOptionEnumeration::$AlertMarkUserOption]);
+	}
+	
+	function showReplicateArrowUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ReplicateArrowUserOption]);
+	}
+	
+	function showUseDifferentPatternForCrossingLinesUserOption() {
+		return isset($this->array[UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption]);
+	}
+	
+	function showEffortInformationUserOption() {
+		return isset($this->array[UserOptionEnumeration::$EffortInformationUserOption]);
+	}
+	
+	function showFinishToStartDependenciesUserOption() {
+		return isset($this->array[UserOptionEnumeration::$FinishToStartDependenciesUserOption]);
+	}
+		
+	function showCustomRangeUserOption() {
+		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
+	}
+	
+	function showFromStartRangeUserOption() {
+		return isset($this->array[UserOptionEnumeration::$FromStartRangeUserOption]);
+	}
+	
+	function showToEndRangeUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ToEndRangeUserOption]);
+	}
+	
+	function showTimeGapsUserOption() {
+		return isset($this->array[UserOptionEnumeration::$TimeGapsUserOption]);
+	}
+	
+	function showShowCompleteDiagramDependencies() {
+		return isset($this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]);
+	}
+	
+	function showCriticalPathUserOption() {
+		return isset($this->array[UserOptionEnumeration::$CriticalPathUserOption]);
+	}
+	
+	function showMaxCriticalPathNumberUserOption() {
+		return $this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
+	}
+	
+	function showTimeGrain() {
+		return $this->array[UserOptionEnumeration::TimeGRainUserOption];
+	}
+	
+	function showImageDimensionUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ImageDimensionUserOption]);
+	}
+	
+	function showTimeRangeUserOption() {
+		return isset($this->array[UserOptionEnumeration::$TimeRangeUserOption]);
+	}
+	
+	
 	public static function GetInstance() {
 		if(!isset(UserOptionsChoice::$instance)) {
 			UserOptionsChoice::$instance = new UserOptionsChoice();
