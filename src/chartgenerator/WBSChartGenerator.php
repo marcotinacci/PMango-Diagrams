@@ -16,14 +16,27 @@ require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 
 class WBSChartGenerator extends ChartGenerator{
 	
+	protected $width;
+	
 	/**
 	 * Funzione di generazione grafica delle WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
+	public function __construct()
+	{	
+		//Costruttore di default con risoluzione di default
+		$this->setWidth(800);	
+	}
 	
+	public function __construct($width)
+	{		
+		//Costruttore che configura la risoluzione secondo specifiche
+		//esterne
+		$this->setWidth($width);
+	}
 	
-	
-	public function generateChart(){
+	public function generateChart()
+	{
 		
 		//$tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
 		$this->makeWBSTaskNode();
@@ -39,7 +52,12 @@ class WBSChartGenerator extends ChartGenerator{
 	public function makeWBSTaskNode(){
 		//AL MOMENTO NON TIENE CONTO DELLE DIPENDENZE E QUINDI STAMPA I NODI SOLO PER LIVELLO
 		
-		$tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
+		//$tdt = $this->$tdtGenerator->generateTaskDataTree($_SESSION["useroptionschoice"]);
+		$tdt= new StubTaskDataTree();
+		$nodi=array();
+		$nodi=$tdt->deepVisit();
+		$tdt->getLeaves();
+		
 		
 		$gif = new GifImage(800,800);
 		$areas=array();
@@ -107,6 +125,16 @@ class WBSChartGenerator extends ChartGenerator{
 	protected function makeWBSDependencies(){
 			
 	}
+	
+	public function setWidth($width)
+	{
+		$this->$width=$width;		
+	}
+	public function getWidth()
+	{
+		$this->$width;
+	}
+		
 }
 
 ?>
