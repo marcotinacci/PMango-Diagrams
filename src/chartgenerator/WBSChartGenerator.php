@@ -72,11 +72,13 @@ class WBSChartGenerator extends ChartGenerator{
 		$numleaves=Count($leav);
 		
 		$CLiv=2;
-		
+
+		//CLiv contiene il numero del livello maggiore
 		foreach($nodi as $n){
 			if($CLiv < $n->getInfo()->getLevel())
 				$CLiv = $n->getInfo()->getLevel();
 		}
+		
 		$Livello=$CLiv;
 		
 		//Altezza della pagina, calcolata dinamicamente	
@@ -86,7 +88,8 @@ class WBSChartGenerator extends ChartGenerator{
 		$alt=$height-220;
 
 		$dimBlocco=$this->getWidth()/$numleaves;
-		
+		//Le seguenti matrici vengono usate per stampare le coordinate per le linee
+		//di collegamento dei box
 		$LinkX=array(array());
 		$LinkY=array(array());
 		
@@ -95,9 +98,10 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$occorrenze=1;
 		
+		//Il seguente blocco di codice esegue in un'unica passata il posizionamento
+		//dei tasknode e salva nelle due matrici LinkX e LinkY le coordinate
 		for($i=$CLiv;$i>=0;$i--)
-		{
-			//IL SECONDO FOR INVECE DEVE SCANDIRE IL VETTORE DELLE FOGLIE (COLONNE)
+		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
 				if($leav[$j]!=null)
@@ -105,6 +109,7 @@ class WBSChartGenerator extends ChartGenerator{
 					if(($leav[$j]->getInfo()->getLevel())==$Livello)
 					{					
 						$occorrenze = $this->getOccorrence($leav,$leav[$j]);
+						//Se vi è una solo occorrenza allora posiziona lo scatolotto esattamente sopra il figlio
 						if($occorrenze == 1)
 						{
 							$areas[] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-75,$alt,150,30,$taskData);
@@ -112,6 +117,7 @@ class WBSChartGenerator extends ChartGenerator{
 							$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-75;
 							$LinkY[$i][$j]=$alt;
 						}
+						//Altrimenti se il padre ha più figli viene messo al centro
 						else if($occorrenze > 1)
 						{
 							$cord1= ((($occorrenze)*$dimBlocco)/2);
@@ -132,6 +138,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$Livello--;
 		$alt-=250;
 	}
+	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
 	$this->makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height);
 }
 	
@@ -140,8 +147,9 @@ class WBSChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	protected function makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height){
+		
 		$s = new LineStyle();
-		$s->style = "longdashed";
+		$s->style = "solid";
 		$s->weight = 2;
 		$s->color = "black";
 		
@@ -155,7 +163,8 @@ class WBSChartGenerator extends ChartGenerator{
 				if($LinkX[$i+1][$j]!=null)
 				{
 					//MODIFICARE IL LINEFROMTO
-					DrawingHelper::LineFromTo($LinkX[$i][$j]+75,$LinkY[$i][$j]+200,$LinkX[$i+1][$j]+75,$LinkY[$i+1][$j],$gif,$s);
+					DrawingHelper::UpRectangularLineFromTo($LinkX[$i][$j]+75,$LinkY[$i][$j]+200,$LinkX[$i+1][$j]+75,$LinkY[$i+1][$j],$gif,$s);
+					//DrawingHelper::LineFromTo($LinkX[$i][$j]+75,$LinkY[$i][$j]+200,$LinkX[$i+1][$j]+75,$LinkY[$i+1][$j],$gif,$s);
 				}
 			}
 		}
