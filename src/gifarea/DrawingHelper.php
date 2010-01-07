@@ -395,10 +395,13 @@ class DrawingHelper
 			$points = DrawingHelper::getRightArrowPoints($x,$y,$width,$height);
 			
 		$canvas->img->SetColor("black");
-		//$canvas->img->Rectangle(0,0,$width,$height);
-		//$canvas->img->Circle(0+$width/2,0+$height,$width/2);
 		$canvas->img->FilledPolygon($points);
 		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
+	}
+	
+	public static function GanttDependencyLine($x1,$y1,$x1,$x2,$gifImage ,$lineStyle = null)
+	{
+		
 	}
 	
 	private static function getUpArrowPoints($x,$y,$width,$height)
