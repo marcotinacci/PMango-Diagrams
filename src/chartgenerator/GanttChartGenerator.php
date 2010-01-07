@@ -8,9 +8,6 @@ require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
 //require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 
-// TODO: eliminare require stubs quando non servono più
-require_once dirname(__FILE__).'/../taskdatatree/StubTaskDataTree.php';
-
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
@@ -66,6 +63,19 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected $granLevel = 5;
 
+	// TODO: prendere date di inizio e fine da uoc
+	/**
+	 * Data di inizio visualizzazione
+	 * @var CDate
+	 */
+	protected $sDate;
+
+	/**
+	 * Data di fine visualizzazione
+	 * @var CDate
+	 */
+	protected $fDate;
+
 	/**
 	 * Numero dei Tasks
 	 * @var int
@@ -78,6 +88,11 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected $tdt;
 	
+	/**
+	 * Opzioni utente
+	 * @var uoc
+	 */
+	protected $uoc = null;
 	
 	/**
 	 * Costruttore
@@ -92,6 +107,10 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	public function generateChart(){
 		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree(null);
+		
+		// TODO: stub date, prenderle dalle uoc
+		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,2,2010));
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -249,7 +268,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$wLeftCol - $indent, // width
 				$this->labelHeight, // height
 				$visit[$i]->getInfo()->getWBSiD().' '.$visit[$i]->getInfo()->getTaskName(), // label
-				$this->fontSize //size
+				$this->fontSize // size
 				);
 			$label->setHAlign('left');
 			$label->drawOn($this->chart);
@@ -301,7 +320,6 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Funzione di generazione grafica dei task box
 	 */
 	protected function makeGanttTaskBox(){
-		// TODO: spostare a variabili di istanza
 		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
 		$yGrid = $this->granLevel * $this->labelHeight + $this->tol;
 		$xfGrid = $this->chart->getWidth() - $this->tol;
@@ -315,15 +333,18 @@ class GanttChartGenerator extends ChartGenerator{
 
 		for($i = 0; $i < sizeOf($visit); $i++)
 		{
-			$box = new GifBox(
-				$xGrid + $i*50 + 10, // x // TODO: 
+			$gTask = new GifGanttTask(
+				$xGrid, // x start
+				$xfGrid, // x finish
 				$yGrid + $this->verticalSpace + 
-				($i * ($this->verticalSpace + $this->labelHeight)), // y
-				100, // width
-				$this->labelHeight // height
-				);
-			$box->setForeColor('white');
-			$box->drawOn($this->chart);
+				($i * ($this->verticalSpace + $this->labelHeight)), // y start
+				$this->labelHeight, // height
+				$this->sDate, // startDate
+				$this->fDate, // finishDate
+				$visit[$i]->getInfo(), // task
+				$this->uoc // opzioni utente
+				);	
+			$gTask->drawOn($this->chart);
 		}		
 
 	}
