@@ -5,7 +5,7 @@ require_once dirname(__FILE__)."/GifArea.php";
 require_once dirname(__FILE__)."/GifBox.php";
 require_once dirname(__FILE__)."/GifLabel.php";
 require_once dirname(__FILE__)."/GifProgressBar.php";
-require_once dirname(__FILE__)."/GifTriangle.php";
+// require_once dirname(__FILE__)."/GifTriangle.php";
 
 
 /**
@@ -36,28 +36,28 @@ class GifGanttTask extends GifArea
 		$finishDate, $task, $uoc)
 	{
 		parent::__construct($xStart, $y, $xFinish - $xStart, $height);
-//		$windowWidth = $xFinish - $xStart;
-//		$startTS = toTimeStamp($startDate);
-//		$finishTS = toTimeStamp($finishDate);
-//		$windowDuration = $finishTS - $startTS;
-//		$xPlanned = $windowWidth * (toTimeStamp(
-//			$task->getPlannedTimeFrame()['start_date']) - $startTS) 
-//			/ $windowDuration;
-//		$wPlanned = ($windowWidth * (toTimeStamp(
-//			$task->getPlannedTimeFrame()['finish_date']) - $startTS) 
-//			/ $windowDuration) - $xPlanned;
-		// Sotto aree
-//		$this->subAreas['Planned'] = new GifBox(
-//			$xPlanned, // x
-//			0, // y
-//			$wPlanned, // width
-//			$height // height
-//			);
-//		$this->subAreas['ActualProgress'] = new GifProgressBar();
-//		$this->subAreas['Resources'] = new GifLabel();
-		// TODO: wait for triangle generator
-//		$this->subAreas['leftTriangle'] = new GifBox();
-//		$this->subAreas['rightTriangle'] = new GifBox();
+		$windowWidth = $xFinish - $xStart;
+		$startTS = toTimeStamp($startDate);
+		$finishTS = toTimeStamp($finishDate);
+		$windowDuration = $finishTS - $startTS;
+		$xPlanned = $windowWidth * (toTimeStamp(
+			$task->getPlannedTimeFrame()['start_date']) - $startTS) 
+			/ $windowDuration;
+		$wPlanned = ($windowWidth * (toTimeStamp(
+			$task->getPlannedTimeFrame()['finish_date']) - $startTS) 
+			/ $windowDuration) - $xPlanned;
+ 	// Sotto aree
+		$this->subAreas['Planned'] = new GifBox(
+			$xPlanned, // x
+			0, // y
+			$wPlanned, // width
+			$height // height
+			);
+		$this->subAreas['ActualProgress'] = new GifProgressBar();
+		$this->subAreas['Resources'] = new GifLabel();
+ 	// TODO: wait for triangle generator
+		$this->subAreas['leftTriangle'] = new GifBox();
+		$this->subAreas['rightTriangle'] = new GifBox();
 		
 	}
 	
