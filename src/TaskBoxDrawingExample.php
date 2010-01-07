@@ -15,7 +15,7 @@ $gif = new GifImage(800,550);
 
 //DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
 
-/*
+
 $pStyle = new LineStyle();
 $pStyle->patterNumberOfDots = 3;
 $pStyle->patternInitialFinalLength = 10;
@@ -85,7 +85,7 @@ DrawingHelper::drawArrow(50,350,30,30,"UP",$gif);
 DrawingHelper::drawArrow(50,350,30,30,"Down",$gif);
 DrawingHelper::drawArrow(50,350,30,30,"Left",$gif);
 DrawingHelper::drawArrow(50,350,30,30,"Right",$gif);
-*/
+
 
 /*
 $task = new StubTask();
@@ -104,8 +104,10 @@ $gTask = new GifGanttTask(
 $gTask->drawOn($gif);
 */
 
+/*
 $gifTriangle = new GifTriangle(0,350,20,60,"left");
 $gifTriangle->drawOn($gif);
+*/
 
 $gif->draw();
 

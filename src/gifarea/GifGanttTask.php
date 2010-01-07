@@ -40,11 +40,12 @@ class GifGanttTask extends GifArea
 		$startTS = toTimeStamp($startDate);
 		$finishTS = toTimeStamp($finishDate);
 		$windowDuration = $finishTS - $startTS;
+		$ptf=$task->getPlannedTimeFrame();
 		$xPlanned = $windowWidth * (toTimeStamp(
-			$task->getPlannedTimeFrame()['start_date']) - $startTS) 
+			$ptf['start_date']) - $startTS) 
 			/ $windowDuration;
 		$wPlanned = ($windowWidth * (toTimeStamp(
-			$task->getPlannedTimeFrame()['finish_date']) - $startTS) 
+			$ptf['finish_date']) - $startTS) 
 			/ $windowDuration) - $xPlanned;
  	// Sotto aree
 		$this->subAreas['Planned'] = new GifBox(
@@ -53,11 +54,11 @@ class GifGanttTask extends GifArea
 			$wPlanned, // width
 			$height // height
 			);
-		$this->subAreas['ActualProgress'] = new GifProgressBar();
-		$this->subAreas['Resources'] = new GifLabel();
+		//$this->subAreas['ActualProgress'] = new GifProgressBar();
+		//$this->subAreas['Resources'] = new GifLabel();
  	// TODO: wait for triangle generator
-		$this->subAreas['leftTriangle'] = new GifBox();
-		$this->subAreas['rightTriangle'] = new GifBox();
+		//$this->subAreas['leftTriangle'] = new GifBox();
+		//$this->subAreas['rightTriangle'] = new GifBox();
 		
 	}
 	
