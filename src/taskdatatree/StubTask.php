@@ -15,7 +15,7 @@ class StubTask{
 	
 	public function __construct()
 	{
-		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="".StubTask::$id;
+		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="1.111".StubTask::$id;
 		$this->data[DataArrayKeyEnumeration::$name]="Task_".StubTask::$id;
 		
 		StubTask::$id++;
@@ -37,8 +37,8 @@ class StubTask{
 		$this->data[DataArrayKeyEnumeration::$act_duration]="20";
 		$this->data[DataArrayKeyEnumeration::$act_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$act_cost]="20";
-		$this->data[DataArrayKeyEnumeration::$actual_start_date]="12.09.10";
-		$this->data[DataArrayKeyEnumeration::$actual_finish_date]="12.09.10";
+		$this->data[DataArrayKeyEnumeration::$actual_start_date]="2010-01-01 01:00:00";
+		$this->data[DataArrayKeyEnumeration::$actual_finish_date]="2010-02-01 01:00:00";
 		$this->data[DataArrayKeyEnumeration::$level]="1";
 		$this->data[DataArrayKeyEnumeration::$percentage]="20";
 	}

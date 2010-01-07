@@ -186,6 +186,22 @@ class GifTaskBox extends GifArea
 		$point['y']+=$this->y;
 		return $point;
 	}
+	
+	public function getLeftMiddlePoint()
+	{
+		$point = $this->subAreas['CompleteBox']->getLeftMiddlePoint();
+		$point['x']+=$this->x;
+		$point['y']+=$this->y;
+		return $point;
+	}
+	
+	public function getRightMiddlePoint()
+	{
+		$point = $this->subAreas['CompleteBox']->getRightMiddlePoint();
+		$point['x']+=$this->x;
+		$point['y']+=$this->y;
+		return $point;
+	}
 }
 
 ?>

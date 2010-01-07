@@ -4,8 +4,10 @@ require_once dirname(__FILE__)."/taskdatatree/StubTask.php";
 require_once dirname(__FILE__)."/taskdatatree/TaskData.php";
 require_once dirname(__FILE__)."/gifarea/GifImage.php";
 require_once dirname(__FILE__)."/gifarea/GifTaskBox.php";
+require_once dirname(__FILE__)."/gifarea/GifGanttTask.php";
 require_once dirname(__FILE__)."/gifarea/DrawingHelper.php";
 require_once dirname(__FILE__)."/gifarea/GifBoxedLabel.php";
+require_once dirname(__FILE__)."/gifarea/GifTriangle.php";
 require_once dirname(__FILE__).'/taskdatatree/StubTaskDataTree.php';
 
 
@@ -13,6 +15,7 @@ $gif = new GifImage(800,550);
 
 //DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
 
+/*
 $pStyle = new LineStyle();
 $pStyle->patterNumberOfDots = 3;
 $pStyle->patternInitialFinalLength = 10;
@@ -61,6 +64,16 @@ DrawingHelper::ExplodedUpRectangularLineFromTo(350,150,$xs,$ys,$gif,$pStyle);
 $boxCenter=$areas[0]->getTopMiddlePoint();
 $c1 = new GifCircle($boxCenter['x'],$boxCenter['y'],5);
 $c1->drawOn($gif);
+$boxCenter=$areas[0]->getBottomMiddlePoint();
+$c1 = new GifCircle($boxCenter['x'],$boxCenter['y'],5);
+$c1->drawOn($gif);
+$boxCenter=$areas[0]->getLeftMiddlePoint();
+$c1 = new GifCircle($boxCenter['x'],$boxCenter['y'],5);
+$c1->drawOn($gif);
+$boxCenter=$areas[0]->getRightMiddlePoint();
+$c1 = new GifCircle($boxCenter['x'],$boxCenter['y'],5);
+$c1->drawOn($gif);
+
 
 $l1 = new GifLabel(0,0,100,20,"".$areas[0]->getEffectiveHeight(),10);
 $l1->drawOn($gif);
@@ -72,6 +85,27 @@ DrawingHelper::drawArrow(50,350,30,30,"UP",$gif);
 DrawingHelper::drawArrow(50,350,30,30,"Down",$gif);
 DrawingHelper::drawArrow(50,350,30,30,"Left",$gif);
 DrawingHelper::drawArrow(50,350,30,30,"Right",$gif);
+*/
+
+/*
+$task = new StubTask();
+$taskData = new TaskData($task);
+
+$gTask = new GifGanttTask(
+				0, // x start
+				1000, // x finish
+				100, // y start
+				20, // height
+				"2010-01-01 01:00:00", // startDate
+				"2010-02-01 01:00:00", // finishDate
+				$taskData->getInfo(), // task
+				null // opzioni utente
+				);	
+$gTask->drawOn($gif);
+*/
+
+$gifTriangle = new GifTriangle(0,350,20,60,"left");
+$gifTriangle->drawOn($gif);
 
 $gif->draw();
 
