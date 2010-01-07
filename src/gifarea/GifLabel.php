@@ -111,10 +111,11 @@ class GifLabel extends GifArea
 	private function TruncateText($txt,$width,$size)
 	{
 		$clear = $this->DeleteSpecialCharacters($txt);
-		$offset = $size*(8/10);
-		if( ($width - strlen($clear)*$offset) > 0)
+		
+		if( ($width - GifLabel::getPixelWidthOfText($clear,$size)) > 0)
 			return $txt;
 		
+		$offset = $size*(8/10);
 		$optimal = $width/$offset;
 		$ret = substr($txt,0,$optimal-2);
 		return $ret."...";
@@ -124,6 +125,12 @@ class GifLabel extends GifArea
 	{
 		$res = preg_replace("/(&#[0-9]+;)/"," ",$txt);
 		return $res;
+	}
+	
+	public static function getPixelWidthOfText($txt,$fontSize,$font=FF_VERDANA)
+	{
+		$offset = $fontSize*(8/10);
+		return strlen($txt)*$offset;
 	}
 	
 }

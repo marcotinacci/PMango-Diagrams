@@ -10,9 +10,24 @@ class DrawingHelper
 	public static function LineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
 	{
 		if($lineStyle == null || $lineStyle->patterNumberOfDots == 0)
+		{
 			DrawingHelper::NormalLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+		}
 		else
-			DrawingHelper::PatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+		{
+			if( $x2==$x1 )
+			{
+				DrawingHelper::VerticalPatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+			}
+			else if( $y1==$y2 )
+			{
+				DrawingHelper::HorizzontalPatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+			}
+			else
+			{
+				DrawingHelper::PatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle);
+			}
+		}
 	}
 	
 	/* This method draw a normal line from the point ($x1,$y1) to point ($x2,$y2). */
@@ -43,10 +58,7 @@ class DrawingHelper
 	{	
 		DrawingHelper::debug("PatternLineFrom ($x1,$y1) to ($x2,$y2)");
 		
-		$dottedStyle = new LineStyle();
-		$dottedStyle->style = "dotted";
-		$dottedStyle->weight = $lineStyle->weight;
-		$dottedStyle->color = $lineStyle->color = "red";
+		$dottedStyle = DrawingHelper::getDottedStyle($lineStyle);
 		
 		//Calcolo m e q
 		$m = 1;
@@ -102,9 +114,108 @@ class DrawingHelper
 			$curEndX   = $curStartX+$hNormalOffset;
 			$curEndY   = $m*$curEndX+$q;
 		}
-		$lineStyle->color = "red";
+	}
+	
+	/* This method draw a vertical pattern line from the point ($x1,$y1) to point ($x2,$y2). */
+	private static function VerticalPatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
+	{	
+		DrawingHelper::debug("VerticalPatternLineFrom ($x1,$y1) to ($x2,$y2)");
+		
+		$dottedStyle = DrawingHelper::getDottedStyle($lineStyle);
+		
+		//Calcolo la distanza del segmento dotted
+		$dottedLength = 5 * $lineStyle->patterNumberOfDots;
+		$vOffset = $lineStyle->patternInitialFinalLength;
+		
+		//Calcolo offset verticale
+		if($y1>$y2)
+		{
+			$vOffset = -$lineStyle->patternInitialFinalLength;
+			$dottedLength = -$dottedLength;
+		}
+		
+		//Calcolo quante volte ripetere il pattern per raggiungere la distanza
+		$parts = intval((abs($y2-$y1))/(2*abs($vOffset)+abs($dottedLength)));
+		DrawingHelper::debug("parts:".$parts);
+		
+		//Preparo i dati per il primo lineto
+		$curStartX = $x1;
+		if($y1>$y2)
+		$curStartY = $y1;
+		else
+		$curStartY = $y1;
+		$curEndY   = $curStartY+$vOffset;
+		
+		//Avvio i lineto
+		for($i=0; $i<$parts; $i++)
+		{			
+			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curStartX , y2=$curEndY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curStartX,$curEndY,$gifImage,$lineStyle);
+			
+			$curStartY = $curEndY;
+			$curEndY   = $curEndY+$dottedLength;
+			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curStartX , y2=$curEndY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curStartX,$curEndY,$gifImage,$dottedStyle);
+			
+			$curStartY = $curEndY;
+			$curEndY   = $curEndY+$vOffset;
+			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curStartX , y2=$curEndY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curStartX,$curEndY,$gifImage,$lineStyle);
+			
+			$curStartY = $curEndY;
+			$curEndY   = $curEndY+$vOffset;
+		}
 		//Aggiuntina per i restanti pixellini
-		//DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$x2,$y2,$gifImage,$lineStyle);
+		DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$x2,$y2,$gifImage,$lineStyle);
+	}
+	
+/* This method draw a vertical pattern line from the point ($x1,$y1) to point ($x2,$y2). */
+	private static function HorizzontalPatternLineFromTo($x1 ,$y1 ,$x2 ,$y2 ,$gifImage ,$lineStyle = null)
+	{	
+		DrawingHelper::debug("HorizzontalPatternLineFrom ($x1,$y1) to ($x2,$y2)");
+		
+		$dottedStyle = DrawingHelper::getDottedStyle($lineStyle);
+		
+		//Calcolo la distanza del segmento dotted
+		$dottedLength = 5 * $lineStyle->patterNumberOfDots;
+		//Calcolo offset orizzontale
+		$hOffset = $lineStyle->patternInitialFinalLength;
+		if($x1>$x2)
+		{
+			$dottedLength = -$dottedLength;
+			$hOffset = -$hOffset;
+		}
+		
+		//Calcolo quante volte ripetere il pattern per raggiungere la distanza
+		$parts = intval((abs($x2-$x1))/(2*abs($hOffset)+abs($dottedLength)));
+		DrawingHelper::debug("parts:".$parts);
+		
+		//Preparo i dati per il primo lineto
+		$curStartX = $x1;
+		$curStartX = $x1;
+		$curEndX   = $curStartX+$hOffset;
+		$curStartY = $y1;
+		//Avvio i lineto
+		for($i=0; $i<$parts; $i++)
+		{			
+			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curStartY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curStartY,$gifImage,$lineStyle);
+			
+			$curStartX = $curEndX;
+			$curEndX   = $curEndX+$dottedLength;
+			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curStartY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curStartY,$gifImage,$dottedStyle);
+			
+			$curStartX = $curEndX;
+			$curEndX   = $curEndX+$hOffset;
+			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curStartY");
+			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curStartY,$gifImage,$lineStyle);
+			
+			$curStartX = $curEndX;
+			$curEndX   = $curEndX+$hOffset;
+		}
+		//Aggiuntina per i restanti pixellini
+		DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$x2,$y2,$gifImage,$lineStyle);
 	}
 	
 	
@@ -221,6 +332,15 @@ class DrawingHelper
 		}
 	}
 	
+	private function getDottedStyle($lineStyle)
+	{
+		$dottedStyle = new LineStyle();
+		$dottedStyle->style = "dotted";
+		$dottedStyle->weight = $lineStyle->weight;
+		$dottedStyle->color = $lineStyle->color = "red";
+		return $dottedStyle;
+	}
+	
 	private function initLineStyle(&$canvas,$lineStyle)
 	{
 		$w = $canvas->img->width;
@@ -255,7 +375,7 @@ class DrawingHelper
 		DrawingHelper::LineFromTo($x+$hOffset,$y+$vOffset,$xEnd,$yEnd,$gifImage,$lineStyle);
 	}
 	
-	public static function drawArrow($x,$y,$width,$height,$angle,$gifImage ,$lineStyle = null)
+	public static function drawArrow($x,$y,$width,$height,$direction,$gifImage ,$lineStyle = null)
 	{	
 		$canvas = new CanvasGraph ($width, $height, 'auto');
 		
@@ -265,18 +385,64 @@ class DrawingHelper
 		$canvas->img->FilledRectangle(0,0,$w, $h);
 		$canvas->img->SetTransparent("magenta");
 		
+		if(strtoupper($direction)=="UP")
+			$points = DrawingHelper::getUpArrowPoints($x,$y,$width,$height);
+		if(strtoupper($direction)=="DOWN")
+			$points = DrawingHelper::getDownArrowPoints($x,$y,$width,$height);
+		if(strtoupper($direction)=="LEFT")
+			$points = DrawingHelper::getLeftArrowPoints($x,$y,$width,$height);
+		if(strtoupper($direction)=="RIGHT")
+			$points = DrawingHelper::getRightArrowPoints($x,$y,$width,$height);
+			
+		$canvas->img->SetColor("black");
+		//$canvas->img->Rectangle(0,0,$width,$height);
+		//$canvas->img->Circle(0+$width/2,0+$height,$width/2);
+		$canvas->img->FilledPolygon($points);
+		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
+	}
+	
+	private static function getUpArrowPoints($x,$y,$width,$height)
+	{	
 		$xoffset = $width/2;
 		$yoffset = $height/2;
 		
 		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
 		$points[2]=0+$width/2+$xoffset; $points[3]=$height/2+$yoffset;
 		$points[4]=0-$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		return $points;
+	}
+	
+	private static function getDownArrowPoints($x,$y,$width,$height)
+	{	
+		$xoffset = $width/2;
+		$yoffset = $height/2;
 		
-		$canvas->img->SetColor("black");
-		//$canvas->img->Rectangle(0,0,$width,$height);
-		//$canvas->img->Circle(0+$width/2,0+$height,$width/2);
-		$canvas->img->FilledPolygon($points);
-		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
+		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
+		$points[2]=0+$width/2+$xoffset; $points[3]=-$height/2+$yoffset;
+		$points[4]=0-$width/2+$xoffset;	$points[5]=-$height/2+$yoffset;
+		return $points;
+	}
+	
+	private static function getLeftArrowPoints($x,$y,$width,$height)
+	{	
+		$xoffset = $width/2;
+		$yoffset = $height/2;
+		
+		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
+		$points[2]=0+$width/2+$xoffset; $points[3]=-$height/2+$yoffset;
+		$points[4]=0+$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		return $points;
+	}
+	
+	private static function getRightArrowPoints($x,$y,$width,$height)
+	{	
+		$xoffset = $width/2;
+		$yoffset = $height/2;
+		
+		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
+		$points[2]=0-$width/2+$xoffset; $points[3]=-$height/2+$yoffset;
+		$points[4]=0-$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		return $points;
 	}
 	
 	private function debug($msg)

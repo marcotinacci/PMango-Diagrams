@@ -12,6 +12,7 @@ class GifTaskBox extends GifArea
 {
 	private $task;
 	private $marked;
+	private $effectiveHeight=0;
 	
 	function __construct($x, $y, $width, $singleRowHeight, $task, $useroptionchoise=null)
 	{
@@ -23,7 +24,7 @@ class GifTaskBox extends GifArea
 		
 		$curY = 0;
 		
-		$this->subAreas['TaskName_box'] = new GifBoxedLabel(0,$curY,$width,$row,$task->getInfo()->getWBSId()." ".$task->getInfo()->getTaskName(),$fontHeight);
+		$this->subAreas['TaskName_box'] = new GifBoxedLabel(0,$curY,$width,$row,$task->getInfo()->getWBSId(),$fontHeight);
 		$this->subAreas['TaskName_box']->getLabel()->setBold(true);
 		
 		$doubleSubBoxWidth = intval($width/2);
@@ -59,7 +60,7 @@ class GifTaskBox extends GifArea
 			$txt = $res[$i]['PlannedEffort'].", ".$res[$i]['ResourceName'].", ".$res[$i]['Role'];
 			
 			$index = "ResourceLabel_".$i;
-			$this->subAreas[$index] = new GifLabel(2,$curY,$width-2,$resRowSize,$txt,$fontHeight);
+			$this->subAreas[$index] = new GifLabel(6,$curY,$width-6,$resRowSize,$txt,$fontHeight);
 			$this->subAreas[$index]->setHAlign("left");
 			$curY += $resRowSize-4;
 		}
@@ -88,12 +89,8 @@ class GifTaskBox extends GifArea
 		$this->subAreas['Mark']= new GifMark($width, 0 ,$row, 1);
 		
 		$this->task = $task;
-	}
-	
-	public function setVisiblesFromOptionsChoice($userOptionsChoice)
-	{
-		//TODO: Appena Ema ha fatto setta la roba basandosi su userOptionsChoice
 		
+		$this->effectiveHeight=$curY+intval($row/4);
 	}
 	
 	public function getFontsize()
@@ -114,12 +111,80 @@ class GifTaskBox extends GifArea
 		$this->subAreas['ActualData_box_D']->getLabel()->setFontSize($size);
 		$this->subAreas['ActualData_box_PH']->getLabel()->setFontSize($size);
 		$this->subAreas['ActualData_box_Money']->getLabel()->setFontSize($size);
+		
+		$index = "ResourceLabel_0";
+		while(isset($this->subAreas[$index]))
+		{
+			$this->subAreas[$index]->setFontSize($size);
+			$i++;
+			$index = "ResourceLabel_".$i;
+		}
 	}
 	
 	public function getEffectiveHeight()
 	{
-		//TODO: farlo per davvero!
-		return 200;
+		return $this->effectiveHeight;
+	}
+	
+	public static function getTaskBoxesBestWidth($taskDataTree,$userOptionChoise,$fontSize,$font)
+	{
+		$max = 0;
+		$taskBoxes=$taskDataTree->deepVisit();
+		foreach($taskBoxes as $taskBox)
+		{
+			$wbsIdWidth = GifLabel::getPixelWidthOfText($taskBox->getInfo()->getWBSId(),$fontSize,$font);
+			
+			$boxMax = $wbsIdWidth;
+			//TODO: va moltiplicato per 2 se ha chiesto i nomi nelle useroptions
+			
+			//TODO: Anche questo va fatto solo se ha chiesto delle date nella useroptionchoice
+			$dateWidth = GifLabel::getPixelWidthOfText("00.00.00",$fontSize,$font);
+			if($dateWidth > $boxMax)
+				$boxMax = $dateWidth*2+5;
+
+			//TODO: Anche questo va fatto solo se ha chiesto gli actual nella useroptionchoice
+			$actualData = $taskBox->getInfo()->getActualData();
+			$actualTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($actualData,$fontSize,$font);
+			if($actualTripleW > $boxMax)
+				$boxMax = $actualTripleW;
+			
+			//TODO: Anche questo va fatto solo se ha chiesto gli actual nella useroptionchoice
+			$plannedData = $taskBox->getInfo()->getPlannedData();
+			$plannedTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($plannedData,$fontSize,$font);
+			if($plannedTripleW > $boxMax)
+				$boxMax = $plannedTripleW;
+				
+			if($boxMax > $max)
+				$max = $boxMax;
+		}
+		//TODO: moltiplicare per 2 se specifica ShowTaskboxName
+		return $max+10;
+	}
+	
+	private static function getBestWidthOfMultipleDataRow($data,$fontSize,$font)
+	{
+		$actW=array();
+		foreach($data as $value)
+		{
+			$actW[] = GifLabel::getPixelWidthOfText($value,$fontSize,$font);
+		}
+		return sizeOf($actW)*(max($actW)+5);
+	}
+	
+	public function getTopMiddlePoint()
+	{
+		$point = $this->subAreas['CompleteBox']->getTopMiddlePoint();
+		$point['x']+=$this->x;
+		$point['y']+=$this->y;
+		return $point;
+	}
+	
+	public function getBottomMiddlePoint()
+	{
+		$point = $this->subAreas['CompleteBox']->getBottomMiddlePoint();
+		$point['x']+=$this->x;
+		$point['y']+=$this->y;
+		return $point;
 	}
 }
 

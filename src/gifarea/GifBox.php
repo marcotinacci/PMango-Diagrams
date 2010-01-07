@@ -52,6 +52,38 @@ class GifBox extends GifArea
 		$this->canvas->img->SetColor($this->foreColor);
 		$this->canvas->img->FilledRectangle($this->borderThickness, $this->borderThickness, $this->width-$this->borderThickness, $this->height-$this->borderThickness);
 	}
+	
+	public function getTopMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->x+($this->width/2);
+		$point['y']=$this->y;
+		return $point;
+	}
+	
+	public function getBottomMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->x+($this->width/2);
+		$point['y']=$this->y+($this->height);
+		return $point;
+	}
+	
+	public function getLeftMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->x;
+		$point['y']=$this->y+($this->height/2);
+		return $point;
+	}
+	
+	public function getRightMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->x+($this->width);
+		$point['y']=$this->y+($this->height/2);
+		return $point;
+	}
 }
 
 ?>
