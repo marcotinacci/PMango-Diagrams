@@ -29,7 +29,13 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Altezza dello spazio dedicato alla label del titolo dei task
 	 * @var int
 	 */
-	protected $labelHeight = 15;
+	protected $labelHeight = 25;
+
+	/**
+	 * Altezza dello spazio dedicato alla label del menu della grana
+	 * @var int
+	 */
+	protected $labelGrainHeight = 15;
 
 	/**
 	 * Dimensione del font usato
@@ -96,6 +102,13 @@ class GanttChartGenerator extends ChartGenerator{
 	protected $uoc = null;
 	
 	/**
+	 * Data attuale
+	 * @var today
+	 */
+	protected $today;
+	
+	
+	/**
 	 * Costruttore
 	 */
 	public function __construct(){
@@ -112,6 +125,7 @@ class GanttChartGenerator extends ChartGenerator{
 		// TODO: stub date, prenderle dalle uoc
 		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
 		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,2,2010));
+		$this->today = date('Y-m-d H:i:s');
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -130,7 +144,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$granLevel = 5;
 		// TODO: prendere la larghezza dalla dimensione della finestra
 		$this->chart = new GifImage(800, 
-			$granLevel * $this->labelHeight + $this->numTasks*($this->verticalSpace +
+			$granLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +
 			$this->labelHeight) + $this->verticalSpace + 2*$this->tol);
 	}
 
@@ -162,7 +176,7 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->tol, // x
 			$this->tol, // y
 			$titleWidth, // larghezza
-			$this->granLevel*$this->labelHeight, // altezza
+			$this->granLevel*$this->labelGrainHeight, // altezza
 			"Project Title", // titolo
 			$this->fontSize // dim font
 			);
@@ -174,7 +188,7 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->tol + $titleWidth, // x
 			$this->tol, // y
 			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelHeight, // altezza	
+			$this->labelGrainHeight, // altezza	
 			"2010", // data
 			$this->fontSize // dim font			
 		);
@@ -183,9 +197,9 @@ class GanttChartGenerator extends ChartGenerator{
 		// TODO: stub mese
 		$mese = new GifBoxedLabel(
 			$this->tol + $titleWidth, // x
-			$this->tol + $this->labelHeight, // y
+			$this->tol + $this->labelGrainHeight, // y
 			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelHeight, // altezza	
+			$this->labelGrainHeight, // altezza	
 			"Gennaio", // data
 			$this->fontSize // dim font			
 		);
@@ -194,9 +208,9 @@ class GanttChartGenerator extends ChartGenerator{
 		// TODO: stub settimana
 		$sett = new GifBoxedLabel(
 			$this->tol + $titleWidth, // x
-			$this->tol + 2*$this->labelHeight, // y
+			$this->tol + 2*$this->labelGrainHeight, // y
 			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelHeight, // altezza	
+			$this->labelGrainHeight, // altezza	
 			"Settimane", // data
 			$this->fontSize // dim font			
 		);
@@ -205,9 +219,9 @@ class GanttChartGenerator extends ChartGenerator{
 		// TODO: stub giorno
 		$giorno = new GifBoxedLabel(
 			$this->tol + $titleWidth, // x
-			$this->tol + 3*$this->labelHeight, // y
+			$this->tol + 3*$this->labelGrainHeight, // y
 			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelHeight, // altezza
+			$this->labelGrainHeight, // altezza
 			"Giorni", // data
 			$this->fontSize // dim font			
 		);
@@ -217,9 +231,9 @@ class GanttChartGenerator extends ChartGenerator{
 		for( $i = 0 ; $i < $frontWidth -2*$this->tol -1 - $granWidth ; $i=$i+$granWidth){
 			$slice = new GifBoxedLabel(
 				$this->tol + $titleWidth + $i, // x
-				$this->tol + 4*$this->labelHeight, // y
+				$this->tol + 4*$this->labelGrainHeight, // y
 				$granWidth, // larghezza
-				$this->labelHeight, // altezza
+				$this->labelGrainHeight, // altezza
 				($i / $granWidth)."", // data
 				$this->fontSize // dim font
 			);
@@ -227,9 +241,9 @@ class GanttChartGenerator extends ChartGenerator{
 		}
 		$slice = new GifBoxedLabel(
 			$this->tol + $titleWidth + $i, // x
-			$this->tol + 4*$this->labelHeight, // y
+			$this->tol + 4*$this->labelGrainHeight, // y
 			$this->chart->getWidth() - 2*$this->tol -$i - $titleWidth -1, // larghezza
-			$this->labelHeight, // altezza
+			$this->labelGrainHeight, // altezza
 			($i / $granWidth)."", // data
 			$this->fontSize // dim font
 		);
@@ -244,16 +258,18 @@ class GanttChartGenerator extends ChartGenerator{
 		// larghezza della colonna sinistra
 		$wLeftCol = $this->chart->getWidth()*$this->leftColumnSpace;
 		$xLeftCol = $this->tol;
-		$yLeftCol = $this->tol + $this->granLevel * $this->labelHeight;
+		$yLeftCol = $this->tol + $this->granLevel * $this->labelGrainHeight;
 		// disegno il box della colonna sinistra
 		$leftCol = new GifBox(
 			$xLeftCol, // x
 			$yLeftCol, // y
 			$wLeftCol, // larghezza 
-			$this->chart->getHeight() - $this->granLevel * $this->labelHeight 
+			$this->chart->getHeight() - $this->granLevel * $this->labelGrainHeight 
 			- 2*$this->tol // altezza
 		);
-		$leftCol->setForeColor('white');
+		
+// TODO: commentato per vedere i task sottostanti, decommentare poi
+//		$leftCol->setForeColor('white');
 		$leftCol->drawOn($this->chart);
 
 		// TODO: spostare a variabili di istanza
@@ -305,7 +321,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 */	
 	protected function makeGrid(){
 		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
-		$yGrid = $this->granLevel * $this->labelHeight + $this->tol;
+		$yGrid = $this->granLevel * $this->labelGrainHeight + $this->tol;
 		$xfGrid = $this->chart->getWidth() - $this->tol;
 		$yfGrid = $this->chart->getHeight() - $this->tol;
 		
@@ -323,7 +339,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function makeGanttTaskBox(){
 		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
-		$yGrid = $this->granLevel * $this->labelHeight + $this->tol;
+		$yGrid = $this->granLevel * $this->labelGrainHeight + $this->tol;
 		$xfGrid = $this->chart->getWidth() - $this->tol;
 		$yfGrid = $this->chart->getHeight() - $this->tol;
 		
@@ -345,6 +361,7 @@ class GanttChartGenerator extends ChartGenerator{
 				"2010-01-01 01:00:00",//$this->sDate, // startDate
 				"2010-02-01 01:00:00",//$this->fDate, // finishDate
 				$dt, // task data
+				$this->today, // today
 				$this->uoc // opzioni utente
 				);	
 			$gTask->drawOn($this->chart);

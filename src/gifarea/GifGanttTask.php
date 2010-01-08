@@ -5,7 +5,9 @@ require_once dirname(__FILE__)."/GifArea.php";
 require_once dirname(__FILE__)."/GifBox.php";
 require_once dirname(__FILE__)."/GifLabel.php";
 require_once dirname(__FILE__)."/GifProgressBar.php";
-// require_once dirname(__FILE__)."/GifTriangle.php";
+require_once dirname(__FILE__)."/GifTriangle.php";
+
+// TODO: gestire caso task molto stretto coi triangoli
 
 
 /**
@@ -25,6 +27,13 @@ class GifGanttTask extends GifArea
 	 */
 	private $td;
 	
+	// TODO: wTri in opzioni di conf
+	/**
+	 * Misura larghezza triangolo
+	 * @var wTri
+	 */
+	protected $wTri = 4;
+
 	/**
 	 * Costruttore
 	 * @param xStart: x iniziale
@@ -34,12 +43,16 @@ class GifGanttTask extends GifArea
 	 * @param startDate: data inizale della finestra
 	 * @param finishDate: data finale della finestra
 	 * @param task: informazioni da rappresentare (Task)
+	 * @param today: data odierna
 	 * @param uoc: opzioni utente (UserOptionsChoice)
 	 */
 	function __construct($xStart, $xFinish, $y, $height, $startDate, 
-		$finishDate, $taskData, $uoc)
+		$finishDate, $taskData, $today, $uoc)
 	{
 		parent::__construct($xStart, $y, $xFinish - $xStart, $height);
+
+		// task data
+		$this->td = $taskData;
 
 		// dati finestra
 		$windowWidth = $xFinish - $xStart;
@@ -47,22 +60,42 @@ class GifGanttTask extends GifArea
 		$finishTS = $this->toTimeStamp($finishDate);
 		$windowDuration = $finishTS - $startTS;
 		
-		// dati task
-		$this->td = $taskData;
+		// dai odierni
+		$todayTS = $this->toTimeStamp($today);
+				
+		// dati task planned
 		$planned = $this->td->getInfo()->getPlannedTimeFrame();
-		$xPlanned = $windowWidth * ($this->toTimeStamp(
-			$planned['start_date']) - $startTS) 
-			/ $windowDuration;
-		$wPlanned = ($windowWidth * ($this->toTimeStamp(
-			$planned['finish_date']) - $startTS) 
+		$startPlannedTS = $this->toTimeStamp($planned['start_date']);
+		$finishPlannedTS = $this->toTimeStamp($planned['finish_date']);
+		
+		// coordinate planned
+		$xPlanned = $windowWidth * ($startPlannedTS-$startTS) / $windowDuration;
+		$wPlanned = ($windowWidth * ($finishPlannedTS-$startTS) 
 			/ $windowDuration) - $xPlanned;
+		
+		// dati task actual (possono non esserci)
 		$actual = $this->td->getInfo()->getActualTimeFrame();
-		$xActual = $windowWidth * ($this->toTimeStamp(
-			$actual['start_date']) - $startTS) 
-			/ $windowDuration;
-		$wActual = ($windowWidth * ($this->toTimeStamp(
-			$actual['finish_date']) - $startTS) 
-			/ $windowDuration) - $xActual;
+		if($actual['start_date'] == null){
+			$startActualTS = null;
+			$finishActualTS = null;
+			// coordinate actual
+			$xActual = null;
+			$wActual = null;			
+		}else if($actual['finish_date'] == null){
+			$startActualTS = $this->toTimeStamp($actual['start_date']);
+			$finishActualTS = null;
+			// coordinate actual			
+			$xActual = $windowWidth * ($startActualTS-$startTS) / $windowDuration;
+			$wActual = ($windowWidth * ($todayTS-$startTS) 
+				/ $windowDuration) - $xActual;			
+		}else{
+			$startActualTS = $this->toTimeStamp($actual['start_date']);
+			$finishActualTS = $this->toTimeStamp($actual['finish_date']);
+			// coordinate actual			
+			$xActual = $windowWidth * ($startActualTS-$startTS) / $windowDuration;
+			$wActual = ($windowWidth * ($finishActualTS-$startTS) 
+				/ $windowDuration) - $xActual;			
+		}
 		
 		// caso foglia e caso nodo interno
 		if(sizeOf($this->td->getChildren()) == 0){
@@ -73,8 +106,32 @@ class GifGanttTask extends GifArea
 			// se il task ha figli
 			$hPlanned = $height/3;
 			$cPlanned = 'black';
-//			$this->subAreas['leftTriangle'] = new GifBox();
-//			$this->subAreas['rightTriangle'] = new GifBox();
+			$hTri = $height - $hPlanned;
+			
+			// cerco inizio minore tra planned e actual
+			$xMin = $xActual == null ? 
+				$xPlanned : ($xActual < $xPlanned ? $xActual : $xPlanned);
+			// cerco fine maggiore tra planned e actual							
+			$xMax = $xActual + $wActual == null ? 
+				$xPlanned + $wPlanned : 
+				($xActual + $wActual > $xPlanned + $wPlanned ? 
+				$xActual + $wActual : $xPlanned + $wPlanned);
+			
+			/* DEBUG
+			echo "x actual: $xActual <br>";
+			echo "width actual: $wActual <br>";
+			echo "x max: $xMax <br>";
+			echo "x + w: ".($xActual+$wActual)."<br><br>";
+			*/
+			
+			// genero triangoli
+			$this->subAreas['leftTriangle'] = new GifTriangle(
+				$xMin, $hPlanned, $this->wTri, $hTri, 'left');
+			$this->subAreas['leftTriangle']->setForeColor($cPlanned);
+						
+			$this->subAreas['rightTriangle'] = new GifTriangle(
+				$xMax-$this->wTri, $hPlanned, $this->wTri, $hTri, 'right');
+			$this->subAreas['rightTriangle']->setForeColor($cPlanned);
 		}
 
 		// costruzione del planned
