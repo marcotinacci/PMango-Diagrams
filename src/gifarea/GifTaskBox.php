@@ -202,6 +202,15 @@ class GifTaskBox extends GifArea
 		$point['y']+=$this->y;
 		return $point;
 	}
+	
+	public static function getEffectiveHeightOfTaskBox($taskData,$singleRowHeight,$useroption)
+	{
+		$g = new GifTaskBox(0,0,100,$singleRowHeight,$taskData,$useroption);
+		$height = $g->getEffectiveHeight();
+		unset($g);
+		return $height;
+	}
+	
 }
 
 ?>

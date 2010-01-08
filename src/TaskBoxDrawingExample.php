@@ -75,7 +75,7 @@ $c1 = new GifCircle($boxCenter['x'],$boxCenter['y'],5);
 $c1->drawOn($gif);
 
 
-$l1 = new GifLabel(0,0,100,20,"".$areas[0]->getEffectiveHeight(),10);
+$l1 = new GifLabel(0,0,100,20,"".GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null),10);
 $l1->drawOn($gif);
 
 foreach($areas as $a)
