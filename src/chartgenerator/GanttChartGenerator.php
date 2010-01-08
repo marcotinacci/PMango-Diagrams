@@ -4,6 +4,7 @@ require_once dirname(__FILE__).'/ChartGenerator.php';
 require_once dirname(__FILE__).'/../gifarea/GifBox.php';
 require_once dirname(__FILE__).'/../gifarea/GifLabel.php';
 require_once dirname(__FILE__).'/../gifarea/GifBoxedLabel.php';
+require_once dirname(__FILE__).'/../gifarea/GifGanttTask.php';
 require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
 //require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
@@ -333,15 +334,16 @@ class GanttChartGenerator extends ChartGenerator{
 
 		for($i = 0; $i < sizeOf($visit); $i++)
 		{
+			$dt = $visit[$i];
 			$gTask = new GifGanttTask(
 				$xGrid, // x start
-				$xfGrid, // x finish
+				$xfGrid-1, // x finish
 				$yGrid + $this->verticalSpace + 
 				($i * ($this->verticalSpace + $this->labelHeight)), // y start
 				$this->labelHeight, // height
-				$this->sDate, // startDate
-				$this->fDate, // finishDate
-				$visit[$i]->getInfo(), // task
+				"2010-01-01 01:00:00",//$this->sDate, // startDate
+				"2010-02-01 01:00:00",//$this->fDate, // finishDate
+				$dt, // task data
 				$this->uoc // opzioni utente
 				);	
 			$gTask->drawOn($this->chart);

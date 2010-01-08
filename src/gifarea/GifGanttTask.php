@@ -19,7 +19,11 @@ require_once dirname(__FILE__)."/GifProgressBar.php";
 
 class GifGanttTask extends GifArea
 {
-	private $task;
+	/**
+	 * TaskData da disegnare
+	 * @var td
+	 */
+	private $td;
 	
 	/**
 	 * Costruttore
@@ -33,35 +37,63 @@ class GifGanttTask extends GifArea
 	 * @param uoc: opzioni utente (UserOptionsChoice)
 	 */
 	function __construct($xStart, $xFinish, $y, $height, $startDate, 
-		$finishDate, $task, $uoc)
+		$finishDate, $taskData, $uoc)
 	{
 		parent::__construct($xStart, $y, $xFinish - $xStart, $height);
+
+		// dati finestra
 		$windowWidth = $xFinish - $xStart;
-		$startTS = toTimeStamp($startDate);
-		$finishTS = toTimeStamp($finishDate);
+		$startTS = $this->toTimeStamp($startDate);
+		$finishTS = $this->toTimeStamp($finishDate);
 		$windowDuration = $finishTS - $startTS;
-		$ptf=$task->getPlannedTimeFrame();
-		$xPlanned = $windowWidth * (toTimeStamp(
-			$ptf['start_date']) - $startTS) 
+		
+		// dati task
+		$this->td = $taskData;
+		$planned = $this->td->getInfo()->getPlannedTimeFrame();
+		$xPlanned = $windowWidth * ($this->toTimeStamp(
+			$planned['start_date']) - $startTS) 
 			/ $windowDuration;
-		$wPlanned = ($windowWidth * (toTimeStamp(
-			$ptf['finish_date']) - $startTS) 
+		$wPlanned = ($windowWidth * ($this->toTimeStamp(
+			$planned['finish_date']) - $startTS) 
 			/ $windowDuration) - $xPlanned;
- 	// Sotto aree
+//		$outLeft = 
+		
+		// caso foglia e caso nodo interno
+		if(sizeOf($this->td->getChildren()) == 0){
+			// se il task è una foglia
+			$hPlanned = 2*$height/3;
+			$cPlanned = 'white';
+		}else{
+			// se il task ha figli
+			$hPlanned = $height/3;
+			$cPlanned = 'black';
+//			$this->subAreas['leftTriangle'] = new GifBox(
+				
+//				);
+//			$this->subAreas['rightTriangle'] = new GifBox(
+				
+//				);
+		}
+
+		// costruzione del planned
+		
 		$this->subAreas['Planned'] = new GifBox(
-			$xPlanned, // x
+			$xPlanned < $xStart ? 0 : $xPlanned, // x
 			0, // y
 			$wPlanned, // width
-			$height // height
+			$hPlanned // height
 			);
-		//$this->subAreas['ActualProgress'] = new GifProgressBar();
-		//$this->subAreas['Resources'] = new GifLabel();
- 	// TODO: wait for triangle generator
-		//$this->subAreas['leftTriangle'] = new GifBox();
-		//$this->subAreas['rightTriangle'] = new GifBox();
+		$this->subAreas['Planned']->setForeColor($cPlanned);
+
+		 	// TODO: wait for triangle generator
+
+		
+//		$this->subAreas['ActualProgress'] = new GifProgressBar();
+//		$this->subAreas['Resources'] = new GifLabel();
+
 		
 	}
-	
+
 	/**
 	 * la funzione converte dal formato mySQL datetime
 	 * al formato unix timestamp
