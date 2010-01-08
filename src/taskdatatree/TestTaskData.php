@@ -72,4 +72,13 @@
 	echo "substr(str, 0, 0) ritorna: ".substr($str,0,0)."<br>";
 	echo "substr(str, 0, 1) ritorna: ".substr($str,0,1)."<br>";
 	echo "substr(str, 0, 2) ritorna: ".substr($str,0,2)."<br>";
+	
+	$arr_curr = explode('.', $str);
+	echo "la stringa esplosa con separatore .: "; 
+	for($s=0; $s<sizeOf($arr_curr); $s++){
+		echo $arr_curr[$s];
+		$str_curr .= $arr_curr[$s];
+	}
+
+	echo "<br>La stringa presa passo passo dall'array viene: ".$str_curr;
 ?>
