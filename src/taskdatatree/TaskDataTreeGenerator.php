@@ -36,12 +36,11 @@ class TaskDataTreeGenerator{
 	 * @return TaskDataTree $tdt
 	 */
 	public function generateTaskDataTree($uoc){
-		/*
+		
 		//$tasks contiene tutti i dati costruiti dal DataArrayBuilder
 		$tasks = $this->getData();
 		$root = new TaskData();
 		/////cerco il wbsID più lungo per sapere il livello massimo
-		//IMPORTANTE: la funzione explode() restituisce qualcosa se non trova separatori???
 		$max = 0;
 		for($i=0; $i<sizeOf($tasks); $i++){
 			$wbs_id = $tasks[i]->getWBSId();
@@ -60,27 +59,41 @@ class TaskDataTreeGenerator{
 		}
 		$root->setChildren($first_level);
 		
-		/////composizione dell'albero
+		/////inizializzazione variabili necessarie alla costruzione
 		//next_level viene costruito via via, e verrà utilizzato per il ciclo successivo
 		$next_level = array();
-		//contiene il livello corrente di cui stiamo individuando i sottotask
+		//curr_level contiene il livello corrente di cui stiamo individuando i sottotask
 		$curr_level = $first_level;
 		//conterrà i sottotask di uno specifico task del livello corrente
 		$son = array();
 		//variabile booleana per il controllare se un task è sottotask di un altro
-		$son_of = true;
+		$descendant_of = true;
 		for($i=1; $i<$max; $i++){
 			for($j=0; $j<sizeOf($curr_level); $j++){	
 				for($k=0; $k<sizeOf($tasks); $k++){
+					//prendo gli array contenenti i vari pezzi dell'Id del current e del task 
 					$arr_curr = explode(".", $curr_level[$j]->getWBSId());
-					$arr_task = explode(".", $curr_task[$k]->getWBSId());
-					for($s=0; $s<$i; $s++){
+					$arr_task = explode(".", $tasks[$k]->getWBSId());
+					//ciclo sulla parte significativa dell'Id, delimitata da $limit che prende
+					//il valore minore tra $i e la dimensione di arr_task (che potrebbe essere minore in questo ciclo)
+					//N.B. arr_curr avrà sempre dimensione uguale a $i, quindi può non essere considerato
+					$limit = $i;
+					if($i>sizeOf($arr_task)){
+						$limit = sizeOf($arr_task);
+					}
+					for($s=0; $s<$limit; $s++){
 						if($arr_curr[$s]!=$arr_task[$s]){
-							$son_of = false;
+							$descendant_of = false;
 						}
 					}
-					if($son_of){
+					//controllo il booleano e la dimensione dell'id
+					//infatti per essere figlio deve avere l'id più lungo del padre di una sola posizione.
+					if($descendant_of && sizeOf($arr_task)==sizeOf($arr_curr)+1){
 						$task_data = new TaskData($tasks[$k]);
+						
+						//@TODO serie di operazioni per settare i campi del taskdata
+						//settare le ftsDependencies
+						//settare (controllando le uoc) collapsed
 						$son[] = $task_data;
 						$next_level[] = $task_data;
 					}
@@ -97,7 +110,7 @@ class TaskDataTreeGenerator{
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);
 		return $tdt;
-		*/
+		//-----------------------------------------------------------------------//
 		$tasks = $this->getData(); //preleva le info
 		$root = new TaskData();
 		
@@ -173,12 +186,6 @@ class TaskDataTreeGenerator{
 		/*
 		$recovered_data = array();
 		$task_ids = array();
-		//@TODO query per tirare su dal DB i task_id,
-		//da mettere nella variabile $task_ids.
-		//la query dovrebbe risultare
-		
-		//SELECT task_id
-		//FROM nome tabella AS alias
 		
 		$sql = 'SELECT task_id FROM tasks';
 		$task_ids = db_loadList($sql);
