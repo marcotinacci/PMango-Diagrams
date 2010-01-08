@@ -20,6 +20,22 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 */
 	private $drawedTasksMap = array();
 
+	/**
+	 * array of all the dependency line that are candidate to be printed to
+	 * the chart
+	 * @var array of DependencyLineInfo
+	 */
+	private $dependencyLinesArray = array();
+
+	/**
+	 * the dots inside the pattern of a line dependency arrow.
+	 * This variable permits to distinguish between dependency relation lines
+	 * between exiting from two different tasks
+	 *
+	 * @var integer
+	 */
+	private $dotsDependencyLineCount = 2;
+
 	public function generateChart()	{
 
 	}
@@ -47,21 +63,29 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 			foreach ($dependency->getDependentTasks() as $dependentTask) {
 
+				$dependantTaskId =	$dependantTask->getNeededTask()->getTask()->task_id;
 				/*
 				 * cloning the critical path domain object to duplicate the info
 				 * to have one clone foreach fork of the path
 				 */
-				$cpdoClone = $this->BuildNewCriticalPathDomainObjectFrom(
+				$cpdoClone = $this->buildNewCriticalPathDomainObjectFrom(
 				$criticalPathDomainObject,
 				$dependency->getNeededTask()->getTask(),
 				$dependentTask->getNeededTask()->getTask());
 
-				$entryPoint = $dependentTask->getDrawer()->computeEntryPoint(new PointInfo($horizontal, $this->vertical));
+				if (array_key_exists($dependantTaskId, $this->drawedTasksMap)) {
+					$existingDependencyLineInfo =& $this->drawedTasksMap[$dependantTaskId];
+					$existingDependencyLineInfo->horizontal -= $this->getHorizontalGapForExistingDependency();
+					$this->appendDependencyLine(clone $existingDependencyLineInfo);
+				} else {
+					$entryPoint = $dependentTask->getDrawer()->computeEntryPoint(new PointInfo($horizontal, $this->vertical));
 
-				// the following method draw a line only if is necessary in presence of composed task
-				//$entryPoint = $this->connectEntryPointToCurrentVertical($entryPoint);
+					// the following method draw a line only if is necessary in presence of composed task
+					//$entryPoint = $this->connectEntryPointToCurrentVertical($entryPoint);
 
-				$entryPointArray[$dependantTask->getNeededTask()->getTask()->task_id] = $entryPoint;
+					$entryPointArray[$dependantTask->getNeededTask()->getTask()->task_id] = $entryPoint;
+				}
+
 
 				$this->internalGenerateChart($dependentTask, $cpdoClone, $horizontal + $this->getGapBetweenHorizonalTasks()
 				+ $this->getTaskBoxWidth());
@@ -70,7 +94,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 			$exitPoint = $dependency->getDrawer()->computeExitPoint();
 			foreach($entryPointArray as $task_id => $entryPoint) {
-				$dependencyLine = $this->buildDependencyLine($dependency, $task_id, $exitPoint, $entryPoint);
+				$dependencyLine = $this->buildDependencyLine($dependency->getNeededTask()->getTask()->task_id, $task_id, $exitPoint, $entryPoint);
 			}
 
 			$freezeVertical += $this->calculateSpan($dependency);
@@ -88,6 +112,35 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$this->vertical += $taskDrawer->getHeight() + $this->getGapBetweenVerticalTasks();
 		}
 	}
+	
+	private function getHorizontalGapForExistingDependency() {
+		// return a constant
+	}
+
+	private function buildDependencyLine($neededTask_id, $task_id, $exitPoint, $entryPoint) {
+		$dependencyLineInfo = new DependencyLineInfo();
+		$dependencyLineInfo->dependentTaskId = $task_id;
+		$dependencyLineInfo->neededTaskId = $neededTask_id;
+		$dependencyLineInfo->exitPoint = $exitPoint;
+		$dependencyLineInfo->entryPoint = $entryPoint;
+		$dependencyLineInfo->horizontalOffset = ($entryPoint->horizontal - $exitPoint->horizontal) / 2;
+		$dependencyLineInfo->verticalOffset = $entryPoint->vertical - $exitPoint->vertical;
+
+		$dependencyLineInfo->dotsInPattern = $this->dotsDependencyLineCount;
+		$this->dotsDependencyLineCount = $this->dotsDependencyLineCount + 1;
+
+		$this->drawedTasksMap[$task_id] = $dependencyLineInfo;
+
+		// append a clone prevent to have update when the dependency are modified when the dependent task
+		// already exists.
+		$this->appendDependencyLine(clone $dependencyLineInfo);
+
+		return $dependencyLineInfo;
+	}
+
+	private function appendDependencyLine($dependencyLine) {
+		$this->dependencyLinesArray[] = $dependencyLine;
+	}
 
 	private function appendCriticalPathDomainObject($criticalPathDomainObject, $dependency) {
 		// calculating the last time gap and add this information to the domain object
@@ -97,17 +150,17 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		$this->criticalPathTable[$criticalPathDomainObject->getImplodedChain(" - ")] = $criticalPathDomainObject;
 	}
 
-	private function connectEntryPointToCurrentVertical($entryPoint) {
-		if($entryPoint->vertical > $this->vertical) {
-			DrawingHelper::LineFromTo($entryPoint->horizontal, $this->vertical,
-			$entryPoint->horizontal, $entryPoint->vertical, $this->getChart());
-
-			$copyOfVertical = $this->vertical;
-			$this->vertical = $entryPoint->vertical;
-			$entryPoint->vertical = $copyOfVertical;
-		}
-		return $entryPoint;
-	}
+	//	private function connectEntryPointToCurrentVertical($entryPoint) {
+	//		if($entryPoint->vertical > $this->vertical) {
+	//			DrawingHelper::LineFromTo($entryPoint->horizontal, $this->vertical,
+	//			$entryPoint->horizontal, $entryPoint->vertical, $this->getChart());
+	//
+	//			$copyOfVertical = $this->vertical;
+	//			$this->vertical = $entryPoint->vertical;
+	//			$entryPoint->vertical = $copyOfVertical;
+	//		}
+	//		return $entryPoint;
+	//	}
 
 	private function calculateSpan($dependency) {
 		$span = ($this->vertical - $dependency->getDrawer()->getHeight()) / 2;
@@ -126,7 +179,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 * @param Task $dependentTask
 	 * @return CriticalPathObjectDomain
 	 */
-	private function BuildNewCriticalPathDomainObjectFrom($criticalPathDomainObject, $dependency, $dependentTask) {
+	private function buildNewCriticalPathDomainObjectFrom($criticalPathDomainObject, $dependency, $dependentTask) {
 		$result = clone $criticalPathDomainObject;
 		$result->increaseDurationOf($this->ComputeDuration($dependentTask));
 		$result->increaseDurationOf($this->ComputeTimeGap($dependency, $dependentTask));
@@ -351,7 +404,7 @@ class ComposedTaskDataDrawer extends AbstractTaskDataDrawer {
 
 	protected function onDependencySegmentDrawing($gifImage, $initialPoint) {
 		$arrivePointVerticalComponent = $initialPoint->vertical + AbstractTaskDataDrawer::$composedVerticalLineLength;
-		$horizontal = $initialPoint->horizontal + 
+		$horizontal = $initialPoint->horizontal +
 		(AbstractTaskDataDrawer::$width / 2);
 		DrawingHelper::LineFromTo(horizontal, $initialPoint->vertical, horizontal, $arrivePointVerticalComponent, $gifImage);
 		return new PointInfo($initialPoint->horizontal, $arrivePointVerticalComponent);

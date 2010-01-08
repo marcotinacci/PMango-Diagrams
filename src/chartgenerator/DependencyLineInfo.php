@@ -37,5 +37,11 @@ class DependencyLineInfo {
 	 * @var int
 	 */
 	var $dependentTaskId;
+	
+	/**
+	 * number of dots to distinguish between a two dependency line
+	 * @var integer
+	 */
+	var $dotsInPattern;
 }
 ?>
