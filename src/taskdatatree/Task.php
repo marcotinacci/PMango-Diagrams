@@ -24,7 +24,7 @@ class Task{
 	 * correct because the array with the info is empty
 	 * @return unknown_type
 	 */
-	//@TODO set private
+	//TODO set private
 	public function __construct(){	}
 
 	/**
@@ -32,6 +32,8 @@ class Task{
 	 * @param int $task_id
 	 * @return Task a correct task to be handle
 	 */
+	//TODO aggiungere campo task_id alle classi che necessitano, per aggiungerlo come
+	//facente parte del campo data di Task.
 	public static function MakeTask($task_id) {
 		// creating the object that build the associative array
 		$dataArrayBuilder =& new DataArrayBuilder($task_id);

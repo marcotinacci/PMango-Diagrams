@@ -74,26 +74,23 @@ class TaskDataTreeGenerator{
 					//prendo gli array contenenti i vari pezzi dell'Id del current e del task 
 					$arr_curr = explode(".", $curr_level[$j]->getWBSId());
 					$arr_task = explode(".", $tasks[$k]->getWBSId());
-					//ciclo sulla parte significativa dell'Id, delimitata da $limit che prende
-					//il valore minore tra $i e la dimensione di arr_task (che potrebbe essere minore in questo ciclo)
-					//N.B. arr_curr avrà sempre dimensione uguale a $i, quindi può non essere considerato
-					$limit = $i;
-					if($i>sizeOf($arr_task)){
-						$limit = sizeOf($arr_task);
-					}
-					for($s=0; $s<$limit; $s++){
-						if($arr_curr[$s]!=$arr_task[$s]){
-							$descendant_of = false;
+					//ciclo sulla parte significativa dell'Id, delimitata da $i
+					//il controllo $i<sizeOf(arr_task) evita i
+					if($i<sizeOf($arr_task)){
+						for($s=0; $s<$i; $s++){
+							if($arr_curr[$s]!=$arr_task[$s]){
+								$descendant_of = false;
+							}
 						}
+					}
+					else{
+						$descendant_of = false;
 					}
 					//controllo il booleano e la dimensione dell'id
 					//infatti per essere figlio deve avere l'id più lungo del padre di una sola posizione.
 					if($descendant_of && sizeOf($arr_task)==sizeOf($arr_curr)+1){
 						$task_data = new TaskData($tasks[$k]);
-						
-						//@TODO serie di operazioni per settare i campi del taskdata
-						//settare le ftsDependencies
-						//settare (controllando le uoc) collapsed
+						//TODO settare (controllando le uoc) collapsed
 						$son[] = $task_data;
 						$next_level[] = $task_data;
 					}
@@ -109,6 +106,9 @@ class TaskDataTreeGenerator{
 		
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);
+		
+		//TODO settare le fts dependencies
+		
 		return $tdt;
 		//-----------------------------------------------------------------------//
 		$tasks = $this->getData(); //preleva le info

@@ -74,8 +74,13 @@ class TaskData{
 		$this->children = $children;
 	}
 	
-	public function setFtsDependencies($ftsDependencies){
-		$this->ftsDependencies = $ftsDependencies;
+	public function setFtsDependencies($ftsDependencies = null){
+		if ($ftsDependencies != null){
+			$this->ftsDependencies = $ftsDependencies;
+		}
+		else{
+			//TODO
+		}
 	}
 	
 	public function setCollapsed($collapsed){
