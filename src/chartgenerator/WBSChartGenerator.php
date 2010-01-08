@@ -17,27 +17,24 @@ require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 class WBSChartGenerator extends ChartGenerator{
 	
 	private  $width=800;	
+	private $boxWidth;
 	
 	/**
 	 * Funzione di generazione grafica delle WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
-	public function __construct()
+	public function __construct($width)
 	{
-		
 		//Costruttore di default con risoluzione di default
-		$this->setWidth(800);
-			
+		$this->setWidth($width);
+				
 	}
 	
 	
 	public function generateChart()
 	{
-	
-		
-		
 		$this->makeWBSTaskNode();		
-}
+	}
 	
 	/**
 	 * Funzione che crea i nodi delle WBS e li posiziona secondo
@@ -57,8 +54,10 @@ class WBSChartGenerator extends ChartGenerator{
 		$tree=new TaskDataTreeGenerator();
 		$treeData=$tree->stubGenerateTaskDataTree();
 		
+		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
+				
 		//vettore di foglie dell'albero
-		$leav=array();//('D','H','F','I');
+		$leav=array();
 		
 		$nodi=array();
 		
@@ -66,8 +65,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$nodi=$treeData->deepVisit();
 		//Il vettore $leav viene riempito con tutte le foglie del tree
 		$leav = $treeData->getLeaves();
-		
-		
+				
 		//Viene contato e memorizzato il numero di foglie presenti
 		$numleaves=Count($leav);
 		
@@ -98,6 +96,19 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$occorrenze=1;
 		
+		//PRIMA DI QUESTO FARE DUE CICLI A VUOTO PER VERIFICARE L'ALTEZZA DELLA PAGINA
+		//IN MODO DA GESTIRLA IN MODO DINAMICO; USARE METODO STATICO GIFTASKBOX::EFFECTIVEMAXHEI
+		
+		for($i=$CLiv;$i>=0;$i--)
+		{			
+			for($j=0;$j<$numleaves;$j++)
+			{
+				//$height+=GifTaskbox::dammi dimensioni		
+			}
+		}
+		//$height+=200;
+		//$alt=$height-200;
+		
 		//Il seguente blocco di codice esegue in un'unica passata il posizionamento
 		//dei tasknode e salva nelle due matrici LinkX e LinkY le coordinate
 		for($i=$CLiv;$i>=0;$i--)
@@ -112,22 +123,22 @@ class WBSChartGenerator extends ChartGenerator{
 						//Se vi è una solo occorrenza allora posiziona lo scatolotto esattamente sopra il figlio
 						if($occorrenze == 1)
 						{
-							$areas[] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-75,$alt,150,30,$taskData);
+							$areas[] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$taskData);
 							$leav[$j]=$leav[$j]->getParent();
-							$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-75;
+							$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2);
 							$LinkY[$i][$j]=$alt;
 						}
 						//Altrimenti se il padre ha più figli viene messo al centro
 						else if($occorrenze > 1)
 						{
-							$cord1= ((($occorrenze)*$dimBlocco)/2);
-							$cord2= ((($j)*$dimBlocco));					
-							$areas[] = new GifTaskBox((($cord2+$cord1)-75),$alt,150,30,$taskData);
+							$cord1 = ((($occorrenze)*$dimBlocco)/2);
+							$cord2 = ((($j)*$dimBlocco));					
+							$areas[] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$taskData);
 						
 							for($k=0;$k<$occorrenze;$k++)
 							{
 								$leav[$j+$k]=$leav[$j+$k]->getParent();
-								$LinkX[$i][$j+$k]=(($cord2+$cord1)-75);
+								$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
 								$LinkY[$i][$j+$k]=$alt;
 							}
 							$j+=$occorrenze-1;
@@ -155,23 +166,37 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$gif = new GifImage($this->getWidth(),$height);
 
+		$arrayDrawLine=array();
+		$XToDraw=array();
+		$YToDraw=array();
+		
 		for($i=0;$i<$CLiv;$i++)
 		{
-			//IL SECONDO FOR INVECE DEVE SCANDIRE IL VETTORE DELLE FOGLIE (COLONNE)
+			$arrayDrawLine=$LinkX[$i];
 			for($j=0;$j<$numleaves;$j++)
 			{
-				if($LinkX[$i+1][$j]!=null)
+				$occorrenze=$this->getOccorrence($arrayDrawLine,$arrayDrawLine[$j]);
+				
+				for($k=0;$k<$occorrenze;$k++)
 				{
-					//MODIFICARE IL LINEFROMTO
-					DrawingHelper::UpRectangularLineFromTo($LinkX[$i][$j]+75,$LinkY[$i][$j]+200,$LinkX[$i+1][$j]+75,$LinkY[$i+1][$j],$gif,$s);
-					//DrawingHelper::LineFromTo($LinkX[$i][$j]+75,$LinkY[$i][$j]+200,$LinkX[$i+1][$j]+75,$LinkY[$i+1][$j],$gif,$s);
-				}
+					if($LinkX[$i+1][$j+$k]!="")
+					{
+					$XToDraw[$k]=$LinkX[$i+1][$j+$k]+($this->boxWidth)/2;
+					$YToDraw[$k]=$LinkY[$i+1][$j+$k];
+					}
+				}	
+				$j+=$occorrenze-1;
+				
+				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+200,$XToDraw,$YToDraw,$gif,$s);
+				
+				$XToDraw=array();
+				$YToDraw=array();
+					
 			}
 		}
-
+		
 		foreach($areas as $a)
 			$a->drawOn($gif);
-		
 		$gif->draw();
 		$gif->saveToFile("./WBSTree.gif");
 		
@@ -202,8 +227,5 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 		return $contatore;
 	}
-	
-	
 }
-
 ?>
