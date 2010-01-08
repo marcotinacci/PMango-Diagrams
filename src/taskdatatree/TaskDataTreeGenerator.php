@@ -36,6 +36,25 @@ class TaskDataTreeGenerator{
 	 * @return TaskDataTree $tdt
 	 */
 	public function generateTaskDataTree($uoc){
+		/*
+		$task_ids = $this->getData();
+		$root = new TaskData();
+		//cerco il wbsID più lungo per sapere il livello massimo
+		$max = 0;
+		for($i=0; $i<sizeOf($tasks_ids); $i++){
+			$curr_id = $tasks_ids[$i];
+			$sql = 'SELECT task_wbs_index FROM tasks WHERE task_id = '.$curr_id;
+			$wbs_id = db_loadList($sql);
+			$array = explode(".", $wbs_id);
+			if($max<sizeOf($array)){
+				$max = sizeOf($array);
+			}
+		}
+		
+		$tdt = new TaskDataTree();
+		$tdt->setRoot($root);
+		return $tdt;
+		*/
 		$tasks = $this->getData(); //preleva le info
 		$root = new TaskData();
 		

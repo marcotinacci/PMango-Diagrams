@@ -50,7 +50,7 @@ class UserOptionsChoice {
 	
 	private $array;
 	/*
-private function __construct($array) {
+	private function __construct($array) {
 	
 		$this->array = $array;
 	}*/
