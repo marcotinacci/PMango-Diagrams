@@ -253,6 +253,7 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->chart->getHeight() - $this->granLevel * $this->labelHeight 
 			- 2*$this->tol // altezza
 		);
+		$leftCol->setForeColor('white');
 		$leftCol->drawOn($this->chart);
 
 		// TODO: spostare a variabili di istanza

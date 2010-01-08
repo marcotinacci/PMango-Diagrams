@@ -56,7 +56,13 @@ class GifGanttTask extends GifArea
 		$wPlanned = ($windowWidth * ($this->toTimeStamp(
 			$planned['finish_date']) - $startTS) 
 			/ $windowDuration) - $xPlanned;
-//		$outLeft = 
+		$actual = $this->td->getInfo()->getActualTimeFrame();
+		$xActual = $windowWidth * ($this->toTimeStamp(
+			$actual['start_date']) - $startTS) 
+			/ $windowDuration;
+		$wActual = ($windowWidth * ($this->toTimeStamp(
+			$actual['finish_date']) - $startTS) 
+			/ $windowDuration) - $xActual;
 		
 		// caso foglia e caso nodo interno
 		if(sizeOf($this->td->getChildren()) == 0){
@@ -67,28 +73,27 @@ class GifGanttTask extends GifArea
 			// se il task ha figli
 			$hPlanned = $height/3;
 			$cPlanned = 'black';
-//			$this->subAreas['leftTriangle'] = new GifBox(
-				
-//				);
-//			$this->subAreas['rightTriangle'] = new GifBox(
-				
-//				);
+//			$this->subAreas['leftTriangle'] = new GifBox();
+//			$this->subAreas['rightTriangle'] = new GifBox();
 		}
 
 		// costruzione del planned
 		
 		$this->subAreas['Planned'] = new GifBox(
-			$xPlanned < $xStart ? 0 : $xPlanned, // x
+			$xPlanned, //< $xStart ? 0 : $xPlanned, // x
 			0, // y
 			$wPlanned, // width
 			$hPlanned // height
 			);
 		$this->subAreas['Planned']->setForeColor($cPlanned);
-
-		 	// TODO: wait for triangle generator
-
 		
-//		$this->subAreas['ActualProgress'] = new GifProgressBar();
+		$this->subAreas['ActualProgress'] = new GifProgressBar(
+			$xActual,
+			$hPlanned,
+			$wActual,
+			$height/3,
+			$this->td->getInfo()->getPercentage()
+			);
 //		$this->subAreas['Resources'] = new GifLabel();
 
 		

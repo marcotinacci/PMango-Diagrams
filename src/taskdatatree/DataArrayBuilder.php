@@ -8,7 +8,7 @@
  */
 function __autoload($class_name){
 	//print $class_name;
-	require ("./modules/tasks/tasks.class.php");
+//	require ("./modules/tasks/tasks.class.php");
 }
 /**
  * This class provide the abstraction for creating the associative array
