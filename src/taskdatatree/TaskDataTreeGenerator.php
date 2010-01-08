@@ -61,6 +61,7 @@ class TaskDataTreeGenerator{
 		$root->setChildren($first_level);
 		
 		//composizione dell'albero
+		//@TODO fare confronto sugli elementi dell'explode invece che sulle stringhe.
 		$next_level = array();
 		$curr_level = $first_level;
 		$son = array();
