@@ -73,6 +73,10 @@
 	echo "substr(str, 0, 1) ritorna: ".substr($str,0,1)."<br>";
 	echo "substr(str, 0, 2) ritorna: ".substr($str,0,2)."<br>";
 	
+	$str1 = "222";
+	echo $str1." è una stringa senza punti.<br>";
+	echo "La funzione explode() con separatore punto, ritorna ".explode(".", $str1);
+	
 	$arr_curr = explode('.', $str);
 	echo "la stringa esplosa con separatore .: "; 
 	for($s=0; $s<sizeOf($arr_curr); $s++){

@@ -40,7 +40,7 @@ class TaskDataTreeGenerator{
 		//$tasks contiene tutti i dati costruiti dal DataArrayBuilder
 		$tasks = $this->getData();
 		$root = new TaskData();
-		//cerco il wbsID più lungo per sapere il livello massimo
+		/////cerco il wbsID più lungo per sapere il livello massimo
 		//IMPORTANTE: la funzione explode() restituisce qualcosa se non trova separatori???
 		$max = 0;
 		for($i=0; $i<sizeOf($tasks); $i++){
@@ -51,7 +51,7 @@ class TaskDataTreeGenerator{
 			}
 		}
 		
-		//costruisco il primo livello
+		/////costruzione primo livello
 		$first_level = array();
 		for($i=0; $i<sizeOf($tasks); $i++){
 			if($tasks[$i]->getLevel()==1){
@@ -60,26 +60,32 @@ class TaskDataTreeGenerator{
 		}
 		$root->setChildren($first_level);
 		
-		//composizione dell'albero
-		//@TODO fare confronto sugli elementi dell'explode invece che sulle stringhe.
+		/////composizione dell'albero
+		//next_level viene costruito via via, e verrà utilizzato per il ciclo successivo
 		$next_level = array();
+		//contiene il livello corrente di cui stiamo individuando i sottotask
 		$curr_level = $first_level;
+		//conterrà i sottotask di uno specifico task del livello corrente
 		$son = array();
+		//variabile booleana per il controllare se un task è sottotask di un altro
+		$son_of = true;
 		for($i=1; $i<$max; $i++){
 			for($j=0; $j<sizeOf($curr_level); $j++){	
-				for($k=0; $k<sizeOf($tasks); $k++{
+				for($k=0; $k<sizeOf($tasks); $k++){
 					$arr_curr = explode(".", $curr_level[$j]->getWBSId());
-					for($s=0; $s<sizeOf($arr_curr); $s++){
-						$str_curr .= arr_curr[$s];
-					}
 					$arr_task = explode(".", $curr_task[$k]->getWBSId());
-					for($s=0; $s<sizeOf($arr_task); $s++){
-						$str_task .= arr_curr[$s];
+					for($s=0; $s<$i; $s++){
+						if($arr_curr[$s]!=$arr_task[$s]){
+							$son_of = false;
+						}
 					}
-					if(substr($str_task,0,$i)==substr($str_curr,0,$i){
+					if($son_of){
 						$task_data = new TaskData($tasks[$k]);
 						$son[] = $task_data;
 						$next_level[] = $task_data;
+					}
+					else{
+						$son_of=true;
 					}
 				}
 				$curr_level[$j]->setChildren($son);
