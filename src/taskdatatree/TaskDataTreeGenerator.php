@@ -63,11 +63,20 @@ class TaskDataTreeGenerator{
 		//composizione dell'albero
 		$next_level = array();
 		$curr_level = $first_level;
-		for($i=0; $i<$max; $i++){
+		for($i=1; $i<$max+1; $i++){
 			for($j=0; $j<sizeOf($curr_level); $j++){
 				for($k=0; $k<sizeOf($tasks); $k++{
-					if(substr($tasks[$k]->getWBSId(),0,$i)==substr($curr_level[$j]->getWBSId(),0,$i){
-					
+					$arr_curr = explode(".", $curr_level[$j]->getWBSId());
+					for($s=0; $s<sizeOf($arr_curr); $s++){
+						$str_curr .= arr_curr[$s];
+					}
+					$arr_task = explode(".", $curr_task[$k]->getWBSId());
+					for($s=0; $s<sizeOf($arr_task); $s++){
+						$str_task .= arr_curr[$s];
+					}
+					if(substr($str_task,0,$i)==substr($str_curr,0,$i){
+						
+					}
 				}
 			}
 		}
