@@ -41,6 +41,7 @@ class TaskDataTreeGenerator{
 		$tasks = $this->getData();
 		$root = new TaskData();
 		//cerco il wbsID più lungo per sapere il livello massimo
+		//IMPORTANTE: la funzione explode() restituisce qualcosa se non trova separatori???
 		$max = 0;
 		for($i=0; $i<sizeOf($tasks); $i++){
 			$wbs_id = $tasks[i]->getWBSId();
@@ -52,13 +53,24 @@ class TaskDataTreeGenerator{
 		
 		//costruisco il primo livello
 		$first_level = array();
-		for ($i=0; $i<sizeOf($tasks); $i++){
+		for($i=0; $i<sizeOf($tasks); $i++){
 			if($tasks[$i]->getLevel()==1){
 				$first_level[] = new TaskData($tasks[$i]);
 			}
 		}
 		$root->setChildren($first_level);
 		
+		//composizione dell'albero
+		$next_level = array();
+		$curr_level = $first_level;
+		for($i=0; $i<$max; $i++){
+			for($j=0; $j<sizeOf($curr_level); $j++){
+				for($k=0; $k<sizeOf($tasks); $k++{
+					if(substr($tasks[$k]->getWBSId(),0,$i)==substr($curr_level[$j]->getWBSId(),0,$i){
+					
+				}
+			}
+		}
 		
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);

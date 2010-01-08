@@ -66,4 +66,10 @@
 		echo "<b>".$leaves[$i]->getInfo()->getWBSId()."</b>: <b>".$leaves[$i]->getInfo()->getTaskName()."</b> --- ";
 	}
 	echo " <b>END</b><br>";
+	
+	$str = "1.2.3";
+	echo "La stringa esaminata: ".$str."<br>";
+	echo "substr(str, 0, 0) ritorna: ".substr($str,0,0)."<br>";
+	echo "substr(str, 0, 1) ritorna: ".substr($str,0,1)."<br>";
+	echo "substr(str, 0, 2) ritorna: ".substr($str,0,2)."<br>";
 ?>
