@@ -109,6 +109,8 @@ $gifTriangle = new GifTriangle(0,350,20,60,"left");
 $gifTriangle->drawOn($gif);
 */
 
+DrawingHelper::GanttDependencyLine(100,100,140,140,10,true,$gif,null);
+
 $gif->draw();
 
 

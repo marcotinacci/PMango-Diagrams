@@ -375,9 +375,9 @@ class DrawingHelper
 		DrawingHelper::LineFromTo($x+$hOffset,$y+$vOffset,$xEnd,$yEnd,$gifImage,$lineStyle);
 	}
 	
-	public static function drawArrow($x,$y,$width,$height,$direction,$gifImage ,$lineStyle = null)
+	public static function drawArrow($x,$y,$width,$height,$direction,$gifImage)
 	{	
-		$canvas = new CanvasGraph ($width, $height, 'auto');
+		$canvas = new CanvasGraph ($width+30, $height+30, 'auto');
 		
 		$w = $canvas->img->width;
 		$h = $canvas->img->height;
@@ -399,9 +399,28 @@ class DrawingHelper
 		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
 	}
 	
-	public static function GanttDependencyLine($x1,$y1,$x1,$x2,$gifImage ,$lineStyle = null)
+	public static function GanttDependencyLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle = null)
 	{
-		
+		$halfQuote = ($y2-$y1)/2;
+		$halfX = ($x2-$x1)/2;
+		if($x1<=$x2)
+		{
+			DrawingHelper::LineFromTo($x1,$y1,$x1+$halfX,$y1,$gifImage,$lineStyle);
+			DrawingHelper::LineFromTo($x1+$halfX,$y1,$x1+$halfX,$y2,$gifImage,$lineStyle);
+			DrawingHelper::LineFromTo($x1+$halfX,$y2,$x2,$y2,$gifImage,$lineStyle);
+			if($endWithArrow)
+				DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+		}
+		else
+		{
+			DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
+			DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+			DrawingHelper::LineFromTo($x1+$offset,$y1+$halfQuote,$x2-$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+			DrawingHelper::LineFromTo($x2-$offset,$y1+$halfQuote,$x2-$offset,$y2,$gifImage,$lineStyle);
+			DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+			if($endWithArrow)
+				DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+		}
 	}
 	
 	private static function getUpArrowPoints($x,$y,$width,$height)
