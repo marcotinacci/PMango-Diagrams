@@ -118,14 +118,18 @@ class TaskDataTreeGenerator{
 		//SELECT task_id
 		//FROM nome tabella AS alias
 		
-		$q =& new DBQuery();
-		$q->addTable(nome tab, alias);
-		$q->addQuery(field);
-		$task_ids = $q->exec();
+		$sql = 'SELECT task_id FROM tasks';
+		$task_ids = db_loadList($sql);
+		//$q =& new DBQuery();
+		//$q->addTable("tasks", "t");
+		//$q->addQuery("task_id");
+		//$task_ids = $q->exec();
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]);
 			$recovered_data[sizeOf($recovered_data)] = $current_task;
-		}*/
+		}
+		return $recovered_data;
+		*/
 		return $recovered_data;
 	}
 }
