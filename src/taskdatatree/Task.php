@@ -108,7 +108,13 @@ class Task{
 	}
 	
 	public function getLevel(){
-		return $this->data[DataArrayKeyEnumeration::$level];
+		//return $this->data[DataArrayKeyEnumeration::$level];
+		
+		//esplodo il wbsId separando elementi con separatore "."; ottengo l'array $level
+		//che avrà tanti elementi, quanto è il livello del task stesso. 
+		$wbs_id = $tasks[i]->getWBSId();
+		$level = explode(".", $wbs_id);
+		return sizeOf($level);
 	}
 
 	public function getPercentage(){

@@ -37,19 +37,28 @@ class TaskDataTreeGenerator{
 	 */
 	public function generateTaskDataTree($uoc){
 		/*
-		$task_ids = $this->getData();
+		//$tasks contiene tutti i dati costruiti dal DataArrayBuilder
+		$tasks = $this->getData();
 		$root = new TaskData();
 		//cerco il wbsID più lungo per sapere il livello massimo
 		$max = 0;
-		for($i=0; $i<sizeOf($tasks_ids); $i++){
-			$curr_id = $tasks_ids[$i];
-			$sql = 'SELECT task_wbs_index FROM tasks WHERE task_id = '.$curr_id;
-			$wbs_id = db_loadList($sql);
-			$array = explode(".", $wbs_id);
-			if($max<sizeOf($array)){
-				$max = sizeOf($array);
+		for($i=0; $i<sizeOf($tasks); $i++){
+			$wbs_id = $tasks[i]->getWBSId();
+			$level = explode(".", $wbs_id);
+			if($max<sizeOf($level)){
+				$max = sizeOf($level);
 			}
 		}
+		
+		//costruisco il primo livello
+		$first_level = array();
+		for ($i=0; $i<sizeOf($tasks); $i++){
+			if($tasks[$i]->getLevel()==1){
+				$first_level[] = new TaskData($tasks[$i]);
+			}
+		}
+		$root->setChildren($first_level);
+		
 		
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);
@@ -139,13 +148,9 @@ class TaskDataTreeGenerator{
 		
 		$sql = 'SELECT task_id FROM tasks';
 		$task_ids = db_loadList($sql);
-		//$q =& new DBQuery();
-		//$q->addTable("tasks", "t");
-		//$q->addQuery("task_id");
-		//$task_ids = $q->exec();
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]);
-			$recovered_data[sizeOf($recovered_data)] = $current_task;
+			$recovered_data[] = $current_task;
 		}
 		return $recovered_data;
 		*/
