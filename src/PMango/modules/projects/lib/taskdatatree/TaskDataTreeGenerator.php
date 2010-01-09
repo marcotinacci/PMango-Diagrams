@@ -131,28 +131,6 @@ class TaskDataTreeGenerator{
 			$recovered_data[] = $current_task;
 		}
 		return $recovered_data;
-		*/
-		return $recovered_data;
-	}
-}
-	public function getData(){
-		$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
-		//$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
-		
-		$recovered_data = array();
-		$task_ids = array();
-		
-		$sql = 'SELECT task_id FROM tasks';
-		$task_ids = db_loadList($sql);
-		for ($i=0; $i<sizeOf($task_ids); $i++){
-			$current_task = Task::makeTask($task_ids[$i]);
-			$recovered_data[] = $current_task;
-		}
-		return $recovered_data;
-		*/
-		return $recovered_data;
-		
-		//return $recovered_data;
 	}
 }
 
