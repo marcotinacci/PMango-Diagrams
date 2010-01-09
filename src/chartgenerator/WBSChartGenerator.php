@@ -188,8 +188,9 @@ class WBSChartGenerator extends ChartGenerator{
 					$YToDraw[$k]=$LinkY[$i+1][$j+$k];
 					}
 				}	
-				$j+=$occorrenze-1;	
-				$hspace=GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null);
+				$j+=$occorrenze-1;
+				
+				$hspace = GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null);
 				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
 				
 				$XToDraw=array();
