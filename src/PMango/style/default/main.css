@@ -1,0 +1,520 @@
+/* Mango REQUIRED CLASSES */
+BODY {
+	background-color: #FFFFE8;
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: 10px;
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 10pt
+}
+
+ul {
+	margin-left: 25px;
+}
+
+dl {
+	margin-top: 0px; padding-left: 1px;
+}
+dt {
+	margin-top: 0.5em;
+	color: #009933;
+	font-weight: bold
+}
+dd {
+	margin-bottom: 0px; margin-left: 1.5em;
+}
+
+
+em {
+	font-weight: bold;
+	text-decoration: none;
+	font-style: normal;
+}
+
+A:link {
+	color: #006600;
+	text-decoration: none
+}
+
+A:visited {
+	color: #006600;
+	text-decoration: none
+}
+
+A:active {
+	color: #006600;
+	text-decoration: none
+}
+
+A:hover {
+	color: #666666;
+	text-decoration: underline;
+}
+
+TD {
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt
+}
+
+TR {
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt
+}
+
+h1, .title {
+	font-size: 16px;
+	font-weight: bold;
+	font-family: Osaka,verdana,Sans-Serif;
+	color: #003300;
+	margin-bottom: 0px;
+	margin-top: 5px
+}
+
+h2, .subtitle {
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Osaka,verdana,Sans-Serif;
+	color: #666;
+	margin-bottom: 0px;
+	margin-top: 15px;
+}
+
+h3 {
+	font-size: 12px;
+	font-weight: bold;
+	font-family: Osaka,verdana,Sans-Serif;
+	color: #006600;
+	margin-bottom: 0px;
+	margin-top: 35px
+}
+
+bordertable {
+	border: 1px black solid;
+}
+
+.bordertable{
+ border: 1px black solid;
+}
+
+.button{
+	cursor: hand; 
+	border: 1px solid #000000; 
+	padding: 1; 
+	font-weight: normal;
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt; 
+	background-color:#FBDA1E; 
+	color:#006600
+}
+
+.button2{
+ 	cursor: pointer; 
+	border: 1px solid #FFFFFF; 
+	padding: 0; 
+	font-weight: normal;
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt;
+	background-color:transparent; 
+	color:#FFFFFF
+}
+
+.logout{
+	border: 1px solid #000000; 
+	padding: 2; 
+	font-weight: normal;
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt; 
+	color:#006600; vertical-align:medium; background-color:#FDF0A8
+}
+
+.insText{
+	border: 1px	solid #000000; 
+	padding: 1; 
+	font-weight: normal;
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt; 
+}
+
+.item {
+	color: #08245b;
+}
+
+.ok {
+	color: #009933;
+}
+
+.text{
+	border: 1px black solid;
+	font-family: Osaka,verdana,Sans-Serif;
+	font-size: 8pt;
+	/*height: 12pt; Select boxes are too small in Mozilla */
+}
+
+TEXTAREA {
+	font-family: Osaka,verdana, Sans-serif;
+	font-size: 9pt;
+}
+
+.textarea {
+	font-family: Osaka, verdana, Sans-serif;
+	font-size: 8pt;
+}
+
+textarea.small {
+	border: 1px black solid;
+	font-family: Osaka, verdana,Sans-Serif;
+	font-size: 8pt;
+}
+
+/* Mango Top Banner and Top Nav Customization */
+TH.banner {
+	background-color: #996600;
+	color: #FFFFFF
+}
+
+td.nav1 {
+	border: 1px solid #000000; margin:0; padding:2;
+	background-color:#FDF0A8
+}
+
+td.nav2 {
+	border: 0px solid #000000; margin:0; padding:0;
+	font-weight:normal 
+}
+
+/*
+**********************************
+Begin IE TD buttonizing
+**********************************
+*/
+
+TD.clsBtnUp {
+	cursor: hand;
+	color: #FFFFFF;
+	padding: 0 3;
+	border: inset 2px;
+}
+
+TD.clsBtnDown {
+	cursor: hand;
+	color: #FFFFFF;
+	padding: 0 3;
+	border: inset 2px;
+}
+
+TD.clsBtnOn {
+	cursor: hand;
+	color: #FFFFFF;
+	padding: 0 3;
+	border: outset #eeeeee 2px;
+}
+
+TD.clsBtnOff {
+	color: #FFFFFF;
+	tab-index: 0;
+	border: 2px solid #808000;; padding-left:3; padding-right:3; padding-top:0; padding-bottom:0
+}
+
+TD.topBtnOff {
+	color: #FFFFFF;
+	padding: 0 3;
+	tab-index: 0;
+	border: solid #cccccc 2px;
+}
+
+TD.nav {
+	color: #000000; background-image:url('images/titleNav1.jpg')
+}
+
+/* Standard table 'spreadsheet' style */
+
+table.title {border: 1px solid #000000; margin:0; padding:1; background-color:#F7F7B9  
+}
+
+table.tbl {
+	background: #E2B969;
+}
+
+table.tbl TH {
+	background-color: #996600;
+	color: #FFFFFF;
+	list-style-type: disc;
+	list-style-position: inside;
+	border: 1px outset #D1D1CD;
+	font-weight: normal;
+	text-align:center
+}
+
+table.tbl td {
+	background-color: #ffffff;
+}
+
+table.tbl2 {
+	background: #E2B969;
+}
+
+table.tbl2 TH {
+	background-color: #996600;
+	color: #FFFFFF;
+	list-style-type: disc;
+	list-style-position: inside;
+	border: 1px outset #D1D1CD;
+	font-weight: normal;
+	text-align:center
+}
+
+table.tbl2 td {
+	
+}
+
+/* a 'standard' table */
+table.pr {
+	border: 2px solid #000000;
+	background: #DDCC68;
+}
+table.std {
+	border: 2px solid #000000;
+	background: #E9DE9C;
+}
+table.std TH {
+	background-color: #996600;
+	color: #FFFFFF;
+	list-style-type: disc;
+	list-style-position: inside;
+	border: 1px outset #D1D1CD
+}
+
+table.std td.hilite {
+	background-color: #ffffff;
+}
+
+/* contacts table */
+table.contacts {
+	background-color: #996600;
+}
+
+table.contacts td {
+	background-color: #E9DE9C;
+}
+
+table.contacts td.hilite {
+	background-color: #ffffff;
+}
+
+/* links in header blocks */
+a:link.hdr, a:active.hdr, a:visited.hdr {
+	color: #ffffff;
+}
+
+/* tabbed boxes */
+td.tabon {
+	background: #E2B969 url('images/tabSelectedBg.png');
+	 
+}
+td.taboff {
+	background: #E9DE9C url('images/tabBg.png');
+	/*
+	border-top: solid #cccccc 1px;
+	border-left: solid #cccccc 1px;
+	border-right: solid #cccccc 1px;
+	border-bottom: solid #cccccc 2px;
+	*/
+	/* background-image: url('./style/default/images/tabBg.png'); */
+	
+}
+td.tabsp {
+	border-bottom: solid #cccccc 2px;
+}
+td.tabox {
+	background-color: #E2B969;
+	border-left: 2px solid #CCCCCC;
+	border-right: 2px solid #CCCCCC;
+	border-bottom: 2px solid #CCCCCC
+}
+
+/* Message styles */
+.warning {
+	color: red
+}
+.error {
+	color: red
+}
+.message {
+	color: #003300;
+}
+
+.no_ {
+	color: red
+}
+
+/* popup calendar */
+body.popcal {
+	background-color: #f0f0f0;
+}
+
+table.poptitle {
+	background-color: #ffffff;
+}
+table.poptitle td {
+	background-color: #ffffff;
+}
+table.poptitle th {
+	background-color: #ffffff;
+	color: #000000;
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+table.popcal {
+	background-color: #cccccc;
+}
+
+table.popcal th {
+	background-color: #ffffff;
+	color: #000000;
+	font-family: Osaka,helvetica,arial,sans-serif;
+	font-size: 9pt;
+	font-weight: normal;
+}
+
+table.popcal td {
+	background-color: #ffffff;
+	font-family: Osaka,helvetica,arial,sans-serif;
+	font-size: 8pt;
+	text-align: center;
+}
+
+table.popcal td.empty {
+	background-color: #e0e0e0;
+}
+
+table.mocal td.day  {
+	background-color: #ffffff;
+	text-align: center;
+}
+
+table.popcal td.today {
+}
+
+table.popcal td.weekend {
+	background-color: #f0f0f0;
+}
+
+table.popcal a:link,
+table.popcal a:visited {
+	color: #00FF00;
+	text-decoration: none
+}
+
+table.popcal a:link.today, table.popcal a:visited.today {
+	color: #ff0000;
+	font-weight: bold;
+}
+
+table.popcal a:link.weekend, table.popcal a:visited.weekend {
+	color: #009933;
+}
+
+table.popcal a:link.empty, table.popcal a:visited.empty {
+	color: #777777;
+}
+
+/* month calendar - title area */
+table.motitle {
+	background-color: #777777;
+}
+table.motitle td {
+	background-color: #f0f0f0;
+}
+table.motitle th {
+	background-color: #f0f0f0;
+	font-size: 10pt;
+}
+
+table.mocal {
+	background-color: #777777;
+}
+table.mocal th {
+	background-color: #996600;
+	color: #FFFFFF
+}
+table.mocal td {
+}
+table.mocal td.week {
+	vertical-align: top;
+	background-color: #996600;
+	height: 80px
+}
+table.mocal td.empty {
+	background-color: #e0e0e0;
+	color: #aaaaaa;
+	text-align: left;
+	vertical-align: top;
+	height: 80px;
+}
+table.mocal td.day  {
+	background-color: #ffffff;
+	color: #003300;
+	text-align: left;
+	vertical-align: top;
+	height: 80px
+}
+table.mocal td.today {
+	background-color: #E9DE9C;
+	color: #FFFFFF;
+	text-align: left;
+	vertical-align: top
+}
+
+table.mocal td.weekend {
+	background-color: #f0f0f0;
+	text-align: left;
+	vertical-align: top;
+}
+
+table.mocal .event {
+}
+
+/* mini calendar - title area */
+table.minititle {
+}
+table.minititle td {
+}
+table.minititle th {
+	font-weight: normal;
+}
+
+table.minical {
+}
+table.minical th {
+	font-weight: normal;
+}
+table.minical td {
+}
+table.minical td.week {
+}
+table.minical td.empty {
+	color: #aaaaaa;
+}
+table.minical td.day  {
+	text-align: center;
+}
+table.minical td.today {
+	background-color: #e0e0e0;
+	text-align: center;
+}
+table.minical td.weekend {
+	text-align: center;
+}
+table.minical .event {
+}
+
+/* daily calendar */
+table.tbl td.event {
+    background-color: #fff0b0;
+}
+
+table.tbl td.event td {
+	background-color: #fff0b0;
+}
