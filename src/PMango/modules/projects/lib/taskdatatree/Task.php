@@ -44,8 +44,6 @@ class Task{
 		$task->data = $dataArrayBuilder->getAssociativeArray();
 		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
 		
-		print "$task_id:".$task->getTaskName();
-		
 		return $task;
 	}
 

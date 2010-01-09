@@ -3,7 +3,7 @@
 require_once dirname(__FILE__)."/../gifarea/GifTaskBox.php";
 require_once dirname(__FILE__)."/../gifarea/DrawingHelper.php";
 require_once dirname(__FILE__)."/./ChartGenerator.php";
-require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
+//require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 
 /**
  * Questa classe implementa il metodo di generazione delle WBS
@@ -70,9 +70,6 @@ class WBSChartGenerator extends ChartGenerator{
 
 		//CLiv contiene il numero del livello maggiore
 		foreach($nodi as $n){
-			print $n->getInfo()->getWbsId()."<br>";
-			print $n->getInfo()->getTaskName()."<br>";
-			//print $n->getInfo()->getLevel()."<br>";
 			if($CLiv < $n->getInfo()->getLevel())
 				$CLiv = $n->getInfo()->getLevel();
 		}
