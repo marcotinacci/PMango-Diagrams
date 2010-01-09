@@ -124,6 +124,7 @@ class TaskDataTreeGenerator{
 		if($project_id==0){
 			die("ERROR: project not found!");
 		}
+		$project_id = 0;
 		$sql = 'SELECT task_id FROM tasks WHERE project_id ='.$project_id;
 		$task_ids = db_loadList($sql);
 		for ($i=0; $i<sizeOf($task_ids); $i++){
