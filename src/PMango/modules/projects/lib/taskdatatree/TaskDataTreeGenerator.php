@@ -16,8 +16,8 @@
  	require_once dirname(__FILE__)."/TaskData.php";
 	require_once dirname(__FILE__)."/Task.php";
 	require_once dirname(__FILE__).'/StubTaskDataTree.php';	
-	require_once dirname(__FILE__).'/../../../../includes/db_connect.php';	
-	//@TODOrequire_once "query.class.php";
+	require_once dirname(__FILE__).'/../../../../includes/db_connect.php';
+	require_once dirname(__FILE__).'/../../../../includes/main_functions.php';
 
 class TaskDataTreeGenerator{
 
