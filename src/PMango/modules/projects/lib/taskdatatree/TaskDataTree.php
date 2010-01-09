@@ -52,4 +52,35 @@ class TaskDataTree {
 		$leaves = $this->root->getLeaves();
 		return $leaves;
 	}
+	
+	public function selectTask($task_id){
+		$nodes = $this->wideVisit();
+		for($i=0; $i<sizeOf($nodes); $i++){
+			if($task_id == $nodes[$i]->getInfo()->getTaskID()){
+				return $nodes[$i];
+			}
+		}
+	}
+	
+	public function setAllDependencies(){
+		//prendo tutti i nodi dell'albero
+		$nodes = wideVisit();
+		$current_dep = array();
+		//ciclo sui nodi
+		for($i=0; $i<sizeOf($nodes); $i++){
+			//$dep adesso è una stringa di task_id separati da virgole
+			$dep = $nodes[$i]->getInfo()->getDependencies();
+			//$dep è diventato un array di stringhe=task_id
+			$dep = explode(",", $dep);
+			//per ognuna di queste stringhe seleziono il task corrispondente nell'albero
+			//aggiornando current_dep (vettore di taskdata
+			foreach($dep as $task_id){
+				$current_dep[] = $this->selectTask($task_id);
+			}
+			//setto le dipendenze
+			$nodes[$i]->setFtsDependencies($current_dep);
+			//re-inizializzo current_dep
+			$current_dep = array();
+		}
+	}
 }

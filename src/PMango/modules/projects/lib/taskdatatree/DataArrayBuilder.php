@@ -58,6 +58,17 @@ class DataArrayBuilder {
 		$this->_CTaskObject->getWBS($this->_CTaskObject->task_id);
 		//task_wbs_index;
 	}
+	
+	public function buildName() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
+		$this->_CTaskObject->task_name;
+	}
+	
+	public function buildFtsDependencies(){
+		$this->_associativeArray[DataArrayKeyEnumeration::$ftsDependencies] = 
+			$this->_CTaskObject->getDependencies();
+			//comma delimited list (string) of tasks id's
+	}
 
 //	public function buildName() {
 //		$this->_associativeArray[DataArrayKeyEnumeration::$name] =

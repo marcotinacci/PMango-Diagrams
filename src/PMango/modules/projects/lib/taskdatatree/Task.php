@@ -24,16 +24,13 @@ class Task{
 	 * correct because the array with the info is empty
 	 * @return unknown_type
 	 */
-	//TODO set private
-	public function __construct(){	}
+	private function __construct(){	}
 
 	/**
 	 * Static method that create a correct task, querying a db
 	 * @param int $task_id
 	 * @return Task a correct task to be handle
 	 */
-	//TODO aggiungere campo task_id alle classi che necessitano, per aggiungerlo come
-	//facente parte del campo data di Task.
 	public static function MakeTask($task_id) {
 		// creating the object that build the associative array
 		$dataArrayBuilder =& new DataArrayBuilder($task_id);
@@ -43,7 +40,8 @@ class Task{
 		// resulting task
 		$task = & new Task();
 		$task->data = $dataArrayBuilder->getAssociativeArray();
-
+		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
+		
 		return $task;
 	}
 
@@ -55,6 +53,10 @@ class Task{
 		return $this->data;
 	}
 
+	public function getTaskID(){
+		return $this->data[DataArrayKeyEnumeration::$task_id];
+	}
+	
 	public function getWBSId(){
 		return $this->data[DataArrayKeyEnumeration::$wbsIdentifier];
 	}
@@ -121,6 +123,10 @@ class Task{
 
 	public function getPercentage(){
 		return $this->data[DataArrayKeyEnumeration::$percentage];
+	}
+	
+	public function getDependencies(){
+		$this->data[DataArrayKeyEnumeration::$ftsDependencies];
 	}
 }
 /*

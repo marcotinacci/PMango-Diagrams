@@ -18,6 +18,7 @@
 class DataArrayKeyEnumeration {
 	private function __construct() { }
 	
+	public static $task_id = "task_id";
 	public static $wbsIdentifier = "wbsIdentifier";
 	public static $name = "name";
 	public static $plan_effort = "plan_effort";
@@ -33,5 +34,6 @@ class DataArrayKeyEnumeration {
 	public static $actual_finish_date = "actual_finish_date";
 	public static $level = "level";
 	public static $percentage = "percentage";
+	public static $ftsDependencies = "ftsDependencies";
 }
 ?>
