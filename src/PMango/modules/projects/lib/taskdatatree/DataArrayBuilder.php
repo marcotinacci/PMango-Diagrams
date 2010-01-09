@@ -84,13 +84,13 @@ class DataArrayBuilder {
 	}
 	
 	public function buildActualStartDate() {
-		$this->_associativeArray[DataArrayKeyEnumeration::$actual_start_date] =
-		$this->_CTaskObject->getActualStartDate(null);
+		$actual_start_date = $this->_CTaskObject->getActualStartDate(null, $this->_CTaskObject->task_project);
+		$this->_associativeArray[DataArrayKeyEnumeration::$actual_start_date] = $actual_start_date['task_log_start_date'];
 	}
 	
 	public function buildActualFinishDate() {
-		$this->_associativeArray[DataArrayKeyEnumeration::$actual_finish_date] =
-		$this->_CTaskObject->getActualFinishDate(null);
+		$actual_finish_date = $this->_CTaskObject->getActualStartDate(null, $this->_CTaskObject->task_project);
+		$this->_associativeArray[DataArrayKeyEnumeration::$actual_finish_date] = $actual_finish_date['task_log_finish_date'];
 	}
 	
 //	public function buildName() {
