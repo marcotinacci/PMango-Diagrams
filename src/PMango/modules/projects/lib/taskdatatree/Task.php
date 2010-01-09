@@ -3,6 +3,7 @@ require_once dirname(__FILE__).'/DataArrayBuilder.php';
 require_once dirname(__FILE__).'/DataArrayDirector.php';
 require_once dirname(__FILE__).'/DataArrayKeyEnumeration.php';
 require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
+require_once dirname(__FILE__).'/../../../tasks/tasks.class.php';
 /**
  * Questa classe organizza le informazioni da incapsulare nei nodi della struttura,
  * Per ogni task.
@@ -17,6 +18,7 @@ require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 class Task{
 
 	private $data = array();
+	private $_cTask;
 
 	/**
 	 * private constructor to preevent client from creating a task
@@ -41,6 +43,8 @@ class Task{
 		$task = new Task();
 		$task->data = $dataArrayBuilder->getAssociativeArray();
 		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
+		$task->_cTask = &new CTask();
+		$task->_cTask->load($task_id);
 		
 		return $task;
 	}
@@ -127,6 +131,10 @@ class Task{
 	
 	public function getDependencies(){
 		$this->data[DataArrayKeyEnumeration::$ftsDependencies];
+	}
+	
+	public function getCTask() {
+		return $this->_cTask;
 	}
 }
 /*
