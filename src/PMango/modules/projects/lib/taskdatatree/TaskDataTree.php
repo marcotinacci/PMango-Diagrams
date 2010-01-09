@@ -64,7 +64,7 @@ class TaskDataTree {
 
 	public function setAllDependencies(){
 		//prendo tutti i nodi dell'albero
-		$nodes = wideVisit();
+		$nodes = $this->wideVisit();
 		$current_dep = array();
 		//ciclo sui nodi
 		for($i=0; $i<sizeOf($nodes); $i++){
