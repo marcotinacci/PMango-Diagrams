@@ -74,13 +74,13 @@ class GanttChartGenerator extends ChartGenerator{
 	// TODO: prendere date di inizio e fine da uoc
 	/**
 	 * Data di inizio visualizzazione
-	 * @var CDate
+	 * @var datetime
 	 */
 	protected $sDate;
 
 	/**
 	 * Data di fine visualizzazione
-	 * @var CDate
+	 * @var datetime
 	 */
 	protected $fDate;
 
@@ -98,7 +98,7 @@ class GanttChartGenerator extends ChartGenerator{
 	
 	/**
 	 * Data attuale
-	 * @var today
+	 * @var datetime
 	 */
 	protected $today;
 	
@@ -115,12 +115,12 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	public function generateChart(){
-		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree(null);
+		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
 		
 		// TODO: stub date, prenderle dalle uoc
 		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,2,2010));
-		$this->today = date('Y-m-d H:i:s',mktime(22,0,0,1,1,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,10,2010));
+		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,4,2010));
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -128,7 +128,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
-		$this->chart->draw();
+		//$this->chart->draw();
 		//echo "ciao";
 	}
 	
@@ -372,7 +372,7 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		for($i=$xGrid; $i < $xfGrid; $i = $i + $granWidth){
 			DrawingHelper::LineFromTo($i,$yGrid,$i,$yfGrid,$this->chart,
-				new LineStyle("gray"));
+				new LineStyle('gray'));
 		}
 
 		

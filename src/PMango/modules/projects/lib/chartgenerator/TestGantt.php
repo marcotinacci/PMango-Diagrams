@@ -2,7 +2,7 @@
 error_reporting(E_ALL & ~E_NOTICE);
 
 //--------------------------------------------------
-$baseDir = dirname(__FILE__)."/../../../../";
+$baseDir = dirname(__FILE__)."/../../../..";
 require_once "$baseDir/includes/config.php";
 require_once "$baseDir/includes/session.php";
 // manage the session variable(s)
