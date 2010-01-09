@@ -41,10 +41,10 @@ class TaskDataTreeGenerator{
 		$tasks = $this->getData();
 		$root = new TaskData();
 		global $AppUI;
-		$visible_tasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
+		/*$visible_tasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
 			$AppUI->getState('ExplodeTasks', '1'), 
 			$AppUI->getState("tasks_opened"),
-			$AppUI->getState("tasks_closed"))->getDrawableTasks();
+			$AppUI->getState("tasks_closed"))->getDrawableTasks();*/
 		/////cerco il wbsID più lungo per sapere il livello massimo
 		$max = 0;
 		for($i=0; $i<sizeOf($tasks); $i++){
