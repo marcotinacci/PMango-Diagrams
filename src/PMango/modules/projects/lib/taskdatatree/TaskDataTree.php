@@ -97,22 +97,27 @@ class TaskDataTree {
 		foreach ($leaves as $leaf) {
 			$deepChildren = $leaf->getInfo()->getCTask()->getDeepChildren();
 			foreach ($deepChildren as $child) {
-				$dependencies = CTask::staticGetDependencies($child);
-				foreach($dependencies as $dependency) {
-					if(in_array($dependency, $deepChildren)) {
-						continue;
+				$this->analizeDependencies($child, $deepChildren, $leaf, $result);
+			}
+			$this->analizeDependencies($leaf->getInfo()->getTaskID(), array(), $leaf, $result);
+		}
+	}
+
+	private function analizeDependencies($task_id, $deepChildren, $leaf, & $result) {
+		$dependencies = CTask::staticGetDependencies($task_id);
+		foreach($dependencies as $dependency) {
+			if(in_array($dependency, $deepChildren)) {
+				continue;
+			}
+			else {
+				$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren($dependency, $leaf);
+				if($neededLeaf != false) {
+					if(!isset($result[$neededLeaf->getInfo()->getTaskID()])) {
+						$result[$neededLeaf->getInfo()->getTaskID()] = array();
 					}
-					else {
-						$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren($dependency, $leaf);
-						if($neededLeaf != false) {
-							if(!isset($result[$neededLeaf->getInfo()->getTaskID()])) {
-								$result[$neededLeaf->getInfo()->getTaskID()] = array();
-							}
-							$leafId = $leaf->getInfo()->getTaskID();
-							if(!in_array($leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
-								$result[$neededLeaf->getInfo()->getTaskID()][] = $leafId;
-							}
-						}
+					$leafId = $leaf->getInfo()->getTaskID();
+					if(!in_array($leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
+						$result[$neededLeaf->getInfo()->getTaskID()][] = $leafId;
 					}
 				}
 			}
@@ -122,7 +127,7 @@ class TaskDataTree {
 	/**
 	 * Metodo che ritorna la foglia contenente il task necessario in una relazione di dipendenza
 	 * @param integer $dependency the task identifier of the needed task
-	 * @param TaskData $butLeaf la foglia da saltare per evitare confronti che sicuramente si conosce che 
+	 * @param TaskData $butLeaf la foglia da saltare per evitare confronti che sicuramente si conosce che
 	 * 	la foglia non sia presente
 	 * @return TaskData if the leaf is found, else false
 	 */
@@ -132,13 +137,20 @@ class TaskDataTree {
 				continue;
 			}
 
-			if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren())) {
-				return $leaf;
+			if ($leaf->getInfo()->getCTask()->getDeepChildren() != null) {
+				if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren())) {
+					return $leaf;
+				}
+			}
+			else {
+				if ($dependency == $leaf->getInfo()->getTaskID()) {
+					return $leaf;
+				}
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Metodo invocato su un albero, che ne restituisce una copia contenente solo i nodi visibili
 	 * @return TaskDataTree
@@ -146,6 +158,6 @@ class TaskDataTree {
 	public function getVisibleTree(){
 		$v_tdt = $this;
 		$v_tdt->getRoot()->visibilityCheck();
-		return $v_tdt; 
+		return $v_tdt;
 	}
 }
