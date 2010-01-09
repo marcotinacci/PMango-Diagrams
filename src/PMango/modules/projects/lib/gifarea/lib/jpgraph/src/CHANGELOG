@@ -1,0 +1,401 @@
+r302: 2005-12-03 08:56  ljp
+
+	* Fixed lost startyear variable in DateScaleUtils
+	Modified files: jpgraph_utils.inc
+
+r299: 2005-11-30 22:16  ljp
+
+	* Added multiple Y-axis example
+	Modified files: Examples/mulyaxisex1.php
+
+r298: 2005-11-30 22:16  ljp
+
+	* Merged the multiple Y-axis addition
+	Modified files: jpgraph.php
+
+r295: 2005-11-30 19:52  ljp
+
+	* Fix PR #269. Make sure that the title of the axis is only stroken once
+	Modified files: jpgraph.php
+
+r294: 2005-11-30 19:15  ljp
+
+	* Fix PR #204. This was a result of the new object reference sematics in PHP5. In the old code a copy was made of the Axis object for the reposition of the top and bottom axis (and left and right). Since that copy is now (in PHP5) just a new reference to the same object the small margin adjustment made for asthetic reason also affected the original axis.
+	Modified files: jpgraph.php
+
+r290: 2005-11-29 20:32  ljp
+
+	* Improved error message for illegal date testing in Gantt charts
+	Modified files: jpgraph_gantt.php
+
+r289: 2005-11-29 20:17  ljp
+
+	* Fixed problem with extra point with centered lines. Note: This was caused by the necessary rewrite for PHP 5 replacing is_a() with a instanceof operator. In order to avoid class doesn't exist error this statement had to be guarded with condition for existance. This guard protected too much compared with the original data flow in the initiating autoscaling in Graph::Stroke() for the X-axis.
+	Modified files: jpgraph.php
+
+r288: 2005-11-28 22:13  ljp
+
+	* Fixed gantthourminex1.php example to be compatible with PHP 5.1.0
+	Modified files: Examples/gantthourminex1.php
+
+r285: 2005-11-28 22:06  ljp
+
+	* Added error check for too large width caused by a faulty input date
+	Modified files: jpgraph_gantt.php
+
+r284: 2005-11-27 20:36  ljp
+
+	* Made instance variables in FuncGenerator compatible with PHP5
+	Modified files: jpgraph_utils.inc
+
+r283: 2005-11-27 20:35  ljp
+
+	* Updated math function examples to include jpgraph_utils.inc
+	Modified files: Examples/dupyaxisex1.php, Examples/funcex1.php,
+	  Examples/funcex2.php, Examples/funcex3.php, Examples/funcex4.php
+
+r281: 2005-11-27 11:17  ljp
+
+	* Merged r277:278. Updated and added manual tick examples
+	Modified files: Examples/manualtickex1.php,
+	  Examples/manualtickex2.php
+
+r280: 2005-11-27 11:14  ljp
+
+	* Merged r278:279 from branch v1.x. Added option to put the background image for MGraph at a specific x,y location
+	Modified files: jpgraph_utils.inc
+
+r277: 2005-11-26 15:45  ljp
+
+	* Merged r275:276 from branch v1.x . Moved FuncGenerator from jpgraph.php to jpgraph_utils.inc
+	Modified files: jpgraph.php, jpgraph_utils.inc
+
+r275: 2005-11-26 14:45  ljp
+
+	* Merged r273:274 from branch v1.x . Simplified DateScaleUtils interface
+	Modified files: jpgraph_utils.inc
+
+r273: 2005-11-26 14:41  ljp
+
+	* Merged 271:272 from branch v1.x. Various adjustments to jpgraph.php * Added maj_tick_label as instance variable. That had always been missing !! * Adjusted the default margin fox X-axis labels slightly, slightly larger * Adjusted the left/right default graph margin (They were unecessarily large). * Added error checking when client specifies to few manual major ticks
+	Modified files: jpgraph.php
+
+r271: 2005-11-26 11:15  ljp
+
+	* Made Text::iWordWrap public instead of protected since this is a friend of RadarPlot and is needed to run RadarPlots
+	Modified files: jpgraph.php
+
+r270: 2005-11-26 08:41  ljp
+
+	* Add necessary static keyword for Class DateUtils
+	Modified files: jpgraph_utils.inc
+
+r269: 2005-11-26 08:40  ljp
+
+	* Fixed deprecated string indexing method for PHP 5.1
+	Modified files: jpgraph.php
+
+r268: 2005-11-25 16:39  ljp
+
+	* Merged r266:267 from branch v1.x. Added option to use background images in MGraph (combined graphs)
+	Modified files: jpgraph_utils.inc
+
+r266: 2005-11-25 16:28  ljp
+
+	* Merged r264:265 from v1.x branch. Added Graph proxy method for Image::SetImgFormat()
+	Modified files: jpgraph.php
+
+r264: 2005-11-25 11:37  ljp
+
+	* Merged r259:260 from branch v1.x. Adding background for axis labels
+	Modified files: jpgraph.php
+
+r263: 2005-11-25 11:32  ljp
+
+	* Merged change in v1.x branch to add support for minor manually specified tick marks, -Ths line, and those below, will be ignored-- M jpgraph.php
+	Modified files: jpgraph.php
+
+r254: 2005-11-21 19:37  ljp
+
+	* Added example for how to set manual tick positions
+	Modified files: Examples/manualtickex1.php
+
+r252: 2005-11-21 19:34  ljp
+
+	* Removed double entry in code table for greek characters in jpgraph_utils.php
+	Modified files: jpgraph_utils.inc
+
+r249: 2005-11-20 12:34  ljp
+
+	* Added CR#263 to PHP5 branch. Possibility to have completely manual tick positions. One new method Axis::SetTickPositions($aTickPos,$aTickLabel) can be used to manually specify the exact positions for the ticks as well as an optional specified label. If no label array is specified then the labels will be determined by the scale value and any set formatting strings. Removed some old code that dealt with hiding zero-labels (this is now handled in the Tick class directly)
+	Modified files: jpgraph.php
+
+r248: 2005-11-20 12:18  ljp
+
+	* Replaced some double quotes which wasn't necessary. Changed some tests on empty strings (null) to use empty() function instead
+	Modified files: jpgraph.php
+
+r244: 2005-11-20 12:04  ljp
+
+	* Added jpgraph_utils.inc
+	Modified files: jpgraph_utils.inc
+
+r241: 2005-11-12 19:56  ljp
+
+	* Fix #264. Integer scaling for some specific ranges and graph sizes can fail
+	Modified files: jpgraph.php
+
+r240: 2005-11-12 19:53  ljp
+
+	* Small performance enhancement in CSIM loop
+	Modified files: jpgraph_pie.php
+
+r224: 2005-11-04 04:36  ljp
+
+	* Small loop perfromance improvement
+	Modified files: jpgraph_error.php
+
+r223: 2005-11-04 04:32  ljp
+
+	* Fix #253 Gradient in legends. Micro speeed improvement in min/max methods
+	Modified files: jpgraph_line.php
+
+r221: 2005-10-15 16:54  ljp
+
+	* Fix for issue #229. Special case when only having a single data point in date scale
+	Modified files: jpgraph_date.php
+
+r219: 2005-10-15 10:52  ljp
+
+	* Fix for issue #247 boundary check in while loop
+	Modified files: jpgraph_gantt.php
+
+r216: 2005-10-14 17:40  ljp
+
+	* Fix for #251 where the ID attribute in the MAP tag makes it hard to save an CSIM image
+	Modified files: jpgraph.php
+
+r214: 2005-10-11 18:22  ljp
+
+	* Fix axis title positioning issue #248
+	Modified files: jpgraph_radar.php
+
+r212: 2005-10-06 16:29  ljp
+
+	* Fix for #244. Missing ALT value for CSIM for Bars
+	Modified files: jpgraph_bar.php
+
+r210: 2005-09-26 17:23  ljp
+
+	* Fix #231. Image markers are not rotated
+	Modified files: jpgraph_plotmark.inc
+
+r208: 2005-09-04 15:25  ljp
+
+	* PHP Bug workaround (#226)
+	Modified files: jpgraph.php
+
+r200: 2005-09-01 05:10  ljp
+
+	* Fixed #222 - Width for Day scale header sometimes too small
+	Modified files: jpgraph_gantt.php
+
+r199: 2005-09-01 05:07  ljp
+
+	* Performance (changed loop variable to static count())
+	Modified files: jpgraph_gantt.php
+
+r198: 2005-09-01 05:06  ljp
+
+	* Added icon creation from strings
+	Modified files: jpgraph_iconplot.php
+
+r197: 2005-09-01 05:05  ljp
+
+	* Added icon creation from strings, Y2 axis always on the right by default, performance enhancements
+	Modified files: jpgraph.php
+
+r89: 2005-08-07 17:30  ljp
+
+	* Modified source formatting for date class
+	Modified files: jpgraph_date.php
+
+r87: 2005-07-12 18:44  ljp
+
+	* Feature #208. Added WindrosePlot::SetRangeStyle()
+	Modified files: jpgraph_windrose.php,
+	  windrose/examples/windrose_ex1b.php
+
+r83: 2005-07-10 18:21  ljp
+
+	* Added debug lines in legend and fine-tuned calculation of legend height
+	Modified files: jpgraph.php
+
+r81: 2005-07-09 21:23  ljp
+
+	* Fixed #196 - Better layout for legend box
+	Modified files: jpgraph.php
+
+r79: 2005-06-26 21:47  ljp
+
+	* Moved flag_raw directory out of src
+	Modified files: flag_raw
+
+r78: 2005-06-25 22:00  ljp
+
+	* Fix for possible undefined CSIM alt tag.
+	Modified files: jpgraph.php
+
+r77: 2005-06-25 22:00  ljp
+
+	* Final fix for bug #191 by commenting out some strange adjustment Stroke() for accbar plot
+	Modified files: jpgraph_bar.php
+
+r74: 2005-06-25 11:17  ljp
+
+	* Make sure pie csim center coordinates are integers
+	Modified files: jpgraph_pie.php
+
+r71: 2005-06-22 21:28  ljp
+
+	* Added zero option to line interpolation
+	Modified files: jpgraph_line.php
+
+r70: 2005-06-17 19:51  ljp
+
+	* Added linear interpolation for acc lines (#189)
+	Modified files: jpgraph_line.php
+
+r66: 2005-06-16 21:22  ljp
+
+	* Implemented multipe data chunks for EAN128 (#201)
+	Modified files: barcode/jpgraph_barcode.php
+
+r64: 2005-06-10 04:56  ljp
+
+	* Added individual legend mark size for horiz/vert (#144)
+	Modified files: jpgraph.php
+
+r62: 2005-06-08 11:06  ljp
+
+	* Make public so that Graph class can access it
+	Modified files: jpgraph_line.php
+
+r61: 2005-06-08 11:05  ljp
+
+	* Better handling of bars with an Absolute Width (#190)
+	Modified files: jpgraph.php, jpgraph_bar.php
+
+r59: 2005-06-08 09:21  ljp
+
+	* Compensation for handling of barcenter number of data points (#190)
+	Modified files: jpgraph.php
+
+r57: 2005-06-06 20:14  ljp
+
+	* Fixed HideTicks for log scale (#90)
+	Modified files: jpgraph_log.php
+
+r55: 2005-06-06 18:41  ljp
+
+	* Correctly use linethickness in GD2 #148
+	Modified files: jpgraph.php
+
+r54: 2005-06-06 18:13  ljp
+
+	* Fix so that 'x' and '-' are interpretated as null in ScatterPlot
+	Modified files: jpgraph_scatter.php
+
+r52: 2005-06-06 16:13  ljp
+
+	* Fix for #188 CSIM for Titles in PieGraphs
+	Modified files: jpgraph_pie.php
+
+r50: 2005-06-06 14:47  ljp
+
+	* Fixed wrong parameter to imagefilledarc() in CakeSlice() #66
+	Modified files: jpgraph.php
+
+r48: 2005-06-06 14:22  ljp
+
+	* Fixed problem with non-rotated dashedline #149
+	Modified files: jpgraph.php
+
+r47: 2005-06-06 14:00  ljp
+
+	* Fixed rounding problem #164
+	Modified files: jpgraph_windrose.php
+
+r44: 2005-06-06 13:48  ljp
+
+	* Fixed problem with AccBar PreStrokeAdjust #103
+	Modified files: jpgraph_bar.php
+
+r43: 2005-06-06 13:09  ljp
+
+	* Fixed remaining problem with single slice Pie and CSIM (#107)
+	Modified files: jpgraph_pie.php
+
+r40: 2005-06-06 10:40  ljp
+
+	* Better (X)HTML compliance for CSIM generated HTML
+	Modified files: jpgraph.php, jpgraph_bar.php, jpgraph_gantt.php,
+	  jpgraph_pie.php, jpgraph_pie3d.php, jpgraph_plotmark.inc,
+	  jpgraph_stock.php, tests/test_barpattern.php, tests/test_bary2.php
+
+r39: 2005-06-06 10:12  ljp
+
+	* Added formatting callback #172
+	Modified files: jpgraph_radar.php
+
+r37: 2005-06-06 10:04  ljp
+
+	* Fixed anti-alias pie problem #71
+	Modified files: jpgraph_pie.php
+
+r30: 2005-06-05 16:41  ljp
+
+	* Removed old test-code
+	Modified files: jpgraph_date.php
+
+r29: 2005-06-05 16:39  ljp
+
+	* Added more date axis examples and pie guide line examples
+	Modified files: Examples/dateaxisex2.php,
+	  Examples/dateaxisex3.php, Examples/dateaxisex4.php,
+	  Examples/gantthgridex1.php, Examples/pielabelsex1.php,
+	  Examples/pielabelsex4.php
+
+r27: 2005-06-05 15:33  ljp
+
+	* Added SetTimeAlign() and adjusted constants
+	Modified files: jpgraph_date.php
+
+r25: 2005-06-05 11:52  ljp
+
+	* Added Pie guidelines + examples
+	Modified files: Examples/pielabelsex1.php,
+	  Examples/pielabelsex2.php, Examples/pielabelsex3.php,
+	  jpgraph_pie.php
+
+r22: 2005-05-31 20:03  ljp
+
+	* Added FR #184 - Interlaced output
+	Modified files: jpgraph.php
+
+r20: 2005-05-30 20:34  ljp
+
+	* Added Id keyword property
+	Modified files: Todo, flags_full.inc, imgdata_balls.inc,
+	  imgdata_bevels.inc, imgdata_diamonds.inc, imgdata_pushpins.inc,
+	  imgdata_squares.inc, imgdata_stars.inc, jpg-config.inc,
+	  jpgraph.php, jpgraph_antispam-digits.php, jpgraph_antispam.php,
+	  jpgraph_bar.php, jpgraph_canvas.php, jpgraph_canvtools.php,
+	  jpgraph_date.php, jpgraph_error.php, jpgraph_flags.php,
+	  jpgraph_gantt.php, jpgraph_gb2312.php, jpgraph_gradient.php,
+	  jpgraph_iconplot.php, jpgraph_imgtrans.php, jpgraph_line.php,
+	  jpgraph_log.php, jpgraph_odo.php, jpgraph_pie.php,
+	  jpgraph_pie3d.php, jpgraph_plotband.php, jpgraph_plotmark.inc,
+	  jpgraph_polar.php, jpgraph_radar.php, jpgraph_regstat.php,
+	  jpgraph_scatter.php, jpgraph_stock.php, jpgraph_windrose.php
+
