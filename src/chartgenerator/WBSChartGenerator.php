@@ -23,15 +23,13 @@ class WBSChartGenerator extends ChartGenerator{
 	 * Funzione di generazione grafica delle WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
-	public function __construct($width)
+	public function __construct()
 	{
-		//Costruttore di default con risoluzione di default
-		$this->setWidth($width);
 				
 	}
 	
 	public function generateChart()
-	{
+	{		
 		$this->makeWBSTaskNode();		
 	}
 	
@@ -50,8 +48,8 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$nodi=array();
 		
-		$tree=new TaskDataTreeGenerator();
-		$treeData=$tree->stubGenerateTaskDataTree();
+		$tree = new TaskDataTreeGenerator();
+		$treeData = $tree->stubGenerateTaskDataTree();
 		
 		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
 				
@@ -97,9 +95,9 @@ class WBSChartGenerator extends ChartGenerator{
 			for($j=0;$j<$numleaves;$j++)
 			{
 				//CICLI FOR CHE SCANDISCONO I TASKDATA PER TROVARNE QUELLO PIU ALTO
-				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null))
+				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null))
 				{
-					$max=GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null);	
+					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null);	
 				}				
 			}
 		}
@@ -109,7 +107,8 @@ class WBSChartGenerator extends ChartGenerator{
 		//Spazio tra un livello ed un altro
 		$alt=$height-220;
 		
-		$NodeForHeight=array(array());
+		$Link=array(array());
+		$l=0;		//Indice per vettore areas
 		
 		//Il seguente blocco di codice esegue in un'unica passata il posizionamento
 		//dei tasknode e salva nelle due matrici LinkX e LinkY le coordinate
@@ -125,25 +124,27 @@ class WBSChartGenerator extends ChartGenerator{
 						//Se vi è una solo occorrenza allora posiziona lo scatolotto esattamente sopra il figlio
 						if($occorrenze == 1)
 						{
-							$areas[] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$taskData);
+							$areas[$l] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j]);
+							$Link[$i][$j]=$areas[$l];
 							$leav[$j]=$leav[$j]->getParent();
 							$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2);
 							$LinkY[$i][$j]=$alt;
-							
+							$l++;
 						}
 						//Altrimenti se il padre ha più figli viene messo al centro
 						else if($occorrenze > 1)
 						{
 							$cord1 = ((($occorrenze)*$dimBlocco)/2);
 							$cord2 = ((($j)*$dimBlocco));					
-							$areas[] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$taskData);
-						
+							$areas[$l] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j]);
 							for($k=0;$k<$occorrenze;$k++)
 							{
 								$leav[$j+$k]=$leav[$j+$k]->getParent();
 								$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
 								$LinkY[$i][$j+$k]=$alt;
+								$Link[$i][$j+$k]=$areas[$l];								
 							}
+							$l++;
 							$j+=$occorrenze-1;
 						}
 					}				
@@ -153,14 +154,14 @@ class WBSChartGenerator extends ChartGenerator{
 		$alt-=250;
 	}
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
-	$this->makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height,$taskData);
+	$this->makeWBSDependencies($LinkX,$LinkY,$Link,$CLiv,$numleaves,$areas,$height);
 }
 	
 	/**
 	 * Funzione che assegna le dipendenze ai nodi della WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
-	protected function makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height,$taskData){
+	protected function makeWBSDependencies($LinkX,$LinkY,$Link,$CLiv,$numleaves,$areas,$height){
 		
 		$s = new LineStyle();
 		$s->style = "solid";
@@ -188,9 +189,8 @@ class WBSChartGenerator extends ChartGenerator{
 					$YToDraw[$k]=$LinkY[$i+1][$j+$k];
 					}
 				}	
-				$j+=$occorrenze-1;
-				
-				$hspace = GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null);
+				$j+=$occorrenze-1;	
+				$hspace=GifTaskBox::getEffectiveHeightOfTaskBox($Link[$i][$j],30,null);
 				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
 				
 				$XToDraw=array();
