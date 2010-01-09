@@ -58,6 +58,7 @@
 	originally written for WEBO project, see webo source for "real life" usages
 */
 require_once( "$baseDir/lib/adodb/adodb.inc.php" );
+require_once( "$baseDir/includes/main_functions.php" );
 
 $db = NewADOConnection($dPconfig['dbtype']);
 
