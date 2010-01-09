@@ -94,7 +94,6 @@ class WBSChartGenerator extends ChartGenerator{
 		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
-				//CICLI FOR CHE SCANDISCONO I TASKDATA PER TROVARNE QUELLO PIU ALTO
 				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null))
 				{
 					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null);	
