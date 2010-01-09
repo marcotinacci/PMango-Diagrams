@@ -42,7 +42,7 @@ class Task{
 		// resulting task
 		$task = new Task();
 		$task->data = $dataArrayBuilder->getAssociativeArray();
-		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
+		//$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
 		
 		return $task;
 	}
