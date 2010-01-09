@@ -128,8 +128,8 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
-		//$this->chart->draw();
-		echo "ciao";
+		$this->chart->draw();
+		//echo "ciao";
 	}
 	
 	/**
@@ -391,7 +391,8 @@ class GanttChartGenerator extends ChartGenerator{
 
 		for($i = 0; $i < sizeOf($visit); $i++)
 		{
-			$dt = $visit[$i];
+			$dt = $visit[$i];                   			
+
 			$gTask = new GifGanttTask(
 				$xGrid, // x start
 				$xfGrid-1, // x finish

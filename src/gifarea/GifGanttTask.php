@@ -108,7 +108,7 @@ class GifGanttTask extends GifArea
 			$hPlanned = $height/3;
 			$cPlanned = 'black';
 			$hTri = $height - $hPlanned;
-			
+		
 			// cerco inizio minore tra planned e actual
 			$xMin = $xActual == null ? 
 				$xPlanned : ($xActual < $xPlanned ? $xActual : $xPlanned);
@@ -136,6 +136,11 @@ class GifGanttTask extends GifArea
 		}
 
 		// costruzione del planned
+		/*
+		echo $xActual.'<br>';
+		echo $hPlanned.'<br>';
+		echo $wActual.'<br>';
+		echo ($height/3).'<br>';*/
 		
 		$this->subAreas['Planned'] = new GifBox(
 			$xPlanned, //< $xStart ? 0 : $xPlanned, // x
@@ -144,7 +149,7 @@ class GifGanttTask extends GifArea
 			$hPlanned // height
 			);
 		$this->subAreas['Planned']->setForeColor($cPlanned);
-		
+
 		$this->subAreas['ActualProgress'] = new GifProgressBar(
 			$xActual,
 			$hPlanned,
