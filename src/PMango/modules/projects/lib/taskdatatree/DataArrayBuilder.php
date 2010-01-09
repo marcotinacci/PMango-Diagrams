@@ -35,7 +35,7 @@ class DataArrayBuilder {
 	 * refers to the key column of the task table)
 	 */
 	public function __construct($task_id) {
-		$this->_CTaskObject = &new CTask();
+		$this->_CTaskObject = new CTask();
 		$this->_CTaskObject->load($task_id);
 		//var_dump($this->_CTaskObject);
 	}

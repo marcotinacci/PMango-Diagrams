@@ -180,6 +180,7 @@ function db_loadList( $sql, $maxrows=NULL ) {
 	GLOBAL $AppUI;
 	if (!($cur = db_exec( $sql ))) {;
 		$AppUI->setMsg( db_error(), UI_MSG_ERROR );
+		print db_error().UI_MSG_ERROR;
 		return false;
 	}
 	$list = array();

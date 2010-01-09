@@ -49,7 +49,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$nodi=array();
 		
 		$tree = new TaskDataTreeGenerator();
-		$treeData = $tree->stubGenerateTaskDataTree();
+		$treeData = $tree->GenerateTaskDataTree();
 		
 		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
 				
@@ -70,6 +70,9 @@ class WBSChartGenerator extends ChartGenerator{
 
 		//CLiv contiene il numero del livello maggiore
 		foreach($nodi as $n){
+			print $n->getInfo()->getWbsId()."<br>";
+			print $n->getInfo()->getTaskName()."<br>";
+			//print $n->getInfo()->getLevel()."<br>";
 			if($CLiv < $n->getInfo()->getLevel())
 				$CLiv = $n->getInfo()->getLevel();
 		}

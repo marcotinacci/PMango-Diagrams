@@ -27,6 +27,8 @@ class DataArrayDirector {
 	 */
 	function composeArray() {
 		$this->_dataArrayBuilder->buildWBSIdentifier();
+		$this->_dataArrayBuilder->buildName();
+		$this->_dataArrayBuilder->buildFtsDependencies();
 	}
 	
 }

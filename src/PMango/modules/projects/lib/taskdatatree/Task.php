@@ -43,8 +43,8 @@ class Task{
 		$task = new Task();
 		$task->data = $dataArrayBuilder->getAssociativeArray();
 		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
-		$task->_cTask = &new CTask();
-		$task->_cTask->load($task_id);
+		
+		print "$task_id:".$task->getTaskName();
 		
 		return $task;
 	}

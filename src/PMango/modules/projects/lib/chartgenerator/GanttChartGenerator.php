@@ -1,5 +1,4 @@
 <?php
-
 require_once dirname(__FILE__).'/ChartGenerator.php';
 require_once dirname(__FILE__).'/../gifarea/GifBox.php';
 require_once dirname(__FILE__).'/../gifarea/GifLabel.php';
