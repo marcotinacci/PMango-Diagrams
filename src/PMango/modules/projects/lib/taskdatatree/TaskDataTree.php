@@ -83,4 +83,14 @@ class TaskDataTree {
 			$current_dep = array();
 		}
 	}
+	
+	/**
+	 * Metodo invocato su un albero, che ne restituisce una copia contenente solo i nodi visibili
+	 * @return TaskDataTree
+	 */
+	public function getVisibleTree(){
+		$v_tdt = $this;
+		$v_tdt->getRoot()->visibilityCheck();
+		return $v_tdt; 
+	}
 }

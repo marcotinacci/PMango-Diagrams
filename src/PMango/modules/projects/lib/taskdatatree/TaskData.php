@@ -216,4 +216,15 @@ class TaskData{
 		}
 		return $leaves;
 	}
+	
+	public function visibilityCheck(){
+		if($this->children!=null && $this->collapsed){
+			$this->children = null;
+		}
+		else if(!$this->collapsed){
+			foreach($this->children as $son){
+				$son->visibilityCheck();
+			}
+		}
+	}
 }
