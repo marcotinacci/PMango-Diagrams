@@ -30,7 +30,6 @@ class WBSChartGenerator extends ChartGenerator{
 				
 	}
 	
-	
 	public function generateChart()
 	{
 		$this->makeWBSTaskNode();		
@@ -79,13 +78,8 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$Livello=$CLiv;
 		
-		//Altezza della pagina, calcolata dinamicamente	
-		$height=($CLiv+1)*250;
-
-		//Spazio tra un livello ed un altro
-		$alt=$height-220;
-
 		$dimBlocco=$this->getWidth()/$numleaves;
+		
 		//Le seguenti matrici vengono usate per stampare le coordinate per le linee
 		//di collegamento dei box
 		$LinkX=array(array());
@@ -96,18 +90,26 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$occorrenze=1;
 		
-		//PRIMA DI QUESTO FARE DUE CICLI A VUOTO PER VERIFICARE L'ALTEZZA DELLA PAGINA
-		//IN MODO DA GESTIRLA IN MODO DINAMICO; USARE METODO STATICO GIFTASKBOX::EFFECTIVEMAXHEI
-		
+		//I seguenti cicli for scandiscono tutti i task data per scoprire 
+		//quello ad altezza maggiore
 		for($i=$CLiv;$i>=0;$i--)
 		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
-				//$height+=GifTaskbox::dammi dimensioni		
+				//CICLI FOR CHE SCANDISCONO I TASKDATA PER TROVARNE QUELLO PIU ALTO
+				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null))
+				{
+					$max=GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null);	
+				}				
 			}
 		}
-		//$height+=200;
-		//$alt=$height-200;
+			
+		//Altezza della pagina, calcolata dinamicamente	
+		$height=($CLiv+1)*$max+150;
+		//Spazio tra un livello ed un altro
+		$alt=$height-220;
+		
+		$NodeForHeight=array(array());
 		
 		//Il seguente blocco di codice esegue in un'unica passata il posizionamento
 		//dei tasknode e salva nelle due matrici LinkX e LinkY le coordinate
@@ -127,6 +129,7 @@ class WBSChartGenerator extends ChartGenerator{
 							$leav[$j]=$leav[$j]->getParent();
 							$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2);
 							$LinkY[$i][$j]=$alt;
+							
 						}
 						//Altrimenti se il padre ha più figli viene messo al centro
 						else if($occorrenze > 1)
@@ -150,14 +153,14 @@ class WBSChartGenerator extends ChartGenerator{
 		$alt-=250;
 	}
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
-	$this->makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height);
+	$this->makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height,$taskData);
 }
 	
 	/**
 	 * Funzione che assegna le dipendenze ai nodi della WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
-	protected function makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height){
+	protected function makeWBSDependencies($LinkX,$LinkY,$CLiv,$numleaves,$areas,$height,$taskData){
 		
 		$s = new LineStyle();
 		$s->style = "solid";
@@ -185,21 +188,19 @@ class WBSChartGenerator extends ChartGenerator{
 					$YToDraw[$k]=$LinkY[$i+1][$j+$k];
 					}
 				}	
-				$j+=$occorrenze-1;
-				
-				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+200,$XToDraw,$YToDraw,$gif,$s);
+				$j+=$occorrenze-1;	
+				$hspace=GifTaskBox::getEffectiveHeightOfTaskBox($taskData,30,null);
+				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
 				
 				$XToDraw=array();
 				$YToDraw=array();
 					
 			}
 		}
-		
 		foreach($areas as $a)
 			$a->drawOn($gif);
 		$gif->draw();
-		$gif->saveToFile("./WBSTree.gif");
-		
+		$gif->saveToFile("./WBSTree.gif");	
 	}
 	
 	public function setWidth($width)
