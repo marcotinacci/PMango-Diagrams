@@ -77,7 +77,7 @@ class TaskDataTreeGenerator{
 			for($j=0; $j<sizeOf($curr_level); $j++){	
 				for($k=0; $k<sizeOf($tasks); $k++){
 					//prendo gli array contenenti i vari pezzi dell'Id del current e del task 
-					$arr_curr = explode(".", $curr_level[$j]->getWBSId());
+					$arr_curr = explode(".", $curr_level[$j]->getInfo()->getWBSId());
 					$arr_task = explode(".", $tasks[$k]->getWBSId());
 					//ciclo sulla parte significativa dell'Id, delimitata da $i
 					//il controllo $i<sizeOf(arr_task) evita i
