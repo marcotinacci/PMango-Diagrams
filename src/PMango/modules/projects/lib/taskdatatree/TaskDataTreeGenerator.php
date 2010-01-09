@@ -17,6 +17,7 @@
 	require_once dirname(__FILE__)."/Task.php";
 	require_once dirname(__FILE__).'/StubTaskDataTree.php';	
 	//require_once dirname(__FILE__)."/classes/query.class.php";
+	//require_once dirname(__FILE__)."/includes/main_functions.php";
 
 class TaskDataTreeGenerator{
 
@@ -118,7 +119,11 @@ class TaskDataTreeGenerator{
 		$recovered_data = array();
 		$task_ids = array();
 		//TODO aggiungere la WHERE nella quale si fa riferimento al progetto corrente
-		$sql = 'SELECT task_id FROM tasks';
+		$project_id = defVal(@$_REQUEST['project_id'], 0);
+		if($project_id==0){
+			die("ERROR: project not found!");
+		}
+		$sql = 'SELECT task_id FROM tasks WHERE project_id ='.$project_id;
 		$task_ids = db_loadList($sql);
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]);
