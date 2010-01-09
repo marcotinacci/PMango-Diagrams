@@ -147,7 +147,7 @@ class UserOptionsChoice {
 	}
 	
 	function showTimeGrain() {
-		return $this->array[UserOptionEnumeration::TimeGRainUserOption];
+		return $this->array[UserOptionEnumeration::$TimeGrainUserOption];
 	}
 	
 	function showImageDimensionUserOption() {

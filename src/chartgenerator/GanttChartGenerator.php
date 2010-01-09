@@ -7,6 +7,7 @@ require_once dirname(__FILE__).'/../gifarea/GifBoxedLabel.php';
 require_once dirname(__FILE__).'/../gifarea/GifGanttTask.php';
 require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
+require_once dirname(__FILE__).'/../utils/TimeUtils.php';
 //require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 
 /**
@@ -118,13 +119,18 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * Funzione di generazione grafica del diagramma Gantt
 	 * @see chartgenerator/ChartGenerator#generateChart()
+	 * @param uoc
+	 * UserOptionsChoice, opzioni utente 
 	 */
-	public function generateChart(){
+	public function generateChart($uoc){
 		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree(null);
+		
+		// imposta le opzioni utente
+		$this->uoc = $uoc;
 		
 		// TODO: stub date, prenderle dalle uoc
 		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,2,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,10,1,1,2010));
 		$this->today = date('Y-m-d H:i:s');
 		
 		// calcola una sola volta il numero dei task dell'albero
@@ -164,14 +170,12 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * Funzione di generazione della testata del diagramma
 	 */	
-	protected function makeFront(){
-		// TODO: granularità da uoc
-		// TODO: stub ampiezza grana
-		$granWidth = 41;
-		
+	protected function makeFront(){		
+		// titolo progetto
 		$titleWidth = $this->chart->getWidth()*$this->leftColumnSpace;
 		$frontWidth = $this->chart->getWidth() - $titleWidth;
 		
+		// TODO: titolo progetto
 		$title = new GifBoxedLabel(
 			$this->tol, // x
 			$this->tol, // y
@@ -182,6 +186,46 @@ class GanttChartGenerator extends ChartGenerator{
 			);
 		$title->getBox()->setForeColor("green");
 		$title->drawOn($this->chart); 
+		
+		// generazione calendario
+		$xCal = $titleWidth + $this->tol;
+		$yCal = $this->tol;
+		$wCal = $this->chart->getWidth() - $xCal - $this->tol;
+		$startTS = toTimeStamp($this->sDate);
+		$finishTS = toTimeStamp($this->fDate);
+		
+		// TODO: stub, granularità da uoc		
+//		switch($this->uoc->showTimeGrain()){
+		switch('HourlyGrainUserOption'){			
+		case 'HourlyGrainUserOption':
+			$xPrec = $xCal;
+			$currentTS = toTimeStamp(date('Y-m-d H:00:00'),$startTS) + 60 * 60;
+			$xCurrent = $wCal*($currentTS-$startTS)/($finishTS-$startTS);
+			// per ogni ora
+			while($currentTS <= $finishTS){
+				$slice = new GifBoxedLabel(
+					$xPrec, // x
+					$this->tol + 4*$this->labelGrainHeight, // y
+					$xCurrent-$xPrec, // larghezza
+					$this->labelGrainHeight, // altezza
+					date('H',$currentTS).'', // data
+					$this->fontSize // dim font
+				);	
+				$slice->drawOn($this->chart);
+				$xPrec = $xCurrent;
+				$currentTS += 60*60;
+				$xCurrent = $wCal*($currentTS-$startTS)/($finishTS-$startTS);
+			}
+
+			case 'DailyGrainUserOption':
+			
+			case 'WeaklyGrainUserOption':
+			
+			case 'MonthlyGrainUserOption':
+			
+			case 'AnnuallyGrainUserOption':
+			
+		}
 		
 		// TODO: stub anno
 		$anno = new GifBoxedLabel(
@@ -226,7 +270,8 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->fontSize // dim font			
 		);
 		$giorno->drawOn($this->chart);		
-		
+
+/*
 		// TODO: stub ore
 		for( $i = 0 ; $i < $frontWidth -2*$this->tol -1 - $granWidth ; $i=$i+$granWidth){
 			$slice = new GifBoxedLabel(
@@ -247,7 +292,7 @@ class GanttChartGenerator extends ChartGenerator{
 			($i / $granWidth)."", // data
 			$this->fontSize // dim font
 		);
-		$slice->drawOn($this->chart);
+		$slice->drawOn($this->chart);*/
 	}
 	
 	/**
@@ -277,6 +322,13 @@ class GanttChartGenerator extends ChartGenerator{
 
 		for($i = 0; $i < sizeOf($visit); $i++)
 		{
+			$label = $visit[$i]->getInfo()->getWBSiD();
+			// mostra il nome del task se specificato nelle opzioni utente
+			// TODO: stub, attendere popolamento opzioni utente
+//			if($this->uoc->showEffortInformationUserOption()){
+				$label = $label.' '.$visit[$i]->getInfo()->getTaskName();
+//			}
+			
 			// profondità indentatura
 			$indent = $visit[$i]->getInfo()->getLevel() * $this->horizontalSpace;
 			$label = new GifLabel(
@@ -285,7 +337,7 @@ class GanttChartGenerator extends ChartGenerator{
 				($i * ($this->verticalSpace + $this->labelHeight)), // y
 				$wLeftCol - $indent, // width
 				$this->labelHeight, // height
-				$visit[$i]->getInfo()->getWBSiD().' '.$visit[$i]->getInfo()->getTaskName(), // label
+				$label, // label
 				$this->fontSize // size
 				);
 			$label->setHAlign('left');
@@ -358,8 +410,8 @@ class GanttChartGenerator extends ChartGenerator{
 				$yGrid + $this->verticalSpace + 
 				($i * ($this->verticalSpace + $this->labelHeight)), // y start
 				$this->labelHeight, // height
-				"2010-01-01 01:00:00",//$this->sDate, // startDate
-				"2010-02-01 01:00:00",//$this->fDate, // finishDate
+				$this->sDate, // startDate
+				$this->fDate, // finishDate
 				$dt, // task data
 				$this->today, // today
 				$this->uoc // opzioni utente

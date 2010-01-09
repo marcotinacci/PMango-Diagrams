@@ -6,6 +6,7 @@ require_once dirname(__FILE__)."/GifBox.php";
 require_once dirname(__FILE__)."/GifLabel.php";
 require_once dirname(__FILE__)."/GifProgressBar.php";
 require_once dirname(__FILE__)."/GifTriangle.php";
+require_once dirname(__FILE__)."/../utils/TimeUtils.php";
 
 // TODO: gestire caso task molto stretto coi triangoli
 
@@ -56,17 +57,17 @@ class GifGanttTask extends GifArea
 
 		// dati finestra
 		$windowWidth = $xFinish - $xStart;
-		$startTS = $this->toTimeStamp($startDate);
-		$finishTS = $this->toTimeStamp($finishDate);
+		$startTS = toTimeStamp($startDate);
+		$finishTS = toTimeStamp($finishDate);
 		$windowDuration = $finishTS - $startTS;
 		
 		// dai odierni
-		$todayTS = $this->toTimeStamp($today);
+		$todayTS = toTimeStamp($today);
 				
 		// dati task planned
 		$planned = $this->td->getInfo()->getPlannedTimeFrame();
-		$startPlannedTS = $this->toTimeStamp($planned['start_date']);
-		$finishPlannedTS = $this->toTimeStamp($planned['finish_date']);
+		$startPlannedTS = toTimeStamp($planned['start_date']);
+		$finishPlannedTS = toTimeStamp($planned['finish_date']);
 		
 		// coordinate planned
 		$xPlanned = $windowWidth * ($startPlannedTS-$startTS) / $windowDuration;
@@ -82,15 +83,15 @@ class GifGanttTask extends GifArea
 			$xActual = null;
 			$wActual = null;			
 		}else if($actual['finish_date'] == null){
-			$startActualTS = $this->toTimeStamp($actual['start_date']);
+			$startActualTS = toTimeStamp($actual['start_date']);
 			$finishActualTS = null;
 			// coordinate actual			
 			$xActual = $windowWidth * ($startActualTS-$startTS) / $windowDuration;
 			$wActual = ($windowWidth * ($todayTS-$startTS) 
 				/ $windowDuration) - $xActual;			
 		}else{
-			$startActualTS = $this->toTimeStamp($actual['start_date']);
-			$finishActualTS = $this->toTimeStamp($actual['finish_date']);
+			$startActualTS = toTimeStamp($actual['start_date']);
+			$finishActualTS = toTimeStamp($actual['finish_date']);
 			// coordinate actual			
 			$xActual = $windowWidth * ($startActualTS-$startTS) / $windowDuration;
 			$wActual = ($windowWidth * ($finishActualTS-$startTS) 
@@ -155,21 +156,6 @@ class GifGanttTask extends GifArea
 
 		
 	}
-
-	/**
-	 * la funzione converte dal formato mySQL datetime
-	 * al formato unix timestamp
-	 * @param str
-	 * la data (YYYY-MM-DD HH:MM:SS) da convertire in timestamp
-	 */
-	private function toTimeStamp($str) {
-		list($date, $time) = explode(' ', $str);
-		list($year, $month, $day) = explode('-', $date);
-		list($hour, $minute, $second) = explode(':', $time);
-		$timestamp = mktime($hour, $minute, $second, $month, $day, $year);
-		return $timestamp;
-	}
-
 	
 	public function setVisiblesFromOptionsChoice($userOptionsChoice)
 	{
