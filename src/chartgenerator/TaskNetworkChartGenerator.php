@@ -34,7 +34,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 *
 	 * @var integer
 	 */
-	private $dotsDependencyLineCount = 2;
+	private $dotsDependencyLineCount = 1;
 
 	public function generateChart()	{
 

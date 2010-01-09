@@ -150,8 +150,7 @@ print "The following id will be draw: {" . implode(" - ",
 	UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
 		$AppUI->getState('ExplodeTasks', '1'), 
 		$AppUI->getState("tasks_opened"),
-		$AppUI->getState("tasks_closed"))->getDrawableTasks()) . "}";
-*/
+		$AppUI->getState("tasks_closed"))->getDrawableTasks()) . "}";*/
 
 
 ?>
