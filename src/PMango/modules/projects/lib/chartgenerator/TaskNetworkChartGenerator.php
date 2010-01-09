@@ -112,9 +112,52 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$this->vertical += $taskDrawer->getHeight() + $this->getGapBetweenVerticalTasks();
 		}
 	}
-	
+
+	private function buildDependencyTree($tdt) {
+		$analizedDependency = array();
+
+		// building the internal graph relation
+		foreach ($tdt->computeDependencyRelationOnVisibleTasks() as $neededTaskId => $dependantTasksIds) {
+			$this->checkDependencyExistence($tdt->selectTask($neededTaskId), $analizedDependency);
+
+			foreach ($dependantTasksIds as $dependantId) {
+				$this->checkDependencyExistence($tdt->selectTask($dependantId), $analizedDependency);
+
+				// update the needed task adding a child
+				$analizedDependency[$neededTaskId]->$_dependencies[] = $analizedDependency[$dependantId];
+
+				// update the dependant task adding a father
+				$analizedDependency[$dependantId]->$_fathersDependencies[] = $analizedDependency[$neededTaskId];
+			}
+		}
+
+		$root = new DefaultDependency(null);
+		$root->_dependencyType = DependencyType::$start;
+		$end = new DefaultDependency(null);
+		$root->_dependencyType = DependencyType::$end;
+		foreach ($analizedDependency as $dependency) {
+			if(!$dependency->hasFathersDependency()) {
+				$dependency->$_fathersDependencies[] = $root;
+			}
+			if(!$dependency->hasDependentTasks()) {
+				$dependency->$_dependencies[] = $end;
+			}
+		}
+
+		return $root;
+
+	}
+
+	private function checkDependencyExistence($taskData, & $analizedDependency) {
+		$neededTaskId = $taskData->getInfo()->getTaskID();
+		if(!array_key_exists($neededTaskId, $analizedDependency)) {
+			$analizedDependency[$neededTaskId] = new DefaultDependency($taskData);
+		}
+	}
+
 	private function getHorizontalGapForExistingDependency() {
 		// return a constant
+		return 3;
 	}
 
 	private function buildDependencyLine($neededTask_id, $task_id, $exitPoint, $entryPoint) {
@@ -213,36 +256,43 @@ interface IDependency {
 	public function getEndPointDrawer();
 	public function neededTaskIsStartMilestone();
 	public function getDrawer();
-	public function hasFatherDependency();
+	public function hasFathersDependency();
 	//public function neededTaskAlreadyDrawed();
+}
+
+class DependencyType {
+	public static $normal = "normal";
+	public static $start = "start";
+	public static $end = "end";
 }
 
 class DefaultDependency implements IDependency {
 	var $_taskData;
 	var $_dependencies = array();
 	var $_drawer;
-	var $_fatherDependency;
+	var $_fathersDependencies = array();
+	var $_dependencyType;
 
 	/**
 	 * constructor
 	 * @param TaskData $taskData
 	 * @param array of IDependency $dependencies
 	 */
-	public function __construct($taskData, $dependencies, $fatherDependency) {
+	public function __construct($taskData) {
 		$this->_taskData = $taskData;
 
-		$this->_fatherDependency = $fatherDependency;
+		//		foreach ($dependencies as $dependency) {
+		//			$this->_dependencies[] = $dependency;
+		//		}
 
-		foreach ($dependencies as $dependency) {
-			$this->_dependencies[] = $dependency;
-		}
-
+		$this->_dependencyType = DependencyType::$normal;
+		
 		$this->initDrawer();
 	}
 
-	public function __construct($taskData, $dependencies) {
-		self::__construct($taskData, $dependencies, null);
-	}
+	//	public function __construct($taskData, $dependencies) {
+	//		self::__construct($taskData, $dependencies, null);
+	//	}
 
 	private function initDrawer() {
 		if($this->neededTaskIsAtomic()) {
@@ -254,8 +304,8 @@ class DefaultDependency implements IDependency {
 		}
 	}
 
-	public function hasFatherDependency() {
-		return isset($this->_fatherDependency);
+	public function hasFathersDependency() {
+		return count($this->_fatherDependency) > 0;
 	}
 
 	private function neededTaskIsAtomic() {
@@ -394,7 +444,7 @@ class ComposedTaskDataDrawer extends AbstractTaskDataDrawer {
 		$result = parent::computeHeight();
 
 		// adding the top segment to represent the entry dependency if this exists
-		$result += $this->_dependency->hasFatherDependency() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;
+		$result += $this->_dependency->hasFathersDependency() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;
 
 		// adding the bottom segment to represent the exit dependency if this exists
 		$result += $this->_dependency->hasDependentTasks() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;

@@ -101,6 +101,7 @@ class TaskDataTree {
 			}
 			$this->analizeDependencies($leaf->getInfo()->getTaskID(), array(), $leaf, $result);
 		}
+		return $result;
 	}
 
 	private function analizeDependencies($task_id, $deepChildren, $leaf, & $result) {
