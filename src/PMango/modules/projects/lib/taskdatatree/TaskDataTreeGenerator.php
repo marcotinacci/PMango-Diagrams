@@ -36,10 +36,15 @@ class TaskDataTreeGenerator{
 	 * @param UserOptionsChoice $uoc
 	 * @return TaskDataTree $tdt
 	 */
-	public function generateTaskDataTree($uoc){
+	public function generateTaskDataTree(){
 		//$tasks contiene tutti i dati costruiti dal DataArrayBuilder
 		$tasks = $this->getData();
 		$root = new TaskData();
+		global $AppUI;
+		$visible_tasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
+			$AppUI->getState('ExplodeTasks', '1'), 
+			$AppUI->getState("tasks_opened"),
+			$AppUI->getState("tasks_closed"))->getDrawableTasks();
 		/////cerco il wbsID più lungo per sapere il livello massimo
 		$max = 0;
 		for($i=0; $i<sizeOf($tasks); $i++){
@@ -90,7 +95,12 @@ class TaskDataTreeGenerator{
 					//infatti per essere figlio deve avere l'id più lungo del padre di una sola posizione.
 					if($descendant_of && sizeOf($arr_task)==sizeOf($arr_curr)+1){
 						$task_data = new TaskData($tasks[$k]);
-						//TODO settare (controllando le uoc) collapsed
+						//controlla se il task è effettivamente tra i task da mostrare
+						for($s=0; $s<sizeOf($visible_tasks); $s++){
+							if($tasks[$k]->getTaskID()==$visible_tasks[$s]){
+								$task_data->setVisibility(true);
+							}
+						}
 						$son[] = $task_data;
 						$next_level[] = $task_data;
 					}
@@ -99,6 +109,15 @@ class TaskDataTreeGenerator{
 					}
 				}
 				$curr_level[$j]->setChildren($son);
+				//se in $son i taskData non sono visibili
+				//(in questo caso si fa il controllo solo sul primo, se c'è,
+				//logicamente dovrebbe essere la stessa cosa anche per gli altri.
+				//si setta il parent come collapsed
+				if(sizeOf($son)>0){
+					if($son[0]->getVisibility()==false){
+						$curr_level[$j]->setCollapsed(true);
+					}
+				}
 				$son = array();
 			}
 			$curr_level = $next_level;
@@ -117,9 +136,8 @@ class TaskDataTreeGenerator{
 	 */
 	public function getData(){
 		$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
-		$recovered_data = array();
+		/*$recovered_data = array();
 		$task_ids = array();
-		//TODO aggiungere la WHERE nella quale si fa riferimento al progetto corrente
 		$project_id = defVal(@$_REQUEST['project_id'], 0);
 		if($project_id==0){
 			die("ERROR: project not found!");
@@ -130,7 +148,7 @@ class TaskDataTreeGenerator{
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]);
 			$recovered_data[] = $current_task;
-		}
+		}*/
 		return $recovered_data;
 	}
 }

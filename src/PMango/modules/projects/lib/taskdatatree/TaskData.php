@@ -45,6 +45,13 @@ class TaskData{
 	 */
 	private $collapsed;
 	
+	/**
+	 * Variabile settata a vero quando il task è visibile
+	 * nella tipologia di esplosione richiesta dall'utente.
+	 * @var boolean
+	 */
+	private $visible;
+	
 	public function __construct($info = null){
 
 		$this->parent = null;
@@ -82,6 +89,10 @@ class TaskData{
 		$this->collapsed = $collapsed;
 	}
 	
+	public function setVisibility($visible){
+		$this->visible = $visible;
+	}
+	
 	public function getParent(){
 		return $this->parent;
 	}
@@ -100,6 +111,10 @@ class TaskData{
 	
 	public function getCollapsed(){
 		return $this->collapsed;
+	}
+	
+	public function getVisibility(){
+		return $this->visible;
 	}
 	
 	/**
