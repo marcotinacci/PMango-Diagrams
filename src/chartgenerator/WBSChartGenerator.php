@@ -9,7 +9,7 @@ require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
  * Questa classe implementa il metodo di generazione delle WBS
  *
  * @author: Daniele Poggi
- * @version: 0.8
+ * @version: 1.0
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -189,8 +189,8 @@ class WBSChartGenerator extends ChartGenerator{
 					$YToDraw[$k]=$LinkY[$i+1][$j+$k];
 					}
 				}	
-				$j+=$occorrenze-1;	
-				$hspace=GifTaskBox::getEffectiveHeightOfTaskBox($Link[$i][$j],30,null);
+				$j+=$occorrenze-1;
+				$hspace=$Link[$i][$j]->getEffectiveHeight();
 				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
 				
 				$XToDraw=array();
