@@ -183,29 +183,29 @@ class UserOptionsChoice {
 		
 		$this->tasksToShow = $this->getExplodedTasks();
 
-		print "<br>Tasks after wbs explosion level: " . implode(",", $this->tasksToShow);
+//		print "<br>Tasks after wbs explosion level: " . implode(",", $this->tasksToShow);
 		
 		//now I remove from the resulting array the task that are collapsed
 		$closedTaskDistiller = new CloseArrayDistiller($closedTasks, $this->taskInformationRetriever);
 		$closedTaskDistiller->distill();
 
-		print "<br>Distiller had find this to close tasks: " . implode(",", $closedTaskDistiller->getToCloseTasks());
-		print "<br>Distiller had find this to show tasks: " . implode(",", $closedTaskDistiller->getToShowTasks());
+//		print "<br>Distiller had find this to close tasks: " . implode(",", $closedTaskDistiller->getToCloseTasks());
+//		print "<br>Distiller had find this to show tasks: " . implode(",", $closedTaskDistiller->getToShowTasks());
 
 		$this->eraseClosedTasks($closedTaskDistiller->getToCloseTasks());
 		
-		print "<br>Tasks after deletion of collapsed tasks: " . implode(",", $this->tasksToShow);
+//		print "<br>Tasks after deletion of collapsed tasks: " . implode(",", $this->tasksToShow);
 
 		$this->appendDrawableTasks($closedTaskDistiller->getToShowTasks());
 		
-		print "<br>Tasks after adding distilled tasks: " . implode(",", $this->tasksToShow);
+//		print "<br>Tasks after adding distilled tasks: " . implode(",", $this->tasksToShow);
 
 		foreach ($openedTasks as $opened_task) {
 			$this->appendDrawableTasks($this->taskInformationRetriever->getChildren($opened_task));
 		}
 		
 		
-		print "<br>Tasks after last append action: " . implode(",", $this->tasksToShow);
+//		print "<br>Tasks after last append action: " . implode(",", $this->tasksToShow);
 		
 		return $this;
 	}

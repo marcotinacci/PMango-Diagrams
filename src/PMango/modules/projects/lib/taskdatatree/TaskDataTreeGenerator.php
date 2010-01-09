@@ -143,7 +143,7 @@ class TaskDataTreeGenerator{
 			die("ERROR: project not found!");
 		}
 		// $project_id = 0; // ?? stub ?? non esiste il progetto zero
-		$sql = 'SELECT task_id FROM tasks WHERE task_project='.$project_id;
+		$sql = 'SELECT task_id FROM tasks WHERE task_project ='.$project_id;
 		$task_ids = db_loadList($sql);
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]['task_id']);
