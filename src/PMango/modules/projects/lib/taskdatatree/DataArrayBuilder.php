@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(__FILE__)."/../../../tasks/tasks.class.php";
+
 /**
  * this method is necessary to load at runtime and only if is needed the
  * relative tasks.class.php file (if this is already loaded, the runtime

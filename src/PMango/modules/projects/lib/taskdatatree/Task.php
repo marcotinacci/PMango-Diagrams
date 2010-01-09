@@ -33,12 +33,12 @@ class Task{
 	 */
 	public static function MakeTask($task_id) {
 		// creating the object that build the associative array
-		$dataArrayBuilder =& new DataArrayBuilder($task_id);
-		$dataArrayDirector =& new DataArrayDirector($dataArrayBuilder);
+		$dataArrayBuilder = new DataArrayBuilder($task_id);
+		$dataArrayDirector = new DataArrayDirector($dataArrayBuilder);
 		$dataArrayDirector->composeArray();
 
 		// resulting task
-		$task = & new Task();
+		$task = new Task();
 		$task->data = $dataArrayBuilder->getAssociativeArray();
 		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
 		
@@ -116,7 +116,7 @@ class Task{
 		
 		//esplodo il wbsId separando elementi con separatore "."; ottengo l'array $level
 		//che avrà tanti elementi, quanto è il livello del task stesso. 
-		$wbs_id = $tasks[i]->getWBSId();
+		$wbs_id = $this->getWBSId();
 		$level = explode(".", $wbs_id);
 		return sizeOf($level);
 	}

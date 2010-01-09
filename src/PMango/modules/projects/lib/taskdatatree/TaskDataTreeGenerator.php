@@ -16,8 +16,8 @@
  	require_once dirname(__FILE__)."/TaskData.php";
 	require_once dirname(__FILE__)."/Task.php";
 	require_once dirname(__FILE__).'/StubTaskDataTree.php';	
-	//require_once dirname(__FILE__)."/classes/query.class.php";
-	//require_once dirname(__FILE__)."/includes/main_functions.php";
+	require_once dirname(__FILE__).'/../../../../includes/db_connect.php';	
+	//@TODOrequire_once "query.class.php";
 
 class TaskDataTreeGenerator{
 
@@ -43,7 +43,7 @@ class TaskDataTreeGenerator{
 		/////cerco il wbsID più lungo per sapere il livello massimo
 		$max = 0;
 		for($i=0; $i<sizeOf($tasks); $i++){
-			$wbs_id = $tasks[i]->getWBSId();
+			$wbs_id = $tasks[$i]->getWBSId();
 			$level = explode(".", $wbs_id);
 			if($max<sizeOf($level)){
 				$max = sizeOf($level);
@@ -116,6 +116,7 @@ class TaskDataTreeGenerator{
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
+		$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
 		$recovered_data = array();
 		$task_ids = array();
 		//TODO aggiungere la WHERE nella quale si fa riferimento al progetto corrente
@@ -130,6 +131,28 @@ class TaskDataTreeGenerator{
 			$recovered_data[] = $current_task;
 		}
 		return $recovered_data;
+		*/
+		return $recovered_data;
+	}
+}
+	public function getData(){
+		$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
+		//$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
+		
+		$recovered_data = array();
+		$task_ids = array();
+		
+		$sql = 'SELECT task_id FROM tasks';
+		$task_ids = db_loadList($sql);
+		for ($i=0; $i<sizeOf($task_ids); $i++){
+			$current_task = Task::makeTask($task_ids[$i]);
+			$recovered_data[] = $current_task;
+		}
+		return $recovered_data;
+		*/
+		return $recovered_data;
+		
+		//return $recovered_data;
 	}
 }
 
