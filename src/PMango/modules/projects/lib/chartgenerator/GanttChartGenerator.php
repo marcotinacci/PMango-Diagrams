@@ -182,9 +182,6 @@ class GanttChartGenerator extends ChartGenerator{
 				($currentTS-$startTS)/($finishTS-$startTS));
 			// per ogni ora
 			while($currentTS < $finishTS){
-//				echo $xPrec.'<br>';
-//				echo $xCurrent.'<br>';
-
 				$slice = new GifBoxedLabel(
 					$xPrec, // x
 					$this->tol + 4*$this->labelGrainHeight, // y
@@ -377,6 +374,8 @@ class GanttChartGenerator extends ChartGenerator{
 			DrawingHelper::LineFromTo($i,$yGrid,$i,$yfGrid,$this->chart,
 				new LineStyle("gray"));
 		}
+
+		
 	}
 	
 	/**

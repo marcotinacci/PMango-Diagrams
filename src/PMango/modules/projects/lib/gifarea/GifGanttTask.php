@@ -9,7 +9,7 @@ require_once dirname(__FILE__)."/GifTriangle.php";
 require_once dirname(__FILE__)."/../utils/TimeUtils.php";
 
 // TODO: gestire caso task molto stretto coi triangoli
-
+// TODO: label risorse
 
 /**
  * Questa classe implementa la generazione grafica del task nel diagramma Gantt
