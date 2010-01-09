@@ -11,7 +11,7 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 
-Class ImageDimension {
+Class TimeRange {
 	
 	public static  $CustomRangeUserOption = "CustomRangeUserOption";
 	public static  $WholeProjectRangeUserOption = "WholeProjectRangeUserOption";

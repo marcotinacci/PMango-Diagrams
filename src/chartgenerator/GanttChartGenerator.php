@@ -97,12 +97,6 @@ class GanttChartGenerator extends ChartGenerator{
 	protected $tdt;
 	
 	/**
-	 * Opzioni utente
-	 * @var uoc
-	 */
-	protected $uoc = null;
-	
-	/**
 	 * Data attuale
 	 * @var today
 	 */
@@ -119,19 +113,17 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * Funzione di generazione grafica del diagramma Gantt
 	 * @see chartgenerator/ChartGenerator#generateChart()
-	 * @param uoc
-	 * UserOptionsChoice, opzioni utente 
 	 */
-	public function generateChart($uoc){
+	public function generateChart(){
 		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree(null);
 		
-		// imposta le opzioni utente
-		$this->uoc = $uoc;
-		
 		// TODO: stub date, prenderle dalle uoc
-		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,10,1,1,2010));
-		$this->today = date('Y-m-d H:i:s');
+		$this->sDate =
+		date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
+		$this->fDate = 
+		date('Y-m-d H:i:s',mktime(10,0,0,1,1,2010));
+		$this->today = 
+		date('Y-m-d H:i:s');
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -146,8 +138,6 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Funzione di generazione del canvas
 	 */	
 	protected function makeCanvas(){
-		// TODO: stub granLevel
-		$granLevel = 5;
 		// TODO: prendere la larghezza dalla dimensione della finestra
 		$this->chart = new GifImage(800, 
 			$granLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +

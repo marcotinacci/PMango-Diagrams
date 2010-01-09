@@ -50,10 +50,8 @@ abstract class ChartGenerator{
 	 * metodo disegna in $chart il diagramma richiesto
 	 * @abstract
 	 * @see $chart
-	 * @param uoc
-	 * UserOptionsChoice, opzioni utente
 	 */
-	abstract public function generateChart($uoc);
+	abstract public function generateChart();
 	
 	/**
 	 * Metodo get della gif elaborata
