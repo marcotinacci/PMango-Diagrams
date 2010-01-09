@@ -135,13 +135,14 @@ class TaskDataTreeGenerator{
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
+	//	$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
 		$recovered_data = array();
 		$task_ids = array();
-		$project_id = defVal(@$_REQUEST['project_id'], 0);
+		$project_id = 1;// defVal(@$_REQUEST['project_id'], 0);
 		if($project_id==0){
 			die("ERROR: project not found!");
 		}
-		$project_id = 0;
+		// $project_id = 0; // ?? stub ?? non esiste il progetto zero
 		$sql = 'SELECT task_id FROM tasks WHERE project_id ='.$project_id;
 		$task_ids = db_loadList($sql);
 		for ($i=0; $i<sizeOf($task_ids); $i++){
