@@ -101,12 +101,14 @@ class GifGanttTask extends GifArea
 		// caso foglia e caso nodo interno
 		if(sizeOf($this->td->getChildren()) == 0){
 			// se il task è una foglia
-			$hPlanned = 2*$height/3;
+			$hPlanned = intval(2*$height/3);
+			$hActual = $height - $hPlanned;
 			$cPlanned = 'white';
 		}else{
 			// se il task ha figli
-			$hPlanned = $height/3;
+			$hPlanned = intval($height/3);
 			$cPlanned = 'black';
+			$hActual = $hPlanned;
 			$hTri = $height - $hPlanned;
 		
 			// cerco inizio minore tra planned e actual
@@ -136,11 +138,6 @@ class GifGanttTask extends GifArea
 		}
 
 		// costruzione del planned
-		/*
-		echo $xActual.'<br>';
-		echo $hPlanned.'<br>';
-		echo $wActual.'<br>';
-		echo ($height/3).'<br>';*/
 		
 		$this->subAreas['Planned'] = new GifBox(
 			$xPlanned, //< $xStart ? 0 : $xPlanned, // x
