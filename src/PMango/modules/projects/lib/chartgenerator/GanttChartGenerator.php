@@ -119,8 +119,8 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		// TODO: stub date, prenderle dalle uoc
 		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(10,0,0,1,1,2010));
-		$this->today = date('Y-m-d H:i:s',mktime(5,0,0,1,1,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,2,2010));
+		$this->today = date('Y-m-d H:i:s',mktime(22,0,0,1,1,2010));
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -159,21 +159,10 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Funzione di generazione della testata del diagramma
 	 */	
 	protected function makeFront(){
+		// TODO: spostare a var di istanza
 		// titolo progetto
 		$titleWidth = $this->chart->getWidth()*$this->leftColumnSpace;
 		$frontWidth = $this->chart->getWidth() - $titleWidth;
-		
-		// TODO: titolo progetto
-		$title = new GifBoxedLabel(
-			$this->tol, // x
-			$this->tol, // y
-			$titleWidth, // larghezza
-			$this->granLevel*$this->labelGrainHeight, // altezza
-			"Project Title", // titolo
-			$this->fontSize // dim font
-			);
-		$title->getBox()->setForeColor("green");
-		$title->drawOn($this->chart); 
 		
 		// generazione calendario
 		$xCal = $titleWidth + $this->tol;
@@ -187,10 +176,15 @@ class GanttChartGenerator extends ChartGenerator{
 		switch('HourlyGrainUserOption'){	
 		case 'HourlyGrainUserOption':
 			$xPrec = $xCal;
-			$currentTS = toTimeStamp(date('Y-m-d H:00:00'),$startTS) + 60 * 60;
-			$xCurrent = $wCal*($currentTS-$startTS)/($finishTS-$startTS);
+			$currentTS = toTimeStamp(date('Y-m-d H:i:s',$startTS)) 
+				- date('i',$startTS)*60 - date('s',$startTS) + 60*60;
+			$xCurrent = intval($xCal+ $wCal * 
+				($currentTS-$startTS)/($finishTS-$startTS));
 			// per ogni ora
-			while($currentTS <= $finishTS){
+			while($currentTS < $finishTS){
+//				echo $xPrec.'<br>';
+//				echo $xCurrent.'<br>';
+
 				$slice = new GifBoxedLabel(
 					$xPrec, // x
 					$this->tol + 4*$this->labelGrainHeight, // y
@@ -198,13 +192,24 @@ class GanttChartGenerator extends ChartGenerator{
 					$this->labelGrainHeight, // altezza
 					date('H',$currentTS).'', // data
 					$this->fontSize // dim font
-				);	
+				);
+				$slice->getBox()->setForeColor('white');
 				$slice->drawOn($this->chart);
 				$xPrec = $xCurrent;
 				$currentTS += 60*60;
-				$xCurrent = $wCal*($currentTS-$startTS)/($finishTS-$startTS);
+				$xCurrent = intval($xCal+ $wCal*($currentTS-$startTS)/($finishTS-$startTS));
 			}
-
+			$slice = new GifBoxedLabel(
+				$xPrec, // x
+				$this->tol + 4*$this->labelGrainHeight, // y
+				$xCal+$wCal-$xPrec-1, // larghezza
+				$this->labelGrainHeight, // altezza
+				date('H',$currentTS).'', // data
+				$this->fontSize // dim font
+			);
+			$slice->getBox()->setForeColor('white');			
+			$slice->drawOn($this->chart);
+			
 			case 'DailyGrainUserOption':
 			
 			case 'WeaklyGrainUserOption':
@@ -257,30 +262,30 @@ class GanttChartGenerator extends ChartGenerator{
 			"Giorni", // data
 			$this->fontSize // dim font			
 		);
-		$giorno->drawOn($this->chart);		
-
-
-		// TODO: stub ore
-/*		for( $i = 0 ; $i < $frontWidth -2*$this->tol -1 - $granWidth ; $i=$i+$granWidth){
-			$slice = new GifBoxedLabel(
-				$this->tol + $titleWidth + $i, // x
-				$this->tol + 4*$this->labelGrainHeight, // y
-				$granWidth, // larghezza
-				$this->labelGrainHeight, // altezza
-				($i / $granWidth)."", // data
-				$this->fontSize // dim font
-			);
-			$slice->drawOn($this->chart);
-		}
-		$slice = new GifBoxedLabel(
-			$this->tol + $titleWidth + $i, // x
-			$this->tol + 4*$this->labelGrainHeight, // y
-			$this->chart->getWidth() - 2*$this->tol -$i - $titleWidth -1, // larghezza
-			$this->labelGrainHeight, // altezza
-			($i / $granWidth)."", // data
+		$giorno->drawOn($this->chart);
+		
+		$this->makeTitle();
+	}
+	
+	/**
+	 * Funzione di generazione grafica della label del titolo del progetto
+	 */
+	protected function makeTitle(){
+		// TODO: spostare a var di istanza
+		// titolo progetto
+		$titleWidth = $this->chart->getWidth()*$this->leftColumnSpace;
+		$frontWidth = $this->chart->getWidth() - $titleWidth;
+		// TODO: titolo progetto
+		$title = new GifBoxedLabel(
+			$this->tol, // x
+			$this->tol, // y
+			$titleWidth, // larghezza
+			$this->granLevel*$this->labelGrainHeight, // altezza
+			"Project Title", // titolo
 			$this->fontSize // dim font
-		);
-		$slice->drawOn($this->chart);*/
+			);
+		$title->getBox()->setForeColor('green');
+		$title->drawOn($this->chart);		
 	}
 	
 	/**
@@ -406,7 +411,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$this->uoc // opzioni utente
 				);	
 			$gTask->drawOn($this->chart);
-		}		
+		}
 
 	}
 	
