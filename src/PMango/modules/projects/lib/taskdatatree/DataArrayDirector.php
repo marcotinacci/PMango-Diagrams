@@ -29,6 +29,10 @@ class DataArrayDirector {
 		$this->_dataArrayBuilder->buildWBSIdentifier();
 		$this->_dataArrayBuilder->buildName();
 		$this->_dataArrayBuilder->buildFtsDependencies();
+		$this->_dataArrayBuilder->buildPlannedStartDate();
+		$this->_dataArrayBuilder->buildPlannedFinishDate();
+		$this->_dataArrayBuilder->buildActualStartDate();
+		$this->_dataArrayBuilder->buildActualFinishDate();
 	}
 	
 }

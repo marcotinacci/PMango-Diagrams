@@ -119,7 +119,7 @@ class GanttChartGenerator extends ChartGenerator{
 		// TODO: stub date, prenderle dalle uoc
 		$this->sDate = date('Y-m-d H:i:s',mktime(12,0,0,1,9,2010));
 		$this->fDate = date('Y-m-d H:i:s',mktime(12,0,0,1,10,2010));
-		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,10,2010));
+		$this->today = date('Y-m-d H:i:s',mktime());
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());

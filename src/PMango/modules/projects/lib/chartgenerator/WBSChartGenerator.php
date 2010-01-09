@@ -111,7 +111,7 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		//Il seguente blocco di codice esegue in un'unica passata il posizionamento
 		//dei tasknode e salva nelle due matrici LinkX e LinkY le coordinate
-		for($i=$CLiv;$i>=0;$i--)
+		for($i=$CLiv-1;$i>=0;$i--)
 		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
@@ -189,6 +189,8 @@ class WBSChartGenerator extends ChartGenerator{
 					}
 				}	
 				$j+=$occorrenze-1;
+				$hspace = 190;
+				if(isset($Link[$i][$j]))
 				$hspace=$Link[$i][$j]->getEffectiveHeight();
 				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
 				

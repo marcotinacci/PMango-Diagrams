@@ -73,6 +73,26 @@ class DataArrayBuilder {
 			//comma delimited list (string) of tasks id's
 	}
 
+	public function buildPlannedStartDate() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$planned_start_date] =
+		$this->_CTaskObject->task_start_date;
+	}
+	
+	public function buildPlannedFinishDate() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$planned_finish_date] =
+		$this->_CTaskObject->task_finish_date;
+	}
+	
+	public function buildActualStartDate() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$actual_start_date] =
+		$this->_CTaskObject->getActualStartDate(null);
+	}
+	
+	public function buildActualFinishDate() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$actual_finish_date] =
+		$this->_CTaskObject->getActualFinishDate(null);
+	}
+	
 //	public function buildName() {
 //		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
 //		$this->_CTaskObject->task_name;
