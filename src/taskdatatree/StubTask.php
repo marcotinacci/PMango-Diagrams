@@ -32,8 +32,8 @@ class StubTask{
 		$this->data[DataArrayKeyEnumeration::$plan_duration]="20";
 		$this->data[DataArrayKeyEnumeration::$plan_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$plan_cost]="20";
-		$this->data[DataArrayKeyEnumeration::$planned_start_date]="2009-01-01 01:00:00";
-		$this->data[DataArrayKeyEnumeration::$planned_finish_date]="2010-01-17 01:00:00";
+		$this->data[DataArrayKeyEnumeration::$planned_start_date]="2010-01-01 01:00:00";
+		$this->data[DataArrayKeyEnumeration::$planned_finish_date]="2010-01-01 03:00:00";
 		$this->data[DataArrayKeyEnumeration::$act_duration]="20";
 		$this->data[DataArrayKeyEnumeration::$act_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$act_cost]="20";

@@ -118,12 +118,9 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree(null);
 		
 		// TODO: stub date, prenderle dalle uoc
-		$this->sDate =
-		date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
-		$this->fDate = 
-		date('Y-m-d H:i:s',mktime(10,0,0,1,1,2010));
-		$this->today = 
-		date('Y-m-d H:i:s');
+		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(10,0,0,1,1,2010));
+		$this->today = date('Y-m-d H:i:s',mktime(5,0,0,1,1,2010));
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -131,7 +128,8 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
-		$this->chart->draw();
+		//$this->chart->draw();
+		echo "ciao";
 	}
 	
 	/**
@@ -140,7 +138,7 @@ class GanttChartGenerator extends ChartGenerator{
 	protected function makeCanvas(){
 		// TODO: prendere la larghezza dalla dimensione della finestra
 		$this->chart = new GifImage(800, 
-			$granLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +
+			$this->granLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +
 			$this->labelHeight) + $this->verticalSpace + 2*$this->tol);
 	}
 
@@ -160,7 +158,7 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * Funzione di generazione della testata del diagramma
 	 */	
-	protected function makeFront(){		
+	protected function makeFront(){
 		// titolo progetto
 		$titleWidth = $this->chart->getWidth()*$this->leftColumnSpace;
 		$frontWidth = $this->chart->getWidth() - $titleWidth;
@@ -186,7 +184,7 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		// TODO: stub, granularità da uoc		
 //		switch($this->uoc->showTimeGrain()){
-		switch('HourlyGrainUserOption'){			
+		switch('HourlyGrainUserOption'){	
 		case 'HourlyGrainUserOption':
 			$xPrec = $xCal;
 			$currentTS = toTimeStamp(date('Y-m-d H:00:00'),$startTS) + 60 * 60;
@@ -261,9 +259,9 @@ class GanttChartGenerator extends ChartGenerator{
 		);
 		$giorno->drawOn($this->chart);		
 
-/*
+
 		// TODO: stub ore
-		for( $i = 0 ; $i < $frontWidth -2*$this->tol -1 - $granWidth ; $i=$i+$granWidth){
+/*		for( $i = 0 ; $i < $frontWidth -2*$this->tol -1 - $granWidth ; $i=$i+$granWidth){
 			$slice = new GifBoxedLabel(
 				$this->tol + $titleWidth + $i, // x
 				$this->tol + 4*$this->labelGrainHeight, // y
