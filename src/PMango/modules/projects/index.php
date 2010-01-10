@@ -230,5 +230,7 @@ foreach($project_types as $project_type) {
 }
 $min_view = true;
 $tabBox->add("viewgantt", "Gantt");
+$tabBox->add("viewwbs", "WBS");
+$tabBox->add("viewtasknetwork", "Task Network");
 $tabBox->show();
 ?>

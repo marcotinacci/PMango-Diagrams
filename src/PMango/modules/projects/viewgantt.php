@@ -117,6 +117,18 @@ if (!@$min_view) {
 }
 ?>
 <script language="javascript">
+
+function getPageWidth()
+{
+	//IE
+	if(!window.innerWidth)
+	{
+		return document.body.clientWidth;
+	}
+	//w3c
+	return window.innerWidth;
+}
+
 var calendarField = '';
 
 function popCalendar( field ){
@@ -242,17 +254,11 @@ function showFullProject() {
 
                 </table>
 
-                <table cellspacing="0" cellpadding="0" border="1" align="center" class="tbl">
+                <!-- Generated Image -->
+                <table width="100%" cellspacing="0" cellpadding="0" border="1" align="center" class="tbl">
                 <tr>
                         <td>
-                <?php
-                $src =
-                "?m=$m&a=gantt&suppressHeaders=1" .
-                ( $display_option == 'all' ? '' :
-                        '&start_date=' . $start_date->format( "%Y-%m-%d" ) . '&end_date=' . $end_date->format( "%Y-%m-%d" ) ) .
-                "&width=' + ((navigator.appName=='Netscape'?window.innerWidth:document.body.offsetWidth)*0.95) + '&showLabels=$showLabels&proFilter=$proFilter&showInactive=$showInactive&group_id=$group_id&showAllGantt=$showAllGantt";
-                echo "<script>document.write('<img src=\"$src\">')</script>";
-                ?>
+							<img width='100%' src='<?php echo $basedir."modules/projects/lib/chartGenerator/TestGantt.php"; ?>'>
                         </td>
                 </tr>
                 </table>
