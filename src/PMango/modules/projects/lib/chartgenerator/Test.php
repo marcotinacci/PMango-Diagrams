@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 //--------------------------------------------------
 $baseDir = dirname(__FILE__)."/../../../..";
 require_once "$baseDir/includes/config.php";
@@ -28,8 +28,6 @@ $AppUI =& $_SESSION['AppUI'];
 //--------------------------------------------------
 
 require_once dirname(__FILE__)."/WBSChartGenerator.php";
-
-error_reporting(E_ALL & ~E_NOTICE);
 
 $WBS = new WBSChartGenerator(800);
 $WBS->generateChart();
