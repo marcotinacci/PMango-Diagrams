@@ -46,7 +46,7 @@ class UserOptionsChoice {
 		$this->taskInformationRetriever = new DefaultTaskInformationRetriever();
 	}
 
-
+	//array of choices
 	private $array;
 
 	public function setFromArray($array){
