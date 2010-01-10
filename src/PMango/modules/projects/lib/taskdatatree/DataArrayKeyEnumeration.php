@@ -23,16 +23,13 @@ class DataArrayKeyEnumeration {
 	public static $name = "name";
 	public static $plan_effort = "plan_effort";
 	public static $assigned_to_task = "assigned_to_task";
-	public static $plan_duration = "plan_duration";
 	public static $plan_cost = "plan_cost";
 	public static $planned_start_date = "planned_start_date";
 	public static $planned_finish_date = "planned_finish_date";
-	public static $act_duration = "act_duration";
 	public static $act_effort = "act_effort";
 	public static $act_cost = "act_cost";
 	public static $actual_start_date = "actual_start_date";
 	public static $actual_finish_date = "actual_finish_date";
-	public static $level = "level";
 	public static $percentage = "percentage";
 	public static $ftsDependencies = "ftsDependencies";
 }

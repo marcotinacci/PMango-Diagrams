@@ -33,7 +33,13 @@ class DataArrayDirector {
 		$this->_dataArrayBuilder->buildPlannedFinishDate();
 		$this->_dataArrayBuilder->buildActualStartDate();
 		$this->_dataArrayBuilder->buildActualFinishDate();
+		$this->_dataArrayBuilder->buildAssignedToTask();
+		$this->_dataArrayBuilder->buildPlannedEffort();
+		$this->_dataArrayBuilder->buildActualEffort();
+		$this->_dataArrayBuilder->buildPlannedCost();
+		$this->_dataArrayBuilder->buildActualCost();
+		$this->_dataArrayBuilder->buildPercentage();
 	}
-	
+
 }
 ?>

@@ -96,17 +96,29 @@ class Task{
 	}
 
 	public function getPlannedData(){
-		$planned_data = array ("duration"=>$this->data[DataArrayKeyEnumeration::$plan_duration], "effort"=>$this->data[DataArrayKeyEnumeration::$plan_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$plan_cost]);
+		$planned_data = array ("duration"=>$this->getPlannedDuration(), "effort"=>$this->data[DataArrayKeyEnumeration::$plan_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$plan_cost]);
 		return $planned_data;
+	}
+	
+	public function getPlannedDuration(){
+		$s_f = $this->getPlannedTimeFrame();
+		$plan_duration = strtotime($s_f["start_date"])-strtotime($s_f["finish_date"]);
+		return intval((($plan_duration/60)/60)/24)+1;
 	}
 
 	public function getPlannedTimeFrame(){
 		$planned_time_frame = array("start_date"=>$this->data[DataArrayKeyEnumeration::$planned_start_date], "finish_date"=>$this->data[DataArrayKeyEnumeration::$planned_finish_date]);
 		return $planned_time_frame;
 	}
+	
+	public function getActualDuration(){
+		$s_f = $this->getActualTimeFrame();
+		$act_duration = strtotime($s_f["start_date"])-strtotime($s_f["finish_date"]);
+		return intval((($act_duration/60)/60)/24)+1;
+	}
 
 	public function getActualData(){
-		$actual_data = array ("duration"=>$this->data[DataArrayKeyEnumeration::$act_duration], "effort"=>$this->data[DataArrayKeyEnumeration::$act_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$act_cost]);
+		$actual_data = array ("duration"=>$this->getActualDuration(), "effort"=>$this->data[DataArrayKeyEnumeration::$act_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$act_cost]);
 		return $actual_data;
 	}
 
@@ -116,8 +128,6 @@ class Task{
 	}
 	
 	public function getLevel(){
-		//return $this->data[DataArrayKeyEnumeration::$level];
-		
 		//esplodo il wbsId separando elementi con separatore "."; ottengo l'array $level
 		//che avrà tanti elementi, quanto è il livello del task stesso. 
 		$wbs_id = $this->getWBSId();

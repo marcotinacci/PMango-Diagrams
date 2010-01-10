@@ -93,59 +93,34 @@ class DataArrayBuilder {
 		$this->_associativeArray[DataArrayKeyEnumeration::$actual_finish_date] = $actual_finish_date['task_log_finish_date'];
 	}
 	
-//	public function buildName() {
-//		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-//		$this->_CTaskObject->task_name;
-//	}
-//
-//	public function buildName() {
-//		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-//		$this->_CTaskObject->task_name;
-//	}
-//
-//	public function buildName() {
-//		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-//		$this->_CTaskObject->task_name;
-//	}
-//
-//	public function buildName() {
-//		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-//		$this->_CTaskObject->task_name;
-//	}
-//
-//	public function buildName() {
-//		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-//		$this->_CTaskObject->task_name;
-//	}
-//
-//	public function buildName() {
-//		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-//		$this->_CTaskObject->task_name;
-//	}
-//
-//	public static $name = "name";
-//	public static $plan_effort = "plan_effort";
-//	public static $assigned_to_task = "assigned_to_task";
-//	public static $plan_duration = "plan_duration";
-//	public static $plan_cost = "plan_cost";
-//	public static $planned_start_date = "planned_start_date";
-//	public static $planned_finish_date = "planned_finish_date";
-//	public static $act_duration = "act_duration";
-//	public static $act_effort = "act_effort";
-//	public static $act_cost = "act_cost";
-//	public static $actual_start_date = "actual_start_date";
-//	public static $actual_finish_date = "actual_finish_date";
-//	public static $level = "level";
-//	public static $percentage = "percentage";
+  	public function buildAssignedToTask() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task] =
+		$this->_CTaskObject->getAssignedUser();
+	}
 
-	/*
-	 public function buildTaskName() {
-		$this->_associativeArray[DataArrayKeyEnumeration::$name] =
-		$this->_CTaskObject->task_name;
-		//task_name;
-		}
+	public function buildPlannedEffort() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$plan_effort] =
+		$this->_CTaskObject->getEffort();
+	}
 
-		*/
+	public function buildActualEffort() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$act_effort] =
+		$this->_CTaskObject->getActualEffort();
+	}
 
+	public function buildPlannedCost() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$plan_cost] = 
+		$this->_CTaskObject->getBudget();
+	}
+	
+	public function buildActualCost() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$act_cost] =
+		$this->_CTaskObject->getActualCost();
+	}
+
+	public function buildPercentage() {
+		$this->_associativeArray[DataArrayKeyEnumeration::$percentage] =
+		$this->_CTaskObject->getProgress();
+	}
 }
 ?>
