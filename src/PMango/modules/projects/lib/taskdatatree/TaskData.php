@@ -118,20 +118,16 @@ class TaskData{
 	public function getCollapsed() {
 		if ($this->getVisibility()) {
 			if ($this->isAtomic()) {
-				return true;
+				return false;
 			}
-			//print "task " . $this->getInfo()->getTaskID() . " is visible";
-			if (count($this->getChildren()) > 0) {
+			else {
 				foreach ($this->getChildren() as $child) {
-					if($child->getCollapsed()) {
+					if($child->getVisibility) {
 						return false;
 					}
 						
 				}
 				return true;
-			}
-			else {
-				return false;
 			}
 		}
 		else {
@@ -140,7 +136,7 @@ class TaskData{
 	}
 
 	public function isAtomic() {
-		return count($this->getChildren()) < 1;
+		return $this->getVisibility() && count($this->getChildren()) < 1;
 	}
 
 	public function getVisibility(){
@@ -248,6 +244,25 @@ class TaskData{
 	}
 
 	public function visibilityCheck(){
+		$result = array();
+		
+		for($index = 0; $index < count($this->getChildren()); $index++) {
+			if($this->children[$index]->getVisibility()) {
+				$result[] = $this->children[$index];
+				$this->children[$index]->visibilityCheck();
+			}
+//			else {
+//				print "<br>task before deleting " . $this->children[$index]->getInfo()->getTaskID();
+//				//array_splice($this->children, $index, $index);
+//				unset($this->children[$index]);
+//				print "<br>task after deleting " . $this->children[$index]->getInfo()->getTaskID();
+//				$index++;
+//				//$this->children[$index] = null;
+//			}
+		}
+		
+		$this->children = $result;
+		return;
 		if($this->getCollapsed() || $this->isAtomic()) {
 			print $this->getInfo()->getTaskID() . " is collapsed?" . $this->getCollapsed();
 			print "<br>pruning children of: " . $this->getInfo()->getTaskID();
