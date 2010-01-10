@@ -117,11 +117,16 @@ class TaskData{
 
 	public function getCollapsed() {
 		if ($this->getVisibility()) {
+			if ($this->isAtomic()) {
+				return true;
+			}
+			//print "task " . $this->getInfo()->getTaskID() . " is visible";
 			if (count($this->getChildren()) > 0) {
 				foreach ($this->getChildren() as $child) {
 					if($child->getCollapsed()) {
 						return false;
 					}
+						
 				}
 				return true;
 			}
@@ -132,6 +137,10 @@ class TaskData{
 		else {
 			return false;
 		}
+	}
+
+	public function isAtomic() {
+		return count($this->getChildren()) < 1;
 	}
 
 	public function getVisibility(){
@@ -239,12 +248,15 @@ class TaskData{
 	}
 
 	public function visibilityCheck(){
-		if($this->getCollapsed()){
+		if($this->getCollapsed() || $this->isAtomic()) {
+			print $this->getInfo()->getTaskID() . " is collapsed?" . $this->getCollapsed();
+			print "<br>pruning children of: " . $this->getInfo()->getTaskID();
 			$this->children = null;
 		}
 		else {//if(!$this->getCollapsed()){
 			// if a haven't children the method doesn't cut anything
 			foreach($this->children as $son){
+				//print "<br>leaf: " . $son->getInfo()->getTaskID();
 				$son->visibilityCheck();
 			}
 		}

@@ -30,6 +30,20 @@ print "The following id will be draw: {" . implode(" - ",
 		$AppUI->getState("tasks_closed"))->getDrawableTasks()) . "}";
 
 print "<br>generating the tree";
-$tdt = new TaskDataTreeGenerator();
-$tdt->generateTaskDataTree();
+$tdtGenerator = new TaskDataTreeGenerator();
+$tdt = $tdtGenerator->generateTaskDataTree();
+
+print "<br>Getting the leaves...";
+$leaves = $tdt->getLeaves();
+foreach ($leaves as $leaf) {
+	print " " . $leaf->getInfo()->getTaskID();	
+}
+print "<br>Puning the unvisible tasks...";
+$tdt->getVisibleTree();
+print "<br>The new leaves are: ";
+$leaves = $tdt->getLeaves();
+foreach ($leaves as $leaf) {
+	print " " . $leaf->getInfo()->getTaskID();	
+}
+
 ?>
