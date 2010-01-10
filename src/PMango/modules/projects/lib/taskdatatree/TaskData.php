@@ -56,8 +56,8 @@ class TaskData{
 
 		$this->parent = null;
 		$this->info = $info;
-		$this->children = null;
-		$this->ftsDependencies = null;
+		//$this->children = null;
+		//$this->ftsDependencies = null;
 		$this->visible = false;
 	}
 

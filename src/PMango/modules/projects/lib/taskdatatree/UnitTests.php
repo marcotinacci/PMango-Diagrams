@@ -1,6 +1,7 @@
 <?php 
 require_once dirname(__FILE__).'/Task.php';
 require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
+require_once dirname(__FILE__) . '/TaskDataTreeGenerator.php';
 
 global $AppUI;
 $tasks_closed = $AppUI->getState("tasks_closed");
@@ -27,4 +28,8 @@ print "The following id will be draw: {" . implode(" - ",
 		$AppUI->getState('ExplodeTasks', '1'), 
 		$AppUI->getState("tasks_opened"),
 		$AppUI->getState("tasks_closed"))->getDrawableTasks()) . "}";
+
+print "<br>generating the tree";
+$tdt = new TaskDataTreeGenerator();
+$tdt->generate();
 ?>

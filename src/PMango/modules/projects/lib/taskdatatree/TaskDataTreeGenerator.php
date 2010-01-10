@@ -40,9 +40,11 @@ class TaskDataTreeGenerator{
 		die("Node '$id' not found!");
 	}
 
-	private function generate() {
+	public function generate() {
 		$tasks = $this->getData();
 
+		print "<br>Tasks count: " . count($tasks);
+		
 		$taskDatasMap = array();
 
 		global $AppUI;
@@ -54,21 +56,32 @@ class TaskDataTreeGenerator{
 		// for each task build a TaskData
 		foreach ($tasks as $task) {
 			$task_id = $task->getTaskID();
+			print "<br>" . $task_id;
+			
 			$taskData = new TaskData($task);
 			$taskDatasMap[$task_id] = $taskData;
 				
 			if(in_array($task_id, $visibleTasks)) {
 				$taskData->setVisibility(true);
+				print "task " . $task_id . " is visible";
 			}
 		}
 
 		$root = new TaskData();
 		foreach ($taskDatasMap as $task_id => $taskData) {
 			if ($taskData->getInfo()->isChildOfRoot()) {
+				print "<br>task " . $task_id . " is child of the root";
 				$root->addChild($taskData);
 			}
 			else {
 				$taskDatasMap[$taskData->getInfo()->getCTask()->task_parent]->addChild($taskData);
+			}
+		}
+		
+		foreach ($taskDatasMap as $key => $value) {
+			print "<br>" . $key . " ";
+			foreach ($value->getChildren() as $child) {
+				print "child: " . $child->getInfo()->getTaskID() . " ";
 			}
 		}
 
