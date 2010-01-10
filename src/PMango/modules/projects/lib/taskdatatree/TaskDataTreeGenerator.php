@@ -37,6 +37,7 @@ class TaskDataTreeGenerator{
 	 * @return TaskDataTree $tdt
 	 */
 	public function generateTaskDataTree(){
+		print "start tree generation<br>";
 		//$tasks contiene tutti i dati costruiti dal DataArrayBuilder
 		$tasks = $this->getData();
 		$root = new TaskData();
@@ -81,7 +82,7 @@ class TaskDataTreeGenerator{
 					$arr_task = explode(".", $tasks[$k]->getWBSId());
 					//ciclo sulla parte significativa dell'Id, delimitata da $i
 					//il controllo $i<sizeOf(arr_task) evita i
-					if($i<sizeOf($arr_task)){
+					if($i<=sizeOf($arr_task)){
 						for($s=0; $s<$i; $s++){
 							if($arr_curr[$s]!=$arr_task[$s]){
 								$descendant_of = false;
@@ -126,6 +127,7 @@ class TaskDataTreeGenerator{
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);
 		$tdt->setAllDependencies();
+		print "end tree generation";
 		return $tdt;
 	}
 	
