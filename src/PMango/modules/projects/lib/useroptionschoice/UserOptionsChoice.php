@@ -49,14 +49,14 @@ class UserOptionsChoice {
 	
 	
 	private $array;
-	/*
-	private function __construct($array) {
 	
-		$this->array = $array;
-	}*/
-	
+	public function setFromArray($arr){
+		
+	}
 	
 	// metodi che mostrano quali useroption ha selezionato l'utente
+	
+	//Common shows
 	
 	function showTaskNameUserOption() {
 		return isset($this->array[UserOptionEnumeration::$TaskNameUserOption]);
@@ -68,6 +68,10 @@ class UserOptionsChoice {
 	
 	function showLevelSpecificationUserOption() {
 		return $this->array[UserOptionEnumeration::$LevelSpecificationUserOption];
+	}
+	
+	function showImageDimensionUserOption() {
+		return isset($this->array[UserOptionEnumeration::$ImageDimensionUserOption]);
 	}
 	
 	function showCustomDimUserOption() {
@@ -110,6 +114,8 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption]);
 	}
 	
+	//Gantt shows
+	
 	function showEffortInformationUserOption() {
 		return isset($this->array[UserOptionEnumeration::$EffortInformationUserOption]);
 	}
@@ -117,7 +123,15 @@ class UserOptionsChoice {
 	function showFinishToStartDependenciesUserOption() {
 		return isset($this->array[UserOptionEnumeration::$FinishToStartDependenciesUserOption]);
 	}
-		
+	
+	function showTimeGrainUserOption() {
+		return $this->array[UserOptionEnumeration::$TimeGrainUserOption];
+	}
+	
+	function showTimeRangeUserOption() {
+		return isset($this->array[UserOptionEnumeration::$TimeRangeUserOption]);
+	}
+	
 	function showCustomRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
 	}
@@ -129,6 +143,8 @@ class UserOptionsChoice {
 	function showToEndRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$ToEndRangeUserOption]);
 	}
+	
+	//Task Network shows
 	
 	function showTimeGapsUserOption() {
 		return isset($this->array[UserOptionEnumeration::$TimeGapsUserOption]);
@@ -145,19 +161,7 @@ class UserOptionsChoice {
 	function showMaxCriticalPathNumberUserOption() {
 		return $this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
 	}
-	
-	function showTimeGrain() {
-		return $this->array[UserOptionEnumeration::$TimeGrainUserOption];
-	}
-	
-	function showImageDimensionUserOption() {
-		return isset($this->array[UserOptionEnumeration::$ImageDimensionUserOption]);
-	}
-	
-	function showTimeRangeUserOption() {
-		return isset($this->array[UserOptionEnumeration::$TimeRangeUserOption]);
-	}
-	
+
 	
 	public static function GetInstance() {
 		if(!isset(UserOptionsChoice::$instance)) {
