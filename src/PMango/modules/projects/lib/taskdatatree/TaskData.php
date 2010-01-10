@@ -11,26 +11,26 @@ require_once dirname(__FILE__)."/DeltaInfoEnum.php";
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 class TaskData{
-	
+
 	/**
 	 * Variabile di tipo Task, rappresenta le informazioni contenute nel nodo.
 	 * @var Task
 	 */
 	private $info;
-	
+
 	/**
 	 * Variabile di tipo TaskData, riferimento al nodo padre.
 	 * @var TaskData
 	 */
 	private $parent;
-	
+
 	/**
 	 * Variabile vettore di tipo TaskData,
 	 * riferimento all'insieme dei nodi figli.
 	 * @var TaskData[]
 	 */
 	private $children = array();
-	
+
 	/**
 	 * Variabile vettore di tipo TaskData,
 	 * riferimento ai task da cui il this dipende, nel senso delle
@@ -38,67 +38,67 @@ class TaskData{
 	 * @var TaskData[]
 	 */
 	private $ftsDependencies = array();
-	
+
 	/**
 	 * Variabile boolean settata a vero quando il task è collassato.
 	 * @var boolean
 	 */
-	private $collapsed;
-	
+	// private $collapsed;
+
 	/**
 	 * Variabile settata a vero quando il task è visibile
 	 * nella tipologia di esplosione richiesta dall'utente.
 	 * @var boolean
 	 */
 	private $visible;
-	
+
 	public function __construct($info = null){
 
 		$this->parent = null;
 		$this->info = $info;
 		$this->children = null;
 		$this->ftsDependencies = null;
-		$this->collapsed = false;
+		$this->visible = false;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param TaskData $parent
 	 */
 	public function setParent($parent){
 		$this->parent = $parent;
 	}
-	
-	
+
+
 	public function setInfo($info){
 		$this->info = $info;
 	}
-	
+
 	public function setChildren($children){
 		if($this->getInfo()==null){
-//		print "Setting children of root:<br>";
+			//		print "Setting children of root:<br>";
 		}else{
-//		print "Setting children of ".$this->getInfo()->getWBSId().":<br>";
+			//		print "Setting children of ".$this->getInfo()->getWBSId().":<br>";
 		}
 		for($i=0; $i<sizeOf($children); $i++){
-//			print $children[$i]->getInfo()->getWBSId()."<br>";
+			//			print $children[$i]->getInfo()->getWBSId()."<br>";
 			$children[$i]->setParent($this);
 		}
 		$this->children = $children;
 	}
-	
+
 	public function setFtsDependencies($ftsDependencies = null){
 		$this->ftsDependencies = $ftsDependencies;
 	}
-	
-	public function setCollapsed($collapsed){
-		$this->collapsed = $collapsed;
-	}
-	
+
+	//	public function setCollapsed($collapsed){
+	//		$this->collapsed = $collapsed;
+	//	}
+
 	public function setVisibility($visible){
 		$this->visible = $visible;
 	}
-	
+
 	public function getParent(){
 		return $this->parent;
 	}
@@ -106,7 +106,7 @@ class TaskData{
 	public function getInfo(){
 		return $this->info;
 	}
-	
+
 	public function getChildren(){
 		return $this->children;
 	}
@@ -114,22 +114,37 @@ class TaskData{
 	public function getFtsDependencies(){
 		return $this->ftsDependencies;
 	}
-	
-	public function getCollapsed(){
-		return $this->collapsed;
+
+	public function getCollapsed() {
+		if ($this->getVisibility()) {
+			if (count($this->getChildren()) > 0) {
+				foreach ($this->getChildren() as $child) {
+					if($child->getCollapsed()) {
+						return false;
+					}
+				}
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
 	}
-	
+
 	public function getVisibility(){
 		return $this->visible;
 	}
-	
+
 	/**
 	 * Metodo che consente di aggiungere un figlio alla lista dei figli del this.
 	 * @param TaskData
 	 */
-	public function addChild($td){
+	public function addChild($td) {
 		$td->setParent($this);
-		//$this->children[sizeOf($this->children)] = $td; 
+		//$this->children[sizeOf($this->children)] = $td;
 		$this->children[] = $td; // stessa cosa, append più leggibile
 	}
 	/**
@@ -144,7 +159,7 @@ class TaskData{
 		$planned_eff = $this->info->getPlannedEffort();
 		$actual_cost = $this->info->getActualCost();
 		$planned_cost = $this->info->getPlannedCost();
-		
+
 		if($actual_time["start_date"]>$planned_time["start_date"]){
 			return DeltaInfoEnum::$bad_news;
 		}
@@ -156,8 +171,8 @@ class TaskData{
 		}
 		if($actual_cost>$planned_cost){
 			return DeltaInfoEnum::$bad_news;
-		}		
-		
+		}
+
 		if($actual_time["start_date"]<$planned_time["start_date"]){
 			return DeltaInfoEnum::$good_news;
 		}
@@ -172,7 +187,7 @@ class TaskData{
 		}
 		return DeltaInfoEnum::$no_marks;
 	}
-	
+
 	public function deepVisit(){
 		$res = array();
 		$add = array();
@@ -187,7 +202,7 @@ class TaskData{
 		}
 		return $res;
 	}
-	
+
 	public function wideVisit(){
 		$res = array();
 		$add = array();
@@ -205,7 +220,7 @@ class TaskData{
 		}
 		return $res;
 	}
-	
+
 	public function getLeaves(){
 		$leaves = array();
 		$add = array();
@@ -218,16 +233,17 @@ class TaskData{
 				for ($i=0; $i<sizeOf($add); $i++){
 					$leaves[] = $add[$i];
 				}
-			}	
+			}
 		}
 		return $leaves;
 	}
-	
+
 	public function visibilityCheck(){
-		if($this->children!=null && $this->collapsed){
+		if($this->getCollapsed()){
 			$this->children = null;
 		}
-		else if(!$this->collapsed){
+		else {//if(!$this->getCollapsed()){
+			// if a haven't children the method doesn't cut anything
 			foreach($this->children as $son){
 				$son->visibilityCheck();
 			}

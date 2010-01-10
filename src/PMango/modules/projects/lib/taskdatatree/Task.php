@@ -134,6 +134,11 @@ class Task{
 	public function getCTask() {
 		return $this->_cTask;
 	}
+	
+	public function isChildOfRoot() {
+		return $this->getCTask()->task_parent == $this->getCTask()->task_id;
+	}
+	
 }
 /*
 // the following lines are for testing...as soon as possible I move them

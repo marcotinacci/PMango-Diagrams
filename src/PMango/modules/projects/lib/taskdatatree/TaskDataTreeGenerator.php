@@ -12,36 +12,72 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 
-	require_once dirname(__FILE__)."/TaskDataTree.php";
- 	require_once dirname(__FILE__)."/TaskData.php";
-	require_once dirname(__FILE__)."/Task.php";
-	require_once dirname(__FILE__).'/StubTaskDataTree.php';	
-	require_once dirname(__FILE__).'/../../../../includes/db_connect.php';
-	require_once dirname(__FILE__).'/../../../../includes/main_functions.php';
+require_once dirname(__FILE__)."/TaskDataTree.php";
+require_once dirname(__FILE__)."/TaskData.php";
+require_once dirname(__FILE__)."/Task.php";
+require_once dirname(__FILE__).'/StubTaskDataTree.php';
+require_once dirname(__FILE__).'/../../../../includes/db_connect.php';
+require_once dirname(__FILE__).'/../../../../includes/main_functions.php';
 
 class TaskDataTreeGenerator{
 
 	/**
-	 * Questo metodo genera un TaskDataTree utilizzando getData() per 
+	 * Questo metodo genera un TaskDataTree utilizzando getData() per
 	 * recuperare i dati dal DB (considerando le uoc).
 	 * @return TaskDataTree
-	 */	
+	 */
 	public function stubGenerateTaskDataTree(){
 		return new StubTaskDataTree();
 	}
-	
+
 	private function findTaskDataIdInArray($array,$id)
 	{
 		foreach($array as $a)
 		{
 			if($a->getInfo()->getWbsId() == $id)
-				return $a;
+			return $a;
 		}
 		die("Node '$id' not found!");
 	}
-	
+
+	private function generate() {
+		$tasks = $this->getData();
+
+		$taskDatasMap = array();
+
+		global $AppUI;
+		$visibleTasks = $visible_tasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
+		$AppUI->getState('ExplodeTasks', '1'),
+		$AppUI->getState("tasks_opened"),
+		$AppUI->getState("tasks_closed"))->getDrawableTasks();
+
+		// for each task build a TaskData
+		foreach ($tasks as $task) {
+			$task_id = $task->getTaskID();
+			$taskData = new TaskData($task);
+			$taskDatasMap[$task_id] = $taskData;
+				
+			if(in_array($task_id, $visibleTasks)) {
+				$taskData->setVisibility(true);
+			}
+		}
+
+		$root = new TaskData();
+		foreach ($taskDatasMap as $task_id => $taskData) {
+			if ($taskData->getInfo()->isChildOfRoot()) {
+				$root->addChild($taskData);
+			}
+			else {
+				$taskDatasMap[$taskData->getInfo()->getCTask()->task_parent]->addChild($taskData);
+			}
+		}
+
+		return $root;
+
+	}
+
 	/**
-	 * Questo metodo genera un TaskDataTree utilizzando getData() per 
+	 * Questo metodo genera un TaskDataTree utilizzando getData() per
 	 * recuperare i dati dal DB (considerando le uoc).
 	 * @param UserOptionsChoice $uoc
 	 * @return TaskDataTree $tdt
@@ -53,7 +89,7 @@ class TaskDataTreeGenerator{
 		$root = new TaskData();
 		global $AppUI;
 		/*$visible_tasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
-			$AppUI->getState('ExplodeTasks', '1'), 
+			$AppUI->getState('ExplodeTasks', '1'),
 			$AppUI->getState("tasks_opened"),
 			$AppUI->getState("tasks_closed"))->getDrawableTasks();*/
 		/////cerco il wbsID più lungo per sapere il livello massimo
@@ -65,7 +101,7 @@ class TaskDataTreeGenerator{
 				$max = sizeOf($level);
 			}
 		}
-		
+
 		/////costruzione primo livello
 		$first_level = array();
 		for($i=0; $i<sizeOf($tasks); $i++){
@@ -74,7 +110,7 @@ class TaskDataTreeGenerator{
 			}
 		}
 		$root->setChildren($first_level);
-		
+
 		/////inizializzazione variabili necessarie alla costruzione
 		//next_level viene costruito via via, e verrà utilizzato per il ciclo successivo
 		$next_level = array();
@@ -85,9 +121,9 @@ class TaskDataTreeGenerator{
 		//variabile booleana per il controllare se un task è sottotask di un altro
 		$descendant_of = true;
 		for($i=1; $i<$max; $i++){
-			for($j=0; $j<sizeOf($curr_level); $j++){	
+			for($j=0; $j<sizeOf($curr_level); $j++){
 				for($k=0; $k<sizeOf($tasks); $k++){
-					//prendo gli array contenenti i vari pezzi dell'Id del current e del task 
+					//prendo gli array contenenti i vari pezzi dell'Id del current e del task
 					$arr_curr = explode(".", $curr_level[$j]->getInfo()->getWBSId());
 					$arr_task = explode(".", $tasks[$k]->getWBSId());
 					//ciclo sulla parte significativa dell'Id, delimitata da $i
@@ -133,24 +169,24 @@ class TaskDataTreeGenerator{
 			}
 			$curr_level = $next_level;
 		}
-		
+
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);
 		$tdt->setAllDependencies();
 		//print "end tree generation";
 		return $tdt;
 	}
-	
+
 	/**
 	 * Metodo per l'accesso ai dati dei task. Si prende i task_id (differenza tra task_id e wbs_id)
 	 * e si utilizza il metodo makeTask passando gli id dei task per ritornare un array di Task.
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
-	//	$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
+		//	$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
 		$recovered_data = array();
 		$task_ids = array();
-		defVal(@$_REQUEST['project_id'], 0);
+		$project_id = defVal(@$_REQUEST['project_id'], 0);
 		if($project_id==0){
 			die("ERROR: project not found!");
 		}
