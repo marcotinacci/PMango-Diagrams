@@ -94,21 +94,21 @@ class DrawingHelper
 		{
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$lineStyle);
-				
+
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
 			$curEndX   = $curStartX+$hDottedOffset;
 			$curEndY   = $m*$curEndX+$q;
 			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$dottedStyle);
-				
+
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
 			$curEndX   = $curStartX+$hNormalOffset;
 			$curEndY   = $m*$curEndX+$q;
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curEndY,$gifImage,$lineStyle);
-				
+
 			$curStartX = $curEndX;
 			$curStartY = $curEndY;
 			$curEndX   = $curStartX+$hNormalOffset;
@@ -151,17 +151,17 @@ class DrawingHelper
 		{
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curStartX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curStartX,$curEndY,$gifImage,$lineStyle);
-				
+
 			$curStartY = $curEndY;
 			$curEndY   = $curEndY+$dottedLength;
 			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curStartX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curStartX,$curEndY,$gifImage,$dottedStyle);
-				
+
 			$curStartY = $curEndY;
 			$curEndY   = $curEndY+$vOffset;
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curStartX , y2=$curEndY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curStartX,$curEndY,$gifImage,$lineStyle);
-				
+
 			$curStartY = $curEndY;
 			$curEndY   = $curEndY+$vOffset;
 		}
@@ -200,17 +200,17 @@ class DrawingHelper
 		{
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curStartY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curStartY,$gifImage,$lineStyle);
-				
+
 			$curStartX = $curEndX;
 			$curEndX   = $curEndX+$dottedLength;
 			DrawingHelper::debug("dotted | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curStartY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curStartY,$gifImage,$dottedStyle);
-				
+
 			$curStartX = $curEndX;
 			$curEndX   = $curEndX+$hOffset;
 			DrawingHelper::debug("normal | x1=$curStartX , y1=$curStartY => x2=$curEndX , y2=$curStartY");
 			DrawingHelper::NormalLineFromTo($curStartX,$curStartY,$curEndX,$curStartY,$gifImage,$lineStyle);
-				
+
 			$curStartX = $curEndX;
 			$curEndX   = $curEndX+$hOffset;
 		}
@@ -430,41 +430,106 @@ class DrawingHelper
 		$halfX = ($x2-$x1)/2;
 		if($middleIn && $middleOut)
 		{
-			//OK
-			DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$halfQuote,$gifImage,$lineStyle);
-			DrawingHelper::LineFromTo($x1,$y1+$halfQuote,$x2,$y1+$halfQuote,$gifImage,$lineStyle);
-			DrawingHelper::LineFromTo($x2,$y1+$halfQuote,$x2,$y2,$gifImage,$lineStyle);
-			if($endWithArrow && $y2>$y1)
-			DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
-			if($endWithArrow && $y2<$y1)
-			DrawingHelper::drawArrow($x2,$y2,10,10,"up",$gifImage);
-		}
-		else if(!$middleIn && $middleOut)
-		{
-			//????
-			if($x1<=$x2)
+			if($y1<$y2)
 			{
 				DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$halfQuote,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x1,$y1+$halfQuote,$x1+$halfX,$y1+$halfQuote,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
+				DrawingHelper::LineFromTo($x1,$y1+$halfQuote,$x2,$y1+$halfQuote,$gifImage,$lineStyle);
+				DrawingHelper::LineFromTo($x2,$y1+$halfQuote,$x2,$y2,$gifImage,$lineStyle);
 				if($endWithArrow)
-				DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+				DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
 			}
 			else
 			{
-				DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y1+$halfQuote,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x1+$offset,$y1+$halfQuote,$x2-$offset,$y1+$halfQuote,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x2-$offset,$y1+$halfQuote,$x2-$offset,$y2,$gifImage,$lineStyle);
-				DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+				DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
+				DrawingHelper::LineFromTo($x1,$y1+$offset,$x2,$y1+$offset,$gifImage,$lineStyle);
+				DrawingHelper::LineFromTo($x2,$y1+$offset,$x2,$y2,$gifImage,$lineStyle);
 				if($endWithArrow)
-				DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+				DrawingHelper::drawArrow($x2,$y2,10,10,"up",$gifImage);
+			}
+		}
+		else if(!$middleIn && $middleOut)
+		{
+			if($y1<$y2)
+			{
+				if($x1<=$x2)
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1,$y2,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1,$y2,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+				}
+				if($x1>$x2)
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$halfQuote,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1,$y1+$halfQuote,$x2-$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2-$offset,$y1+$halfQuote,$x2-$offset,$y2,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+				}
+			}
+			else
+			{
+				if($x1<=$x2)
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
+					DrawingHelper::GanttDependencyLine($x1,$y1+$offset,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+				}
+				else
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1,$y1+$offset,$x2-$offset,$y1+$offset,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2-$offset,$y1+$offset,$x2-$offset,$y2,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+				}
 			}
 		}
 		else if($middleIn && !$middleOut)
 		{
-			//?
+			if($y1<$y2)
+			{
+				if($x1<=$x2)
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x2,$y1,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2,$y1,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
+				}
+				if($x1>$x2)
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1+$offset,$y1+$halfQuote,$x2,$y1+$halfQuote,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2,$y1+$halfQuote,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
+				}
+			}
+			else
+			{
+				if($x1<=$x2)
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1+$halfX,$y1,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1+$halfX,$y1,$x1+$halfX,$y2-$offset,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1+$halfX,$y2-$offset,$x2,$y2-$offset,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2,$y2-$offset,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
+				}
+				else
+				{
+					DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y2-$offset,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x1+$offset,$y2-$offset,$x2,$y2-$offset,$gifImage,$lineStyle);
+					DrawingHelper::LineFromTo($x2,$y2-$offset,$x2,$y2,$gifImage,$lineStyle);
+					if($endWithArrow)
+					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
+				}
+			}
 		}
 		else if(!$middleIn && !$middleOut)
 		{
