@@ -75,12 +75,13 @@ class TaskData{
 	}
 	
 	public function setChildren($children){
-		if($this->getInfo()==null)
-		print "Setting children of root:<br>";
-		else
-		print "Setting children of ".$this->getInfo()->getWBSId().":<br>";
+		if($this->getInfo()==null){
+//		print "Setting children of root:<br>";
+		}else{
+//		print "Setting children of ".$this->getInfo()->getWBSId().":<br>";
+		}
 		for($i=0; $i<sizeOf($children); $i++){
-			print $children[$i]->getInfo()->getWBSId()."<br>";
+//			print $children[$i]->getInfo()->getWBSId()."<br>";
 			$children[$i]->setParent($this);
 		}
 		$this->children = $children;

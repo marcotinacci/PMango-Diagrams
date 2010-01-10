@@ -37,7 +37,7 @@ class TaskDataTreeGenerator{
 	 * @return TaskDataTree $tdt
 	 */
 	public function generateTaskDataTree(){
-		print "start tree generation<br>";
+		//print "start tree generation<br>";
 		//$tasks contiene tutti i dati costruiti dal DataArrayBuilder
 		$tasks = $this->getData();
 		$root = new TaskData();
@@ -127,7 +127,7 @@ class TaskDataTreeGenerator{
 		$tdt = new TaskDataTree();
 		$tdt->setRoot($root);
 		$tdt->setAllDependencies();
-		print "end tree generation";
+		//print "end tree generation";
 		return $tdt;
 	}
 	

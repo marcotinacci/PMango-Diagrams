@@ -88,6 +88,16 @@ class GifGanttTask extends GifArea
 	{
 		parent::__construct($xStart, $y, $xFinish - $xStart, $height);
 
+		// DEBUG
+/*		echo '<br>x start: '.$xStart;
+		echo '<br>x finish: '.$xFinish;
+		echo '<br>y: '.$y;
+		echo '<br>height: '.$height;
+		echo '<br>start date: '.$startDate;
+		echo '<br>finish date: '.$finishDate;
+		echo '<br>today: '.$today;
+*/
+
 		// task data
 		$this->td = $taskData;
 
@@ -97,7 +107,7 @@ class GifGanttTask extends GifArea
 		$finishTS = toTimeStamp($finishDate);
 		$windowDuration = $finishTS - $startTS;
 		
-		// dai odierni
+		// dati odierni
 		$todayTS = toTimeStamp($today);
 				
 		// dati task planned
@@ -180,15 +190,17 @@ class GifGanttTask extends GifArea
 			);
 		$this->subAreas['Planned']->setForeColor($cPlanned);
 
-		// costruzione actual
-		$this->subAreas['ActualProgress'] = new GifProgressBar(
-			$xActual,
-			$hPlanned,
-			$wActual,
-			intval($height/3),
-			$this->td->getInfo()->getPercentage()
+		if($this->actualStarted){
+			// costruzione actual
+			$this->subAreas['ActualProgress'] = new GifProgressBar(
+				$xActual,
+				$hPlanned,
+				$wActual,
+				intval($height/3),
+				$this->td->getInfo()->getPercentage()
 			);
-
+		}
+		
 		// riga di collegamento actual-planned
 		$this->xP = $xPlanned;
 		$this->wP = $wPlanned;
