@@ -16,8 +16,6 @@ Class UserOptionEnumeration {
 	// Common
 	
 	public static  $TaskNameUserOption = "TaskNameUserOption";
-	public static  $ImageDimensionUserOption = "ImageDimensionUserOption";
-	public static  $CustomDimUserOption = "CustomDimUserOption";
 	public static  $OpenInNewWindowUserOption = "OpenInNewWindowUserOption";
 	public static  $PlannedDataUserOption = "PlannedDataUserOption";
 	public static  $PlannedTimeFrameUserOption = "PlannedTimeFrameUserOption";
@@ -34,11 +32,6 @@ Class UserOptionEnumeration {
 	
 	public static $EffortInformationUserOption = "EffortInformationUserOption";
 	public static $FinishToStartDependenciesUserOption = "FinishToStartDependenciesUserOption";
-	public static $TimeGrainUserOption = "TimeGrainUserOption";
-	public static $TimeRangeUserOption = "TimeRangeUserOption";
-	public static $CustomRangeUserOption = "CustomRangeUserOption";
-	public static $FromStartRangeUserOption = "FromStartRangeUserOption";
-	public static $ToEndRangeUserOption = "ToEndRangeUserOption";
 	
 	
 	

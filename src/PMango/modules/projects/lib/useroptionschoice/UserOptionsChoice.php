@@ -61,6 +61,7 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$TaskNameUserOption]);
 	}
 
+	//return type of Image Dimension requested by the user: defaultDimension default
 	function getImageDimensionUserOption() {
 		if(isset($this->array[ImageDimension::$OptimalDimUserOption])){
 			return ImageDimension::$OptimalDimUserOption;
@@ -71,18 +72,18 @@ class UserOptionsChoice {
 		if(isset($this->array[ImageDimension::$CustomDimUserOption])){
 			return ImageDimension::$CustomDimUserOption;
 		}
-		if(isset($this->array[ImageDimension::$DefaultDimUserOption])){
-			return ImageDimension::$OptimalDimUserOption;
+		else{
+			return ImageDimension::$DefaultDimUserOption;
 		}
 	}
 
-	function getCustomDim(){
+	function getCustomDimValues(){
 		$custom_dim = array("width"=>$this->array[ImageDimension::$CustomWidthUserOption],
 							"height"=>$this->array[$CustomHeightUserOption]);
 		return $custom_dim;
 	}
 
-	function getDefaultDim(){
+	function getDefaultDimValues(){
 		$def_dim = array("width"=>$this->array[ImageDimension::$DefaultWidthUserOption],
 							"height"=>$this->array[$DefaultHeightUserOption]);
 		return $def_dim;
@@ -138,14 +139,44 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$FinishToStartDependenciesUserOption]);
 	}
 
-	function showTimeGrainUserOption() {
-		return $this->array[UserOptionEnumeration::$TimeGrainUserOption];
+	//return type of time grain requested by the user: monthly default.
+	function getTimeGrainUserOption() {
+		if(isset($this->array[TimeGrainEnum::$HourlyGrainUserOption])){
+			return TimeGrainEnum::$HourlyGrainUserOption;
+		}
+		if(isset($this->array[TimeGrainEnum::$DailyGrainUserOption])){
+			return TimeGrainEnum::$DailyGrainUserOption;
+		}
+		if(isset($this->array[TimeGrainEnum::$AnnuallyGrainUserOption])){
+			return TimeGrainEnum::$AnnuallyGrainUserOption;
+		}
+		else{
+			return TimeGrainEnum::$MonthlyGrainUserOption;
+		}
 	}
 
-	function showTimeRangeUserOption() {
-		return isset($this->array[UserOptionEnumeration::$TimeRangeUserOption]);
+	//returns the type of visualization range requested by the user: FromNowToEnd default
+	function getTimeRangeUserOption() {
+		if(isset($this->array[TimeRange::$CustomRangeUserOption])){
+			return TimeRange::$CustomRangeUserOption;
+		}
+		if(isset($this->array[TimeRange::$WholeProjectRangeUserOption])){
+			return TimeRange::$WholeProjectRangeUserOption;
+		}
+		if(isset($this->array[TimeRange::$FromStartToNowRangeUserOption])){
+			return TimeRange::$FromStartToNowRangeUserOption;
+		}
+		else{
+			return TimeRange::$FromNowToEndRangeUserOption;
+		}
 	}
 
+	function getCustomRangeValues(){
+		$custom_range = array("start"=>$this->array[TimeRange::$CustomStartDateUserOption],
+							"end"=>$this->array[$CustomEndDateUserOption]);
+		return $custom_range;
+	}
+	
 	function showCustomRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
 	}
@@ -168,11 +199,11 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]);
 	}
 
-	function getCriticalPathUserOption() {
-		return $this->array[UserOptionEnumeration::$CriticalPathUserOption];
+	function showCriticalPathUserOption() {
+		return isset($this->array[UserOptionEnumeration::$CriticalPathUserOption]);
 	}
 
-	function showMaxCriticalPathNumberUserOption() {
+	function getMaxCriticalPathNumberUserOption() {
 		return $this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
 	}
 

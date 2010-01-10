@@ -13,10 +13,12 @@
 
 Class TimeRange {
 	
-	public static  $CustomRangeUserOption = "CustomRangeUserOption";
-	public static  $WholeProjectRangeUserOption = "WholeProjectRangeUserOption";
-	public static  $FromStartRangeUserOption = "FromStartRangeUserOption";
-	public static  $ToEndRangeUserOption = "ToEndRangeUserOption";
+	public static $CustomRangeUserOption = "CustomRangeUserOption"; //boolean
+	public static $CustomStartDateUserOption = "CustomStartDateUserOption"; //date
+	public static $CustomEndDateUserOption = "CustomFinishDateUserOption"; //date
+	public static $WholeProjectRangeUserOption = "WholeProjectRangeUserOption"; //boolean
+	public static $FromStartToNowRangeUserOption = "FromStartToNowRangeUserOption"; //boolean
+	public static $FromNowToEndRangeUserOption = "FromNowToEndRangeUserOption"; //boolean
 }
 
 ?>

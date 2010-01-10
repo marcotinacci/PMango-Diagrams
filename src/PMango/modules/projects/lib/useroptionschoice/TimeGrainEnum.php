@@ -13,11 +13,11 @@
 
 Class TimeGrainEnum {
 	
-	public static  $HourlyGrainUserOption = "HourlyGrainUserOption";
-	public static  $DailyGrainUserOption = "DailyGrainUserOption";
-	public static  $WeaklyGrainUserOption = "WeaklyGrainUserOption";
-	public static  $MonthlyGrainUserOption = "MonthlyGrainUserOption";
-	public static  $AnnuallyGrainUserOption = "AnnuallyGrainUserOption";
+	public static  $HourlyGrainUserOption = "HourlyGrainUserOption"; //boolean
+	public static  $DailyGrainUserOption = "DailyGrainUserOption"; //boolean
+	public static  $WeaklyGrainUserOption = "WeaklyGrainUserOption"; //boolean
+	public static  $MonthlyGrainUserOption = "MonthlyGrainUserOption"; //boolean
+	public static  $AnnuallyGrainUserOption = "AnnuallyGrainUserOption"; //boolean
 }
 
 ?>
