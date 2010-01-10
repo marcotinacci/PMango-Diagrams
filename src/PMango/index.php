@@ -56,7 +56,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 */
 
 ini_set('display_errors', 1); // Ensure errors get to the user.
-error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 // If you experience a 'white screen of death' or other problems,
 // uncomment the following line of code:
