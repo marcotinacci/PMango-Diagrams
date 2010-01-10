@@ -1277,8 +1277,8 @@ function PM_makeWbsPdf($pdf,$generatorUrl)
 	//Title
 	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
 	//Logo
-	$pdf=new FPDF();
-	$pdf->Image($generatorUrl,11,17,100,100,"gif");
+	//$pdf=new FPDF();
+	$pdf->Image($generatorUrl,11,17);
 	//Line break
 	$pdf->Ln(10);
 }

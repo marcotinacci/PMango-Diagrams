@@ -11,6 +11,7 @@ class GifLabel extends GifArea
 	private $bold = false;
 	private $vAlign = "center";
 	private $hAlign = "center";
+	private $truncate = true;
 	
 	public function __construct($x, $y, $width, $height, $text, $size)
 	{
@@ -28,6 +29,16 @@ class GifLabel extends GifArea
 	public function setFontSize($size)
 	{
 		$this->size=$size;
+	}
+	
+	public function getTruncate()
+	{
+		return $this->truncate;
+	}
+	
+	public function setTruncate($bool)
+	{
+		$this->truncate=$bool;
 	}
 	
 	public function setText($txt)
@@ -82,7 +93,9 @@ class GifLabel extends GifArea
 
 	protected function canvasDraw()
 	{
-		$txt = $this->TruncateText($this->text,$this->width,$this->size);
+		$txt=$this->text;
+		if($this->truncate)
+			$txt = $this->TruncateText($this->text,$this->width,$this->size);
 		$this->canvas->img->SetTransparent("white");
 		
 		$xc = intval($this->width/2);
