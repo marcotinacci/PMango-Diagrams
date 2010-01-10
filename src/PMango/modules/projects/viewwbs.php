@@ -149,7 +149,7 @@ function setCalendar( idate, fdate ) {
                 <input type="hidden" name="display_option" value="<?php echo $display_option; ?>" />
 
                 <td valign="top">
-                    <input type="checkbox" value='1' name="<?php ?>"> <?php echo "ShowPlannedData"; ?>
+                    <input type="checkbox" value='1' name="<?php  ?>"> <?php echo "ShowPlannedData"; ?>
                 </td>
 				
 				</tr>
