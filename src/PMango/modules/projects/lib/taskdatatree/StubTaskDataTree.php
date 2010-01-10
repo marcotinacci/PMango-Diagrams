@@ -42,7 +42,7 @@ class StubTaskDataTree {
 		$D->setFtsDependencies(array($F));
 		
 		// Nodi collassati
-		$B->setCollapsed(true);
+//		$B->setCollapsed(true);
 	}
 	
 	/**
