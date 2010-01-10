@@ -13,7 +13,7 @@ require_once dirname(__FILE__).'/../utils/TimeUtils.php';
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.5
+ * @version: 0.7
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -101,6 +101,29 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected $today;
 	
+	/**
+	 * x punto centrale
+	 * @var int
+	 */
+	protected $xCenter;
+	
+	/**
+	 * y punto centrale
+	 * @var int
+	 */
+	protected $yCenter;	
+	
+	/**
+	 * vettore dei task
+	 * @var tasks[]
+	 */
+	protected $tasks = array();
+	
+	/**
+	 * vettore di task grafici
+	 * @var GifGanttTask[]
+	 */
+	protected $gTasks = array();
 	
 	/**
 	 * Costruttore
@@ -114,19 +137,30 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	public function generateChart(){
-		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
+		// genera l'albero dei task
+		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree();
+		// visita l'albero
+		$this->tasks = $this->tdt->deepVisit();
+		// calcola una sola volta il numero dei task dell'albero
+		$this->numTasks = sizeOf($this->tasks);
 		
 		// TODO: stub date, prenderle dalle uoc
-		$this->sDate = date('Y-m-d H:i:s',mktime(10,0,0,1,13,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(12,30,0,1,14,2010));
-		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
+		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,13,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(12,0,0,1,14,2010));
+		$this->today = date('Y-m-d H:i:s',mktime(12,0,0,1,20,2010));
 		
 		// TODO: opzioni utente
 		$this->grainLevel = 5;
 		
-		// calcola una sola volta il numero dei task dell'albero
-		$this->numTasks = sizeOf($this->tdt->deepVisit());
+		// costruisci il canvas
 		$this->makeCanvas();
+				
+		// fissa le coordinate del punto centrale
+		$this->xCenter = $this->chart->getWidth() * $this->leftColumnSpace;
+		$this->yCenter = $this->chart->getHeight() - 
+			$this->numTasks*($this->verticalSpace + $this->labelHeight) - 
+			$this->verticalSpace - $this->tol;
+		
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
@@ -139,8 +173,9 @@ class GanttChartGenerator extends ChartGenerator{
 	protected function makeCanvas(){
 		// TODO: prendere la larghezza dalla dimensione della finestra
 		$this->chart = new GifImage(800, 
-			$this->grainLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +
-			$this->labelHeight) + $this->verticalSpace + 2*$this->tol);
+			$this->grainLevel * $this->labelGrainHeight + 2*$this->tol + 
+			$this->numTasks*($this->verticalSpace + $this->labelHeight) + 
+			$this->verticalSpace);
 	}
 
 	/**
@@ -160,39 +195,45 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Funzione di generazione della testata del diagramma
 	 */	
 	protected function makeFront(){
-		// TODO: spostare a var di istanza
 		// titolo progetto
-		$titleWidth = $this->chart->getWidth()*$this->leftColumnSpace;
-		$frontWidth = $this->chart->getWidth() - $titleWidth;
+		$frontWidth = $this->chart->getWidth() - $this->xCenter;
 		
 		// generazione calendario
-		$xCal = $titleWidth + $this->tol;
 		$yCal = $this->tol;
 		$wCal = $this->chart->getWidth() - $xCal - $this->tol;
-		$startTS = toTimeStamp($this->sDate);
-		$finishTS = toTimeStamp($this->fDate);
+		$startTS = strtotime($this->sDate);
+		$finishTS = strtotime($this->fDate);
 		
 		for($i = $this->grainLevel ; $i > 0 ; $i--){
-			$this->makeCalLine($startTS,$finishTS,$xCal,$wCal,$i);
+			if($i ==  $this->grainLevel){
+				$this->makeCalLine(
+					$startTS,
+					$finishTS,
+					$i,
+					true,
+					$this->chart->getHeight() - $this->tol
+				);
+			}else{
+				$this->makeCalLine(
+					$startTS,
+					$finishTS,
+					$i
+				);				
+			}
 		}
-
-		$this->makeTitle();
 	}
 	
 	/**
 	 * Funzione di generazione grafica della label del titolo del progetto
 	 */
 	protected function makeTitle(){
-		// TODO: spostare a var di istanza
 		// titolo progetto
-		$titleWidth = $this->chart->getWidth()*$this->leftColumnSpace;
-		$frontWidth = $this->chart->getWidth() - $titleWidth;
 		// TODO: titolo progetto
 		$title = new GifBoxedLabel(
 			$this->tol, // x
 			$this->tol, // y
-			$titleWidth, // larghezza
-			$this->grainLevel*$this->labelGrainHeight, // altezza
+			$this->xCenter - $this->tol, // larghezza
+			$this->yCenter - $this->tol, // altezza
 			"Project Title", // titolo
 			$this->fontSize // dim font
 			);
@@ -205,17 +246,14 @@ class GanttChartGenerator extends ChartGenerator{
 	 * sinistra
 	 */
 	protected function makeLeftColumn(){
-		// larghezza della colonna sinistra
-		$wLeftCol = $this->chart->getWidth()*$this->leftColumnSpace;
 		$xLeftCol = $this->tol;
-		$yLeftCol = $this->tol + $this->grainLevel * $this->labelGrainHeight;
+		$yLeftCol = $this->yCenter;//$this->tol + $this->grainLevel * $this->labelGrainHeight;
 		// disegno il box della colonna sinistra
 		$leftCol = new GifBox(
 			$xLeftCol, // x
 			$yLeftCol, // y
-			$wLeftCol, // larghezza 
-			$this->chart->getHeight() - $this->grainLevel * $this->labelGrainHeight 
-			- 2*$this->tol // altezza
+			$this->xCenter - $this->tol, // larghezza 
+			$this->chart->getHeight() - $this->yCenter - $this->tol // altezza
 		);
 		
 // TODO: commentato per vedere i task sottostanti, decommentare poi
@@ -239,8 +277,8 @@ class GanttChartGenerator extends ChartGenerator{
 			$label = new GifLabel(
 				$xLeftCol + $this->tol, //+ $indent, // x
 				$this->verticalSpace + $yLeftCol + 
-				($i * ($this->verticalSpace + $this->labelHeight)), // y
-				$wLeftCol - $indent, // width
+					($i * ($this->verticalSpace + $this->labelHeight)), // y
+				$this->xCenter - $xLeftCol, // width
 				$this->labelHeight, // height
 				$label, // label
 				$this->fontSize // size
@@ -257,46 +295,40 @@ class GanttChartGenerator extends ChartGenerator{
 	protected function makeRightColumn(){
 		// larghezza della colonna destra
 		$wRightCol = $this->chart->getWidth()*(1-$this->leftColumnSpace);
-
-		$this->makeGrid();		
+	
 		// disegno il box della colonna destra
 		$rightCol = new GifBox(
-			$this->chart->getWidth() - $wRightCol + $this->tol,
+			$this->xCenter,
 			$this->tol,
-			$wRightCol - 2*$this->tol - 1,
+			$this->chart->getWidth() - $this->xCenter - $this->tol -1,//$wRightCol - 2*$this->tol - 1,
 			$this->chart->getHeight() - 2*$this->tol
 		);
 		$rightCol->drawOn($this->chart);
 
 		$this->makeFront();
+		$this->makeTitle();		
 		$this->makeGanttDependencies();		
 		$this->makeGanttTaskBox();
+		$this->makeTodayLine();
 	}
-	
-	/**
-	 * Funzione di generazione grafica della griglia
-	 */	
-	protected function makeGrid(){
-		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
-		$yGrid = $this->grainLevel * $this->labelGrainHeight + $this->tol;
-		$xfGrid = $this->chart->getWidth() - $this->tol;
-		$yfGrid = $this->chart->getHeight() - $this->tol;
-		
-		// TODO: stub granularità (stessa di make front!) da uoc
-		$granWidth = 41;
-		
-		for($i=$xGrid; $i < $xfGrid; $i = $i + $granWidth){
-			DrawingHelper::LineFromTo(
-				$i,
-				$yGrid,
-				$i,
-				$yfGrid,
-				$this->chart,
-				new LineStyle('gray')
-				);
-		}
 
+	/**
+	 * Funzione di generazione della barra today
+	 */
+	protected function makeTodayLine(){
+		$currentTS = strtotime($this->today);
+		$startTS = strtotime($this->sDate);
+		$finishTS = strtotime($this->fDate);
+		$xCal = $titleWidth + $this->tol;
+		$wCal = $this->chart->getWidth() - $xCal - $this->tol;
 		
+		$x = intval($this->xCenter + 
+			($this->chart->getWidth() - $this->xCenter - $this->tol) * 
+			($currentTS-$startTS)/($finishTS-$startTS));
+		$y = $this->yCenter;
+		$yf = $this->chart->getHeight() - $this->tol;
+		
+		DrawingHelper::LineFromTo($x,$y,$x,$yf,$this->chart,new LineStyle('black',1,'longdashed'));
 	}
 	
 	/**
@@ -313,25 +345,14 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		// TODO: spostare a variabili di istanza
 		$visit = $this->tdt->deepVisit();
-
+		$gTasks = array();
 		for($i = 0; $i < sizeOf($visit); $i++)
 		{
-			$dt = $visit[$i];                   			
-
-			// DEBUG
-/*			echo '<br>x grid: '.$xGrid;
-			echo '<br>x finish grid: '.$xfGrid;
-			echo '<br>y start: '.($yGrid + $this->verticalSpace + 
-			($i * ($this->verticalSpace + $this->labelHeight)));
-			echo '<br>start date: '.$this->sDate;
-			echo '<br>finish date: '.$this->fDate;
-			echo '<br>today: '.$this->today;
-*/
-			$gTask = new GifGanttTask(
-				$xGrid, // x start
-				$xfGrid-1, // x finish
-				$yGrid + $this->verticalSpace + 
-				($i * ($this->verticalSpace + $this->labelHeight)), // y start
+			$dt = $visit[$i];
+			$gTasks[$i] = new GifGanttTask(
+				$this->xCenter, // x start
+				$this->chart->getWidth() - $this->tol -1, // x finish
+				$this->yCenter + $this->verticalSpace + $i*($this->verticalSpace + $this->labelHeight), // y start
 				$this->labelHeight, // height
 				$this->sDate, // startDate
 				$this->fDate, // finishDate
@@ -339,13 +360,15 @@ class GanttChartGenerator extends ChartGenerator{
 				$this->today, // today
 				$this->uoc // opzioni utente
 				);	
-			$gTask->drawOn($this->chart);
+			$gTasks[$i]->drawOn($this->chart);
 		}
 
 	}
 	
 	/**
-	 * Funzione di generazione grafica di una dipendenza tra due task
+	 * Funzione di generazione grafica di una dipendenza tra due task, è 
+	 * nessario eseguire 
+	 * @see chartgenerator/GanttChartGenerator#makeGanttTaskBox()	
 	 */
 	protected function makeGanttDependencies(){
 		// TODO: not implemented yet
@@ -354,7 +377,7 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * funzione di disegno di una riga del calendario
 	 */
-	private function makeCalLine($startTS,$finishTS,$xCal,$wCal,$level){
+	private function makeCalLine($startTS,$finishTS,$level,$grid=false,$yfGrid=null){
 		$hour = 0;
 		$days = 0;
 		$mounth = 0;
@@ -366,7 +389,6 @@ class GanttChartGenerator extends ChartGenerator{
 				$formatDate = 'H';
 				$beginDate = date('Y-m-d H',$startTS).':00:00';
 				$HAlign = 'left';
-//				echo "begindate: $beginDate <br>";
 			break;
 			case 4:
 				$days = 1;
@@ -394,39 +416,58 @@ class GanttChartGenerator extends ChartGenerator{
 			break;
 		}
 
-		$xPrec = $xCal;
-		$currentTS = toTimeStamp(add_date($beginDate,$hour,$days,$mounth,$year));
-		$xCurrent = intval($xCal+ $wCal * 
+		$wCal = $this->chart->getWidth() - $this->xCenter - $this->tol;
+		$xPrec = $this->xCenter;
+		$precTS = $startTS; 
+		$currentTS = strtotime(add_date($beginDate,$hour,$days,$mounth,$year));
+		$xCurrent = intval($this->xCenter+ $wCal * 
 			($currentTS-$startTS)/($finishTS-$startTS));
-//		echo "x prec: ".$xPrec."<br>";						
-//		echo "x curr: ".$xCurrent."<br>";			
 		
 		// per ogni intervallo
 		while($currentTS < $finishTS){
+			// costruisci il box
 			$slice = new GifBoxedLabel(
 				$xPrec, // x
 				$this->tol + ($level-1)*$this->labelGrainHeight, // y
 				$xCurrent - $xPrec, // larghezza
 				$this->labelGrainHeight, // altezza
-				date($formatDate,$currentTS).'', // data
+				date($formatDate,$precTS).'', // data
 				$this->fontSize // dim font
 			);
 			$slice->getLabel()->setHAlign($HAlign);
 			$slice->getBox()->setForeColor('white');
 			$slice->drawOn($this->chart);
+			// se c'è la griglia, scrivi il tratto
+//			echo "xcurrent $xCurrent , xprec $xPrec <br>";
+			if($grid){
+				if($yfGrid == null){
+					$yfGrid = $this->chart->getHeight() - $this->tol;
+				}
+				DrawingHelper::LineFromTo(
+					$xCurrent,
+					$this->yCenter,
+					$xCurrent,
+					$yfGrid,
+					$this->chart,
+					new LineStyle('#7F7F7F')
+				);
+			}
+			// passa all'intervallo successivo
 			$xPrec = $xCurrent;
-			$currentTS = toTimeStamp(add_date(date('Y-m-d H:i:s',$currentTS),$hour,$days,$mounth,$year));
-			$xCurrent = intval($xCal+ $wCal*($currentTS-$startTS)/($finishTS-$startTS));
+			$precTS = $currentTS;
+			$currentTS = strtotime(add_date(date('Y-m-d H:i:s',$currentTS),$hour,$days,$mounth,$year));
+			$xCurrent = intval($this->xCenter + $wCal*($currentTS-$startTS)/($finishTS-$startTS));
 		}
+		// costruisci l'ultimo box
 		$slice = new GifBoxedLabel(
 			$xPrec, // x
 			$this->tol + ($level-1)*$this->labelGrainHeight, // y
-			$xCal+$wCal-$xPrec-1, // larghezza
+			$this->xCenter + $wCal - $xPrec - 1, // larghezza
 			$this->labelGrainHeight, // altezza
-			date($formatDate,$currentTS).'', // data
+			date($formatDate,$precTS), // data
 			$this->fontSize // dim font
 		);
 		$slice->getBox()->setForeColor('white');			
-		$slice->drawOn($this->chart);		
+		$slice->drawOn($this->chart);
 	}
 }
