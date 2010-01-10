@@ -1,11 +1,11 @@
 <?php
 
 /*
-require_once dirname(__FILE__)."./classes/query.class.php";
-require_once dirname(__FILE__)."./includes/main_functions.php";
-require_once dirname(__FILE__)."./includes/db_connect.php";
-require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
-*/
+ require_once dirname(__FILE__)."./classes/query.class.php";
+ require_once dirname(__FILE__)."./includes/main_functions.php";
+ require_once dirname(__FILE__)."./includes/db_connect.php";
+ require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
+ */
 
 /**
  *
@@ -45,22 +45,22 @@ class UserOptionsChoice {
 		// setting only once the retriever
 		$this->taskInformationRetriever = new DefaultTaskInformationRetriever();
 	}
-	
+
 
 	private $array;
-	
+
 	public function setFromArray($array){
 		$this->array = $array;
 	}
-	
+
 	// metodi che mostrano quali useroption ha selezionato l'utente
-	
+
 	//Common shows
-	
+
 	function showTaskNameUserOption() {
 		return isset($this->array[UserOptionEnumeration::$TaskNameUserOption]);
 	}
-	
+
 	function getImageDimensionUserOption() {
 		if(isset($this->array[ImageDimension::$OptimalDimUserOption])){
 			return ImageDimension::$OptimalDimUserOption;
@@ -75,108 +75,108 @@ class UserOptionsChoice {
 			return ImageDimension::$OptimalDimUserOption;
 		}
 	}
-	
+
 	function getCustomDim(){
 		$custom_dim = array("width"=>$this->array[ImageDimension::$CustomWidthUserOption],
 							"height"=>$this->array[$CustomHeightUserOption]);
 		return $custom_dim;
 	}
-	
+
 	function getDefaultDim(){
 		$def_dim = array("width"=>$this->array[ImageDimension::$DefaultWidthUserOption],
 							"height"=>$this->array[$DefaultHeightUserOption]);
 		return $def_dim;
 	}
-	
+
 	function showCustomDimUserOption() {
 		return isset($this->array[UserOptionEnumeration::$CustomDimUserOption]);
 	}
-	
+
 	function showOpenInNewWindowUserOption() {
 		return isset($this->array[UserOptionEnumeration::$OpenInNewWindowUserOption]);
 	}
-	
+
 	function showPlannedDataUserOption() {
 		return isset($this->array[UserOptionEnumeration::$PlannedDataUserOption]);
 	}
-	
+
 	function showPlannedTimeFrameUserOption() {
 		return isset($this->array[UserOptionEnumeration::$PlannedTimeFrameUserOption]);
 	}
-	
+
 	function showResourcesUserOption() {
 		return isset($this->array[UserOptionEnumeration::$ResourcesUserOption]);
 	}
-	
+
 	function showActualTimeFrameUserOption() {
 		return isset($this->array[UserOptionEnumeration::$ActualTimeFrameUserOption]);
 	}
-	
+
 	function showActualDataUserOption() {
 		return isset($this->array[UserOptionEnumeration::$ActualDataUserOption]);
 	}
-	
+
 	function showAlertMarkUserOption() {
 		return isset($this->array[UserOptionEnumeration::$AlertMarkUserOption]);
 	}
-	
+
 	function showReplicateArrowUserOption() {
 		return isset($this->array[UserOptionEnumeration::$ReplicateArrowUserOption]);
 	}
-	
+
 	function showUseDifferentPatternForCrossingLinesUserOption() {
 		return isset($this->array[UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption]);
 	}
-	
+
 	//Gantt shows
-	
+
 	function showEffortInformationUserOption() {
 		return isset($this->array[UserOptionEnumeration::$EffortInformationUserOption]);
 	}
-	
+
 	function showFinishToStartDependenciesUserOption() {
 		return isset($this->array[UserOptionEnumeration::$FinishToStartDependenciesUserOption]);
 	}
-	
+
 	function showTimeGrainUserOption() {
 		return $this->array[UserOptionEnumeration::$TimeGrainUserOption];
 	}
-	
+
 	function showTimeRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$TimeRangeUserOption]);
 	}
-	
+
 	function showCustomRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
 	}
-	
+
 	function showFromStartRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$FromStartRangeUserOption]);
 	}
-	
+
 	function showToEndRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$ToEndRangeUserOption]);
 	}
-	
+
 	//Task Network shows
-	
+
 	function showTimeGapsUserOption() {
 		return isset($this->array[UserOptionEnumeration::$TimeGapsUserOption]);
 	}
-	
+
 	function showShowCompleteDiagramDependencies() {
 		return isset($this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]);
 	}
-	
+
 	function getCriticalPathUserOption() {
 		return $this->array[UserOptionEnumeration::$CriticalPathUserOption];
 	}
-	
+
 	function showMaxCriticalPathNumberUserOption() {
 		return $this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
 	}
 
-	
+
 	public static function GetInstance() {
 		if(!isset(UserOptionsChoice::$instance)) {
 			UserOptionsChoice::$instance = new UserOptionsChoice();
@@ -198,36 +198,36 @@ class UserOptionsChoice {
 		$this->initializeForDrawableTasksResearch();
 
 		$this->explodeWbsToLevel($explodeLevel);
-		
+
 		$this->tasksToShow = $this->getExplodedTasks();
 
-//		print "<br>Tasks after wbs explosion level: " . implode(",", $this->tasksToShow);
-		
+		//		print "<br>Tasks after wbs explosion level: " . implode(",", $this->tasksToShow);
+
 		//now I remove from the resulting array the task that are collapsed
 		$closedTaskDistiller = new CloseArrayDistiller($closedTasks, $this->taskInformationRetriever);
 		$closedTaskDistiller->distill();
 
-//		print "<br>Distiller had find this to close tasks: " . implode(",", $closedTaskDistiller->getToCloseTasks());
-//		print "<br>Distiller had find this to show tasks: " . implode(",", $closedTaskDistiller->getToShowTasks());
+		//		print "<br>Distiller had find this to close tasks: " . implode(",", $closedTaskDistiller->getToCloseTasks());
+		//		print "<br>Distiller had find this to show tasks: " . implode(",", $closedTaskDistiller->getToShowTasks());
 
 		$this->eraseClosedTasks($closedTaskDistiller->getToCloseTasks());
-		
-//		print "<br>Tasks after deletion of collapsed tasks: " . implode(",", $this->tasksToShow);
+
+		//		print "<br>Tasks after deletion of collapsed tasks: " . implode(",", $this->tasksToShow);
 
 		$this->appendDrawableTasks($closedTaskDistiller->getToShowTasks());
-		
-//		print "<br>Tasks after adding distilled tasks: " . implode(",", $this->tasksToShow);
+
+		//		print "<br>Tasks after adding distilled tasks: " . implode(",", $this->tasksToShow);
 
 		foreach ($openedTasks as $opened_task) {
 			$this->appendDrawableTasks($this->taskInformationRetriever->getChildren($opened_task));
 		}
-		
-		
-//		print "<br>Tasks after last append action: " . implode(",", $this->tasksToShow);
-		
+
+
+		//		print "<br>Tasks after last append action: " . implode(",", $this->tasksToShow);
+
 		return $this;
 	}
-	
+
 	/**
 	 * get the tasks set to be draw
 	 * @return array of integer
@@ -243,7 +243,7 @@ class UserOptionsChoice {
 	private function initializeForDrawableTasksResearch() {
 		unset($this->map);
 		$this->map = array();
-		
+
 		unset($this->tasksToShow);
 	}
 
@@ -275,11 +275,11 @@ class UserOptionsChoice {
 				$eraseIndices[] = $i;
 			}
 		}
-		
+
 		foreach($eraseIndices as $eraseIndex) {
 			$result[] = $this->tasksToShow[$eraseIndex];
 		}
-		
+
 		$this->tasksToShow = $result;
 	}
 
@@ -461,11 +461,22 @@ class CloseArrayDistiller {
 	}
 
 	public function getToShowTasks() {
-		$result = array();
+		$toAppend = array();
 		foreach ($this->map as $parent => $children) {
-			$result[] = $parent;
+			$isDeepChildren = false;
+			foreach ($this->getToCloseTasks() as $currentCloseTask) {
+				if(in_array($parent, $this->taskInformationRetriever->getDeepChildren($currentCloseTask))) {
+					print "<br>il task " . $parent . " is deep child of " . $currentCloseTask;
+					$isDeepChildren = true;
+					break;
+				}
+			}
+			if(!$isDeepChildren) {
+				$toAppend[] = $parent;
+			}
 		}
-		return $result;
+
+		return $toAppend;
 	}
 
 }
