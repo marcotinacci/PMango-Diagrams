@@ -46,12 +46,11 @@ class UserOptionsChoice {
 		$this->taskInformationRetriever = new DefaultTaskInformationRetriever();
 	}
 	
-	
-	
+
 	private $array;
 	
-	public function setFromArray($arr){
-		
+	public function setFromArray($array){
+		$this->array = $array;
 	}
 	
 	// metodi che mostrano quali useroption ha selezionato l'utente
@@ -62,16 +61,31 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$TaskNameUserOption]);
 	}
 	
-	function showWBSTreeSpecification() {
-		return isset($this->array[UserOptionEnumeration::$WBSTreeSpecification]);
+	function getImageDimensionUserOption() {
+		if(isset($this->array[ImageDimension::$OptimalDimUserOption])){
+			return ImageDimension::$OptimalDimUserOption;
+		}
+		if(isset($this->array[ImageDimension::$FitInWindowDimUserOption])){
+			return ImageDimension::$FitInWindowDimUserOption;
+		}
+		if(isset($this->array[ImageDimension::$CustomDimUserOption])){
+			return ImageDimension::$CustomDimUserOption;
+		}
+		if(isset($this->array[ImageDimension::$DefaultDimUserOption])){
+			return ImageDimension::$OptimalDimUserOption;
+		}
 	}
 	
-	function showLevelSpecificationUserOption() {
-		return $this->array[UserOptionEnumeration::$LevelSpecificationUserOption];
+	function getCustomDim(){
+		$custom_dim = array("width"=>$this->array[ImageDimension::$CustomWidthUserOption],
+							"height"=>$this->array[$CustomHeightUserOption]);
+		return $custom_dim;
 	}
 	
-	function showImageDimensionUserOption() {
-		return isset($this->array[UserOptionEnumeration::$ImageDimensionUserOption]);
+	function getDefaultDim(){
+		$def_dim = array("width"=>$this->array[ImageDimension::$DefaultWidthUserOption],
+							"height"=>$this->array[$DefaultHeightUserOption]);
+		return $def_dim;
 	}
 	
 	function showCustomDimUserOption() {
@@ -154,8 +168,8 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]);
 	}
 	
-	function showCriticalPathUserOption() {
-		return isset($this->array[UserOptionEnumeration::$CriticalPathUserOption]);
+	function getCriticalPathUserOption() {
+		return $this->array[UserOptionEnumeration::$CriticalPathUserOption];
 	}
 	
 	function showMaxCriticalPathNumberUserOption() {

@@ -16,8 +16,6 @@ Class UserOptionEnumeration {
 	// Common
 	
 	public static  $TaskNameUserOption = "TaskNameUserOption";
-	public static  $WBSTreeSpecification = "WBSTreeSpecification";
-	public static  $LevelSpecificationUserOption = "LevelSpecificationUserOption";
 	public static  $ImageDimensionUserOption = "ImageDimensionUserOption";
 	public static  $CustomDimUserOption = "CustomDimUserOption";
 	public static  $OpenInNewWindowUserOption = "OpenInNewWindowUserOption";

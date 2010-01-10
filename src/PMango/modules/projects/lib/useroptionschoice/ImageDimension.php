@@ -13,10 +13,14 @@
 
 Class ImageDimension {
 	
-	public static  $CustomDimUserOption = "CustomDimUserOption";
-	public static  $FitInWindowDimUserOption = "FitInWindowDimUserOption";
-	public static  $OptiomalDimUserOption = "OptiomalDimUserOption";
-	public static  $DefaultDimUserOption = "DefaultDimUserOption";
+	public static $CustomDimUserOption = "CustomDimUserOption"; //boolean
+	public static $CustomWidthUserOption = "CustomWidthUserOption"; //int
+	public static $CustomHeightUserOption = "CustomHeightUserOption"; //int
+	public static $FitInWindowDimUserOption = "FitInWindowDimUserOption"; //boolean
+	public static $OptiomalDimUserOption = "OptiomalDimUserOption"; //boolean
+	public static $DefaultDimUserOption = "DefaultDimUserOption"; //boolean
+	public static $DefaultWidthUserOption = "DefaultWidthUserOption"; //int
+	public static $DefaultHeightUserOption = "DefaultHeightUserOption"; //int
 }
 
 ?>
