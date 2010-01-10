@@ -445,6 +445,7 @@ function delIt() {
 </tr>
 </table>
 <br>
+
 <?php
 
 $tabBox = new CTabBox( "?m=projects&a=view&project_id=$project_id", "", $tab );
@@ -460,7 +461,9 @@ if ($canViewTask) {
 //if ($perms->checkModule('files', 'view'))
 //	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/vw_files", 'Files' );
 if ($canViewTask) {
-	$tabBox->add( dPgetConfig('root_dir')."/modules/tasks/viewgantt", 'Gantt Chart' );
+	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewgantt", 'Gantt Chart' );
+	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewwbs", 'WBS Chart' );
+	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewtasknetwork", 'Task Networks Chart' );
 	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/vw_logs", 'Task Logs' );
 }
 $tabBox->loadExtras($m);
