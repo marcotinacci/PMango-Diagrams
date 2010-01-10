@@ -49,7 +49,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$nodi=array();
 		
 		$tree = new TaskDataTreeGenerator();
-		$treeData = $tree->GenerateTaskDataTree();
+		$treeData = $tree->StubGenerateTaskDataTree();
 		
 		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
 				
