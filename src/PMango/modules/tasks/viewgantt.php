@@ -222,8 +222,8 @@ function showFullProject() {
 <?php 
 //	require ("../MangoGanttCPM/taskdatatree/Task.php");
 	//echo realpath("./"); // this line would print the path until PMango2.2.0
-	// require ("./modules/MangoGanttCPM/taskdatatree/Task.php");
-	// require ("./modules/projects/lib/chartgenerator/TestGantt.php");
+	 require ("./modules/projects/lib/taskdatatree/UnitTests.php");
+	 //require ("./modules/projects/lib/chartgenerator/TestGantt.php");
 ?>
 
 <table cellspacing="0" cellpadding="0" border="1" align="center">
