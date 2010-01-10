@@ -263,12 +263,13 @@ function showFullProject() {
 			align="center" class="tbl">
 			<tr>
 				<td><img width='100%'
-					src='<?php echo $basedir."/modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']; ?>'>
+					src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']; ?>'>
 				</td>
 			</tr>
 		</table>
 
 		<?php
+		/*
 		include('modules/report/makePDF.php');
 	
 						$task_level=$explodeTasks;
@@ -282,6 +283,7 @@ function showFullProject() {
 						PM_makeWbsPdf($pdf,$basedir."/modules/projects/lib/chartGenerator/WBSTree.gif");
 						//PM_makeWbsPdf($pdf,"http://localhost:8080/Eclipse Project/PMango/application/PMango/modules/projects/lib/chartGenerator/WBSTree.gif");
 						$filename=PM_footerPdf($pdf, $name[0]['project_name'], 5);
+		*/
 		?></td>
 	</tr>
 </table>

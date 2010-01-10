@@ -28,18 +28,14 @@ class StubTask{
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][1]['PlannedEffort']="50";
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][1]['ResourceName']="Pippo";
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][1]['Role']="Administrator";
-
-		$this->data[DataArrayKeyEnumeration::$plan_duration]="20";
 		$this->data[DataArrayKeyEnumeration::$plan_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$plan_cost]="20";
 		$this->data[DataArrayKeyEnumeration::$planned_start_date]="2010-01-13 02:00:00";
 		$this->data[DataArrayKeyEnumeration::$planned_finish_date]="2010-01-14 06:00:00";
-		$this->data[DataArrayKeyEnumeration::$act_duration]="20";
 		$this->data[DataArrayKeyEnumeration::$act_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$act_cost]="20";
 		$this->data[DataArrayKeyEnumeration::$actual_start_date]= "2010-01-13 01:00:00";
 		$this->data[DataArrayKeyEnumeration::$actual_finish_date]= "2010-01-14 10:00:00";
-		$this->data[DataArrayKeyEnumeration::$level]="1";
 		$this->data[DataArrayKeyEnumeration::$percentage]="20";
 	}
 
@@ -110,14 +106,10 @@ class StubTask{
 		$actual_time_frame = array("start_date"=>$this->data[DataArrayKeyEnumeration::$actual_start_date], "finish_date"=>$this->data[DataArrayKeyEnumeration::$actual_finish_date]);
 		return $actual_time_frame;
 	}
-	
-	public function getLevel(){
-		return $this->data[DataArrayKeyEnumeration::$level];
-	}
 
 	// funzione solo di stub
 	public function setLevel($l){
-		$this->data[DataArrayKeyEnumeration::$level] = $l ;
+		
 	}
 	
 	private function calculatePercentage(){
@@ -126,6 +118,26 @@ class StubTask{
 	
 	public function getPercentage(){
 		return $this->data[DataArrayKeyEnumeration::$percentage];
+	}
+	
+	public function getActualDuration(){
+		$s_f = $this->getActualTimeFrame();
+		$act_duration = strtotime($s_f["start_date"])-strtotime($s_f["finish_date"]);
+		return intval((($act_duration/60)/60)/24)+1;
+	}
+	
+	public function getPlannedDuration(){
+		$s_f = $this->getPlannedTimeFrame();
+		$plan_duration = strtotime($s_f["start_date"])-strtotime($s_f["finish_date"]);
+		return intval((($plan_duration/60)/60)/24)+1;
+	}
+	
+	public function getLevel(){
+		//esplodo il wbsId separando elementi con separatore "."; ottengo l'array $level
+		//che avrà tanti elementi, quanto è il livello del task stesso. 
+		$wbs_id = $this->getWBSId();
+		$level = explode(".", $wbs_id);
+		return sizeOf($level);
 	}
 }
 
