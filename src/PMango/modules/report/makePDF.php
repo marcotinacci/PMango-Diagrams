@@ -388,6 +388,8 @@ function PM_footerPdf($pdf, $project_name, $p=0){
 		break;
 		case 4: $filename=$project_name."- Properties.pdf";
 		break;
+		case 5: $filename=$project_name."- Wbs.pdf";
+		break;
 	}
 	$pdf->Output("./modules/report/pdf/".$filename,'F');
 	return "./modules/report/pdf/".$filename;	
@@ -1266,4 +1268,19 @@ function PM_sortChildTask($tasks, $parent, $task_level, $tasks_opened, $tasks_cl
 	}
 return $a_task;
 }
+
+function PM_makeWbsPdf($pdf,$generatorUrl)
+{
+	global $AppUI, $brd, $orient;
+	
+	$pdf->SetFont('Arial','B',16);
+	//Title
+	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
+	//Logo
+	$pdf=new FPDF();
+	$pdf->Image($generatorUrl,11,17,100,100,"gif");
+	//Line break
+	$pdf->Ln(10);
+}
+
 ?>

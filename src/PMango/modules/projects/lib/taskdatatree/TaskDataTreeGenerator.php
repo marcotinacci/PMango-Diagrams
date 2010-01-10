@@ -18,6 +18,7 @@ require_once dirname(__FILE__)."/Task.php";
 require_once dirname(__FILE__).'/StubTaskDataTree.php';
 require_once dirname(__FILE__).'/../../../../includes/db_connect.php';
 require_once dirname(__FILE__).'/../../../../includes/main_functions.php';
+require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 
 class TaskDataTreeGenerator{
 	private $tasksMap;

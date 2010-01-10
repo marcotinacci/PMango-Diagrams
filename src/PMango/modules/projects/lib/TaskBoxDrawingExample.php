@@ -15,7 +15,7 @@ $gif = new GifImage(800,550);
 
 //DrawingHelper::segmentedOffsetLine(50,50,20,-10,70,40,$gif);
 
-
+/*
 $pStyle = new LineStyle();
 $pStyle->patterNumberOfDots = 3;
 $pStyle->patternInitialFinalLength = 10;
@@ -109,7 +109,12 @@ $gifTriangle = new GifTriangle(0,350,20,60,"left");
 $gifTriangle->drawOn($gif);
 */
 
-DrawingHelper::GanttDependencyLine(100,100,140,140,10,true,$gif,null);
+//DrawingHelper::GanttDependencyLine(100,100,140,140,10,true,$gif,null);
+
+DrawingHelper::GanttFTSLine(100,100,150,150,10,true,false,true,$gif,null);
+//DrawingHelper::GanttFTSLine(100,100,150,50,10,true,true,true,$gif,null);
+//DrawingHelper::GanttFTSLine(100,100,50,50,10,true,true,true,$gif,null);
+//DrawingHelper::GanttFTSLine(100,100,50,150,10,true,true,true,$gif,null);
 
 $gif->draw();
 

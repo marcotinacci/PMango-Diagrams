@@ -1,6 +1,6 @@
-<?php 
+<?php
 /**
----------------------------------------------------------------------------
+ ---------------------------------------------------------------------------
 
  PMango Project
 
@@ -17,23 +17,23 @@
 
  Version history.
  - 2006.07.30 Lorenzo
-   Second version, modified to manage PMango Gantt.
+ Second version, modified to manage PMango Gantt.
  - 2006.07.30 Lorenzo
-   First version, unmodified from dotProject 2.0.1.
+ First version, unmodified from dotProject 2.0.1.
 
----------------------------------------------------------------------------
+ ---------------------------------------------------------------------------
 
  PMango - A web application for project planning and control.
 
  Copyright (C) 2006 Giovanni A. Cignoni, Lorenzo Ballini, Marco Bonacchi
  All rights reserved.
 
- PMango reuses part of the code of dotProject 2.0.1: dotProject code is 
+ PMango reuses part of the code of dotProject 2.0.1: dotProject code is
  released under GNU GPL, further information at: http://www.dotproject.net
  Copyright (c) 2003-2005 The dotProject Development Team.
 
  Other libraries used by PMango are redistributed under their own license.
- See ReadMe.txt in the root folder for details. 
+ See ReadMe.txt in the root folder for details.
 
  PMango is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -49,8 +49,8 @@
  along with this program; if not, write to the Free Software
  Foundation Inc., 51 Franklin St, 5th Floor, Boston, MA 02110-1301 USA.
 
----------------------------------------------------------------------------
-*/
+ ---------------------------------------------------------------------------
+ */
 
 GLOBAL  $group_id, $min_view, $m, $a;
 
@@ -69,14 +69,14 @@ $showTaskGantt = dPgetParam( $_POST, 'showTaskGantt', '0' );
 
 //if set GantChart includes user labels as captions of every GantBar
 if ($showLabels!='0') {
-    $showLabels='1';
+	$showLabels='1';
 }
 if ($showInactive!='0') {
-    $showInactive='1';
+	$showInactive='1';
 }
 
 if ($showAllGantt!='0')
-     $showAllGantt='1';
+$showAllGantt='1';
 
 $projectStatus = dPgetSysVal( 'ProjectStatus' );
 
@@ -187,82 +187,101 @@ function showFullProject() {
 }
 
 </script>
-<table class="tbl" width="100%" border="0" cellpadding="4" cellspacing="0">
-<tr>
-        <td>
-                <table align="center" border="0" cellpadding="4" cellspacing="0" class="tbl">
+<table class="tbl" width="100%" border="0" cellpadding="4"
+	cellspacing="0">
+	<tr>
+		<td>
+		<table align="center" border="0" cellpadding="4" cellspacing="0"
+			class="tbl">
 
-                <form name="editFrm" method="post" action="?<?php echo "m=$m&a=$a";?>">
-                <input type="hidden" name="display_option" value="<?php echo $display_option;?>" />
+			<form name="editFrm" method="post"
+				action="?<?php echo "m=$m&a=$a";?>"><input type="hidden"
+				name="display_option" value="<?php echo $display_option;?>" />
 
-                <tr> 
-                        <td align="left" valign="top" width="20">
-                <?php 
-                	$new_start->addMonths( -$scroll_date );
-					$new_end->addMonths( -$scroll_date );
-                	if ($display_option != "all") { ?>
-                                <a href="javascript:scrollPrev()">
-                                        <img src="./images/prev.gif" width="16" height="16" alt="<?php echo $AppUI->_( 'previous' );?>" border="0">
-                                </a>
-                <?php } ?>
-                        </td>
+			<tr>
+				<td align="left" valign="top" width="20"><?php 
+				$new_start->addMonths( -$scroll_date );
+				$new_end->addMonths( -$scroll_date );
+				if ($display_option != "all") { ?> <a href="javascript:scrollPrev()">
+				<img src="./images/prev.gif" width="16" height="16"
+					alt="<?php echo $AppUI->_( 'previous' );?>" border="0"> </a> <?php } ?>
+				</td>
 
-                        <td align="right" nowrap="nowrap"><?php echo $AppUI->_( 'From' );?>:</td>
-                        <td align="left" nowrap="nowrap">
-                                <input type="hidden" name="sdate" value="<?php echo $start_date->format( FMT_TIMESTAMP_DATE );?>" />
-                                <input type="text" class="text" name="show_sdate" value="<?php echo $start_date->format( $df );?>" size="12" disabled="disabled" />
-                                <a href="javascript:popCalendar('sdate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
-                        </td>
+				<td align="right" nowrap="nowrap"><?php echo $AppUI->_( 'From' );?>:</td>
+				<td align="left" nowrap="nowrap"><input type="hidden" name="sdate"
+					value="<?php echo $start_date->format( FMT_TIMESTAMP_DATE );?>" />
+				<input type="text" class="text" name="show_sdate"
+					value="<?php echo $start_date->format( $df );?>" size="12"
+					disabled="disabled" /> <a href="javascript:popCalendar('sdate')"><img
+					src="./images/calendar.gif" width="24" height="12" alt=""
+					border="0"></a></td>
 
-                        <td align="right" nowrap="nowrap"><?php echo $AppUI->_( 'To' );?>:</td>
-                        <td align="left" nowrap="nowrap">
-                                <input type="hidden" name="edate" value="<?php echo $end_date->format( FMT_TIMESTAMP_DATE );?>" />
-                                <input type="text" class="text" name="show_edate" value="<?php echo $end_date->format( $df );?>" size="12" disabled="disabled" />
-                                <a href="javascript:popCalendar('edate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
-                        <td valign="top">
-                                <?php echo arraySelect( $projFilter, 'proFilter', 'size=1 class=text', $proFilter, true );?>
-                        </td>
-                        <!--<td valign="top">
+				<td align="right" nowrap="nowrap"><?php echo $AppUI->_( 'To' );?>:</td>
+				<td align="left" nowrap="nowrap"><input type="hidden" name="edate"
+					value="<?php echo $end_date->format( FMT_TIMESTAMP_DATE );?>" /> <input
+					type="text" class="text" name="show_edate"
+					value="<?php echo $end_date->format( $df );?>" size="12"
+					disabled="disabled" /> <a href="javascript:popCalendar('edate')"><img
+					src="./images/calendar.gif" width="24" height="12" alt=""
+					border="0"></a>
+				<td valign="top"><?php echo arraySelect( $projFilter, 'proFilter', 'size=1 class=text', $proFilter, true );?>
+				</td>
+				<!--<td valign="top">
                                 <input type="checkbox" name="showLabels" value='1' <?php //echo (($showLabels==1) ? "checked=true" : "");?>><?php //echo $AppUI->_( 'Show captions' );?>
                         </td>-->
-                        <td valign="top">
-                                <input type="checkbox" value='1' name="showInactive" <?php echo (($showInactive==1) ? "checked=true" : "");?>><?php echo $AppUI->_( 'Show Inactive' );?>
-                        </td>
-                        <td valign="top">
-                                <input type="checkbox" value='1' name="showAllGantt" <?php echo (($showAllGantt==1) ? "checked=true" : "");?>><?php echo $AppUI->_( 'Show Tasks' );?>
-                        </td>
-                        <td align="left">
-                                <input type="button" class="button" value="<?php echo $AppUI->_( 'submit' );?>" onclick='document.editFrm.display_option.value="custom";if (document.editFrm.edate.value < document.editFrm.sdate.value) alert("Start date must before end date"); else submit();'>
-                        </td>
+				<td valign="top"><input type="checkbox" value='1'
+					name="showInactive"
+					<?php echo (($showInactive==1) ? "checked=true" : "");?>><?php echo $AppUI->_( 'Show Inactive' );?>
+				</td>
+				<td valign="top"><input type="checkbox" value='1'
+					name="showAllGantt"
+					<?php echo (($showAllGantt==1) ? "checked=true" : "");?>><?php echo $AppUI->_( 'Show Tasks' );?>
+				</td>
+				<td align="left"><input type="button" class="button"
+					value="<?php echo $AppUI->_( 'submit' );?>"
+					onclick='document.editFrm.display_option.value="custom";if (document.editFrm.edate.value < document.editFrm.sdate.value) alert("Start date must before end date"); else submit();'>
+				</td>
 
-                        <td align="right" valign="top" width="20">
-                <?php if ($display_option != "all") { ?>
-                        <a href="javascript:scrollNext()">
-                                <img src="./images/next.gif" width="16" height="16" alt="<?php echo $AppUI->_( 'next' );?>" border="0">
-                        </a>
-                <?php } ?>
-                        </td>
-                </tr>
+				<td align="right" valign="top" width="20"><?php if ($display_option != "all") { ?>
+				<a href="javascript:scrollNext()"> <img src="./images/next.gif"
+					width="16" height="16" alt="<?php echo $AppUI->_( 'next' );?>"
+					border="0"> </a> <?php } ?></td>
+			
+			</tr>
 
-                </form>
+			</form>
 
-                <tr>
-                        <td align="center" valign="bottom" colspan="12">
-                                <?php echo "<a href='javascript:showThisMonth()'>".$AppUI->_('show this month')."</a> : <a href='javascript:showFullProject()'>".$AppUI->_('show all')."</a><br>"; ?>
-                        </td>
-                </tr>
+			<tr>
+				<td align="center" valign="bottom" colspan="12"><?php echo "<a href='javascript:showThisMonth()'>".$AppUI->_('show this month')."</a> : <a href='javascript:showFullProject()'>".$AppUI->_('show all')."</a><br>"; ?>
+				</td>
+			</tr>
 
-                </table>
+		</table>
 
-                <!-- Generated Image -->
-                <table width="100%" cellspacing="0" cellpadding="0" border="1" align="center" class="tbl">
-                <tr>
-                        <td>
-							<img width='100%' src='<?php echo $basedir."modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']; ?>'>
-                        </td>
-                </tr>
-                </table>
-        </td>
-</tr>
+		<!-- Generated Image -->
+		<table width="100%" cellspacing="0" cellpadding="0" border="1"
+			align="center" class="tbl">
+			<tr>
+				<td><img width='100%'
+					src='<?php echo $basedir."modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']; ?>'>
+				</td>
+			</tr>
+		</table>
+
+		<?php
+		include('modules/report/makePDF.php');
+	
+						$task_level=$explodeTasks;
+						$q  = new DBQuery;
+						$q->addQuery('projects.project_name');
+						$q->addTable('projects');
+						$q->addWhere("project_id = $project_id ");
+						$name = $q->loadList();
+						$pdf = PM_headerPdf($name[0]['project_name']);
+						//PM_makePropPdf($pdf, str_replace("@","'",$string),$project_id,'P');
+						PM_makeWbsPdf($pdf,$basedir."modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."");
+						$filename=PM_footerPdf($pdf, $name[0]['project_name'], 5);
+		?></td>
+	</tr>
 </table>
-<?php ini_restore('memory_limit');?>
+		<?php ini_restore('memory_limit');?>
