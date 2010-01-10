@@ -103,17 +103,17 @@ class GifGanttTask extends GifArea
 
 		// dati finestra
 		$windowWidth = $xFinish - $xStart;
-		$startTS = toTimeStamp($startDate);
-		$finishTS = toTimeStamp($finishDate);
+		$startTS = strtotime($startDate);
+		$finishTS = strtotime($finishDate);
 		$windowDuration = $finishTS - $startTS;
 		
 		// dati odierni
-		$todayTS = toTimeStamp($today);
+		$todayTS = strtotime($today);
 				
 		// dati task planned
 		$planned = $this->td->getInfo()->getPlannedTimeFrame();
-		$startPlannedTS = toTimeStamp($planned['start_date']);
-		$finishPlannedTS = toTimeStamp($planned['finish_date']);
+		$startPlannedTS = strtotime($planned['start_date']);
+		$finishPlannedTS = strtotime($planned['finish_date']);
 		
 		// coordinate planned
 		$xPlanned = intval($windowWidth * ($startPlannedTS-$startTS) / $windowDuration);
@@ -130,7 +130,7 @@ class GifGanttTask extends GifArea
 			$wActual = null;
 			$this->actualStarted = false;	
 		}else if($actual['finish_date'] == null){
-			$startActualTS = toTimeStamp($actual['start_date']);
+			$startActualTS = strtotime($actual['start_date']);
 			$finishActualTS = null;
 			// coordinate actual			
 			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
@@ -139,8 +139,8 @@ class GifGanttTask extends GifArea
 				/ $windowDuration) - $xActual;
 			$this->actualStarted = true;
 		}else{
-			$startActualTS = toTimeStamp($actual['start_date']);
-			$finishActualTS = toTimeStamp($actual['finish_date']);
+			$startActualTS = strtotime($actual['start_date']);
+			$finishActualTS = strtotime($actual['finish_date']);
 			// coordinate actual			
 			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
 				/ $windowDuration);
