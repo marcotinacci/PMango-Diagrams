@@ -68,7 +68,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Livello della granularità
 	 * @var int
 	 */
-	protected $granLevel = 5;
+	protected $grainLevel;
 
 	// TODO: prendere date di inizio e fine da uoc
 	/**
@@ -117,9 +117,12 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
 		
 		// TODO: stub date, prenderle dalle uoc
-		$this->sDate = date('Y-m-d H:i:s',mktime(10,0,0,1,9,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,11,2010));
+		$this->sDate = date('Y-m-d H:i:s',mktime(10,0,0,1,13,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(12,30,0,1,14,2010));
 		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,1,2010));
+		
+		// TODO: opzioni utente
+		$this->grainLevel = 5;
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tdt->deepVisit());
@@ -127,8 +130,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
-//		$this->chart->draw();
-		//echo "ciao";
+		$this->chart->draw();
 	}
 	
 	/**
@@ -137,7 +139,7 @@ class GanttChartGenerator extends ChartGenerator{
 	protected function makeCanvas(){
 		// TODO: prendere la larghezza dalla dimensione della finestra
 		$this->chart = new GifImage(800, 
-			$this->granLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +
+			$this->grainLevel * $this->labelGrainHeight + $this->numTasks*($this->verticalSpace +
 			$this->labelHeight) + $this->verticalSpace + 2*$this->tol);
 	}
 
@@ -170,121 +172,9 @@ class GanttChartGenerator extends ChartGenerator{
 		$startTS = toTimeStamp($this->sDate);
 		$finishTS = toTimeStamp($this->fDate);
 		
-		$this->makeCalLine($startTS,$finishTS,$xCal,$wCal,'HourlyGrainUserOption');
-		
-		/*
-		// TODO: stub, granularità da uoc		
-//		switch($this->uoc->showTimeGrain()){
-		switch('HourlyGrainUserOption'){	
-		case 'HourlyGrainUserOption':
-			$xPrec = $xCal;
-			$currentTS = toTimeStamp(date('Y-m-d H:i:s',$startTS)) 
-				- date('i',$startTS)*60 - date('s',$startTS) + 60*60;
-			$xCurrent = intval($xCal+ $wCal * 
-				($currentTS-$startTS)/($finishTS-$startTS));
-			// per ogni ora
-			while($currentTS < $finishTS){
-				$slice = new GifBoxedLabel(
-					$xPrec, // x
-					$this->tol + 4*$this->labelGrainHeight, // y
-					$xCurrent-$xPrec, // larghezza
-					$this->labelGrainHeight, // altezza
-					date('H',$currentTS).'', // data
-					$this->fontSize // dim font
-				);
-				$slice->getBox()->setForeColor('white');
-				$slice->drawOn($this->chart);
-				$xPrec = $xCurrent;
-				$currentTS += 60*60;
-				$xCurrent = intval($xCal+ $wCal*($currentTS-$startTS)/($finishTS-$startTS));
-			}
-			$slice = new GifBoxedLabel(
-				$xPrec, // x
-				$this->tol + 4*$this->labelGrainHeight, // y
-				$xCal+$wCal-$xPrec-1, // larghezza
-				$this->labelGrainHeight, // altezza
-				date('H',$currentTS).'', // data
-				$this->fontSize // dim font
-			);
-			$slice->getBox()->setForeColor('white');			
-			$slice->drawOn($this->chart);
-
-		case 'DailyGrainUserOption':
-			$xPrec = $xCal;
-			$currentTS = toTimeStamp(date('Y-m-d H:i:s',$startTS)) 
-				- date('H',$startTS)*24
-				- date('i',$startTS)*60 
-				- date('s',$startTS) 
-				+ 60*60*24;
-			$xCurrent = intval($xCal+ $wCal * 
-				($currentTS-$startTS)/($finishTS-$startTS));
-			// per ogni giorno
-			while($currentTS < $finishTS){
-				$slice = new GifBoxedLabel(
-					$xPrec, // x
-					$this->tol + 3*$this->labelGrainHeight, // y
-					$xCurrent-$xPrec, // larghezza
-					$this->labelGrainHeight, // altezza
-					date('d',$currentTS).'', // data
-					$this->fontSize // dim font
-				);
-				$slice->getBox()->setForeColor('white');
-				$slice->drawOn($this->chart);
-				$xPrec = $xCurrent;
-				$currentTS += 60*60*24;
-				$xCurrent = intval($xCal+ $wCal*($currentTS-$startTS)/($finishTS-$startTS));
-			}
-			$slice = new GifBoxedLabel(
-				$xPrec, // x
-				$this->tol + 3*$this->labelGrainHeight, // y
-				$xCal+$wCal-$xPrec-1, // larghezza
-				$this->labelGrainHeight, // altezza
-				date('d',$currentTS).'', // data
-				$this->fontSize // dim font
-			);
-			$slice->getBox()->setForeColor('white');			
-			$slice->drawOn($this->chart);
-			
-			case 'WeaklyGrainUserOption':
-			
-			case 'MonthlyGrainUserOption':
-			
-			case 'AnnuallyGrainUserOption':
-			
+		for($i = $this->grainLevel ; $i > 0 ; $i--){
+			$this->makeCalLine($startTS,$finishTS,$xCal,$wCal,$i);
 		}
-		
-		// TODO: stub anno
-		$anno = new GifBoxedLabel(
-			$this->tol + $titleWidth, // x
-			$this->tol, // y
-			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelGrainHeight, // altezza	
-			"2010", // data
-			$this->fontSize // dim font			
-		);
-		$anno->drawOn($this->chart);
-		
-		// TODO: stub mese
-		$mese = new GifBoxedLabel(
-			$this->tol + $titleWidth, // x
-			$this->tol + $this->labelGrainHeight, // y
-			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelGrainHeight, // altezza	
-			"Gennaio", // data
-			$this->fontSize // dim font			
-		);
-		$mese->drawOn($this->chart);
-		
-		// TODO: stub settimana
-		$sett = new GifBoxedLabel(
-			$this->tol + $titleWidth, // x
-			$this->tol + 2*$this->labelGrainHeight, // y
-			$frontWidth - 2*$this->tol -1, // larghezza
-			$this->labelGrainHeight, // altezza	
-			"Settimane", // data
-			$this->fontSize // dim font			
-		);
-		$sett->drawOn($this->chart);*/
 
 		$this->makeTitle();
 	}
@@ -302,7 +192,7 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->tol, // x
 			$this->tol, // y
 			$titleWidth, // larghezza
-			$this->granLevel*$this->labelGrainHeight, // altezza
+			$this->grainLevel*$this->labelGrainHeight, // altezza
 			"Project Title", // titolo
 			$this->fontSize // dim font
 			);
@@ -318,13 +208,13 @@ class GanttChartGenerator extends ChartGenerator{
 		// larghezza della colonna sinistra
 		$wLeftCol = $this->chart->getWidth()*$this->leftColumnSpace;
 		$xLeftCol = $this->tol;
-		$yLeftCol = $this->tol + $this->granLevel * $this->labelGrainHeight;
+		$yLeftCol = $this->tol + $this->grainLevel * $this->labelGrainHeight;
 		// disegno il box della colonna sinistra
 		$leftCol = new GifBox(
 			$xLeftCol, // x
 			$yLeftCol, // y
 			$wLeftCol, // larghezza 
-			$this->chart->getHeight() - $this->granLevel * $this->labelGrainHeight 
+			$this->chart->getHeight() - $this->grainLevel * $this->labelGrainHeight 
 			- 2*$this->tol // altezza
 		);
 		
@@ -388,7 +278,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 */	
 	protected function makeGrid(){
 		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
-		$yGrid = $this->granLevel * $this->labelGrainHeight + $this->tol;
+		$yGrid = $this->grainLevel * $this->labelGrainHeight + $this->tol;
 		$xfGrid = $this->chart->getWidth() - $this->tol;
 		$yfGrid = $this->chart->getHeight() - $this->tol;
 		
@@ -396,8 +286,14 @@ class GanttChartGenerator extends ChartGenerator{
 		$granWidth = 41;
 		
 		for($i=$xGrid; $i < $xfGrid; $i = $i + $granWidth){
-			DrawingHelper::LineFromTo($i,$yGrid,$i,$yfGrid,$this->chart,
-				new LineStyle('gray'));
+			DrawingHelper::LineFromTo(
+				$i,
+				$yGrid,
+				$i,
+				$yfGrid,
+				$this->chart,
+				new LineStyle('gray')
+				);
 		}
 
 		
@@ -408,7 +304,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function makeGanttTaskBox(){
 		$xGrid = $this->chart->getWidth()*$this->leftColumnSpace + $this->tol;
-		$yGrid = $this->granLevel * $this->labelGrainHeight + $this->tol;
+		$yGrid = $this->grainLevel * $this->labelGrainHeight + $this->tol;
 		$xfGrid = $this->chart->getWidth() - $this->tol;
 		$yfGrid = $this->chart->getHeight() - $this->tol;
 		
@@ -458,43 +354,43 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * funzione di disegno di una riga del calendario
 	 */
-	private function makeCalLine($startTS,$finishTS,$xCal,$wCal,$grain){
+	private function makeCalLine($startTS,$finishTS,$xCal,$wCal,$level){
 		$hour = 0;
 		$days = 0;
 		$mounth = 0;
 		$year = 0;
 		
-		switch($grain){
-			case 'HourlyGrainUserOption':
-				$level = 4;
+		switch($level){
+			case 5:
 				$hour = 1;
 				$formatDate = 'H';
 				$beginDate = date('Y-m-d H',$startTS).':00:00';
-				echo "begindate: $beginDate <br>";
+				$HAlign = 'left';
+//				echo "begindate: $beginDate <br>";
 			break;
-			case 'DailyGrainUserOption':
-				$level = 3;	
+			case 4:
 				$days = 1;
-				$formatDate = 'd';
+				$formatDate = 'D';
 				$beginDate = date('Y-m-d',$startTS).' 00:00:00';
+				$HAlign = 'center';
 			break;
-			case 'WeaklyGrainUserOption':	
-				$level = 2;
+			case 3:	
 				$days = 7;
 				$formatDate = 'm/d';	
-				$beginDate = date('Y-m-d',$startTS).' 00:00:00';	
+				$beginDate = date('Y-m-d',$startTS).' 00:00:00';
+				$HAlign = 'left';
 			break;
-			case 'MontlyGrainUserOption':
-				$level = 1;
+			case 2:
 				$mounth = 1;
 				$formatDate = 'M';	
 				$beginDate = date('Y-m',$startTS).'-01 00:00:00';
+				$HAlign = 'center';
 			break;
-			case 'AnnuallyGrainUserOption':
-				$level = 0;	
+			case 1:
 				$year = 1;
 				$formatDate = 'Y';	
 				$beginDate = date('Y',$startTS).'-01-01 00:00:00';	
+				$HAlign = 'center';
 			break;
 		}
 
@@ -502,29 +398,29 @@ class GanttChartGenerator extends ChartGenerator{
 		$currentTS = toTimeStamp(add_date($beginDate,$hour,$days,$mounth,$year));
 		$xCurrent = intval($xCal+ $wCal * 
 			($currentTS-$startTS)/($finishTS-$startTS));
-		echo "x prec: ".$xPrec."<br>";						
-		echo "x curr: ".$xCurrent."<br>";			
+//		echo "x prec: ".$xPrec."<br>";						
+//		echo "x curr: ".$xCurrent."<br>";			
 		
 		// per ogni intervallo
-		while($currentTS < $finishTS){/*
+		while($currentTS < $finishTS){
 			$slice = new GifBoxedLabel(
 				$xPrec, // x
-				$this->tol + $level*$this->labelGrainHeight, // y
-				30,//$xCurrent - $xPrec, // larghezza
+				$this->tol + ($level-1)*$this->labelGrainHeight, // y
+				$xCurrent - $xPrec, // larghezza
 				$this->labelGrainHeight, // altezza
 				date($formatDate,$currentTS).'', // data
 				$this->fontSize // dim font
 			);
-			
+			$slice->getLabel()->setHAlign($HAlign);
 			$slice->getBox()->setForeColor('white');
-			$slice->drawOn($this->chart);*/
+			$slice->drawOn($this->chart);
 			$xPrec = $xCurrent;
 			$currentTS = toTimeStamp(add_date(date('Y-m-d H:i:s',$currentTS),$hour,$days,$mounth,$year));
 			$xCurrent = intval($xCal+ $wCal*($currentTS-$startTS)/($finishTS-$startTS));
 		}
 		$slice = new GifBoxedLabel(
 			$xPrec, // x
-			$this->tol + $level*$this->labelGrainHeight, // y
+			$this->tol + ($level-1)*$this->labelGrainHeight, // y
 			$xCal+$wCal-$xPrec-1, // larghezza
 			$this->labelGrainHeight, // altezza
 			date($formatDate,$currentTS).'', // data

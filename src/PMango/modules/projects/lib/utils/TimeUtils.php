@@ -17,9 +17,17 @@ function toTimeStamp($str) {
 
 function add_date($givendate,$hour=0,$day=0,$mth=0,$yr=0) {
       $cd = strtotime($givendate);
-      $newdate = date('Y-m-d H:i:s', mktime(date('h',$cd)+$hour,
+/*
+echo "ore: $hour<br>";
+echo "giorni: $day<br>";
+echo "mesi: $mth<br>";
+echo "anni: $yr<br>";
+echo "data: $cd<br>";
+*/
+      $newdate = date('Y-m-d H:i:s', mktime(date('H',$cd)+$hour,
     date('i',$cd), date('s',$cd), date('m',$cd)+$mth,
     date('d',$cd)+$day, date('Y',$cd)+$yr));
+//echo "data: $newdate<br>";
       return $newdate;
 }
 ?>
