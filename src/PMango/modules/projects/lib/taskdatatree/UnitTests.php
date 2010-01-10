@@ -31,5 +31,5 @@ print "The following id will be draw: {" . implode(" - ",
 
 print "<br>generating the tree";
 $tdt = new TaskDataTreeGenerator();
-$tdt->generate();
+$tdt->generateTaskDataTree();
 ?>
