@@ -138,7 +138,9 @@ function setCalendar( idate, fdate ) {
 
 </script>
 
-<?php require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php"; ?>
+<?php require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php"; 
+require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionsChoice.php";
+?>
 
 <table class="tbl" width="100%" border="0" cellpadding="4" cellspacing="0">
 <tr>
