@@ -56,7 +56,8 @@ class UserOptionsChoice {
 	}
 
 	/**
-	 * Put all fields of the private variable $array into a string separated by "|".
+	 * Put all fields (in the form UserOptionEnumerationKey_Value) of the private variable $array
+	 * into a string separated by "|".
 	 * @return String
 	 */
 	public function saveToString(){
@@ -72,8 +73,8 @@ class UserOptionsChoice {
 	}
 	
 	/**
-	 * Set the private variable $array from a string that has all the fields of interest separated
-	 * by "|".
+	 * Set the private variable $array from a string that has all the fields of interest
+	 * (in the form UserOptionEnumerationKey_Value) separated by "|".
 	 * @param $str String
 	 */
 	public function loadFromString($str){
