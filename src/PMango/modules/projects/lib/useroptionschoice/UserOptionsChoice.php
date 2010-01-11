@@ -8,6 +8,8 @@
 */
 
 require_once dirname(__FILE__)."/UserOptionEnumeration.php";
+require_once dirname(__FILE__)."/TimeRange.php";
+require_once dirname(__FILE__)."/TimeGrainEnum.php";
 
 /**
  *
@@ -182,6 +184,9 @@ class UserOptionsChoice {
 		if(isset($this->array[TimeGrainEnum::$DailyGrainUserOption])){
 			return TimeGrainEnum::$DailyGrainUserOption;
 		}
+		if(isset($this->array[TimeGrainEnum::$WeaklyGrainUserOption])){
+			return TimeGrainEnum::$WeaklyGrainUserOption;
+		}		
 		if(isset($this->array[TimeGrainEnum::$AnnuallyGrainUserOption])){
 			return TimeGrainEnum::$AnnuallyGrainUserOption;
 		}
@@ -205,23 +210,25 @@ class UserOptionsChoice {
 			return TimeRange::$FromNowToEndRangeUserOption;
 		}
 	}
-
+	
 	function getCustomRangeValues(){
 		$custom_range = array("start"=>$this->array[TimeRange::$CustomStartDateUserOption],
-							"end"=>$this->array[$CustomEndDateUserOption]);
+							"end"=>$this->array[TimeRange::$CustomEndDateUserOption],
+							"today"=>$this->array[TimeRange::$CustomEndDateUserOption]
+							);
 		return $custom_range;
 	}
 	
 	function showCustomRangeUserOption() {
-		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
+		return isset($this->array[TimeRange::$CustomRangeUserOption]);
 	}
 
 	function showFromStartRangeUserOption() {
-		return isset($this->array[UserOptionEnumeration::$FromStartRangeUserOption]);
+		return isset($this->array[TimeRange::$FromStartToNowRangeUserOption]);
 	}
 
 	function showToEndRangeUserOption() {
-		return isset($this->array[UserOptionEnumeration::$ToEndRangeUserOption]);
+		return isset($this->array[TimeRange::$FromNowToEndRangeUserOption]);
 	}
 
 	//Task Network shows
