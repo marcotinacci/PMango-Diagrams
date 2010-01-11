@@ -39,7 +39,7 @@ $areas=array();
 */
 
 $uoc = UserOptionsChoice::GetInstance(); 
-$uoc->setFromArray($_GET);
+//$uoc->setFromArray($_GET);
 
 $task = new StubTask();
 $taskData = new TaskData();

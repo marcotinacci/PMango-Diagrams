@@ -211,6 +211,10 @@ class UserOptionsChoice {
 
 
 	public static function &GetInstance() {
+		if(!isset(UserOptionsChoice::$instance) && isset($_SESSION['uoc']))
+		{
+			UserOptionsChoice::$instance = unserialize($_SESSION['uoc']);
+		}
 		if(!isset(UserOptionsChoice::$instance)) {
 			UserOptionsChoice::$instance = new UserOptionsChoice();
 		}

@@ -140,38 +140,55 @@ function setCalendar( idate, fdate ) {
 
 <?php require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php"; 
 require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionsChoice.php";
+
+//$uoc = new UserOptionsChoice();
+//unset($_SESSION['uoc']);
+$uoc = UserOptionsChoice::GetInstance();
+$uoc->setFromArray($_POST);
+$_SESSION['uoc'] = serialize($uoc);
+
 ?>
 
 <table class="tbl" width="100%" border="0" cellpadding="4" cellspacing="0">
 <tr>
     <td>
-         <table border="0" cellpadding="4" cellspacing="0" class="tbl">
+    	<form name="editFrm" method="POST" action="?<?php echo "m=$m&a=$a&project_id=$project_id"; ?>">
+         <table border="0" cellpadding="4" cellspacing="0" class="tbl" width='100%'>
 			<tr>
-			    <form name="editFrm" method="post" action="?<?php echo "m=$m&a=$a"; ?>">
                 <input type="hidden" name="display_option" value="<?php echo $display_option; ?>" />
 
                 <td valign="top">
 
-                    <input type="checkbox" value='1' name="<?php echo UserOptionEnumeration::$PlannedDataUserOption ?>"> <?php echo "Show PlannedData"; ?>
-                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>"> <?php echo "Show PlannedTimeFrame"; ?>                    
-                    <input type="checkbox" value='3' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>"> <?php echo "Show PlannedTimeFrame"; ?>                    
-                    <input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption ?>"> <?php echo "Show TaskName"; ?>
-                    <br></br>
-                    <input type="checkbox" value='5' name="<?php echo UserOptionEnumeration::$ActualDataUserOption ?>"> <?php echo "ActualDataUserOption"; ?>
-                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>"> <?php echo "ActualTimeFrameUserOption"; ?>
-                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>"> <?php echo "AlertMarkUserOption"; ?>
-                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>"> <?php echo "Resoutces"; ?>
-
-                    <input type="checkbox" value='1' name="<?php  ?>"> <?php echo "ShowPlannedData"; ?>
-
-                </td>
-            	    </form>    				
+                    <input type="checkbox" value='1' name="<?php echo UserOptionEnumeration::$PlannedDataUserOption ?>" <?php echo $uoc->showPlannedDataUserOption()?"checked":""; ?>> <?php echo "Show PlannedData"; ?>
+                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>" <?php echo $uoc->showPlannedTimeFrameUserOption()?"checked":""; ?>> <?php echo "Show PlannedTimeFrame"; ?>                                      
+                    <input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "Show TaskName"; ?>
+                    <input type="checkbox" value='5' name="<?php echo UserOptionEnumeration::$ActualDataUserOption ?>" <?php echo $uoc->showActualDataUserOption()?"checked":""; ?>> <?php echo "ActualDataUserOption"; ?>
+                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>" <?php echo $uoc->showActualTimeFrameUserOption()?"checked":""; ?>> <?php echo "ActualTimeFrameUserOption"; ?>
+                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>" <?php echo $uoc->showAlertMarkUserOption()?"checked":""; ?>> <?php echo "AlertMarkUserOption"; ?>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resoutces"; ?>
+            
+                </td> 
+                <td align="right">
+                	<input type="reset" value="Reset">
+                	<input type="submit" value="Submit">
+                </td>				
 			</tr>
 		</table>
+		</form>   
 				
 				<?php 
-				UserOptionsChoice::GetInstance()->setFromArray($_POST);
-				echo UserOptionsChoice::GetInstance()->showPlannedDataUserOption(); 
+				
+				//uoc debug
+				/*
+				echo UserOptionEnumeration::$PlannedDataUserOption.":".$uoc->showPlannedDataUserOption()."<br>";
+				echo UserOptionEnumeration::$PlannedTimeFrameUserOption .":".$uoc->showPlannedTimeFrameUserOption()."<br>";
+				echo UserOptionEnumeration::$TaskNameUserOption.":".$uoc->showTaskNameUserOption()."<br>";
+				echo UserOptionEnumeration::$ActualDataUserOption.":".$uoc->showActualDataUserOption()."<br>";
+				echo UserOptionEnumeration::$ActualTimeFrameUserOption.":".$uoc->showActualTimeFrameUserOption()."<br>";
+				echo UserOptionEnumeration::$AlertMarkUserOption.":".$uoc->showAlertMarkUserOption()."<br>";
+				echo UserOptionEnumeration::$ResourcesUserOption.":".$uoc->showResourcesUserOption()."<br>";
+				*/
+				 
 				?>
 				
 				<!-- Generated Image -->

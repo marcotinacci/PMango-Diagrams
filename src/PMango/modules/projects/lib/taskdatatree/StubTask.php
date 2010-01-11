@@ -20,7 +20,7 @@ class StubTask{
 		
 		StubTask::$id++;
 		
-		$this->data[DataArrayKeyEnumeration::$planned_start_date]="12.09.10";
+		$this->data[DataArrayKeyEnumeration::$planned_start_date]="2010-01-12 02:00:00";
 		
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][0]['PlannedEffort']="20";
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][0]['ResourceName']="Pippo";

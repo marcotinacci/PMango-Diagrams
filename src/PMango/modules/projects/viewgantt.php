@@ -262,7 +262,7 @@ function showFullProject() {
 		<table width="100%" cellspacing="0" cellpadding="0" border="1"
 			align="center" class="tbl">
 			<tr>
-				<td><img width='100%'
+				<td><img 
 					src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']; ?>'>
 				</td>
 			</tr>

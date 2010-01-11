@@ -138,7 +138,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	public function generateChart(){
 		// genera l'albero dei task
-		$this->tdt = $this->tdtGenerator->stubGenerateTaskDataTree();
+		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
 		// visita l'albero
 		$this->tasks = $this->tdt->deepVisit();
 		// calcola una sola volta il numero dei task dell'albero
