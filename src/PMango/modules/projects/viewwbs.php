@@ -162,7 +162,7 @@ function setCalendar( idate, fdate ) {
                 <table width="100%" cellspacing="0" cellpadding="0" border="1" align="center" class="tbl">
                 <tr>
                         <td>
-							<img width='100%' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php"; ?>'>
+							<img width='100%' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']; ?>'>
                         </td>
                 </tr>
                 </table>

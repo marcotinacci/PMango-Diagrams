@@ -5,7 +5,9 @@
  require_once dirname(__FILE__)."./includes/main_functions.php";
  require_once dirname(__FILE__)."./includes/db_connect.php";
  require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
- */
+*/
+
+require_once dirname(__FILE__)."./UserOptionEnumeration.php";
 
 /**
  *
@@ -208,7 +210,7 @@ class UserOptionsChoice {
 	}
 
 
-	public static function GetInstance() {
+	public static function &GetInstance() {
 		if(!isset(UserOptionsChoice::$instance)) {
 			UserOptionsChoice::$instance = new UserOptionsChoice();
 		}

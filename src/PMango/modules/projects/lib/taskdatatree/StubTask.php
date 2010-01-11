@@ -15,7 +15,7 @@ class StubTask{
 	
 	public function __construct()
 	{
-		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="1.111".StubTask::$id;
+		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="1.".StubTask::$id;
 		$this->data[DataArrayKeyEnumeration::$name]="Task_".StubTask::$id;
 		
 		StubTask::$id++;
@@ -88,7 +88,7 @@ class StubTask{
 	}
 
 	public function getPlannedData(){
-		$planned_data = array ("duration"=>$this->data[DataArrayKeyEnumeration::$plan_duration], "effort"=>$this->data[DataArrayKeyEnumeration::$plan_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$plan_cost]);
+		$planned_data = array ("duration"=>$this->getPlannedDuration(), "effort"=>$this->data[DataArrayKeyEnumeration::$plan_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$plan_cost]);
 		return $planned_data;
 	}
 
@@ -98,7 +98,7 @@ class StubTask{
 	}
 
 	public function getActualData(){
-		$actual_data = array ("duration"=>$this->data[DataArrayKeyEnumeration::$act_duration], "effort"=>$this->data[DataArrayKeyEnumeration::$act_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$act_cost]);
+		$actual_data = array ("duration"=>$this->getActualDuration(), "effort"=>$this->data[DataArrayKeyEnumeration::$act_effort], "cost"=>$this->data[DataArrayKeyEnumeration::$act_cost]);
 		return $actual_data;
 	}
 
@@ -109,7 +109,7 @@ class StubTask{
 
 	// funzione solo di stub
 	public function setLevel($l){
-		
+
 	}
 	
 	private function calculatePercentage(){
