@@ -102,9 +102,9 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 			
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($CLiv+1)*$max+150;
+		$height=($CLiv+4)*$max;
 		//Spazio tra un livello ed un altro
-		$alt=$height-$max;
+		$alt=$height-2*$max;
 		
 		$Link=array(array());
 		$l=0;		//Indice per vettore areas
@@ -172,7 +172,7 @@ class WBSChartGenerator extends ChartGenerator{
 				}		
 		}
 		$Livello--;
-		$alt-=$max + 20;
+		$alt-=$max + $max/2;
 	}
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
 	if(Count($areas)>0)
