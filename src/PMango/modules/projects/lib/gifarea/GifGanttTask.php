@@ -92,7 +92,7 @@ class GifGanttTask extends GifArea
 	function __construct($xStart, $xFinish, $y, $height, $startDate, 
 		$finishDate, $taskData, $today, $uoc)
 	{
-		parent::__construct($xStart, $y, $xFinish - $xStart, $height);
+		parent::__construct($xStart, $y,  $xFinish - $xStart, $height);
 
 		// task data
 		$this->td = $taskData;
@@ -320,6 +320,7 @@ class GifGanttTask extends GifArea
 	 */
 	protected function canvasDraw(){
 		// riga di collegamento actual-planned
+		
 		if($this->actualStarted){
 			if(($this->xP + $this->wP) < $this->xA){
 				$this->canvas->img->setColor('black');

@@ -154,8 +154,8 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->numTasks = sizeOf($this->tasks);
 		
 		// TODO: stub date, prenderle dalle uoc
-		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,8,1,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,20,1,2010));
+		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,8,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,20,2010));
 		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,10,2010));
 		
 		// TODO: opzioni utente
