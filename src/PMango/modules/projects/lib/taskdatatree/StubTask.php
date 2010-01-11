@@ -30,11 +30,11 @@ class StubTask{
 		$this->data[DataArrayKeyEnumeration::$assigned_to_task][1]['Role']="Administrator";
 		$this->data[DataArrayKeyEnumeration::$plan_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$plan_cost]="20";
-		$this->data[DataArrayKeyEnumeration::$planned_start_date]="2010-01-13 02:00:00";
-		$this->data[DataArrayKeyEnumeration::$planned_finish_date]="2010-01-14 06:00:00";
+		$this->data[DataArrayKeyEnumeration::$planned_start_date]="2010-01-12 02:00:00";
+		$this->data[DataArrayKeyEnumeration::$planned_finish_date]="2010-01-17 16:00:00";
 		$this->data[DataArrayKeyEnumeration::$act_effort]="20";
 		$this->data[DataArrayKeyEnumeration::$act_cost]="20";
-		$this->data[DataArrayKeyEnumeration::$actual_start_date]= "2010-01-13 01:00:00";
+		$this->data[DataArrayKeyEnumeration::$actual_start_date]= "2010-01-13 05:00:00";
 		$this->data[DataArrayKeyEnumeration::$actual_finish_date]= "2010-01-14 10:00:00";
 		$this->data[DataArrayKeyEnumeration::$percentage]="20";
 	}

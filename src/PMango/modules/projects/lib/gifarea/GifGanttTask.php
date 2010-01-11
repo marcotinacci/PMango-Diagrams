@@ -88,16 +88,6 @@ class GifGanttTask extends GifArea
 	{
 		parent::__construct($xStart, $y, $xFinish - $xStart, $height);
 
-		// DEBUG
-/*		echo '<br>x start: '.$xStart;
-		echo '<br>x finish: '.$xFinish;
-		echo '<br>y: '.$y;
-		echo '<br>height: '.$height;
-		echo '<br>start date: '.$startDate;
-		echo '<br>finish date: '.$finishDate;
-		echo '<br>today: '.$today;
-*/
-
 		// task data
 		$this->td = $taskData;
 
@@ -149,58 +139,137 @@ class GifGanttTask extends GifArea
 			$this->actualStarted = true;
 		}
 		
+		// coordinate di supporto (non vengono modificate)
+		$trueXPlanned = $xPlanned;
+		$trueYPlanned = $yPlanned;
+		$trueWPlanned = $wPlanned;
+		$trueXActual = $xActual;
+		$trueYActual = $yActual;
+		$trueWActual = $wActual;
+
 		// caso foglia e caso nodo interno
 		if(sizeOf($this->td->getChildren()) == 0){
 			// se il task è una foglia
 			$hPlanned = intval(2*$height/3);
 			$hActual = $height - $hPlanned;
 			$cPlanned = 'white';
+			$isLeaf = true;
 		}else{
 			// se il task ha figli
 			$hPlanned = intval($height/3);
 			$cPlanned = 'black';
 			$hActual = $hPlanned;
-			$hTri = $height - $hPlanned;
-		
-			// cerco inizio minore tra planned e actual
-			$xMin = $this->actualStarted == null ? 
-				$xPlanned : ($xActual < $xPlanned ? $xActual : $xPlanned);
-			// cerco fine maggiore tra planned e actual							
-			$xMax = $xActual + $wActual == null ? 
-				$xPlanned + $wPlanned : 
-				($xActual + $wActual > $xPlanned + $wPlanned ? 
-				$xActual + $wActual : $xPlanned + $wPlanned);
-			
-			// genero triangoli
-			$this->subAreas['leftTriangle'] = new GifTriangle(
-				$xMin, $hPlanned, $this->wTri, $hTri, 'left');
-			$this->subAreas['leftTriangle']->setForeColor($cPlanned);
-						
-			$this->subAreas['rightTriangle'] = new GifTriangle(
-				$xMax-$this->wTri, $hPlanned, $this->wTri, $hTri, 'right');
-			$this->subAreas['rightTriangle']->setForeColor($cPlanned);
+			$isLeaf = false;
 		}
-
-		// costruzione del planned
-		$this->subAreas['Planned'] = new GifBox(
-			$xPlanned, // x
-			0, // y
-			$wPlanned, // width
-			$hPlanned // height
-			);
-		$this->subAreas['Planned']->setForeColor($cPlanned);
-
-		if($this->actualStarted){
+		
+		// se il planned task è visibile nella finestra
+		if(($xPlanned + $wPlanned > 0) && ($xPlanned < $xFinish - $xStart)){
+			$plannedVisible = true;	
+			// controlli uscita dalla griglia a sinistra
+			if($xPlanned < 0){
+				$wPlanned += $xPlanned;
+				$xPlanned = 0;
+				$plannedOutLeft = true;
+			}else{
+				$plannedOutLeft = false;
+			}
+			
+			// controlli uscita dalla griglia a destra
+			if($xPlanned + $wPlanned > $xFinish - $xStart){
+				$wPlanned = $xFinish - $xStart - $xPlanned;
+				$plannedOutRight = true;
+			}else{
+				$plannedOutRight = false;
+			}
+				
+			// costruzione del planned
+			$plannedGifBox = new GifBox(
+				$xPlanned, // x
+				0, // y
+				$wPlanned, // width
+				$hPlanned // height
+				);
+			$plannedGifBox->setForeColor($cPlanned);
+		}else{
+			// se visible è falsa gli outRight e outLeft non sono settati!			
+			$plannedVisible = false;			
+		}
+		
+		// se l'actual task è visibile nella finestra
+		if($this->actualStarted && 
+			($xActual + $wActual > 0) && 
+			($xActual < $xFinish - $xStart))
+			{
+			$actualVisible = true;	
+			// controlli uscita dalla griglia a sinistra
+			if($xActual < 0){
+				$wActual += $xActual;
+				$xActual = 0;
+				$actualOutLeft = true;
+			}else{
+				$actualOutLeft = false;
+			}
+			
+			// controlli uscita dalla griglia a destra
+			if($xActual + $wActual > $xFinish - $xStart){
+				$wActual = $xFinish - $xStart - $xActual;
+				$actualOutRight = true;
+			}else{
+				$actualOutRight = false;
+			}
+			
+			// TODO: riadattare percentuale
 			// costruzione actual
-			$this->subAreas['ActualProgress'] = new GifProgressBar(
+			$actualGifProgressBar = new GifProgressBar(
 				$xActual,
 				$hPlanned,
 				$wActual,
 				intval($height/3),
 				$this->td->getInfo()->getPercentage()
 			);
+		}else{
+			// se visible è falsa gli outRight e outLeft non sono settati!
+			$actualVisible = false;								
 		}
 		
+		// costruzione triangoli se il task non è foglia ed è visibile
+		if((!$isLeaf) && ($plannedVisible || $actualVisible)){
+			// altezza triangoli
+			$hTri = $height - $hPlanned;
+			$leftVisible = true;
+			$rightVisible = true;
+			
+			// sinistra
+			$xLeft = ($trueXActual < $trueXPlanned) ? 
+				$trueXActual : $trueXPlanned;
+			if($xLeft < 0){
+				$xLeft = null;
+				$leftVisible = false;					
+			}
+			// destra
+			$xRight = ($trueXActual + $trueWActual > $trueXPlanned + $trueWPlanned) ? 
+				$trueXActual + $trueWActual : $trueXPlanned + $trueWPlanned;
+			if($xRight > $xFinish - $xStart){
+				$xRight = null;
+				$rightVisible = false;
+			}
+
+
+			if($leftVisible){
+				// genero triangolo sinistro
+				$leftGifTriangle = new GifTriangle(
+					$xLeft, $hPlanned, $this->wTri, $hTri, 'left');
+				$leftGifTriangle->setForeColor($cPlanned);
+			}
+			if($rightVisible){
+				// genero triangolo destro
+				$rightGifTriangle = new GifTriangle(
+					$xRight - $this->wTri, $hPlanned, $this->wTri, $hTri, 'right');
+				$rightGifTriangle->setForeColor($cPlanned);
+			}
+		}
+		
+		// TODO: troncare riga
 		// riga di collegamento actual-planned
 		$this->xP = $xPlanned;
 		$this->wP = $wPlanned;
@@ -212,6 +281,19 @@ class GifGanttTask extends GifArea
 		// label risorse
 		//$this->subAreas['Resources'] = new GifLabel(,,);
 		
+		// stampa le componenti nel giusto ordine
+		if(isset($plannedGifBox)){
+			$this->subAreas['planned'] = $plannedGifBox;
+		}
+		if(isset($leftGifTriangle)){
+			$this->subAreas['leftTriangle'] = $leftGifTriangle;
+		}
+		if(isset($rightGifTriangle)){
+			$this->subAreas['rightTriangle'] = $rightGifTriangle;
+		}
+		if(isset($actualGifProgressBar)){
+			$this->subAreas['actual'] = $actualGifProgressBar;
+		}		
 	}
 	
 	/**
