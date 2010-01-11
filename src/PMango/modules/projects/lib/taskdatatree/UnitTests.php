@@ -38,6 +38,13 @@ $leaves = $tdt->getLeaves();
 foreach ($leaves as $leaf) {
 	print " " . $leaf->getInfo()->getTaskID();	
 }
+print "<br>analising deep dependency...";
+$dependencyMap = $tdt->computeDependencyRelationOnVisibleTasks();
+foreach ($dependencyMap as $needed => $dependants) {
+	print "<br>Needed leaf task: " . $needed . 
+	" that has this dependants: " . implode(", ", $dependants);
+}
+
 print "<br>Puning the unvisible tasks...";
 $tdt->getVisibleTree();
 print "<br>The new leaves are: ";

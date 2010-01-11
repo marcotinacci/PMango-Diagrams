@@ -91,14 +91,21 @@ class TaskDataTree {
 	 *
 	 * @return array of pair described above
 	 */
+	//var $leaves;
 	public function computeDependencyRelationOnVisibleTasks() {
-		$leaves = $this->getVisibleTree()->getLeaves();
+		//$this->leaves = $this->getVisibleTree()->getLeaves();
 		$result = array();
-		foreach ($leaves as $leaf) {
+		foreach ($this->getVisibleTree()->getLeaves() as $leaf) {
 			$deepChildren = $leaf->getInfo()->getCTask()->getDeepChildren();
+			//			print "<br>deep children of " . $leaf->getInfo()->getCTask()->task_id .
+			//			": " . implode(", ", $deepChildren);
+
 			foreach ($deepChildren as $child) {
+				//print "<br>analizing dependency of " . $child;
 				$this->analizeDependencies($child, $deepChildren, $leaf, $result);
 			}
+
+			// the following line is correct only if the $leaf is atomic
 			$this->analizeDependencies($leaf->getInfo()->getTaskID(), array(), $leaf, $result);
 		}
 		return $result;
@@ -106,12 +113,33 @@ class TaskDataTree {
 
 	private function analizeDependencies($task_id, $deepChildren, $leaf, & $result) {
 		$dependencies = CTask::staticGetDependencies($task_id);
-		foreach($dependencies as $dependency) {
-			if(in_array($dependency, $deepChildren)) {
+		$array = explode(",", $dependencies);
+		//print_r($array);
+		//var_dump($dependencies);
+		//print " that have this dependencies: " . implode(", ", (array)$dependencies);
+		//$array =(array)$dependencies;
+		//print " imploded dependencies " . implode(", ", (array)$dependencies);
+			
+		foreach($array as $stringDependency) {
+			//	var_dump( $stringDependency);
+			if ($stringDependency == "") {
 				continue;
 			}
+
+			$dependency = intval($stringDependency);
+			//print " $dependency ";
+			if(in_array($dependency, $deepChildren)) {
+				//print $dependency . " is a deep child of " .
+				$leaf->getInfo()->getTaskName();
+				//continue;
+			}
 			else {
-				$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren($dependency, $leaf);
+				$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren($dependency);
+
+				if(!$neededLeaf) {
+					print "no parent left found for : " . $dependency;
+				}
+				//print " the parent needed leaf is: " . $neededLeaf->getInfo()->getTaskName();
 				if($neededLeaf != false) {
 					if(!isset($result[$neededLeaf->getInfo()->getTaskID()])) {
 						$result[$neededLeaf->getInfo()->getTaskID()] = array();
@@ -132,21 +160,18 @@ class TaskDataTree {
 	 * 	la foglia non sia presente
 	 * @return TaskData if the leaf is found, else false
 	 */
-	public function searchNeededLeafThatHaveInDeepChildren($dependency, $butLeaf = null) {
+	public function searchNeededLeafThatHaveInDeepChildren($dependency) {
+		//print " saerching parent leaf of " . $dependency . " ";
 		foreach ($this->getVisibleTree()->getLeaves() as $leaf) {
-			if ($butLeaf != null && $leaf->getInfo()->getTaskID() == $butLeaf->getInfo()->getTaskID()) {
-				continue;
-			}
+			//			if ($leaf->getInfo()->getTaskID() == $butLeaf->getInfo()->getTaskID() &&
+			//			$butLeaf != null) {
+			//				continue;
+			//			}
 
-			if ($leaf->getInfo()->getCTask()->getDeepChildren() != null) {
-				if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren())) {
-					return $leaf;
-				}
-			}
-			else {
-				if ($dependency == $leaf->getInfo()->getTaskID()) {
-					return $leaf;
-				}
+			if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren()) ||
+			$dependency == $leaf->getInfo()->getTaskID()) {
+				//print " Leaf that contains $dependency is " . $leaf->getInfo()->getTaskID();
+				return $leaf;
 			}
 		}
 		return false;
