@@ -195,7 +195,7 @@ $_SESSION['uoc'] = serialize($uoc);
                 <table width="100%" cellspacing="0" cellpadding="0" border="1" class="tbl">
                 <tr>
                         <td>
-							<img width='80%' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']; ?>'>
+							<img src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']; ?>'>
                         </td>
                 </tr>
                 </table>

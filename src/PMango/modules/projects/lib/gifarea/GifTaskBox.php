@@ -46,8 +46,8 @@ class GifTaskBox extends GifArea
 		if($uoc->showPlannedTimeFrameUserOption())
 		{
 			$ptf = $task->getInfo()->getPlannedTimeFrame();
-			$PlannedTimeFrame_start = date($date_format,strtotime($ptf['start_date']));
-			$PlannedTimeFrame_finish = date($date_format,strtotime($ptf['finish_date']));
+			$PlannedTimeFrame_start = "".date($date_format,strtotime($ptf['start_date']));
+			$PlannedTimeFrame_finish = "".date($date_format,strtotime($ptf['finish_date']));
 			$this->subAreas['PlannedTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_start,$fontHeight);
 			$this->subAreas['PlannedTimeFrame_box_finish'] = new GifBoxedLabel($doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_finish,$fontHeight);
 			$curY += $row;
@@ -56,9 +56,9 @@ class GifTaskBox extends GifArea
 		if($uoc->showPlannedDataUserOption())
 		{
 			$planned = $task->getInfo()->getPlannedData();
-			$Planned_D = $planned["duration"];
-			$Planned_PH = $planned["effort"];
-			$Planned_Money = $planned["cost"];
+			$Planned_D = "".$planned["duration"];
+			$Planned_PH = "".$planned["effort"];
+			$Planned_Money = "".$planned["cost"];
 			$this->subAreas['PlannedData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$Planned_D,$fontHeight);
 			$this->subAreas['PlannedData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$Planned_PH,$fontHeight);
 			$this->subAreas['PlannedData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$Planned_Money,$fontHeight);
@@ -86,8 +86,9 @@ class GifTaskBox extends GifArea
 		if($uoc->showActualTimeFrameUserOption())
 		{
 			$atf = $task->getInfo()->getActualTimeFrame();
-			$ActualTimeFrame_start = date($date_format,strtotime($atf['start_date']));
-			$ActualTimeFrame_finish = date($date_format,strtotime($atf['finish_date']));
+			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
+			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
+			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
 			$this->subAreas['ActualTimeFrame_box_finish'] = new GifBoxedLabel($doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_finish,$fontHeight);
 			$curY += $row;
@@ -96,9 +97,9 @@ class GifTaskBox extends GifArea
 		if($uoc->showActualDataUserOption())
 		{
 			$actual = $task->getInfo()->getActualData();
-			$actual_D = $actual["duration"];
-			$actual_PH = $actual["effort"];
-			$actual_Money = $actual["cost"];
+			$actual_D = "".$actual["duration"];
+			$actual_PH = "".$actual["effort"];
+			$actual_Money = "".$actual["cost"];
 			$this->subAreas['ActualData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$actual_D,$fontHeight);
 			$this->subAreas['ActualData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$actual_PH,$fontHeight);
 			$this->subAreas['ActualData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$actual_Money,$fontHeight);
@@ -115,9 +116,9 @@ class GifTaskBox extends GifArea
 
 		if($uoc->showAlertMarkUserOption())
 		{
-			if($task->getInfo()->isMarked() == DeltaInfoEnum::$good_news)
+			if($task->isMarked() == DeltaInfoEnum::$good_news)
 			$this->subAreas['Mark']= new GifMark($width, 0 ,$row, 0);
-			else if($task->getInfo()->isMarked() == DeltaInfoEnum::$bad_news)
+			else if($task->isMarked() == DeltaInfoEnum::$bad_news)
 			$this->subAreas['Mark']= new GifMark($width, 0 ,$row, 1);
 		}
 		$this->task = $task;
