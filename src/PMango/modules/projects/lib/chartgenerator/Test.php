@@ -1,5 +1,14 @@
 <?php
-//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+function myerrorhandler($errno,$errstr,$errfile,$errline)
+{
+	$file=fopen("./errors.txt","w");
+	fwrite($file,$errno . " " . $errstr . " " . $errfile  . " " . $errline . "\n");
+	return true;
+}
+set_error_handler("myerrorhandler");
+
 //--------------------------------------------------
 $baseDir = dirname(__FILE__)."/../../../..";
 require_once "$baseDir/includes/config.php";
@@ -29,7 +38,7 @@ $AppUI =& $_SESSION['AppUI'];
 
 require_once dirname(__FILE__)."/WBSChartGenerator.php";
 
-$WBS = new WBSChartGenerator(800);
+$WBS = new WBSChartGenerator();
 $WBS->generateChart();
 
 ?>
