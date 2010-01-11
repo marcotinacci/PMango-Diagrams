@@ -118,6 +118,12 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @var tasks[]
 	 */
 	protected $tasks = array();
+
+	/**
+	 * vettore di dipendenze
+	 * @var coppie (task_id, array(task_dipendenze_id))
+	 */
+	protected $dep = array();
 	
 	/**
 	 * vettore di task grafici
@@ -139,18 +145,21 @@ class GanttChartGenerator extends ChartGenerator{
 	public function generateChart(){
 		// genera l'albero dei task
 		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
-		// visita l'albero
-		$this->tasks = $this->tdt->deepVisit();
+		// visita l'albero visibile
+		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
+		// prendi le dipendenze
+		$this->deps = $this->tdt->computeDependencyRelationOnVisibleTasks();
+		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tasks);
 		
 		// TODO: stub date, prenderle dalle uoc
-		$this->sDate = date('Y-m-d H:i:s',mktime(12,0,0,1,12,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,15,2010));
-		$this->today = date('Y-m-d H:i:s',mktime(12,0,0,1,20,2010));
+		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,8,1,2010));
+		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,20,1,2010));
+		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,10,2010));
 		
 		// TODO: opzioni utente
-		$this->grainLevel = 5;
+		$this->grainLevel = 4;
 		
 		// costruisci il canvas
 		$this->makeCanvas();
@@ -371,7 +380,29 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/GanttChartGenerator#makeGanttTaskBox()	
 	 */
 	protected function makeGanttDependencies(){
-		// TODO: not implemented yet
+		$this->deps;
+		// per ogni task visibile
+		for($i=0 ; $i<$this->numTasks; $i++){
+			// prendi il vettore delle dipendenze
+			$taskDeps = $this->deps[$this->tasks[$i]->getInfo()->getTaskID()];
+			// per ogni dipendenza del task $i
+			$numDep = sizeOf($taskDeps);
+			for($j=0 ; $j < $numDep; $j++){
+				// prendi l'id della dipendenza
+				$id_dep = $taskDeps[$j]->getInfo()->getTaskID();
+				// cercala nei nodi visibili
+				for($k=0 ; $k < $this->numTasks; $k++){
+					// se $k è la dipendenza di $i
+					if($this->tasks[$k]->getInfo()->getTaskID() == $id_dep){
+						$point1 = $this->gTasks[$i]->getPlannedBox()->getRightMiddlePoint();
+						$point2 = $this->gTasks[$k]->getPlannedBox()->getLeftMiddlePoint();
+						DrawingHelper::GanttDependencyLine($point1[0],$point1[1],
+							$point2[0],$point2[1],5,true,$this->chart,new LineStyle('#7F7F7F'));
+						break;
+					}
+				}
+			}
+		}
 	}
 	
 	/**

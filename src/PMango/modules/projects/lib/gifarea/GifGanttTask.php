@@ -72,6 +72,12 @@ class GifGanttTask extends GifArea
 	protected $actualStarted = false;
 
 	/**
+	 * dimensione dei font
+	 * @var fontSize
+	 */	
+	protected $fontSize = 10;
+
+	/**
 	 * Costruttore
 	 * @param xStart: x iniziale
 	 * @param xFinish: x finale
@@ -118,24 +124,30 @@ class GifGanttTask extends GifArea
 			// coordinate actual
 			$xActual = null;
 			$wActual = null;
-			$this->actualStarted = false;	
-		}else if($actual['finish_date'] == null){
-			$startActualTS = strtotime($actual['start_date']);
-			$finishActualTS = null;
+			$this->actualStarted = false;
+// se la start_date non c'è, non c'è nemmeno la finish_date
+//		}else if($actual['finish_date'] == null){
+//			$startActualTS = strtotime($actual['start_date']);
+//			$finishActualTS = null;
 			// coordinate actual			
-			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
-				/ $windowDuration);
-			$wActual = intval($windowWidth * ($todayTS-$startTS) 
-				/ $windowDuration) - $xActual;
-			$this->actualStarted = true;
+//			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
+//				/ $windowDuration);
+//			$wActual = intval($windowWidth * ($todayTS-$startTS) 
+//				/ $windowDuration) - $xActual;
+//			$this->actualStarted = true;
 		}else{
 			$startActualTS = strtotime($actual['start_date']);
 			$finishActualTS = strtotime($actual['finish_date']);
 			// coordinate actual			
 			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
-				/ $windowDuration);
-			$wActual = intval($windowWidth * ($finishActualTS-$startTS) 
-				/ $windowDuration) - $xActual;			
+				/ $windowDuration);			
+			if($this->td->getInfo()->getPercentage() > 99){ // per errori di approssimazione
+				$wActual = intval($windowWidth * ($finishActualTS-$startTS) 
+					/ $windowDuration) - $xActual;
+			}else{
+				$wActual = intval($windowWidth * ($todayTS-$startTS) 
+					/ $windowDuration) - $xActual;				
+			}
 			$this->actualStarted = true;
 		}
 		
@@ -240,12 +252,20 @@ class GifGanttTask extends GifArea
 			$rightVisible = true;
 			
 			// sinistra
-			$xLeft = ($trueXActual < $trueXPlanned) ? 
-				$trueXActual : $trueXPlanned;
-			if($xLeft < 0){
+			if((!$this->actualStarted) && ($trueXPlanned >= 0)){
+				$xLeft = $trueXPlanned;
+			}else if((!$this->actualStarted) && ($trueXPlanned < 0)){
 				$xLeft = null;
-				$leftVisible = false;					
+				$leftVisible = false;			
+			}else{
+				$xLeft = ($trueXActual < $trueXPlanned) ? 
+					$trueXActual : $trueXPlanned;
+				if($xLeft < 0){
+					$xLeft = null;
+					$leftVisible = false;					
+				}
 			}
+			
 			// destra
 			$xRight = ($trueXActual + $trueWActual > $trueXPlanned + $trueWPlanned) ? 
 				$trueXActual + $trueWActual : $trueXPlanned + $trueWPlanned;
@@ -269,12 +289,11 @@ class GifGanttTask extends GifArea
 			}
 		}
 		
-		// TODO: troncare riga
 		// riga di collegamento actual-planned
-		$this->xP = $xPlanned;
+		$this->xP = $xPlanned > $xFinish - $xStart ? $xFinish - $xStart : $xPlanned;
 		$this->wP = $wPlanned;
 		$this->hP = $hPlanned;
-		$this->xA = $xActual;
+		$this->xA = $xActual > $xFinish - $xStart ? $xFinish - $xStart : $xActual;
 		$this->wA = $wActual;
 		
 		// TODO: inserire se presenti in opzioni utente
@@ -322,6 +341,21 @@ class GifGanttTask extends GifArea
 		}
 	}
 	
+	/**
+	 * getter del planned box
+	 */
+	public function getPlannedBox()
+	{
+		return $this->subAreas['planned'];
+	}
+	
+	/**
+	 * getter dell'actual progress bar
+	 */	
+	public function getActualProgressBar()
+	{
+		return $this->subAreas['actual'];
+	}	
 	
 	public function setVisiblesFromOptionsChoice($userOptionsChoice)
 	{
@@ -330,12 +364,12 @@ class GifGanttTask extends GifArea
 	
 	public function getFontsize()
 	{
-		// TODO: not implemented yet		
+		return $this->fontSize;
 	}
 	
 	public function setFontSize($size)
 	{
-		// TODO: not implemented yet
+		$this->fontSize = $size;
 	}
 }
 
