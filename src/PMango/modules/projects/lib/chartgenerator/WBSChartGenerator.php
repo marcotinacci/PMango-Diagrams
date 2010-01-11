@@ -66,7 +66,7 @@ class WBSChartGenerator extends ChartGenerator{
 		//Viene contato e memorizzato il numero di foglie presenti
 		$numleaves=Count($leav);
 		
-		$CLiv=2;
+		$CLiv=-1;
 
 		//CLiv contiene il numero del livello maggiore
 		foreach($nodi as $n){
@@ -153,7 +153,8 @@ class WBSChartGenerator extends ChartGenerator{
 		$alt-=250;
 	}
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
-	$this->makeWBSDependencies($LinkX,$LinkY,$Link,$CLiv,$numleaves,$areas,$height);
+	if(Count($areas)>0)
+		$this->makeWBSDependencies($LinkX,$LinkY,$Link,$CLiv,$numleaves,$areas,$height);
 }
 	
 	/**
@@ -197,6 +198,7 @@ class WBSChartGenerator extends ChartGenerator{
 					
 			}
 		}
+		
 		foreach($areas as $a)
 			$a->drawOn($gif);
 		$gif->draw();
