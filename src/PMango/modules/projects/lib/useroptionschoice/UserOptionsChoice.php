@@ -7,7 +7,7 @@
  require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
 */
 
-require_once dirname(__FILE__)."./UserOptionEnumeration.php";
+require_once dirname(__FILE__)."/UserOptionEnumeration.php";
 
 /**
  *
