@@ -15,7 +15,7 @@ require_once dirname(__FILE__)."/../utils/TimeUtils.php";
  * Questa classe implementa la generazione grafica del task nel diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.6
+ * @version: 0.7
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -76,6 +76,42 @@ class GifGanttTask extends GifArea
 	 * @var fontSize
 	 */	
 	protected $fontSize = 10;
+	
+	/**
+	 * coordinata x reale del box planned	
+	 * @var int
+	 */
+	protected $trueXPlanned;
+
+	/**
+	 * coordinata y reale del box planned
+	 * @var int
+	 */
+	protected $trueYPlanned;
+	
+	/**
+	 * larghezza reale del box planned
+	 * @var int
+	 */
+	protected $trueWPlanned;
+	
+	/**
+	 * coordinata x reale del box planned
+	 * @var int
+	 */
+	protected $trueXActual;
+
+	/**
+	 * coordinata x reale del box planned
+	 * @var int
+	 */
+	protected $trueYActual;
+
+	/**
+	 * coordinata x reale del box planned
+	 * @var int
+	 */
+	protected $trueWActual;
 
 	/**
 	 * Costruttore
@@ -139,25 +175,33 @@ class GifGanttTask extends GifArea
 			$startActualTS = strtotime($actual['start_date']);
 			$finishActualTS = strtotime($actual['finish_date']);
 			// coordinate actual			
-			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
+			$xActual = intval($windowWidth * ($startActualTS-$startActualTS) 
 				/ $windowDuration);			
 			if($this->td->getInfo()->getPercentage() > 99){ // per errori di approssimazione
-				$wActual = intval($windowWidth * ($finishActualTS-$startTS) 
-					/ $windowDuration) - $xActual;
+				// caso task completato
+				$wActual = intval($windowWidth * ($finishActualTS-$startActualTS) 
+					/ $windowDuration);
+			}else if($todayTS-$startActualTS > 0){
+				// caso task in prosecuzione
+				$wActual = ($windowWidth * ($todayTS-$startActualTS) 
+					/ $windowDuration);
+//				echo "-- wActual: $wActual = ($windowWidth * ($todayTS-$startActualTS) 
+//					/ $windowDuration);<br>";
 			}else{
-				$wActual = intval($windowWidth * ($todayTS-$startTS) 
-					/ $windowDuration) - $xActual;				
+				// caso task anticipato
+				$wActual = ($windowWidth * ($finishActualTS-$startActualTS) 
+					/ $windowDuration);				
 			}
 			$this->actualStarted = true;
 		}
 		
 		// coordinate di supporto (non vengono modificate)
-		$trueXPlanned = $xPlanned;
-		$trueYPlanned = $yPlanned;
-		$trueWPlanned = $wPlanned;
-		$trueXActual = $xActual;
-		$trueYActual = $yActual;
-		$trueWActual = $wActual;
+		$this->trueXPlanned = $xPlanned;
+		$this->trueYPlanned = $yPlanned;
+		$this->trueWPlanned = $wPlanned;
+		$this->trueXActual = $xActual;
+		$this->trueYActual = $yActual;
+		$this->trueWActual = $wActual;
 
 		// caso foglia e caso nodo interno
 		if(sizeOf($this->td->getChildren()) == 0){
@@ -252,14 +296,14 @@ class GifGanttTask extends GifArea
 			$rightVisible = true;
 			
 			// sinistra
-			if((!$this->actualStarted) && ($trueXPlanned >= 0)){
-				$xLeft = $trueXPlanned;
-			}else if((!$this->actualStarted) && ($trueXPlanned < 0)){
+			if((!$this->actualStarted) && ($this->trueXPlanned >= 0)){
+				$xLeft = $this->trueXPlanned;
+			}else if((!$this->actualStarted) && ($this->trueXPlanned < 0)){
 				$xLeft = null;
 				$leftVisible = false;			
 			}else{
-				$xLeft = ($trueXActual < $trueXPlanned) ? 
-					$trueXActual : $trueXPlanned;
+				$xLeft = ($this->trueXActual < $this->trueXPlanned) ? 
+					$this->trueXActual : $this->trueXPlanned;
 				if($xLeft < 0){
 					$xLeft = null;
 					$leftVisible = false;					
@@ -267,8 +311,8 @@ class GifGanttTask extends GifArea
 			}
 			
 			// destra
-			$xRight = ($trueXActual + $trueWActual > $trueXPlanned + $trueWPlanned) ? 
-				$trueXActual + $trueWActual : $trueXPlanned + $trueWPlanned;
+			$xRight = ($this->trueXActual + $this->trueWActual > $this->trueXPlanned + $this->trueWPlanned) ? 
+				$this->trueXActual + $this->trueWActual : $this->trueXPlanned + $this->trueWPlanned;
 			if($xRight > $xFinish - $xStart){
 				$xRight = null;
 				$rightVisible = false;
@@ -300,6 +344,13 @@ class GifGanttTask extends GifArea
 		// label risorse
 		//$this->subAreas['Resources'] = new GifLabel(,,);
 		
+		// DEBUG
+		/*
+		echo "x planned: $xPlanned <br>";
+		echo "w planned: $wPlanned <br>";
+		echo "x actual: $xActual <br>";
+		echo "w actual: $wActual <br>";
+		*/
 		// stampa le componenti nel giusto ordine
 		if(isset($plannedGifBox)){
 			$this->subAreas['planned'] = $plannedGifBox;
@@ -320,7 +371,7 @@ class GifGanttTask extends GifArea
 	 */
 	protected function canvasDraw(){
 		// riga di collegamento actual-planned
-		
+
 		if($this->actualStarted){
 			if(($this->xP + $this->wP) < $this->xA){
 				$this->canvas->img->setColor('black');
@@ -372,6 +423,39 @@ class GifGanttTask extends GifArea
 	{
 		$this->fontSize = $size;
 	}
+	
+	public function getPlannedTopMiddlePoint()
+	{
+		$point = array();
+		$point['x']=intval($this->trueXPlanned+($this->trueWPlanned/2));
+		$point['y']=$this->trueYPlanned;
+		return $point;
+	}
+	
+	public function getPlannedBottomMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->trueXPlanned+($this->trueWPlanned/2);
+		$point['y']=$this->trueYPlanned+($this->hP);
+		return $point;
+	}
+	
+	public function getPlannedLeftMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->trueXPlanned;
+		$point['y']=$this->trueYPlanned+($this->hP/2);
+		return $point;
+	}
+	
+	public function getPlannedRightMiddlePoint()
+	{
+		$point = array();
+		$point['x']=$this->trueXPlanned+($this->trueWPlanned);
+		$point['y']=$this->trueYPlanned+($this->hP/2);
+		return $point;
+	}
+	
 }
 
 ?>

@@ -149,6 +149,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
 		// prendi le dipendenze
 		$this->deps = $this->tdt->computeDependencyRelationOnVisibleTasks();
+//		echo "count deps: ".count($this->deps)."<br>";
 		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tasks);
@@ -381,19 +382,23 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function makeGanttDependencies(){
 		$this->deps;
+//		echo "begin scanning visible tasks<br>";
 		// per ogni task visibile
 		for($i=0 ; $i<$this->numTasks; $i++){
 			// prendi il vettore delle dipendenze
 			$taskDeps = $this->deps[$this->tasks[$i]->getInfo()->getTaskID()];
 			// per ogni dipendenza del task $i
 			$numDep = sizeOf($taskDeps);
+//			echo "begin scanning deps ($numDep)<br>";
 			for($j=0 ; $j < $numDep; $j++){
 				// prendi l'id della dipendenza
 				$id_dep = $taskDeps[$j]->getInfo()->getTaskID();
 				// cercala nei nodi visibili
+//				echo "begin scanning visible tasks in deps<br>";
 				for($k=0 ; $k < $this->numTasks; $k++){
 					// se $k è la dipendenza di $i
 					if($this->tasks[$k]->getInfo()->getTaskID() == $id_dep){
+//						echo "drawing dep<br>";
 						$point1 = $this->gTasks[$i]->getPlannedBox()->getRightMiddlePoint();
 						$point2 = $this->gTasks[$k]->getPlannedBox()->getLeftMiddlePoint();
 						DrawingHelper::GanttDependencyLine($point1[0],$point1[1],
@@ -429,7 +434,7 @@ class GanttChartGenerator extends ChartGenerator{
 			break;
 			case 3:	
 				$days = 7;
-				$formatDate = 'm/d';	
+				$formatDate = 'd/m';	
 				$beginDate = date('Y-m-d',$startTS).' 00:00:00';
 				$HAlign = 'left';
 			break;
