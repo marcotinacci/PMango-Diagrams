@@ -216,7 +216,7 @@ class TaskDataTreeGenerator{
 		//	$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
 		$recovered_data = array();
 		$task_ids = array();
-		$project_id = defVal(@$_REQUEST['project_id'], 3);
+		$project_id = defVal(@$_REQUEST['project_id'], 0);
 		if($project_id==0){
 			die("ERROR: project not found!");
 		}
