@@ -55,6 +55,32 @@ class UserOptionsChoice {
 		$this->array = $array;
 	}
 
+	/**
+	 * Put all fields of the private variable $array into a string separated by "|".
+	 * @return String
+	 */
+	public function saveToString(){
+		$pieces = array();
+		for ($i=0; $i<sizeOf($this->array); $i++){
+			$piece = $this->array[$i];
+			$pieces[] = "$piece";
+		}
+		return implode("|", $pieces);
+	}
+	
+	/**
+	 * Set the private variable $array from a string that has all the fields of interest separated
+	 * by "|".
+	 * @param $str String
+	 */
+	public function loadFromString($str){
+		$this->array = array();
+		$array = explode("|", $str);
+		for($i=0; $i<sizeOf($array); $i++){
+			$this->array[]=$array[$i];
+		}
+	}
+	
 	// metodi che mostrano quali useroption ha selezionato l'utente
 
 	//Common shows
