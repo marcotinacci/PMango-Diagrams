@@ -62,8 +62,11 @@ class UserOptionsChoice {
 	public function saveToString(){
 		$pieces = array();
 		for ($i=0; $i<sizeOf($this->array); $i++){
-			$piece = $this->array[$i];
-			$pieces[] = "$piece";
+			if(isset($this->array[$i])){
+				$piece = $this->array[$i];
+				$key = array_keys($this->array[$i]);
+				$pieces[] = $key."_".$piece;
+			}
 		}
 		return implode("|", $pieces);
 	}
@@ -77,7 +80,10 @@ class UserOptionsChoice {
 		$this->array = array();
 		$array = explode("|", $str);
 		for($i=0; $i<sizeOf($array); $i++){
-			$this->array[]=$array[$i];
+			//ottengo in $k_v un array di 2 posizioni: chiave_valore
+			$k_v=explode("_", $array[$i]);
+			//in modo da poter settare array con la giusta chiave
+			$this->array[UserOptionEnumeration::$k_v[0]]=$k_v[1];
 		}
 	}
 	
@@ -237,10 +243,6 @@ class UserOptionsChoice {
 
 
 	public static function &GetInstance() {
-		if(!isset(UserOptionsChoice::$instance) && isset($_SESSION['uoc']))
-		{
-			UserOptionsChoice::$instance = unserialize($_SESSION['uoc']);
-		}
 		if(!isset(UserOptionsChoice::$instance)) {
 			UserOptionsChoice::$instance = new UserOptionsChoice();
 		}
