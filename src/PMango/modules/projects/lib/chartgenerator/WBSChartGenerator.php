@@ -9,7 +9,7 @@ require_once dirname(__FILE__)."/./ChartGenerator.php";
  * Questa classe implementa il metodo di generazione delle WBS
  *
  * @author: Daniele Poggi
- * @version: 1.0
+ * @version: 0.8
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -49,7 +49,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$nodi=array();
 		
 		$tree = new TaskDataTreeGenerator();
-		$treeData = $tree->GenerateTaskDataTree();
+		$treeData = $tree->generateTaskDataTree();
 		
 		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
 				
@@ -104,7 +104,7 @@ class WBSChartGenerator extends ChartGenerator{
 		//Altezza della pagina, calcolata dinamicamente	
 		$height=($CLiv+1)*$max+150;
 		//Spazio tra un livello ed un altro
-		$alt=$height-220;
+		$alt=$height-$max;
 		
 		$Link=array(array());
 		$l=0;		//Indice per vettore areas
@@ -115,42 +115,64 @@ class WBSChartGenerator extends ChartGenerator{
 		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
-				if($leav[$j]!=null)
+				if($Livello==0)
 				{
-					if(($leav[$j]->getInfo()->getLevel())==$Livello)
-					{					
-						$occorrenze = $this->getOccorrence($leav,$leav[$j]);
-						//Se vi è una solo occorrenza allora posiziona lo scatolotto esattamente sopra il figlio
-						if($occorrenze == 1)
-						{
-							$areas[$l] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j]);
-							$Link[$i][$j]=$areas[$l];
-							$leav[$j]=$leav[$j]->getParent();
-							$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2);
-							$LinkY[$i][$j]=$alt;
-							$l++;
-						}
-						//Altrimenti se il padre ha più figli viene messo al centro
-						else if($occorrenze > 1)
-						{
-							$cord1 = ((($occorrenze)*$dimBlocco)/2);
-							$cord2 = ((($j)*$dimBlocco));					
-							$areas[$l] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j]);
-							for($k=0;$k<$occorrenze;$k++)
+					$occorrenze = $this->getOccorrence($leav,$leav[$j]);
+					$cord1 = ((($occorrenze)*$dimBlocco)/2);
+					$cord2 = ((($j)*$dimBlocco));	
+					$t = new StubTask();
+					$td=new TaskData($t);
+																		
+					$areas[$l] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$td);
+					for($k=0;$k<$occorrenze;$k++)
+					{
+						$leav[$j+$k]=$leav[$j+$k]->getParent();
+						$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
+						$LinkY[$i][$j+$k]=$alt;
+						$Link[$i][$j+$k]=$areas[$l];								
+					}	
+					$l++;
+					$j+=$occorrenze-1;
+				}
+				else
+				{
+					if($leav[$j]!=null)
+					{
+						if(($leav[$j]->getInfo()->getLevel())==$Livello)
+						{		
+							$occorrenze = $this->getOccorrence($leav,$leav[$j]);
+							//Se vi è una solo occorrenza allora posiziona lo scatolotto esattamente sopra il figlio
+							if($occorrenze == 1)
 							{
-								$leav[$j+$k]=$leav[$j+$k]->getParent();
-								$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
-								$LinkY[$i][$j+$k]=$alt;
-								$Link[$i][$j+$k]=$areas[$l];								
+								$areas[$l] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j]);
+								$Link[$i][$j]=$areas[$l];
+								$leav[$j]=$leav[$j]->getParent();
+								$LinkX[$i][$j]=((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2);
+								$LinkY[$i][$j]=$alt;
+								$l++;
 							}
-							$l++;
-							$j+=$occorrenze-1;
-						}
-					}				
+							//Altrimenti se il padre ha più figli viene messo al centro
+							else if($occorrenze > 1)
+							{
+								$cord1 = ((($occorrenze)*$dimBlocco)/2);
+								$cord2 = ((($j)*$dimBlocco));					
+								$areas[$l] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j]);
+								for($k=0;$k<$occorrenze;$k++)
+								{
+									$leav[$j+$k]=$leav[$j+$k]->getParent();
+									$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
+									$LinkY[$i][$j+$k]=$alt;
+									$Link[$i][$j+$k]=$areas[$l];								
+								}
+								$l++;
+								$j+=$occorrenze-1;
+							}						
+						}				
+					}
 				}		
 		}
 		$Livello--;
-		$alt-=250;
+		$alt-=$max + 20;
 	}
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
 	if(Count($areas)>0)
