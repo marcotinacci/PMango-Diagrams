@@ -143,30 +143,44 @@ function setCalendar( idate, fdate ) {
 <table class="tbl" width="100%" border="0" cellpadding="4" cellspacing="0">
 <tr>
     <td>
-         <table align="left" border="0" cellpadding="4" cellspacing="0" class="tbl">
+         <table border="0" cellpadding="4" cellspacing="0" class="tbl">
 			<tr>
-            <form name="editFrm" method="post" action="?<?php echo "m=$m&a=$a"; ?>">
+			    <form name="editFrm" method="post" action="?<?php echo "m=$m&a=$a"; ?>">
                 <input type="hidden" name="display_option" value="<?php echo $display_option; ?>" />
 
                 <td valign="top">
+
+                    <input type="checkbox" value='1' name="<?php echo UserOptionEnumeration::$PlannedDataUserOption ?>"> <?php echo "Show PlannedData"; ?>
+                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>"> <?php echo "Show PlannedTimeFrame"; ?>                    
+                    <input type="checkbox" value='3' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>"> <?php echo "Show PlannedTimeFrame"; ?>                    
+                    <input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption ?>"> <?php echo "Show TaskName"; ?>
+                    <br></br>
+                    <input type="checkbox" value='5' name="<?php echo UserOptionEnumeration::$ActualDataUserOption ?>"> <?php echo "ActualDataUserOption"; ?>
+                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>"> <?php echo "ActualTimeFrameUserOption"; ?>
+                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>"> <?php echo "AlertMarkUserOption"; ?>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>"> <?php echo "Resoutces"; ?>
+
                     <input type="checkbox" value='1' name="<?php  ?>"> <?php echo "ShowPlannedData"; ?>
+
                 </td>
+            	    </form>    				
+			</tr>
+		</table>
 				
-				</tr>
-
-                </form>
-
-                </table>
-
+				<?php 
+				UserOptionsChoice::GetInstance()->setFromArray($_POST);
+				echo UserOptionsChoice::GetInstance()->showPlannedDataUserOption(); 
+				?>
+				
 				<!-- Generated Image -->
-                <table width="100%" cellspacing="0" cellpadding="0" border="1" align="center" class="tbl">
+                <table width="100%" cellspacing="0" cellpadding="0" border="1" class="tbl">
                 <tr>
                         <td>
-							<img width='100%' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']; ?>'>
+							<img width='80%' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']; ?>'>
                         </td>
                 </tr>
                 </table>
-        </td>
+	</td>
 </tr>
 </table>
 <?php ini_restore('memory_limit');?>
