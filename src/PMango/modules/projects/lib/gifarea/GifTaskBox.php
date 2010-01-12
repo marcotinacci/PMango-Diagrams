@@ -161,6 +161,8 @@ class GifTaskBox extends GifArea
 
 	public static function getTaskBoxesBestWidth($taskDataTree,$userOptionChoise,$fontSize,$font)
 	{
+		//$uoc = new UserOptionsChoice();
+		$uoc = UserOptionsChoice::GetInstance();
 		$max = 0;
 		$taskBoxes=$taskDataTree->deepVisit();
 		foreach($taskBoxes as $taskBox)
@@ -168,29 +170,34 @@ class GifTaskBox extends GifArea
 			$wbsIdWidth = GifLabel::getPixelWidthOfText($taskBox->getInfo()->getWBSId(),$fontSize,$font);
 
 			$boxMax = $wbsIdWidth;
-			//TODO: va moltiplicato per 2 se ha chiesto i nomi nelle useroptions
+			if($uoc->showTaskNameUserOption())
+				$boxMax*=2;
 
-			//TODO: Anche questo va fatto solo se ha chiesto delle date nella useroptionchoice
-			$dateWidth = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font);
-			if($dateWidth > $boxMax)
-			$boxMax = $dateWidth*2+5;
+			if($uoc->showActualTimeFrameUserOption() || $uoc->showPlannedTimeFrameUserOption())
+			{
+				$dateWidth = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font);
+				if($dateWidth > $boxMax)
+					$boxMax = $dateWidth*2+5;
+			}
+			
+			if($uoc->showActualDataUserOption())
+			{
+				$actualData = $taskBox->getInfo()->getActualData();
+				$actualTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($actualData,$fontSize,$font);
+				if($actualTripleW > $boxMax)
+				$boxMax = $actualTripleW;
+			}
 
-			//TODO: Anche questo va fatto solo se ha chiesto gli actual nella useroptionchoice
-			$actualData = $taskBox->getInfo()->getActualData();
-			$actualTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($actualData,$fontSize,$font);
-			if($actualTripleW > $boxMax)
-			$boxMax = $actualTripleW;
-
-			//TODO: Anche questo va fatto solo se ha chiesto gli actual nella useroptionchoice
-			$plannedData = $taskBox->getInfo()->getPlannedData();
-			$plannedTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($plannedData,$fontSize,$font);
-			if($plannedTripleW > $boxMax)
-			$boxMax = $plannedTripleW;
-
+			if($uoc->showPlannedDataUserOption())
+			{
+				$plannedData = $taskBox->getInfo()->getPlannedData();
+				$plannedTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($plannedData,$fontSize,$font);
+				if($plannedTripleW > $boxMax)
+				$boxMax = $plannedTripleW;
+			}
 			if($boxMax > $max)
 			$max = $boxMax;
 		}
-		//TODO: moltiplicare per 2 se specifica ShowTaskboxName
 		return $max+10;
 	}
 

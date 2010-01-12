@@ -461,8 +461,8 @@ if ($canViewTask) {
 //if ($perms->checkModule('files', 'view'))
 //	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/vw_files", 'Files' );
 if ($canViewTask) {
-	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewgantt", 'Gantt Chart' );
 	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewwbs", 'WBS Chart' );
+	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewgantt", 'Gantt Chart' );
 	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/viewtasknetwork", 'Task Networks Chart' );
 	$tabBox->add( dPgetConfig('root_dir')."/modules/projects/vw_logs", 'Task Logs' );
 }

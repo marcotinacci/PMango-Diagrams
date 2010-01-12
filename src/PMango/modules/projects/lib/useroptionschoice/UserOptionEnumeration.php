@@ -25,8 +25,20 @@ Class UserOptionEnumeration {
 	public static  $AlertMarkUserOption = "AlertMarkUserOption";
 	public static  $ReplicateArrowUserOption = "ReplicateArrowUserOption";
 	public static  $UseDifferentPatternForCrossingLinesUserOption = "UseDifferentPatternForCrossingLinesUserOption";
+	public static  $TimeRangeUserOption = "TimeRangeUserOption";
+	public static  $TimeGrainUserOption = "TimeGrainUserOption";
 	
+	public static  $ImageDimensionsUserOption = "ImageDimensionsUserOption";
+	public static $DefaultWidthUserOption = "DefaultWidthUserOption"; //int
+	public static $DefaultHeightUserOption = "DefaultHeightUserOption"; //int
+	public static $CustomWidthUserOption = "CustomWidthUserOption"; //int
+	public static $CustomHeightUserOption = "CustomHeightUserOption"; //int
+	public static $FitInWindowWidthUserOption = "FitInWindowWidthUserOption"; //int
+	public static $FitInWindowHeightUserOption = "FitInWindowHeightUserOption"; //int
 	
+	public static $TodayDateUserOption = "TodayDateUserOption"; //date
+	public static $CustomStartDateUserOption = "CustomStartDateUserOption"; //date
+	public static $CustomEndDateUserOption = "CustomEndDateUserOption"; //date	
 	
 	// Gantt
 	

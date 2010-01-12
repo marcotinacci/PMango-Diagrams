@@ -14,13 +14,9 @@
 Class ImageDimension {
 	
 	public static $CustomDimUserOption = "CustomDimUserOption"; //boolean
-	public static $CustomWidthUserOption = "CustomWidthUserOption"; //int
-	public static $CustomHeightUserOption = "CustomHeightUserOption"; //int
 	public static $FitInWindowDimUserOption = "FitInWindowDimUserOption"; //boolean
-	public static $OptiomalDimUserOption = "OptiomalDimUserOption"; //boolean
+	public static $OptimalDimUserOption = "OptimalDimUserOption"; //boolean
 	public static $DefaultDimUserOption = "DefaultDimUserOption"; //boolean
-	public static $DefaultWidthUserOption = "DefaultWidthUserOption"; //int
-	public static $DefaultHeightUserOption = "DefaultHeightUserOption"; //int
 }
 
 ?>

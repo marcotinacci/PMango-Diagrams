@@ -10,6 +10,7 @@
 require_once dirname(__FILE__)."/UserOptionEnumeration.php";
 require_once dirname(__FILE__)."/TimeRange.php";
 require_once dirname(__FILE__)."/TimeGrainEnum.php";
+require_once dirname(__FILE__)."/ImageDimension.php";
 
 /**
  *
@@ -100,29 +101,24 @@ class UserOptionsChoice {
 
 	//return type of Image Dimension requested by the user: defaultDimension default
 	function getImageDimensionUserOption() {
-		if(isset($this->array[ImageDimension::$OptimalDimUserOption])){
-			return ImageDimension::$OptimalDimUserOption;
-		}
-		if(isset($this->array[ImageDimension::$FitInWindowDimUserOption])){
-			return ImageDimension::$FitInWindowDimUserOption;
-		}
-		if(isset($this->array[ImageDimension::$CustomDimUserOption])){
-			return ImageDimension::$CustomDimUserOption;
-		}
-		else{
-			return ImageDimension::$DefaultDimUserOption;
-		}
+		return $this->array[UserOptionEnumeration::$ImageDimensionsUserOption];
 	}
 
 	function getCustomDimValues(){
-		$custom_dim = array("width"=>$this->array[ImageDimension::$CustomWidthUserOption],
-							"height"=>$this->array[$CustomHeightUserOption]);
+		$custom_dim = array("width"=>$this->array[UserOptionEnumeration::$CustomWidthUserOption],
+							"height"=>$this->array[UserOptionEnumeration::$CustomHeightUserOption]);
 		return $custom_dim;
 	}
 
 	function getDefaultDimValues(){
-		$def_dim = array("width"=>$this->array[ImageDimension::$DefaultWidthUserOption],
-							"height"=>$this->array[$DefaultHeightUserOption]);
+		$def_dim = array("width"=>$this->array[UserOptionEnumeration::$DefaultWidthUserOption],
+							"height"=>$this->array[UserOptionEnumeration::$DefaultHeightUserOption]);
+		return $def_dim;
+	}
+	
+	function getFitInWindowDimValues(){
+		$def_dim = array("width"=>$this->array[UserOptionEnumeration::$FitInWindowWidthUserOption],
+							"height"=>$this->array[UserOptionEnumeration::$FitInWindowHeightUserOption]);
 		return $def_dim;
 	}
 
@@ -178,37 +174,12 @@ class UserOptionsChoice {
 
 	//return type of time grain requested by the user: monthly default.
 	function getTimeGrainUserOption() {
-		if(isset($this->array[TimeGrainEnum::$HourlyGrainUserOption])){
-			return TimeGrainEnum::$HourlyGrainUserOption;
-		}
-		if(isset($this->array[TimeGrainEnum::$DailyGrainUserOption])){
-			return TimeGrainEnum::$DailyGrainUserOption;
-		}
-		if(isset($this->array[TimeGrainEnum::$WeaklyGrainUserOption])){
-			return TimeGrainEnum::$WeaklyGrainUserOption;
-		}		
-		if(isset($this->array[TimeGrainEnum::$AnnuallyGrainUserOption])){
-			return TimeGrainEnum::$AnnuallyGrainUserOption;
-		}
-		else{
-			return TimeGrainEnum::$MonthlyGrainUserOption;
-		}
+		return $this->array[UserOptionEnumeration::$TimeGrainUserOption];
 	}
 
 	//returns the type of visualization range requested by the user: FromNowToEnd default
 	function getTimeRangeUserOption() {
-		if(isset($this->array[TimeRange::$CustomRangeUserOption])){
-			return TimeRange::$CustomRangeUserOption;
-		}
-		if(isset($this->array[TimeRange::$WholeProjectRangeUserOption])){
-			return TimeRange::$WholeProjectRangeUserOption;
-		}
-		if(isset($this->array[TimeRange::$FromStartToNowRangeUserOption])){
-			return TimeRange::$FromStartToNowRangeUserOption;
-		}
-		else{
-			return TimeRange::$FromNowToEndRangeUserOption;
-		}
+		return $this->array[UserOptionEnumeration::$TimeRangeUserOption];
 	}
 	
 	function getCustomRangeValues(){
@@ -251,6 +222,10 @@ class UserOptionsChoice {
 
 
 	public static function &GetInstance() {
+		if(!isset(UserOptionsChoice::$instance) && isset($_SESSION['uoc']))
+		{
+			UserOptionsChoice::$instance = unserialize($_SESSION['uoc']);
+		}
 		if(!isset(UserOptionsChoice::$instance)) {
 			UserOptionsChoice::$instance = new UserOptionsChoice();
 		}

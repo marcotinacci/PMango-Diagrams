@@ -224,13 +224,16 @@ foreach($project_types as $project_type){
 	}
 }
 
+/*
+$tabBox->add("viewwbs", "WBS");
+$tabBox->add("viewgantt", "Gantt");
+$tabBox->add("viewtasknetwork", "Task Network");
+*/
+
 // tabbed information boxes
 foreach($project_types as $project_type) {
 	$tabBox->add($project_file_type[$project_type], $project_type, true);
 }
 $min_view = true;
-$tabBox->add("viewgantt", "Gantt");
-$tabBox->add("viewwbs", "WBS");
-$tabBox->add("viewtasknetwork", "Task Network");
 $tabBox->show();
 ?>

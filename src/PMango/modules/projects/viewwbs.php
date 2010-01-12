@@ -58,123 +58,70 @@ ini_set('memory_limit', $dPconfig['reset_memory_limit']);
 $min_view = defVal( @$min_view, false);
 $project_id = defVal( @$_GET['project_id'], 0);
 
-// sdate and edate passed as unix time stamps
-$sdate = dPgetParam( $_POST, 'sdate', 0 );
-$edate = dPgetParam( $_POST, 'edate', 0 );
-$showInactive = dPgetParam( $_POST, 'showInactive', '0' );
-$showLabels = dPgetParam( $_POST, 'showLabels', '0' );
-
-$showAllGantt = dPgetParam( $_POST, 'showAllGantt', '0' );
-$showTaskGantt = dPgetParam( $_POST, 'showTaskGantt', '0' );
-
-//if set GantChart includes user labels as captions of every GantBar
-if ($showLabels!='0') {
-    $showLabels='1';
-}
-if ($showInactive!='0') {
-    $showInactive='1';
-}
-
-if ($showAllGantt!='0')
-     $showAllGantt='1';
-
-$projectStatus = dPgetSysVal( 'ProjectStatus' );
-
-if (isset(  $_POST['proFilter'] )) {
-	$AppUI->setState( 'ProjectIdxFilter',  $_POST['proFilter'] );
-}
-$proFilter = $AppUI->getState( 'ProjectIdxFilter' ) !== NULL ? $AppUI->getState( 'ProjectIdxFilter' ) : '-1';
-
-$projFilter = arrayMerge( array('-1' => 'All Projects'), $projectStatus);
-$projFilter = arrayMerge( array( '-2' => 'All w/o in progress'), $projFilter);
-natsort($projFilter);
-
-
-// months to scroll
-$scroll_date = 1;
-
-$display_option = dPgetParam( $_POST, 'display_option', 'this_month' );
-
-// format dates
-$df = $AppUI->getPref('SHDATEFORMAT');
-
-if ($display_option == 'custom') {
-	// custom dates
-	$start_date = intval( $sdate ) ? new CDate( $sdate ) : new CDate();
-	$end_date = intval( $edate ) ? new CDate( $edate ) : new CDate();
-} else {
-	// month
-	$start_date = new CDate();
-	$end_date = new CDate();
-	$end_date->addMonths( $scroll_date );
-}
-
-// setup the title block
-if (!@$min_view) {
-	$titleBlock = new CTitleBlock( 'Gantt Chart', 'applet-48.png', $m, "$m.$a" );
-	//$titleBlock->addCrumb( "?m=$m", "projects list" );
-	$titleBlock->show();
-}
-?>
-<script language="javascript">
-var calendarField = '';
-
-function popCalendar( field ){
-	calendarField = field;
-	idate = eval( 'document.editFrm.' + field + '.value' );
-	window.open( 'index.php?m=public&a=calendar&dialog=1&callback=setCalendar&date=' + idate, 'calwin', 'width=250, height=220, scollbars=false' );
-}
-
-/**
- *	@param string Input date in the format YYYYMMDD
- *	@param string Formatted date
- */
-function setCalendar( idate, fdate ) {
-	fld_date = eval( 'document.editFrm.' + calendarField );
-	fld_fdate = eval( 'document.editFrm.show_' + calendarField );
-	fld_date.value = idate;
-	fld_fdate.value = fdate;
-}
-
-</script>
-
-<?php require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php"; 
+require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php"; 
 require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionsChoice.php";
 
 //$uoc = new UserOptionsChoice();
-//unset($_SESSION['uoc']);
 $uoc = UserOptionsChoice::GetInstance();
 $uoc->setFromArray($_POST);
 $_SESSION['uoc'] = serialize($uoc);
-
 ?>
 
-<table class="tbl" width="100%" border="0" cellpadding="4" cellspacing="0">
+<table width="100%" border="0" cellpadding="4" cellspacing="0">
 <tr>
     <td>
-    	<form name="editFrm" method="POST" action="?<?php echo "m=$m&a=$a&project_id=$project_id"; ?>">
-         <table border="0" cellpadding="4" cellspacing="0" class="tbl" width='100%'>
+         <table border="0" cellpadding="4" cellspacing="0" width='100%'>
 			<tr>
-                <input type="hidden" name="display_option" value="<?php echo $display_option; ?>" />
-
-                <td valign="top">
-
-                    <input type="checkbox" value='1' name="<?php echo UserOptionEnumeration::$PlannedDataUserOption ?>" <?php echo $uoc->showPlannedDataUserOption()?"checked":""; ?>> <?php echo "Show PlannedData"; ?>
-                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>" <?php echo $uoc->showPlannedTimeFrameUserOption()?"checked":""; ?>> <?php echo "Show PlannedTimeFrame"; ?>                                      
-                    <input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "Show TaskName"; ?>
-                    <input type="checkbox" value='5' name="<?php echo UserOptionEnumeration::$ActualDataUserOption ?>" <?php echo $uoc->showActualDataUserOption()?"checked":""; ?>> <?php echo "ActualDataUserOption"; ?>
-                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>" <?php echo $uoc->showActualTimeFrameUserOption()?"checked":""; ?>> <?php echo "ActualTimeFrameUserOption"; ?>
-                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>" <?php echo $uoc->showAlertMarkUserOption()?"checked":""; ?>> <?php echo "AlertMarkUserOption"; ?>
-                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resoutces"; ?>
-            
-                </td> 
-                <td align="right">
-                	<input type="reset" value="Reset">
-                	<input type="submit" value="Submit">
-                </td>				
+				<form name="editFrm" method="POST" action="?<?php echo "m=$m&a=$a&project_id=$project_id"; ?>">
+                <td valign="top" align="left" nowrap="nowrap">
+                	<b>Show:</b>&nbsp;
+                </td>
+                <td valign="top" align="left" nowrap="nowrap">                          
+                    <input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "TaskNames"; ?><br>
+                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>" <?php echo $uoc->showAlertMarkUserOption()?"checked":""; ?>> <?php echo "AlertMarks"; ?>
+                </td>
+                <td valign="top" align="left" nowrap="nowrap">
+                    <input type="checkbox" value='1' name="<?php echo UserOptionEnumeration::$PlannedDataUserOption ?>" <?php echo $uoc->showPlannedDataUserOption()?"checked":""; ?>> <?php echo "Planned Data"; ?><br>
+                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>" <?php echo $uoc->showPlannedTimeFrameUserOption()?"checked":""; ?>> <?php echo "Planned TimeFrame"; ?>      
+                </td>   
+                <td valign="top" align="left" nowrap="nowrap">      
+                	<input type="checkbox" value='5' name="<?php echo UserOptionEnumeration::$ActualDataUserOption ?>" <?php echo $uoc->showActualDataUserOption()?"checked":""; ?>> <?php echo "Actual Data"; ?><br>
+                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>" <?php echo $uoc->showActualTimeFrameUserOption()?"checked":""; ?>> <?php echo "Actual TimeFrame"; ?>
+                </td>
+                <td valign="top" align="left" nowrap="nowrap">
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?>
+                </td>
+                <td>&nbsp;&nbsp;</td>
+                <td valign="top" align="left" nowrap="nowrap">
+                	<b>Image options:</b>&nbsp;
+                </td>
+                <td valign="top" align="left" nowrap="nowrap">
+                	<?php
+						$v = $uoc->getImageDimensionUserOption();
+					?>
+                	<select name="<?php echo UserOptionEnumeration::$ImageDimensionsUserOption;?>">
+						<option value="<?php echo ImageDimension::$FitInWindowDimUserOption; ?>" <?php echo $v==ImageDimension::$FitInWindowDimUserOption?"selected=\"selected\"":"";?>>Fit window</option>
+						<option value="<?php echo ImageDimension::$CustomDimUserOption; ?>" <?php echo $v==ImageDimension::$CustomDimUserOption?"selected=\"selected\"":"";?>>Custom</option>
+						<option value="<?php echo ImageDimension::$OptimalDimUserOption; ?>" <?php echo $v==ImageDimension::$OptimalDimUserOption?"selected=\"selected\"":"";?>>Optimal</option>
+						<option value="<?php echo ImageDimension::$DefaultDimUserOption; ?>" <?php echo $v==ImageDimension::$DefaultDimUserOption?"selected=\"selected\"":"";?>>Default</option>
+					</select>
+				</td>
+				<td valign="top" align="left" nowrap="nowrap">
+					<?php $wh = $uoc->getCustomDimValues(); ?>
+					width: <input size="4" type="text" name="<?php echo UserOptionEnumeration::$CustomWidthUserOption; ?>" value="<?php echo $wh['width'];?>"/> px <br>
+					height:<input size="4" type="text" name="<?php echo UserOptionEnumeration::$DefaultHeightUserOption; ?>" value="<?php echo $wh['height'];?>"/> px
+					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowWidthUserOption; ?>" value="0"/>
+					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowHeightUserOption; ?>" value="0"/>
+                </td>
+                <td width="100%"></td>
+                <td valign="bottom" align="right">
+                	<input type="button" class="button"
+					value="<?php echo $AppUI->_( 'submit' );?>"
+					onclick='submit();'>
+                </td>		
+                </form>  		
 			</tr>
-		</table>
-		</form>   
+		</table> 
 				
 				<?php 
 				
@@ -195,7 +142,7 @@ $_SESSION['uoc'] = serialize($uoc);
                 <table width="100%" cellspacing="0" cellpadding="0" border="1" class="tbl">
                 <tr>
                         <td>
-							<img src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']; ?>'>
+							<img src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id'];?>'>
                         </td>
                 </tr>
                 </table>

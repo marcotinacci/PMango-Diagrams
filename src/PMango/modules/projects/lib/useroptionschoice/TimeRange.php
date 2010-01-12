@@ -11,12 +11,7 @@
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 
-Class TimeRange {
-
-	public static $TodayDateUserOption = "TodayDateUserOption"; //date
-	public static $CustomStartDateUserOption = "CustomStartDateUserOption"; //date
-	public static $CustomEndDateUserOption = "CustomFinishDateUserOption"; //date	
-	
+Class TimeRange {	
 	public static $CustomRangeUserOption = "CustomRangeUserOption"; //boolean
 	public static $WholeProjectRangeUserOption = "WholeProjectRangeUserOption"; //boolean
 	public static $FromStartToNowRangeUserOption = "FromStartToNowRangeUserOption"; //boolean
