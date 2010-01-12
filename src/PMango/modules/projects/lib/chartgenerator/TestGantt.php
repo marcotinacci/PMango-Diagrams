@@ -1,7 +1,16 @@
 <?php
-ini_set('display_errors', 0);
+//ini_set('display_errors', 0);
+//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 error_reporting(E_ALL & ~E_NOTICE);
 
+/*function myerrorhandler($errno,$errstr,$errfile,$errline)
+{
+	$file=fopen("./errors.txt","w");
+	fwrite($file,$errno . " " . $errstr . " " . $errfile  . " " . $errline . "\n");
+	return true;
+}
+set_error_handler("myerrorhandler");
+*/
 //--------------------------------------------------
 $baseDir = dirname(__FILE__)."/../../../..";
 require_once "$baseDir/includes/config.php";

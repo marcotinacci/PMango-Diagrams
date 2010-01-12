@@ -7,7 +7,7 @@ require_once dirname(__FILE__).'/../gifarea/GifGanttTask.php';
 require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
 require_once dirname(__FILE__).'/../utils/TimeUtils.php';
-//require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
+require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
@@ -29,7 +29,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Altezza dello spazio dedicato alla label del titolo dei task
 	 * @var int
 	 */
-	protected $labelHeight = 25;
+	protected $labelHeight = 20;
 
 	/**
 	 * Altezza dello spazio dedicato alla label del menu della grana
@@ -63,14 +63,18 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected $tol = 5;
 	
-	// TODO: prendere grain level da uoc
 	/**
 	 * Livello della granularità
 	 * @var int
 	 */
 	protected $grainLevel;
 
-	// TODO: prendere date di inizio e fine da uoc
+	/**
+	 * Larghezza della grana
+	 * @var int
+	 */
+	protected $grainWidth = 10;
+
 	/**
 	 * Data di inizio visualizzazione
 	 * @var datetime
@@ -145,22 +149,100 @@ class GanttChartGenerator extends ChartGenerator{
 	public function generateChart(){
 		// genera l'albero dei task
 		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
+		
 		// visita l'albero visibile
 		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
+		
+		// FIX: gestire caso senza task
+
 		// prendi le dipendenze
 		$this->deps = $this->tdt->computeDependencyRelationOnVisibleTasks();
-//		echo "count deps: ".count($this->deps)."<br>";
-		
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tasks);
 		
-		// TODO: stub date, prenderle dalle uoc
-		$this->sDate = date('Y-m-d H:i:s',mktime(0,0,0,1,8,2010));
-		$this->fDate = date('Y-m-d H:i:s',mktime(0,0,0,1,20,2010));
-		$this->today = date('Y-m-d H:i:s',mktime(0,0,0,1,10,2010));
+		// ricava date start finish e today da opzioni utente
+		switch(UserOptionsChoice::GetInstance()->getTimeRangeUserOption()){
+			
+ 			// inizio e fine custom			
+			case TimeRange::$CustomRangeUserOption:
+				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$start = mangoToGanttDate($dates['start']);
+				$end = add_date(mangoToGanttDate($dates['end']),0,1);
+				$today = mangoToGanttDate($dates['today']);				
+			break;
+			
+			default:
+			// inizio e fine del progetto
+			case TimeRange::$WholeProjectRangeUserOption: 
+				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$tempToday = mangoToGanttDate($dates['today']);
+//				echo $dates['today'];					
+				// TODO: ricavare inizio e fine del progetto
+				// FIX: gestire il caso in cui actual non termina o non esiste
+				$sProj = null;
+				$fProj = null;
+				for($i=0; $i<$this->numTasks; $i++){
+					$td = $this->tasks[$i];
+					$planned = $td->getInfo()->getPlannedTimeFrame();
+					$actual = $td->getInfo()->getActualTimeFrame();
+					if($actual['start_date'] == null && $sProj == null){
+						// do nothing
+					}else if($actual['start_date'] == null && $sProj != null){
+						$sProj = min($planned['start_date'],$sProj);
+					}else if($actual['start_date'] != null && $sProj == null){
+						$sProj = min($planned['start_date'],$actual['start_date']);
+					}else{
+						$sProj = min($planned['start_date'],$actual['start_date'],$sProj);
+					}
+					if($actual['finish'] == null){
+//						echo "max: ".$planned['finish_date'].",$tempToday,$fProj <br>";
+						$fProj = max($planned['finish_date'],$tempToday,$fProj);
+					}else{
+						$fProj = max($planned['finish_date'],$actual['finish_date'],$fProj);
+					}
+				}
+//				echo "inizio $sProj - fine $fProj";
+				if($sProj == null){
+					$start = $dates['today'];
+					$end = add_date($start,0,1);
+				}
+				
+				$start = add_date($sProj,0,-1);
+				$end = add_date($fProj,0,1);
+			break;
+			
+			// inizio custom e fine today
+			case TimeRange::$FromStartToNowRangeUserOption:
+				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$start = mangoToGanttDate($dates['start']);
+				$end = add_date(mangoToGanttDate($dates['today']),0,1);
+				$today = mangoToGanttDate($dates['today']);
+			break;
+			
+			// inizio today e fine custom
+			case TimeRange::$FromNowToEndRangeUserOption:
+				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$start = add_date(mangoToGanttDate($dates['today']),0,-1);
+				$end = add_date(mangoToGanttDate($dates['end']),0,1);
+				$today = mangoToGanttDate($dates['today']);
+			break;
+		}
 		
-		// TODO: opzioni utente
-		$this->grainLevel = 4;
+		//echo "inizio $start - fine $end";		
+		$this->sDate = $start;
+		$this->fDate = $end;
+		$this->today = $today;
+
+		// TODO: adattare la grana
+		// acquisizione tipo di grana
+		switch(UserOptionsChoice::GetInstance()->getTimeGrainUserOption()){
+			case TimeGrainEnum::$HourlyGrainUserOption: $this->grainLevel = 5; break;
+			case TimeGrainEnum::$DailyGrainUserOption: $this->grainLevel = 4; break;
+			default:			
+			case TimeGrainEnum::$WeaklyGrainUserOption: $this->grainLevel = 3; break;
+			case TimeGrainEnum::$MonthlyGrainUserOption: $this->grainLevel = 2; break;
+			case TimeGrainEnum::$AnnuallyGrainUserOption: $this->grainLevel = 1; break;
+		}
 		
 		// costruisci il canvas
 		$this->makeCanvas();
@@ -170,19 +252,68 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->yCenter = $this->chart->getHeight() - 
 			$this->numTasks*($this->verticalSpace + $this->labelHeight) - 
 			$this->verticalSpace - $this->tol;
-		
+
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
-		$this->chart->draw();
+		$this->chart->draw();		
+	}
+	
+	protected function getLeftColumnWidth(){
+		$maxlen = 0;
+		foreach($this->tasks as $task){
+			$str = $task->getInfo()->getWBSId();
+			if(UserOptionsChoice::GetInstance()->showTaskNameUserOption()){
+				$str = $str.$task->getInfo()->getTaskName();
+			}
+			$maxlen = max($maxlen,GifLabel::getPixelWidthOfText($str,$this->fontSize));
+		}
+		return $maxlen;
 	}
 	
 	/**
 	 * Funzione di generazione del canvas
 	 */	
 	protected function makeCanvas(){
-		// TODO: prendere la larghezza dalla dimensione della finestra
-		$this->chart = new GifImage(800, 
+		// FIX: prendere la larghezza dalla dimensione della finestra
+		switch(UserOptionsChoice::GetInstance()->getImageDimensionUserOption()){
+			case ImageDimension::$CustomDimUserOption:
+				$values = UserOptionsChoice::GetInstance()->getCustomDimValues();
+				$width = $values['width'];
+			break;			
+			case ImageDimension::$FitInWindowDimUserOption:
+			// FIX: chiedere a nicco
+				$values = $_GET[UserOptionsChoice::GetIstance()->getFitInWindowDimValues()];
+				$width = $values['width'];
+			break;			
+			case ImageDimension::$OptimalDimUserOption:
+			// FIX: non funziona
+				$diff = date_diff(mktime($this->fDate),mktime($this->sDate));
+				switch($this->grainLevel){
+					case 5: // ore
+						$width = $diff[3] * $this->grainWidth + $this->getLeftColumnWidth() + 2*$this->tol;
+					break;
+					case 4: // giorni
+						$width = $diff[2] * $this->grainWidth + $this->getLeftColumnWidth() + 2*$this->tol;						
+					break;
+					case 3: // settimane
+						$width = intval($diff[2] * $this->grainWidth / 7) + $this->getLeftColumnWidth() + 2*$this->tol;					
+					break;
+					case 2: // mesi
+						$width = $diff[1] * $this->grainWidth + $this->getLeftColumnWidth() + 2*$this->tol;											
+					break;					
+					case 1: // anni
+						$width = $diff[0] * $this->grainWidth + $this->getLeftColumnWidth() + 2*$this->tol;											
+					break;					
+				}
+			break;
+			case ImageDimension::$DefaultDimUserOption:
+				$width =	800;
+			break;
+		}
+		
+		$this->chart = new GifImage(
+			$width, 
 			$this->grainLevel * $this->labelGrainHeight + 2*$this->tol + 
 			$this->numTasks*($this->verticalSpace + $this->labelHeight) + 
 			$this->verticalSpace);
@@ -317,8 +448,8 @@ class GanttChartGenerator extends ChartGenerator{
 
 		$this->makeFront();
 		$this->makeTitle();		
-		$this->makeGanttDependencies();		
 		$this->makeGanttTaskBox();
+		$this->makeGanttDependencies();		
 		$this->makeTodayLine();
 	}
 
@@ -355,11 +486,11 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		// TODO: spostare a variabili di istanza
 		$visit = $this->tdt->deepVisit();
-		$gTasks = array();
+		$this->gTasks = array();
 		for($i = 0; $i < sizeOf($visit); $i++)
 		{
 			$dt = $visit[$i];
-			$gTasks[$i] = new GifGanttTask(
+			$this->gTasks[$i] = new GifGanttTask(
 				$this->xCenter, // x start
 				$this->chart->getWidth() - $this->tol -1, // x finish
 				$this->yCenter + $this->verticalSpace + $i*($this->verticalSpace + $this->labelHeight), // y start
@@ -370,7 +501,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$this->today, // today
 				$this->uoc // opzioni utente
 				);	
-			$gTasks[$i]->drawOn($this->chart);
+			$this->gTasks[$i]->drawOn($this->chart);
 		}
 
 	}
@@ -389,20 +520,33 @@ class GanttChartGenerator extends ChartGenerator{
 			$taskDeps = $this->deps[$this->tasks[$i]->getInfo()->getTaskID()];
 			// per ogni dipendenza del task $i
 			$numDep = sizeOf($taskDeps);
+//			echo "task_id i ".$this->tasks[$i]->getInfo()->getTaskID()."<br>";			
 //			echo "begin scanning deps ($numDep)<br>";
 			for($j=0 ; $j < $numDep; $j++){
 				// prendi l'id della dipendenza
-				$id_dep = $taskDeps[$j]->getInfo()->getTaskID();
+				$id_dep = $taskDeps[$j];
 				// cercala nei nodi visibili
 //				echo "begin scanning visible tasks in deps<br>";
+//				echo "task_id j ".$id_dep."<br>";				
 				for($k=0 ; $k < $this->numTasks; $k++){
 					// se $k è la dipendenza di $i
+//					echo "task_id k ".$this->tasks[$k]->getInfo()->getTaskID()."<br>";
 					if($this->tasks[$k]->getInfo()->getTaskID() == $id_dep){
-//						echo "drawing dep<br>";
-						$point1 = $this->gTasks[$i]->getPlannedBox()->getRightMiddlePoint();
-						$point2 = $this->gTasks[$k]->getPlannedBox()->getLeftMiddlePoint();
-						DrawingHelper::GanttDependencyLine($point1[0],$point1[1],
-							$point2[0],$point2[1],5,true,$this->chart,new LineStyle('#7F7F7F'));
+//						echo " dep $id_dep <br>";
+						$point1 = $this->gTasks[$i]->getPlannedRightMiddlePoint();
+						$point2 = $this->gTasks[$k]->getPlannedLeftMiddlePoint();
+//						echo "p1: (".$point1['x'].",".$point1['y'].")<br>";
+//						echo "p2: (".$point2['x'].",".$point2['y'].")<br>";						
+						DrawingHelper::GanttDependencyLine(
+							$point1['x'],
+							$point1['y'],
+							$point2['x'],
+							$point2['y'],
+							10,
+							true,
+							$this->chart,
+							new LineStyle('#7F7F7F')
+						);
 						break;
 					}
 				}
@@ -503,6 +647,7 @@ class GanttChartGenerator extends ChartGenerator{
 			date($formatDate,$precTS), // data
 			$this->fontSize // dim font
 		);
+		$slice->getLabel()->setHAlign($HAlign);		
 		$slice->getBox()->setForeColor('white');			
 		$slice->drawOn($this->chart);
 	}

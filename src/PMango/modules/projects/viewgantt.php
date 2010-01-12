@@ -163,7 +163,7 @@ $_SESSION['uoc'] = serialize($uoc);
 	cellspacing="0">
 	<tr>
 		<td>	
-		<table width="100%" align="left" border="0" cellpadding="4" cellspacing="0">
+		<table width="100%" border="0" cellpadding="4" cellspacing="0">
 			<tr>
 			<form name="editFrm" method="post"
 				action="?<?php echo "m=$m&a=$a&project_id=$project_id";?>"><input type="hidden"
@@ -236,13 +236,31 @@ $_SESSION['uoc'] = serialize($uoc);
 					</select>
 					<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>;
 				</td>
+				<td>&nbsp;&nbsp;</td>
+             <td valign="top" align="left" nowrap="nowrap">
+             	<b>Image options:</b>&nbsp;
+             </td>
+             <td valign="top" align="left" nowrap="nowrap">
+             	<?php
+					$v = $uoc->getImageDimensionUserOption();
+				?>
+             	<select name="<?php echo UserOptionEnumeration::$ImageDimensionsUserOption;?>">
+					<option value="<?php echo ImageDimension::$FitInWindowDimUserOption; ?>" <?php echo $v==ImageDimension::$FitInWindowDimUserOption?"selected=\"selected\"":"";?>>Fit window</option>
+					<option value="<?php echo ImageDimension::$CustomDimUserOption; ?>" <?php echo $v==ImageDimension::$CustomDimUserOption?"selected=\"selected\"":"";?>>Custom</option>
+					<option value="<?php echo ImageDimension::$OptimalDimUserOption; ?>" <?php echo $v==ImageDimension::$OptimalDimUserOption?"selected=\"selected\"":"";?>>Optimal</option>
+					<option value="<?php echo ImageDimension::$DefaultDimUserOption; ?>" <?php echo $v==ImageDimension::$DefaultDimUserOption?"selected=\"selected\"":"";?>>Default</option>
+				</select>
+				<?php $wh = $uoc->getCustomDimValues(); ?>
+				<br> width: <input size="4" type="text" name="<?php echo UserOptionEnumeration::$CustomWidthUserOption; ?>" value="<?php echo $wh['width'];?>"/> px 
+				<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowWidthUserOption; ?>" value="0"/>
+             </td>				
 				<td width="100%"></td>
 				<td align="right" valign="bottom">
 				<input type="button" class="button"
 					value="<?php echo $AppUI->_( 'submit' );?>"
 					onclick='if (document.editFrm.<?php echo UserOptionEnumeration::$CustomEndDateUserOption; ?>.value < document.editFrm.<?php echo UserOptionEnumeration::$CustomStartDateUserOption; ?>.value) alert("Start date must before end date"); else submit();'>
 				</td>
-				</form>
+				</form>				
 			</tr>
 
 		</table>
