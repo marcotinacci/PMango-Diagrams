@@ -117,18 +117,18 @@ class TaskData{
 
 	public function getCollapsed() {
 		if ($this->getVisibility()) {
-			if ($this->isAtomic()) {
+			
+			if($this->isAtomic()) {
 				return false;
 			}
-			else {
-				foreach ($this->getChildren() as $child) {
-					if($child->getVisibility) {
-						return false;
-					}
-						
+				
+			foreach($this->getChildren() as $child) {
+				if($child->getVisibility()) {
+					return false;
 				}
-				return true;
 			}
+				
+			return true;
 		}
 		else {
 			return false;
@@ -136,7 +136,7 @@ class TaskData{
 	}
 
 	public function isAtomic() {
-		return $this->getVisibility() && count($this->getChildren()) < 1;
+		return count($this->getChildren()) < 1;
 	}
 
 	public function getVisibility(){
@@ -245,22 +245,22 @@ class TaskData{
 
 	public function visibilityCheck(){
 		$result = array();
-		
+
 		for($index = 0; $index < count($this->getChildren()); $index++) {
 			if($this->children[$index]->getVisibility()) {
 				$result[] = $this->children[$index];
 				$this->children[$index]->visibilityCheck();
 			}
-//			else {
-//				print "<br>task before deleting " . $this->children[$index]->getInfo()->getTaskID();
-//				//array_splice($this->children, $index, $index);
-//				unset($this->children[$index]);
-//				print "<br>task after deleting " . $this->children[$index]->getInfo()->getTaskID();
-//				$index++;
-//				//$this->children[$index] = null;
-//			}
+			//			else {
+			//				print "<br>task before deleting " . $this->children[$index]->getInfo()->getTaskID();
+			//				//array_splice($this->children, $index, $index);
+			//				unset($this->children[$index]);
+			//				print "<br>task after deleting " . $this->children[$index]->getInfo()->getTaskID();
+			//				$index++;
+			//				//$this->children[$index] = null;
+			//			}
 		}
-		
+
 		$this->children = $result;
 		return;
 		if($this->getCollapsed() || $this->isAtomic()) {
