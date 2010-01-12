@@ -16,7 +16,7 @@ require_once dirname(__FILE__)."/./ChartGenerator.php";
 
 class WBSChartGenerator extends ChartGenerator{
 	
-	private  $width=800;	
+	private  $width=1200;	
 	private $boxWidth;
 	
 	/**
@@ -59,7 +59,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$nodi=array();
 		
 		//Il vettore $nodi viene riempito con tutti i nodi del tree presi con una visita in profondità
-		$nodi=$treeData->deepVisit();
+		$nodi=$treeData->getVisibleTree()->deepVisit();
 		//Il vettore $leav viene riempito con tutte le foglie del tree
 		$leav = $treeData->getLeaves();
 				
@@ -76,6 +76,9 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$Livello=$CLiv;
 		
+		$larghezza=$numleaves*$this->boxWidth+50;
+		$this->setWidth($larghezza);
+				
 		$dimBlocco=$this->getWidth()/$numleaves;
 		
 		//Le seguenti matrici vengono usate per stampare le coordinate per le linee
@@ -119,14 +122,16 @@ class WBSChartGenerator extends ChartGenerator{
 				{
 					$occorrenze = $this->getOccorrence($leav,$leav[$j]);
 					$cord1 = ((($occorrenze)*$dimBlocco)/2);
-					$cord2 = ((($j)*$dimBlocco));	
+					$cord2 = ((($j)*$dimBlocco));
+						
 					$t = new StubTask();
-					$td=new TaskData($t);
+					$td = new TaskData($t);
 																		
 					$areas[$l] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$td);
-					for($k=0;$k<$occorrenze;$k++)
+					for($k = 0;$k < $occorrenze;$k++)
 					{
 						$leav[$j+$k]=$leav[$j+$k]->getParent();
+						
 						$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
 						$LinkY[$i][$j+$k]=$alt;
 						$Link[$i][$j+$k]=$areas[$l];								
@@ -196,10 +201,36 @@ class WBSChartGenerator extends ChartGenerator{
 		$XToDraw=array();
 		$YToDraw=array();
 		
+		/*
+		$i=1;
+		$arrayDrawLine=$LinkX[$i];
+		
+		$coordinate=array();
+		for($j=0;$j<$numleaves-1;$j++)
+			{					
+				$occorrenze=$this->getOccorrence($arrayDrawLine,$arrayDrawLine[$j]);	
+				for($k=0;$k<$occorrenze;$k++)
+				{
+					$coordinate[$j+$k]=$LinkX[$i][$j];
+				}	
+				$j+=$occorrenze-1;	
+			}
+			
+		$cord1=$coordinate[0]+$this->boxWidth;
+		
+		$cord2=$coordinate[Count($coordinate)-1];
+
+		$cordinata=$cord1+(($cord2-$cord1)/2);
+		
+		for($j=0;$j<$numleaves-1;$j++)
+		{
+			$LinkX[0][$j]=$cordinata;
+		}
+		*/
 		for($i=0;$i<$CLiv;$i++)
 		{
 			$arrayDrawLine=$LinkX[$i];
-			for($j=0;$j<$numleaves;$j++)
+			for($j=0;$j<$numleaves-1;$j++)
 			{
 				$occorrenze=$this->getOccorrence($arrayDrawLine,$arrayDrawLine[$j]);
 				
