@@ -77,7 +77,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$CLiv+=1;
 		$Livello=$CLiv;
 				
-		$larghezza=$numleaves*$this->boxWidth+50;
+		$larghezza=$numleaves*$this->boxWidth+80;
 		$this->setWidth($larghezza);
 				
 		$dimBlocco=$this->getWidth()/$numleaves;
@@ -94,23 +94,23 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		//I seguenti cicli for scandiscono tutti i task data per scoprire 
 		//quello ad altezza maggiore
+		$max=0;	
 		for($i=$CLiv-1;$i>=0;$i--)
 		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
-				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null))
+				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($leav[$j],30,null))
 				{
-					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null);	
+					$max = GifTaskBox::getEffectiveHeightOfTaskBox($leav[$j],30,null);	
 				}				
 			}
 		}
 			
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($CLiv+($CLiv+1))*$max;
+		$height=($CLiv+($CLiv+1))*$max+50;
 		//Spazio tra un livello ed un altro
 		$alt=$height-2*$max;
-		
-		
+				
 		$Link=array(array());
 		$l=0;		//Indice per vettore areas
 		
@@ -128,18 +128,23 @@ class WBSChartGenerator extends ChartGenerator{
 						
 					$t = new StubTask();
 					$td = new TaskData($t);
-																		
-					$areas[$l] = new GifTaskBox((($cord2+$cord1)-($this->boxWidth/2)),$alt,$this->boxWidth,30,$td);
+					$cordinata1=$LinkX[1][0]+$this->boxWidth;
+					$cordinata2=$LinkX[1][Count($LinkX[1])-1];
+					$cordinata=$cordinata1+($cordinata2-$cordinata1)/2;
+										
+					$areas[$l] = new GifTaskBox(($cordinata-($this->boxWidth/2)),$alt,$this->boxWidth,30,$td);
 					for($k = 0;$k < $occorrenze;$k++)
 					{
 						$leav[$j+$k]=$leav[$j+$k]->getParent();
 						
-						$LinkX[$i][$j+$k]=(($cord2+$cord1)-($this->boxWidth/2));
+						$LinkX[$i][$j+$k]=$cordinata -($this->boxWidth/2);//(($cord2+$cord1)-($this->boxWidth/2));
 						$LinkY[$i][$j+$k]=$alt;
 						$Link[$i][$j+$k]=$areas[$l];								
 					}	
 					$l++;
 					$j+=$occorrenze-1;
+					
+					
 				}
 				else
 				{
@@ -203,32 +208,6 @@ class WBSChartGenerator extends ChartGenerator{
 		$XToDraw=array();
 		$YToDraw=array();
 		
-		/*
-		$i=1;
-		$arrayDrawLine=$LinkX[$i];
-		
-		$coordinate=array();
-		for($j=0;$j<$numleaves-1;$j++)
-			{					
-				$occorrenze=$this->getOccorrence($arrayDrawLine,$arrayDrawLine[$j]);	
-				for($k=0;$k<$occorrenze;$k++)
-				{
-					$coordinate[$j+$k]=$LinkX[$i][$j];
-				}	
-				$j+=$occorrenze-1;	
-			}
-			
-		$cord1=$coordinate[0]+$this->boxWidth;
-		
-		$cord2=$coordinate[Count($coordinate)-1];
-
-		$cordinata=$cord1+(($cord2-$cord1)/2);
-		
-		for($j=0;$j<$numleaves-1;$j++)
-		{
-			$LinkX[0][$j]=$cordinata;
-		}
-		*/
 		for($i=0;$i<$CLiv;$i++)
 		{
 			$arrayDrawLine=$LinkX[$i];
@@ -241,8 +220,8 @@ class WBSChartGenerator extends ChartGenerator{
 					{
 						if($LinkX[$i+1][$j+$k]!="")
 						{
-						$XToDraw[$k]=$LinkX[$i+1][$j+$k]+($this->boxWidth)/2;
-						$YToDraw[$k]=$LinkY[$i+1][$j+$k];
+							$XToDraw[$k]=$LinkX[$i+1][$j+$k]+($this->boxWidth)/2;
+							$YToDraw[$k]=$LinkY[$i+1][$j+$k];
 						}
 					}	
 					$j+=$occorrenze-1;
@@ -255,9 +234,10 @@ class WBSChartGenerator extends ChartGenerator{
 				}
 				else if($occorrenze==1)
 				{					
-					$hspace=$Link[$i][$j]->getEffectiveHeight();
+					if($Link[$i][$j]!=null)
+						$hspace=$Link[$i][$j]->getEffectiveHeight();
 					if($LinkX[$i+1][$j]!=null)
-					DrawingHelper::LineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$LinkX[$i+1][$j]+($this->boxWidth/2),$LinkY[$i+1][$j],$gif,$s);	
+						DrawingHelper::LineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$LinkX[$i+1][$j]+($this->boxWidth/2),$LinkY[$i+1][$j],$gif,$s);	
 				}	
 			}
 		}
