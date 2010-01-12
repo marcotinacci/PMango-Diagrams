@@ -143,6 +143,12 @@ function scrollNext() {
 	f.submit();
 }
 
+function BuildImage(placeHolder)
+{
+	var divImage = document.getElementById(placeHolder);
+	divImage.innerHTML = "<img src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+}
+
 </script>
 
 
@@ -228,6 +234,7 @@ $_SESSION['uoc'] = serialize($uoc);
 						<option value="<?php echo TimeGrainEnum::$MonthlyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$MonthlyGrainUserOption?"selected=\"selected\"":"";?>>Monthly</option>
 						<option value="<?php echo TimeGrainEnum::$AnnuallyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$AnnuallyGrainUserOption?"selected=\"selected\"":"";?>>Annually</option>
 					</select>
+					<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>;
 				</td>
 				<td width="100%"></td>
 				<td align="right" valign="bottom">
@@ -244,12 +251,12 @@ $_SESSION['uoc'] = serialize($uoc);
 		<table width="100%" cellspacing="0" cellpadding="0" border="1"
 			align="center" class="tbl">
 			<tr>
-				<td><img 
-					src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']; ?>'>
+				<td align="center">
+					<div id="imagePlaceHolder">
+					</div>
 				</td>
 			</tr>
 		</table>
-
 		<?php
 		/*
 		include('modules/report/makePDF.php');
@@ -270,4 +277,7 @@ $_SESSION['uoc'] = serialize($uoc);
 		</td>
 	</tr>
 </table>
+<script language="javascript">
+	BuildImage('imagePlaceHolder');
+</script>
 <?php ini_restore('memory_limit');?>

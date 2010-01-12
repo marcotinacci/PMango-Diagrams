@@ -183,23 +183,23 @@ class UserOptionsChoice {
 	}
 	
 	function getCustomRangeValues(){
-		$custom_range = array("start"=>$this->array[TimeRange::$CustomStartDateUserOption],
-							"end"=>$this->array[TimeRange::$CustomEndDateUserOption],
-							"today"=>$this->array[TimeRange::$CustomEndDateUserOption]
+		$custom_range = array("start"=>$this->array[UserOptionEnumeration::$CustomStartDateUserOption],
+							"end"=>$this->array[UserOptionEnumeration::$CustomEndDateUserOption],
+							"today"=>$this->array[UserOptionEnumeration::$TodayDateUserOption]
 							);
 		return $custom_range;
 	}
 	
 	function showCustomRangeUserOption() {
-		return isset($this->array[TimeRange::$CustomRangeUserOption]);
+		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
 	}
 
 	function showFromStartRangeUserOption() {
-		return isset($this->array[TimeRange::$FromStartToNowRangeUserOption]);
+		return isset($this->array[UserOptionEnumeration::$FromStartToNowRangeUserOption]);
 	}
 
 	function showToEndRangeUserOption() {
-		return isset($this->array[TimeRange::$FromNowToEndRangeUserOption]);
+		return isset($this->array[UserOptionEnumeration::$FromNowToEndRangeUserOption]);
 	}
 
 	//Task Network shows

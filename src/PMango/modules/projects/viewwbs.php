@@ -67,6 +67,26 @@ $uoc->setFromArray($_POST);
 $_SESSION['uoc'] = serialize($uoc);
 ?>
 
+<script language="javascript">
+
+function getPageWidth()
+{
+	//IE
+	if(!window.innerWidth)
+	{
+		return document.body.clientWidth;
+	}
+	//w3c
+	return window.innerWidth;
+}
+
+function BuildImage(placeHolder)
+{
+	var divImage = document.getElementById(placeHolder);
+	divImage.innerHTML = "<img src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+}
+</script>
+
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
 <tr>
     <td>
@@ -90,6 +110,7 @@ $_SESSION['uoc'] = serialize($uoc);
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?>
+                	<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>;
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
@@ -139,14 +160,19 @@ $_SESSION['uoc'] = serialize($uoc);
 				?>
 				
 				<!-- Generated Image -->
-                <table width="100%" cellspacing="0" cellpadding="0" border="1" class="tbl">
-                <tr>
-                        <td>
-							<img src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id'];?>'>
-                        </td>
-                </tr>
-                </table>
+                <table width="100%" cellspacing="0" cellpadding="0" border="1"
+					align="center" class="tbl">
+				<tr>
+					<td align="center">
+						<div id="imagePlaceHolder">
+						</div>
+					</td>
+				</tr>
+				</table>
 	</td>
 </tr>
 </table>
+<script language="javascript">
+	BuildImage('imagePlaceHolder');
+</script>
 <?php ini_restore('memory_limit');?>

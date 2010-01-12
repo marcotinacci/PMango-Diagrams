@@ -28,7 +28,7 @@ Class UserOptionEnumeration {
 	public static  $TimeRangeUserOption = "TimeRangeUserOption";
 	public static  $TimeGrainUserOption = "TimeGrainUserOption";
 	
-	public static  $ImageDimensionsUserOption = "ImageDimensionsUserOption";
+	public static $ImageDimensionsUserOption = "ImageDimensionsUserOption";
 	public static $DefaultWidthUserOption = "DefaultWidthUserOption"; //int
 	public static $DefaultHeightUserOption = "DefaultHeightUserOption"; //int
 	public static $CustomWidthUserOption = "CustomWidthUserOption"; //int
