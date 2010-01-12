@@ -74,8 +74,9 @@ class WBSChartGenerator extends ChartGenerator{
 				$CLiv = $n->getInfo()->getLevel();
 		}
 		
+		$CLiv+=1;
 		$Livello=$CLiv;
-		
+				
 		$larghezza=$numleaves*$this->boxWidth+50;
 		$this->setWidth($larghezza);
 				
@@ -93,7 +94,7 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		//I seguenti cicli for scandiscono tutti i task data per scoprire 
 		//quello ad altezza maggiore
-		for($i=$CLiv;$i>=0;$i--)
+		for($i=$CLiv-1;$i>=0;$i--)
 		{			
 			for($j=0;$j<$numleaves;$j++)
 			{
@@ -105,9 +106,10 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 			
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($CLiv+4)*$max;
+		$height=($CLiv+($CLiv+1))*$max;
 		//Spazio tra un livello ed un altro
 		$alt=$height-2*$max;
+		
 		
 		$Link=array(array());
 		$l=0;		//Indice per vettore areas
@@ -230,25 +232,33 @@ class WBSChartGenerator extends ChartGenerator{
 		for($i=0;$i<$CLiv;$i++)
 		{
 			$arrayDrawLine=$LinkX[$i];
-			for($j=0;$j<$numleaves-1;$j++)
+			for($j=0;$j<$numleaves;$j++)
 			{
 				$occorrenze=$this->getOccorrence($arrayDrawLine,$arrayDrawLine[$j]);
-				
-				for($k=0;$k<$occorrenze;$k++)
+				if($occorrenze>1)
 				{
-					if($LinkX[$i+1][$j+$k]!="")
+					for($k=0;$k<$occorrenze;$k++)
 					{
-					$XToDraw[$k]=$LinkX[$i+1][$j+$k]+($this->boxWidth)/2;
-					$YToDraw[$k]=$LinkY[$i+1][$j+$k];
-					}
-				}	
-				$j+=$occorrenze-1;
-				$hspace=$Link[$i][$j]->getEffectiveHeight();
-				DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
-				
-				$XToDraw=array();
-				$YToDraw=array();
+						if($LinkX[$i+1][$j+$k]!="")
+						{
+						$XToDraw[$k]=$LinkX[$i+1][$j+$k]+($this->boxWidth)/2;
+						$YToDraw[$k]=$LinkY[$i+1][$j+$k];
+						}
+					}	
+					$j+=$occorrenze-1;
+					$hspace=$Link[$i][$j]->getEffectiveHeight();
+					if($LinkX[$i+1][$j]!=null)
+						DrawingHelper::ExplodedUpRectangularLineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$XToDraw,$YToDraw,$gif,$s);
 					
+					$XToDraw=array();
+					$YToDraw=array();
+				}
+				else if($occorrenze==1)
+				{					
+					$hspace=$Link[$i][$j]->getEffectiveHeight();
+					if($LinkX[$i+1][$j]!=null)
+					DrawingHelper::LineFromTo($LinkX[$i][$j]+($this->boxWidth/2),$LinkY[$i][$j]+$hspace,$LinkX[$i+1][$j]+($this->boxWidth/2),$LinkY[$i+1][$j],$gif,$s);	
+				}	
 			}
 		}
 		
