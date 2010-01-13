@@ -151,8 +151,8 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
 		
 		// visita l'albero visibile
-//		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
-		$this->tasks = $this->tdt->visibleDeepVisit();
+		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
+//		$this->tasks = $this->tdt->visibleDeepVisit();
 		// FIX: gestire caso senza task
 
 		// prendi le dipendenze
@@ -168,7 +168,6 @@ class GanttChartGenerator extends ChartGenerator{
 				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
 				$start = mangoToGanttDate($dates['start']);
 				$end = add_date(mangoToGanttDate($dates['end']),0,1);
-				$today = mangoToGanttDate($dates['today']);				
 			break;
 			
 			default:
@@ -216,7 +215,6 @@ class GanttChartGenerator extends ChartGenerator{
 				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
 				$start = mangoToGanttDate($dates['start']);
 				$end = add_date(mangoToGanttDate($dates['today']),0,1);
-				$today = mangoToGanttDate($dates['today']);
 			break;
 			
 			// inizio today e fine custom
@@ -224,14 +222,13 @@ class GanttChartGenerator extends ChartGenerator{
 				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
 				$start = add_date(mangoToGanttDate($dates['today']),0,-1);
 				$end = add_date(mangoToGanttDate($dates['end']),0,1);
-				$today = mangoToGanttDate($dates['today']);
 			break;
 		}
 		
 		//echo "inizio $start - fine $end";		
 		$this->sDate = $start;
 		$this->fDate = $end;
-		$this->today = $today;
+		$this->today = mangoToGanttDate($dates['today']);
 
 		// FIX: adattare la grana
 		// acquisizione tipo di grana
@@ -289,8 +286,8 @@ class GanttChartGenerator extends ChartGenerator{
 				$width = $values['width'];
 			break;			
 			case ImageDimension::$FitInWindowDimUserOption:
-				$values = $_GET[UserOptionsEnumeration::$FitInWindowWidthUserOption];
-				$width = $values['width'];
+				$width = $_GET[UserOptionEnumeration::$FitInWindowWidthUserOption] - 40;
+				//$width = $values['width'];
 			break;			
 			case ImageDimension::$OptimalDimUserOption:
 			// FIX: non funziona
@@ -382,7 +379,7 @@ class GanttChartGenerator extends ChartGenerator{
 			"Project Title", // titolo
 			$this->fontSize // dim font
 			);
-//		$title->getBox()->setForeColor('green');
+		$title->getBox()->setForeColor('green');
 		$title->drawOn($this->chart);		
 	}
 	
@@ -402,7 +399,7 @@ class GanttChartGenerator extends ChartGenerator{
 		);
 		
 // TODO: commentato per vedere i task sottostanti, decommentare poi
-//		$leftCol->setForeColor('white');
+		$leftCol->setForeColor('white');
 		$leftCol->drawOn($this->chart);
 
 
