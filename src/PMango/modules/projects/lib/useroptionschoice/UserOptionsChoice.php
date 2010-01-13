@@ -101,7 +101,10 @@ class UserOptionsChoice {
 
 	//return type of Image Dimension requested by the user: defaultDimension default
 	function getImageDimensionUserOption() {
+		if(isset($this->array[UserOptionEnumeration::$ImageDimensionsUserOption]))
 		return $this->array[UserOptionEnumeration::$ImageDimensionsUserOption];
+		else
+		return ImageDimension::$FitInWindowDimUserOption;
 	}
 
 	function getCustomDimValues(){

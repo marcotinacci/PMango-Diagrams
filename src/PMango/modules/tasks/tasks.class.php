@@ -1794,7 +1794,6 @@ class CTaskLog extends CDpObject {
 		return NULL;
 	}
 
-	/*
 	function canDelete( &$msg, $oid=null, $joins=null ) {//OK non viene mai chiamata perchè canDelete di CDobj ha 4 par quindi non c'è overriding
 		global $AppUI;
 
@@ -1841,7 +1840,6 @@ class CTaskLog extends CDpObject {
 
 		return true;
 	}
-	*/
 }
 
 
