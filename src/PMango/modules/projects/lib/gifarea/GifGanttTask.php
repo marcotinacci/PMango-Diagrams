@@ -28,7 +28,6 @@ class GifGanttTask extends GifArea
 	 */
 	private $td;
 	
-	// TODO: wTri in opzioni di conf
 	/**
 	 * Misura larghezza triangolo
 	 * @var wTri
@@ -202,13 +201,11 @@ class GifGanttTask extends GifArea
 			$hPlanned = intval(2*$height/3);
 			$hActual = $height - $hPlanned;
 			$cPlanned = 'white';
-			$isLeaf = true;
 		}else{
 			// se il task è nodo interno
 			$hPlanned = intval($height/3);
 			$cPlanned = 'black';
 			$hActual = $hPlanned;
-			$isLeaf = false;
 		}
 		
 		// se il task è visibile
@@ -237,7 +234,7 @@ class GifGanttTask extends GifArea
 		}
 		
 		// costruzione triangoli se il task non è foglia ed è visibile
-		if(!$this->td->isAtomic()){
+		if(!$this->td->isAtomic() && !$this->td->getCollapsed()){
 			if($this->actualStarted){
 				$xLeft = min($xActual, $xPlanned);
 				$xRight = max($xActual+$wActual, $xPlanned+$wPlanned);
@@ -254,30 +251,6 @@ class GifGanttTask extends GifArea
 			// altezza triangoli			
 			$hTri = $height - $hPlanned;
 
-/*			
-			// sinistra
-			if((!$this->actualStarted) && ($this->trueXPlanned >= 0)){
-				$xLeft = $this->trueXPlanned;
-			}else if((!$this->actualStarted) && ($this->trueXPlanned < 0)){
-				$xLeft = null;
-				$leftVisible = false;			
-			}else{
-				$xLeft = ($this->trueXActual < $this->trueXPlanned) ? 
-					$this->trueXActual : $this->trueXPlanned;
-				if($xLeft < 0){
-					$xLeft = null;
-					$leftVisible = false;					
-				}
-			}
-			
-			// destra
-			$xRight = ($this->trueXActual + $this->trueWActual > $this->trueXPlanned + $this->trueWPlanned) ? 
-				$this->trueXActual + $this->trueWActual : $this->trueXPlanned + $this->trueWPlanned;
-			if($xRight > $xFinish - $xStart){
-				$xRight = null;
-				$rightVisible = false;
-			}
-*/
 			// se il triangolo sinistro è visibile
 			if($xLeft >= 0){
 				// genero triangolo sinistro
