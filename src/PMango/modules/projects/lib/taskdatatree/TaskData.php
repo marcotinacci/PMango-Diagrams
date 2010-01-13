@@ -208,6 +208,23 @@ class TaskData{
 		return $res;
 	}
 
+	public function visibleDeepVisit(){
+		$res = array();
+		$add = array();
+		if($this->children != null){
+			foreach($this->children as $son){
+				if($son->getVisibility()){
+					$res[] = $son;
+					$add = $son->deepVisit();
+					for ($i=0; $i<sizeOf($add); $i++){
+						$res[] = $add[$i];
+					}
+				}
+			}
+		}
+		return $res;
+	}
+
 	public function wideVisit(){
 		$res = array();
 		$add = array();

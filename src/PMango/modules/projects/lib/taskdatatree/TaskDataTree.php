@@ -43,6 +43,15 @@ class TaskDataTree {
 		return $res;
 	}
 
+	/**
+	 *
+	 * @return vettore di TaskData
+	 */
+	public function visibleDeepVisit(){
+		$res = $this->root->visibleDeepVisit();
+		return $res;
+	}
+	
 	public function wideVisit(){
 		$res = $this->root->wideVisit();
 		return $res;

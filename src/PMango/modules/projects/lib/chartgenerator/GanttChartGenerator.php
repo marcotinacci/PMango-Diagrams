@@ -152,7 +152,7 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		// visita l'albero visibile
 //		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
-		$this->tasks = $this->tdt->deepVisit();
+		$this->tasks = $this->tdt->visibleDeepVisit();
 		// FIX: gestire caso senza task
 
 		// prendi le dipendenze
