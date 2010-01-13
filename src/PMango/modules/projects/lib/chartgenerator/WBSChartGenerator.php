@@ -3,7 +3,7 @@
 require_once dirname(__FILE__)."/../gifarea/GifTaskBox.php";
 require_once dirname(__FILE__)."/../gifarea/DrawingHelper.php";
 require_once dirname(__FILE__)."/./ChartGenerator.php";
-//require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
+require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 
 /**
  * Questa classe implementa il metodo di generazione delle WBS
@@ -39,6 +39,14 @@ class WBSChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	protected function makeWBSTaskNode(){
+		$UOC = new UserOptionsChoice();
+		//$UOC=UserOptionsChoice::GetInstance();
+		$dimension=$UOC->getImageDimensionUserOption();
+		if($dimension==ImageDimension::$CustomDimUserOption)
+		{
+			$dim=$UOC->getCustomDimValues();
+			$this->setWidth($dim['width']);
+		}
 		
 		$areas=array();
 		
@@ -78,7 +86,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$Livello=$CLiv;
 				
 		$larghezza=$numleaves*$this->boxWidth+100;
-		$this->setWidth($larghezza);
+		//$this->setWidth($larghezza);
 				
 		$dimBlocco=$this->getWidth()/$numleaves;
 		
