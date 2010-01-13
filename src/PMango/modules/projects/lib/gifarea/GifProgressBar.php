@@ -13,7 +13,7 @@ class GifProgressBar extends GifArea
 	{
 		parent::__construct($x, $y, $width, $height);
 		$p = $this->getPercentagePixels($completed,$width);
-		if($completed)
+		if($completed <= 99)
 		{
 			$this->subAreas[0]=new GifBox(0, 0, $p, $height);
 			$this->subAreas[0]->setForeColor("#7F7F7F");

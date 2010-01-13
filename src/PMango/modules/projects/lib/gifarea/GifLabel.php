@@ -12,6 +12,7 @@ class GifLabel extends GifArea
 	private $vAlign = "center";
 	private $hAlign = "center";
 	private $truncate = true;
+	private $underlined = false;
 	
 	public function __construct($x, $y, $width, $height, $text, $size)
 	{
@@ -112,6 +113,8 @@ class GifLabel extends GifArea
 		$style=FS_NORMAL;
 		if($this->bold)
 			$style=FS_BOLD;
+		/*if($this->underlined)
+			$style=FT*/
 		
 		$t = new Text( $txt,$xc,$yc );
 		$t->SetFont( FF_VERDANA, $style,$this->size);
@@ -143,7 +146,7 @@ class GifLabel extends GifArea
 	public static function getPixelWidthOfText($txt,$fontSize,$font=FF_VERDANA)
 	{
 		$offset = $fontSize*(8/10);
-		return strlen($txt)*$offset;
+		return intval(strlen($txt)*$offset);
 	}
 	
 }

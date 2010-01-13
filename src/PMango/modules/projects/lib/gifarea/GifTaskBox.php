@@ -56,9 +56,9 @@ class GifTaskBox extends GifArea
 		if($uoc->showPlannedDataUserOption())
 		{
 			$planned = $task->getInfo()->getPlannedData();
-			$Planned_D = "".$planned["duration"];
-			$Planned_PH = "".$planned["effort"];
-			$Planned_Money = "".$planned["cost"];
+			$Planned_D = "".$planned["duration"]." d";
+			$Planned_PH = "".$planned["effort"]." ph";
+			$Planned_Money = "".$planned["cost"]." &#8364;";;
 			$this->subAreas['PlannedData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$Planned_D,$fontHeight);
 			$this->subAreas['PlannedData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$Planned_PH,$fontHeight);
 			$this->subAreas['PlannedData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$Planned_Money,$fontHeight);
@@ -69,12 +69,12 @@ class GifTaskBox extends GifArea
 		{
 			$res=$task->getInfo()->getResources();
 			$resRowSize = $row-($row/3);
-			$resHeight = $resRowSize*sizeOf($res);
+			$resHeight = $resRowSize*sizeOf($res)+4;
 			$this->subAreas['ResourcesBox'] = new GifBox(0,$curY,$width,$resHeight);
-			$curY += 4;
 			for($i=0; $i<sizeOf($res); $i++)
 			{
-				$txt = $res[$i]['PlannedEffort'].", ".$res[$i]['ResourceName'].", ".$res[$i]['Role'];
+				$curY += 4;
+				$txt = $res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
 					
 				$index = "ResourceLabel_".$i;
 				$this->subAreas[$index] = new GifLabel(6,$curY,$width-6,$resRowSize,$txt,$fontHeight);
@@ -86,7 +86,13 @@ class GifTaskBox extends GifArea
 		if($uoc->showActualTimeFrameUserOption())
 		{
 			$atf = $task->getInfo()->getActualTimeFrame();
+			
+			$ActualTimeFrame_start = "NA";
+			$ActualTimeFrame_finish = "NA";
+			if(isset($atf['start_date']))
 			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
+
+			if(isset($atf['start_date']))
 			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
@@ -97,9 +103,11 @@ class GifTaskBox extends GifArea
 		if($uoc->showActualDataUserOption())
 		{
 			$actual = $task->getInfo()->getActualData();
-			$actual_D = "".$actual["duration"];
-			$actual_PH = "".$actual["effort"];
-			$actual_Money = "".$actual["cost"];
+			$actual_D = "".$actual["duration"]." d";
+			if($actual_D == "NA d")
+				$actual_D = "NA";
+			$actual_PH = "".$actual["effort"]." ph";
+			$actual_Money = "".$actual["cost"]. " &#8364;";
 			$this->subAreas['ActualData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$actual_D,$fontHeight);
 			$this->subAreas['ActualData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$actual_PH,$fontHeight);
 			$this->subAreas['ActualData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$actual_Money,$fontHeight);
