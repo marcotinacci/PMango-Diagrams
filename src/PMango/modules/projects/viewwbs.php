@@ -74,10 +74,10 @@ function getPageWidth()
 	//IE
 	if(!window.innerWidth)
 	{
-		return document.body.clientWidth;
+		return document.body.clientWidth-40;
 	}
 	//w3c
-	return window.innerWidth;
+	return window.innerWidth-40;
 }
 
 function BuildImage(placeHolder)
