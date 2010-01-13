@@ -39,15 +39,8 @@ class WBSChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	protected function makeWBSTaskNode(){
-		$UOC = new UserOptionsChoice();
-		//$UOC=UserOptionsChoice::GetInstance();
-		$dimension=$UOC->getImageDimensionUserOption();
-		if($dimension==ImageDimension::$CustomDimUserOption)
-		{
-			$dim=$UOC->getCustomDimValues();
-			$this->setWidth($dim['width']);
-		}
-		
+		//$UOC = new UserOptionsChoice();
+				
 		$areas=array();
 		
 		$tdt=new StubTask();
@@ -87,6 +80,27 @@ class WBSChartGenerator extends ChartGenerator{
 				
 		$larghezza=$numleaves*$this->boxWidth+100;
 		//$this->setWidth($larghezza);
+		
+		//Configura la dimensioni dell'immagine, secondo le scelte dell'utente
+		$UOC=UserOptionsChoice::GetInstance();
+		$dimension=$UOC->getImageDimensionUserOption();
+		if($dimension==ImageDimension::$CustomDimUserOption)
+		{
+			$dim=$UOC->getCustomDimValues();
+			$this->setWidth($dim['width']);
+		}
+		if($dimension==ImageDimension::$OptimalDimUserOption)
+		{
+			$this->setWidth($larghezza);
+		}	
+		if($dimension==ImageDimension::$DefaultDimUserOption)
+		{
+			$this->setWidth(800);
+		}	
+		if($dimension==ImageDimension::$FitInWindowDimUserOption)
+		{
+			$this->setWidth($_GET[UserOptionEnumeration::$FitInWindowWidthUserOption]);	
+		}
 				
 		$dimBlocco=$this->getWidth()/$numleaves;
 		
