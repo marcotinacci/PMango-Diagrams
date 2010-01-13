@@ -22,7 +22,7 @@
  Second version, modified to manage Mango task.
  - 2006.07.30 Lorenzo
  First version, unmodified from dotProject 2.0.1.
-  
+
  -------------------------------------------------------------------------------------------
 
  PMango - A web application for project planning and control.
@@ -327,7 +327,7 @@ class CTask extends CDpObject {
 				$sql = "UPDATE tasks SET task_parent = $this->task_id WHERE task_id = $this->task_id";
 				db_exec( $sql );
 			}
-				
+
 			if (!is_null($res_ar) && count($res_ar) > 0)
 			foreach ($res_ar as $i => $res) {
 				$sql = 'INSERT INTO user_tasks (user_id, proles_id, task_id, effort, perc_effort) VALUES ('.$res[0].','.$res[1].','.$this->task_id.','.$res[2].','.$res[3].')';
@@ -624,7 +624,7 @@ class CTask extends CDpObject {
 		// return if we are in a dependency call
 		if ($isDep)
 		return;
-		 
+			
 		return implode (',', $aDeps);
 
 	} // end of dependentTasks()
@@ -827,7 +827,7 @@ class CTask extends CDpObject {
 		if (count($res_ar) > 0) {
 			$sql = "SELECT CONCAT(user_id, proles_id, task_id), user_task_priority FROM user_tasks WHERE task_id = $this->task_id";
 			$utp_ar = db_loadHashList($sql);
-				
+
 			$sql = "DELETE FROM user_tasks WHERE task_id = $this->task_id";
 			db_exec( $sql );
 
@@ -849,13 +849,6 @@ class CTask extends CDpObject {
 	}
 
 	function getAssignedUsers(){
-		/*$sql = "select u.user_last_name as LastName, ut.effort as Effort, pr.proles_name as Role, sum(tl.task_log_hours) as ActualEffort
-		        from users as u, user_tasks as ut left outer join tasks_log as tl on ut.task_id=tl.task_log_tasks, project_roles as pr
-		        where ut.task_id = '$this->task_id'
-		              and ut.user_id = u.user_id
-		              and pr.proles_id = ut.proles_id		       
-		        group by(ut.task_id);";
-		*/
 		$sql="
 		SELECT u.user_last_name AS LastName, ut.effort AS Effort, pr.proles_name AS Role, sum(tl.task_log_hours) as ActualEffort
 FROM users AS u, (
@@ -934,8 +927,8 @@ group by(ut.task_id);";
 	function getDeepChildren()
 	{
 		return $this->internalGetDeepChildren();
-		
-		
+
+
 		$children = db_loadColumn( "SELECT task_id FROM tasks WHERE task_parent = $this->task_id" );
 		if ($children)
 		{
@@ -960,7 +953,7 @@ group by(ut.task_id);";
 			$tempTask->load($child);
 			$result = array_merge($result, $tempTask->internalGetDeepChildren());
 		}
-		
+
 		return $result;
 	}
 
@@ -1097,7 +1090,7 @@ group by(ut.task_id);";
 
 		if (is_null($tid))
 		return "";
-		 
+			
 		$wbs = CTask::getWBS($tid);
 		$splittedWBS = explode(".", $wbs);
 
@@ -1457,7 +1450,7 @@ group by(ut.task_id);";
 		}
 		else
 		return "-";
-		 
+			
 		return round(($pac * 100)/($ptb * $pr),2);
 	}
 
@@ -1690,7 +1683,7 @@ group by(ut.task_id);";
 		if ($d1 > 0)
 		if (!array_search($d1,$dates))
 		$msg .=" - Task delivery date doesn't match with a child task finish date\n";
-	  
+		 
 		if (!$fromProj) {
 			if (is_array($tasks))
 			foreach ($tasks as $t) {
@@ -1801,6 +1794,7 @@ class CTaskLog extends CDpObject {
 		return NULL;
 	}
 
+	/*
 	function canDelete( &$msg, $oid=null, $joins=null ) {//OK non viene mai chiamata perchè canDelete di CDobj ha 4 par quindi non c'è overriding
 		global $AppUI;
 
@@ -1847,6 +1841,7 @@ class CTaskLog extends CDpObject {
 
 		return true;
 	}
+	*/
 }
 
 
@@ -2005,11 +2000,11 @@ function showTaskPlanned( &$a, $level=0, $is_opened = true, $today_view = false,
 					$s .= $db_roles[$i][0].": ".$db_roles[$i][1];
 				}
 			}
-				
+
 			if($roles=="N"){
 				$s .= " <a href=\"javascript: void(0);\"  onClick=\"toggle_users('users_$id');\" title=\"" . join ( ', ', $a_u_tmp_array ) ."\">persons: ". (count( $db_roles )) ."</a>";
 			}
-				
+
 			if($roles=="R"){
 				$s .= $db_roles[0][1];
 				for ( $i = 1; $i < count( $db_roles ); $i++) {
@@ -2109,7 +2104,7 @@ function showTaskActual( &$a, $level=0, $is_opened = true, $today_view = false, 
 		$icon='images/icons/!t.png';
 		$style = 'background-color:#cc6666;color:#ffffff';
 	}
-		
+
 	if ($actual_start_date){
 		if ($now->after( $actual_start_date ) && $tpr < 100) {//Running
 			$icon='images/icons/!r.png';
@@ -2232,11 +2227,11 @@ function showTaskActual( &$a, $level=0, $is_opened = true, $today_view = false, 
 					$s .= $db_roles[$i][0].": ".$db_roles[$i][1];
 				}
 			}
-				
+
 			if($roles=="N"){
 				$s .= " <a href=\"javascript: void(0);\"  onClick=\"toggle_users('users_$id');\" title=\"" . join ( ', ', $a_u_tmp_array ) ."\">persons: ". (count( $db_roles )) ."</a>";
 			}
-				
+
 			if($roles=="R"){
 				$s .= $db_roles[0][1];
 				for ( $i = 1; $i < count( $db_roles ); $i++) {
