@@ -94,8 +94,15 @@ class DataArrayBuilder {
 	}
 	
   	public function buildAssignedToTask() {
-		$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task] =
-		$this->_CTaskObject->getAssignedUsers();
+  		$a = $this->_CTaskObject->getAssignedUsers();
+  		for($i=0; $i<sizeOf($a); $i++)
+  		{
+  			$res[$i]['LastName'] = $a[$i]['LastName'];
+  			$res[$i]['Effort'] = $a[$i]['Effort'];
+  			$res[$i]['ActualEffort'] = $a[$i]['ActualEffort'];
+  			$res[$i]['Role'] = $a[$i]['Role'];
+  		}
+  		$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task] = $res;
 	}
 
 	public function buildPlannedEffort() {

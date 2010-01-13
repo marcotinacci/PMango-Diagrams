@@ -70,15 +70,26 @@ class GifTaskBox extends GifArea
 			$res=$task->getInfo()->getResources();
 			$resRowSize = $row-($row/3);
 			$resHeight = $resRowSize*sizeOf($res)+4;
+			if(sizeOf($res)==0)
+				$resHeight = $resRowSize+4;
 			$this->subAreas['ResourcesBox'] = new GifBox(0,$curY,$width,$resHeight);
 			for($i=0; $i<sizeOf($res); $i++)
 			{
 				$curY += 4;
-				$txt = $res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
+				$txt = $res[$i]['ActualEffort']."/".$res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
 					
 				$index = "ResourceLabel_".$i;
-				$this->subAreas[$index] = new GifLabel(6,$curY,$width-6,$resRowSize,$txt,$fontHeight);
+				$this->subAreas[$index] = new GifLabel(8,$curY,$width-6,$resRowSize,$txt,$fontHeight);
 				$this->subAreas[$index]->setHAlign("left");
+				$curY += $resRowSize-4;
+			}
+			if(sizeOf($res)==0)
+			{
+				$curY += 4;
+				$txt = "NA";
+				$index = "ResourceLabel_0";
+				$this->subAreas[$index] = new GifLabel(8,$curY,$width-6,$resRowSize,$txt,$fontHeight);
+				$this->subAreas[$index]->setHAlign("center");
 				$curY += $resRowSize-4;
 			}
 			$curY += 4;
@@ -96,7 +107,9 @@ class GifTaskBox extends GifArea
 			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
+			$this->subAreas['ActualTimeFrame_box_start']->getLabel()->setUnderline(true);
 			$this->subAreas['ActualTimeFrame_box_finish'] = new GifBoxedLabel($doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_finish,$fontHeight);
+			$this->subAreas['ActualTimeFrame_box_finish']->getLabel()->setUnderline(true);
 			$curY += $row;
 		}
 
@@ -109,8 +122,11 @@ class GifTaskBox extends GifArea
 			$actual_PH = "".$actual["effort"]." ph";
 			$actual_Money = "".$actual["cost"]. " &#8364;";
 			$this->subAreas['ActualData_box_D'] = new GifBoxedLabel(0,$curY,$tripleSubBoxWidth,$row,$actual_D,$fontHeight);
+			$this->subAreas['ActualData_box_D']->getLabel()->setUnderline(true);
 			$this->subAreas['ActualData_box_PH'] = new GifBoxedLabel($tripleSubBoxWidth,$curY,$tripleSubBoxWidth,$row,$actual_PH,$fontHeight);
+			$this->subAreas['ActualData_box_PH']->getLabel()->setUnderline(true);
 			$this->subAreas['ActualData_box_Money'] = new GifBoxedLabel(2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$actual_Money,$fontHeight);
+			$this->subAreas['ActualData_box_Money']->getLabel()->setUnderline(true);
 			$curY += $row;
 		}
 
