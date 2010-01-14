@@ -2,6 +2,7 @@
 require_once dirname(__FILE__).'/Task.php';
 require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 require_once dirname(__FILE__) . '/TaskDataTreeGenerator.php';
+require_once dirname(__FILE__) . '/../chartgenerator/TaskNetworkChartGenerator.php';
 
 global $AppUI;
 $tasks_closed = $AppUI->getState("tasks_closed");
@@ -38,6 +39,15 @@ $leaves = $tdt->getLeaves();
 foreach ($leaves as $leaf) {
 	print " " . $leaf->getInfo()->getTaskID();	
 }
+
+print "<br>Getting the visible leaves...";
+$visibleleaves = $tdt->getVisibleLeaves();
+foreach ($visibleleaves as $leaf) {
+	print "<br>visible leaf " . $leaf->getInfo()->getTaskID() .
+		" is collapsed " . $leaf->getCollapsed() . " / is atomic " . 
+		$leaf->isAtomic();	
+}
+
 print "<br>analising deep dependency...";
 $dependencyMap = $tdt->computeDependencyRelationOnVisibleTasks();
 foreach ($dependencyMap as $needed => $dependants) {
@@ -52,5 +62,9 @@ $leaves = $tdt->getLeaves();
 foreach ($leaves as $leaf) {
 	print " " . $leaf->getInfo()->getTaskID();	
 }
+
+print "<br>preparing the generating process for tn graph: ";
+$tnGenerator = new TaskNetworkChartGenerator();
+$tnGenerator->generateChart();
 
 ?>

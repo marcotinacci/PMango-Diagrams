@@ -61,6 +61,10 @@ class TaskDataTree {
 		$leaves = $this->root->getLeaves();
 		return $leaves;
 	}
+	
+	public function getVisibleLeaves() {
+		return $this->root->getVisibleLeaves();
+	}
 
 	public function selectTask($task_id){
 		$nodes = $this->wideVisit();
@@ -104,7 +108,8 @@ class TaskDataTree {
 	public function computeDependencyRelationOnVisibleTasks() {
 		//$this->leaves = $this->getVisibleTree()->getLeaves();
 		$result = array();
-		foreach ($this->getVisibleTree()->getLeaves() as $leaf) {
+		
+		foreach ($this->getVisibleLeaves() as $leaf) {
 			$deepChildren = $leaf->getInfo()->getCTask()->getDeepChildren();
 			//			print "<br>deep children of " . $leaf->getInfo()->getCTask()->task_id .
 			//			": " . implode(", ", $deepChildren);

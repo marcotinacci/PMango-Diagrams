@@ -1,7 +1,9 @@
 <?php
-function __autoload($classname) {
-	require_once "./modules/MangoGanttCPM/chartgenerator/ChartGenerator.php";
-}
+require_once dirname(__FILE__) . "/ChartGenerator.php";
+require_once dirname(__FILE__) . "/CriticalPathDomainObject.php";
+require_once dirname(__FILE__) . "/PointInfo.php";
+require_once dirname(__FILE__) . "/../taskdatatree/TaskData.php";
+require_once dirname(__FILE__) . "/../gifarea/GifTaskBox.php";
 
 class TaskNetworkChartGenerator extends ChartGenerator {
 
@@ -36,8 +38,34 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 */
 	private $dotsDependencyLineCount = 1;
 
-	public function generateChart()	{
+	/**
+	 * Costruttore
+	 */
+	public function __construct(){
+		parent::__construct();
+	}
 
+	public function retrieveUserOptionChoice() {
+		// retrieve this object from session??
+		return UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
+		$AppUI->getState('ExplodeTasks', '1'),
+		$AppUI->getState("tasks_opened"),
+		$AppUI->getState("tasks_closed"));
+	}
+	
+	public function generateChart()	{
+		$tdt = $this->tdtGenerator->generateTaskDataTree();
+		$root = $this->buildDependencyTree($tdt);
+		
+		$userOptionChoice = $this->retrieveUserOptionChoice();
+
+		AbstractTaskDataDrawer::$width = GifTaskBox::getTaskBoxesBestWidth(
+		$this->tdtGenerator->generateTaskDataTree()->getVisibleTree(),
+		$userOptionChoice, 12, FF_VERDANA);
+
+		// start the generation from (5, 5) point
+		$this->vertical = 5;
+		$this->internalGenerateChart($root, new CriticalPathDomainObject(), 5);
 	}
 
 	/**
@@ -54,31 +82,41 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 * @return void
 	 */
 	private function internalGenerateChart($dependency, $criticalPathDomainObject, $horizontal) {
+		//var_dump($dependency);
+		//print "<br>Drawing " . $dependency->getNeededTask()->getInfo()->getTaskID();
 		if ($dependency->hasDependentTasks()) {
 
 			// freeze the current vertical quote
 			$freezeVertical = $this->vertical;
+			print "<br>freezed vertical $freezeVertical";
 
 			$entryPointArray = array();
 
 			foreach ($dependency->getDependentTasks() as $dependentTask) {
 
-				$dependantTaskId =	$dependantTask->getNeededTask()->getTask()->task_id;
+				$dependantTaskId =	$dependentTask->getNeededTask()->getInfo()->getTaskID();
+
+				print "<br>drawing dependant task " . $dependantTaskId;
+
 				/*
 				 * cloning the critical path domain object to duplicate the info
 				 * to have one clone foreach fork of the path
 				 */
 				$cpdoClone = $this->buildNewCriticalPathDomainObjectFrom(
 				$criticalPathDomainObject,
-				$dependency->getNeededTask()->getTask(),
-				$dependentTask->getNeededTask()->getTask());
+				$dependency->getNeededTask()->getInfo(),
+				$dependentTask->getNeededTask()->getInfo());
 
 				if (array_key_exists($dependantTaskId, $this->drawedTasksMap)) {
 					$existingDependencyLineInfo =& $this->drawedTasksMap[$dependantTaskId];
+					print "$dependantTaskId added to the drawed task map";
+						
 					$existingDependencyLineInfo->horizontal -= $this->getHorizontalGapForExistingDependency();
 					$this->appendDependencyLine(clone $existingDependencyLineInfo);
 				} else {
-					$entryPoint = $dependentTask->getDrawer()->computeEntryPoint(new PointInfo($horizontal, $this->vertical));
+					print "$dependantTaskId not exists into drawed task map";
+					$drawer = $dependentTask->getDrawer();
+					$entryPoint = $drawer->computeEntryPoint(new PointInfo($horizontal, $this->vertical));
 
 					// the following method draw a line only if is necessary in presence of composed task
 					//$entryPoint = $this->connectEntryPointToCurrentVertical($entryPoint);
@@ -117,30 +155,45 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		$analizedDependency = array();
 
 		// building the internal graph relation
-		foreach ($tdt->computeDependencyRelationOnVisibleTasks() as $neededTaskId => $dependantTasksIds) {
-			$this->checkDependencyExistence($tdt->selectTask($neededTaskId), $analizedDependency);
+		foreach ($tdt->computeDependencyRelationOnVisibleTasks() as 
+		$neededTaskId => $dependantTasksIds) {
+			$this->checkDependencyExistence($tdt->selectTask($neededTaskId), 
+			$analizedDependency);
 
 			foreach ($dependantTasksIds as $dependantId) {
-				$this->checkDependencyExistence($tdt->selectTask($dependantId), $analizedDependency);
+				$this->checkDependencyExistence($tdt->selectTask($dependantId), 
+				$analizedDependency);
 
 				// update the needed task adding a child
-				$analizedDependency[$neededTaskId]->$_dependencies[] = $analizedDependency[$dependantId];
+				$analizedDependency[$neededTaskId]->_dependencies[] = 
+				$analizedDependency[$dependantId];
 
 				// update the dependant task adding a father
-				$analizedDependency[$dependantId]->$_fathersDependencies[] = $analizedDependency[$neededTaskId];
+				$analizedDependency[$dependantId]->_fathersDependencies[] = 
+				$analizedDependency[$neededTaskId];
 			}
 		}
 
-		$root = new DefaultDependency(null);
+		$root = new DefaultDependency(new TaskData());
 		$root->_dependencyType = DependencyType::$start;
-		$end = new DefaultDependency(null);
-		$root->_dependencyType = DependencyType::$end;
+		
+		$end = new DefaultDependency(new TaskData());
+		$end->_dependencyType = DependencyType::$end;
+		
 		foreach ($analizedDependency as $dependency) {
+			print "<br>dependency for: " . $dependency->_taskData->getInfo()->getTaskID();
+			foreach($dependency->_dependencies as $dep) {
+				print ", " . $dep->_taskData->getInfo()->getTaskID();
+			}
 			if(!$dependency->hasFathersDependency()) {
-				$dependency->$_fathersDependencies[] = $root;
+				$dependency->_fathersDependencies[] = $root;
+				$root->_dependencies[] = $dependency;
+				print "<br>added root for: " . $dependency->_taskData->getInfo()->getTaskID();
 			}
 			if(!$dependency->hasDependentTasks()) {
-				$dependency->$_dependencies[] = $end;
+				$end->_fathersDependencies[] = $dependency;
+				$dependency->_dependencies[] = $end;
+				print "<br>added end for: " . $dependency->_taskData->getInfo()->getTaskID();
 			}
 		}
 
@@ -148,12 +201,16 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 	}
 
+
 	private function checkDependencyExistence($taskData, & $analizedDependency) {
 		$neededTaskId = $taskData->getInfo()->getTaskID();
 		if(!array_key_exists($neededTaskId, $analizedDependency)) {
+			print "<br>adding data to analizedDependency array: " . $neededTaskId .
+			" / " . $taskData->getInfo()->getTaskID();
 			$analizedDependency[$neededTaskId] = new DefaultDependency($taskData);
 		}
 	}
+
 
 	private function getHorizontalGapForExistingDependency() {
 		// return a constant
@@ -222,30 +279,41 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 * @param Task $dependentTask
 	 * @return CriticalPathObjectDomain
 	 */
-	private function buildNewCriticalPathDomainObjectFrom($criticalPathDomainObject, $dependency, $dependentTask) {
+	private function buildNewCriticalPathDomainObjectFrom(
+	$criticalPathDomainObject, $dependency, $dependentTask) {
+		print "<br>original duration: " . $criticalPathDomainObject->getDuration();
 		$result = clone $criticalPathDomainObject;
+
 		$result->increaseDurationOf($this->ComputeDuration($dependentTask));
+
+		print " / still original duration: " .
+		$criticalPathDomainObject->getDuration();
+
+		print " / cloned duration " . $result->getDuration();
+
 		$result->increaseDurationOf($this->ComputeTimeGap($dependency, $dependentTask));
 		$result->increaseTotalEffortOf($this->ComputeTotalEffort($dependentTask));
 		$result->increaseTotalCostOf($this->computeTotalCost($dependentTask));
 		$result->appendTaskNode($dependentTask->task_id);
+
+		//var_dump($result);
 		return $result;
 	}
 
 	private function ComputeDuration($dependentTask) {
-
+		return 5;
 	}
 
 	private function ComputeTimeGap($dependency, $dependentTask) {
-
+		return 3;
 	}
 
 	private function ComputeTotalEffort($dependentTask) {
-
+		return 100;
 	}
 
 	private function computeTotalCost($dependentTask) {
-
+		return 20000;
 	}
 }
 
@@ -253,8 +321,8 @@ interface IDependency {
 	public function getNeededTask();
 	public function hasDependentTasks();
 	public function getDependentTasks();
-	public function getEndPointDrawer();
-	public function neededTaskIsStartMilestone();
+	//public function getEndPointDrawer();
+	//public function neededTaskIsStartMilestone();
 	public function getDrawer();
 	public function hasFathersDependency();
 	//public function neededTaskAlreadyDrawed();
@@ -286,7 +354,7 @@ class DefaultDependency implements IDependency {
 		//		}
 
 		$this->_dependencyType = DependencyType::$normal;
-		
+
 		$this->initDrawer();
 	}
 
@@ -305,15 +373,15 @@ class DefaultDependency implements IDependency {
 	}
 
 	public function hasFathersDependency() {
-		return count($this->_fatherDependency) > 0;
+		return count($this->_fathersDependencies) > 0;
 	}
 
 	private function neededTaskIsAtomic() {
-		// not yet implemented
+		return $this->getNeededTask()->isAtomic();
 	}
 
 	private function neededTaskIsComposed() {
-		// not yet implemented
+		return $this->getNeededTask()->getCollapsed();
 	}
 
 	/**
@@ -370,6 +438,7 @@ interface ITaskDataDrawer {
 abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
 	public static $width;
 	public static $composedVerticalLineLength = 5;
+	public static $userOptionChoice;
 
 	protected $_dependency;
 
@@ -403,7 +472,8 @@ abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
 	}
 
 	private function computeTaskBoxHeight($gifTaskBox) {
-
+		GifTaskBox::getEffectiveHeightOfTaskBox($this->_dependency,
+		30, self::$userOptionChoice);
 	}
 }
 
