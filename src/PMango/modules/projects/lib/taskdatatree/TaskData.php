@@ -215,7 +215,7 @@ class TaskData{
 			foreach($this->children as $son){
 				if($son->getVisibility()){
 					$res[] = $son;
-					$add = $son->deepVisit();
+					$add = $son->visibleDeepVisit();
 					for ($i=0; $i<sizeOf($add); $i++){
 						$res[] = $add[$i];
 					}
@@ -259,6 +259,33 @@ class TaskData{
 		}
 		return $leaves;
 	}
+	
+	public function getVisibleLeaves(){
+		$leaves = array();
+		$add = array();
+		if(!$this->getVisibility()){
+			// do nothing
+		}else{
+			$isLeaf = true;
+			foreach($this->children as $son){
+				if($son->getVisibility()){
+					$isLeaf = false;
+					break;
+				}
+			}
+			if($isLeaf){
+				$leaves[] = $this;
+			}else{
+				foreach($this->children as $son){
+					$add = $son->getVisibleLeaves();
+					foreach($add as $x){
+						$leaves[] = $x;
+					}
+				}
+			}
+		}
+		return $leaves;
+	}	
 
 	public function visibilityCheck(){
 		$result = array();
