@@ -50,7 +50,7 @@ class TaskDataTreeGenerator{
 		$taskDatasMap = array();
 
 		global $AppUI;
-		$visibleTasks = $visible_tasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
+		$visibleTasks = UserOptionsChoice::GetInstance()->retrieveDrawableTasks(
 		$AppUI->getState('ExplodeTasks', '1'),
 		$AppUI->getState("tasks_opened"),
 		$AppUI->getState("tasks_closed"))->getDrawableTasks();
@@ -74,6 +74,7 @@ class TaskDataTreeGenerator{
 
 	private function buildRootTask() {
 		$root = new TaskData();
+		$root->setVisibility(true);
 		foreach ($this->tasksMap as $task_id => $taskData) {
 			if ($taskData->getInfo()->isChildOfRoot()) {
 				//print "<br>task " . $task_id . " is child of the root";
