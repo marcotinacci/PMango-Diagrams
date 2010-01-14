@@ -151,8 +151,8 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->tdt = $this->tdtGenerator->generateTaskDataTree();
 		
 		// visita l'albero visibile
-		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
-//		$this->tasks = $this->tdt->visibleDeepVisit();
+//		$this->tasks = $this->tdt->getVisibleTree()->deepVisit();
+		$this->tasks = $this->tdt->visibleDeepVisit();
 		// FIX: gestire caso senza task
 
 		// prendi le dipendenze
@@ -215,6 +215,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
 				$start = mangoToGanttDate($dates['start']);
 				$end = add_date(mangoToGanttDate($dates['today']),0,1);
+				
 			break;
 			
 			// inizio today e fine custom
@@ -253,7 +254,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeBorder();
 		$this->makeRightColumn();
 		$this->makeLeftColumn();
-		$this->chart->draw();		
+		//$this->chart->draw();		
 	}
 	
 	/**
@@ -399,7 +400,7 @@ class GanttChartGenerator extends ChartGenerator{
 		);
 		
 // TODO: commentato per vedere i task sottostanti, decommentare poi
-		$leftCol->setForeColor('white');
+	//	$leftCol->setForeColor('white');
 		$leftCol->drawOn($this->chart);
 
 
@@ -446,8 +447,8 @@ class GanttChartGenerator extends ChartGenerator{
 
 		$this->makeFront();
 		$this->makeTitle();
-		$this->makeGanttTaskBox();
-		$this->makeGanttDependencies();
+//		$this->makeGanttTaskBox();
+//		$this->makeGanttDependencies();
 		$this->makeTodayLine();
 	}
 

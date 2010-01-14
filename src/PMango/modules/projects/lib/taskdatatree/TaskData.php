@@ -195,7 +195,6 @@ class TaskData{
 
 	public function deepVisit(){
 		$res = array();
-		$add = array();
 		if($this->children != null){
 			foreach($this->children as $son){
 				$res[] = $son;
@@ -210,7 +209,6 @@ class TaskData{
 
 	public function visibleDeepVisit(){
 		$res = array();
-		$add = array();
 		if($this->children != null){
 			foreach($this->children as $son){
 				if($son->getVisibility()){

@@ -228,13 +228,13 @@ $_SESSION['uoc'] = serialize($uoc);
 						$v = $uoc->getTimeGrainUserOption();
 					?>
 					<select name="<?php echo UserOptionEnumeration::$TimeGrainUserOption;?>">
-						<option value="<?php echo TimeGrainEnum::$HourlyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$HourlyGrainUserOption?"selected=\"selected\"":"";?>>Hourly</option>
-						<option value="<?php echo TimeGrainEnum::$DailyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$DailyGrainUserOption?"selected=\"selected\"":"";?>>Daily</option>
-						<option value="<?php echo TimeGrainEnum::$WeaklyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$WeaklyGrainUserOption?"selected=\"selected\"":"";?>>Weakly</option>
-						<option value="<?php echo TimeGrainEnum::$MonthlyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$MonthlyGrainUserOption?"selected=\"selected\"":"";?>>Monthly</option>
 						<option value="<?php echo TimeGrainEnum::$AnnuallyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$AnnuallyGrainUserOption?"selected=\"selected\"":"";?>>Annually</option>
+						<option value="<?php echo TimeGrainEnum::$MonthlyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$MonthlyGrainUserOption?"selected=\"selected\"":"";?>>Monthly</option>
+						<option value="<?php echo TimeGrainEnum::$WeaklyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$WeaklyGrainUserOption?"selected=\"selected\"":"";?>>Weakly</option>
+						<option value="<?php echo TimeGrainEnum::$DailyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$DailyGrainUserOption?"selected=\"selected\"":"";?>>Daily</option>
+						<option value="<?php echo TimeGrainEnum::$HourlyGrainUserOption; ?>" <?php echo $v==TimeGrainEnum::$HourlyGrainUserOption?"selected=\"selected\"":"";?>>Hourly</option>
 					</select>
-					<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>;
+					<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>
 				</td>
 				<td>&nbsp;&nbsp;</td>
              <td valign="top" align="left" nowrap="nowrap">
