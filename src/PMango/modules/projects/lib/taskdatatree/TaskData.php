@@ -262,10 +262,8 @@ class TaskData{
 	
 	public function getVisibleLeaves(){
 		$leaves = array();
-		$add = array();
-		if(!$this->getVisibility()){
-			// do nothing
-		}else{
+		if($this->getVisibility())
+		{
 			$isLeaf = true;
 			foreach($this->children as $son){
 				if($son->getVisibility()){
@@ -284,7 +282,7 @@ class TaskData{
 				}
 			}
 		}
-		return $leaves;
+		return $leaves;		
 	}	
 
 	public function visibilityCheck(){
