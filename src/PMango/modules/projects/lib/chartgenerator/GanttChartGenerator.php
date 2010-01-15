@@ -160,6 +160,58 @@ class GanttChartGenerator extends ChartGenerator{
 		// calcola una sola volta il numero dei task dell'albero
 		$this->numTasks = sizeOf($this->tasks);
 		
+		$this->setTimeRange();
+
+		// FIX: adattare la grana
+		// acquisizione tipo di grana
+		switch(UserOptionsChoice::GetInstance()->getTimeGrainUserOption()){
+			case TimeGrainEnum::$HourlyGrainUserOption: $this->grainLevel = 5; break;
+			case TimeGrainEnum::$DailyGrainUserOption: $this->grainLevel = 4; break;
+			default:			
+			case TimeGrainEnum::$WeaklyGrainUserOption: $this->grainLevel = 3; break;
+			case TimeGrainEnum::$MonthlyGrainUserOption: $this->grainLevel = 2; break;
+			case TimeGrainEnum::$AnnuallyGrainUserOption: $this->grainLevel = 1; break;
+		}
+		
+		// costruisci il canvas
+		$this->makeCanvas();
+				
+		// fissa le coordinate del punto centrale (più una tolleranza)
+		$this->xCenter = $this->getLeftColumnWidth() + $this->tol + 8;
+		$this->yCenter = $this->chart->getHeight() - 
+			$this->numTasks*($this->verticalSpace + $this->labelHeight) - 
+			$this->verticalSpace - $this->tol;
+
+		$this->makeBorder();
+		$this->makeRightColumn();
+		$this->makeLeftColumn();
+		//$this->chart->draw();		
+	}
+	
+	/**
+	 * calcola lo spazio occupato dalla colonna di sinistra, necessita la gifImage 
+	 * chart generata
+	 */
+	protected function getLeftColumnWidth(){
+		$maxlen = 0;
+		foreach($this->tasks as $task){
+			$str = $task->getInfo()->getWBSId();
+			if(UserOptionsChoice::GetInstance()->showTaskNameUserOption()){
+				$str = $str.$task->getInfo()->getTaskName();
+			}
+			$maxlen = max($maxlen,GifLabel::getPixelWidthOfText($str,$this->fontSize));
+		}
+		if($maxlen > intval($this->leftColumnSpace * $this->chart->getWidth())+1){
+			return intval($this->leftColumnSpace * $this->chart->getWidth()+1);
+		}else{
+			return $maxlen;
+		}
+	}
+	
+	/**
+	 * funzione che imposta le date start, finish e today
+	 */
+	protected function setTimeRange(){
 		// ricava date start finish e today da opzioni utente
 		switch(UserOptionsChoice::GetInstance()->getTimeRangeUserOption()){
 			
@@ -229,52 +281,7 @@ class GanttChartGenerator extends ChartGenerator{
 		//echo "inizio $start - fine $end";		
 		$this->sDate = $start;
 		$this->fDate = $end;
-		$this->today = mangoToGanttDate($dates['today']);
-
-		// FIX: adattare la grana
-		// acquisizione tipo di grana
-		switch(UserOptionsChoice::GetInstance()->getTimeGrainUserOption()){
-			case TimeGrainEnum::$HourlyGrainUserOption: $this->grainLevel = 5; break;
-			case TimeGrainEnum::$DailyGrainUserOption: $this->grainLevel = 4; break;
-			default:			
-			case TimeGrainEnum::$WeaklyGrainUserOption: $this->grainLevel = 3; break;
-			case TimeGrainEnum::$MonthlyGrainUserOption: $this->grainLevel = 2; break;
-			case TimeGrainEnum::$AnnuallyGrainUserOption: $this->grainLevel = 1; break;
-		}
-		
-		// costruisci il canvas
-		$this->makeCanvas();
-				
-		// fissa le coordinate del punto centrale (più una tolleranza)
-		$this->xCenter = $this->getLeftColumnWidth() + $this->tol + 8;
-		$this->yCenter = $this->chart->getHeight() - 
-			$this->numTasks*($this->verticalSpace + $this->labelHeight) - 
-			$this->verticalSpace - $this->tol;
-
-		$this->makeBorder();
-		$this->makeRightColumn();
-		$this->makeLeftColumn();
-		//$this->chart->draw();		
-	}
-	
-	/**
-	 * calcola lo spazio occupato dalla colonna di sinistra, necessita la gifImage 
-	 * chart generata
-	 */
-	protected function getLeftColumnWidth(){
-		$maxlen = 0;
-		foreach($this->tasks as $task){
-			$str = $task->getInfo()->getWBSId();
-			if(UserOptionsChoice::GetInstance()->showTaskNameUserOption()){
-				$str = $str.$task->getInfo()->getTaskName();
-			}
-			$maxlen = max($maxlen,GifLabel::getPixelWidthOfText($str,$this->fontSize));
-		}
-		if($maxlen > intval($this->leftColumnSpace * $this->chart->getWidth())+1){
-			return intval($this->leftColumnSpace * $this->chart->getWidth()+1);
-		}else{
-			return $maxlen;
-		}
+		$this->today = mangoToGanttDate($dates['today']);	
 	}
 	
 	/**

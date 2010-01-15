@@ -30,7 +30,7 @@ function mangoToGanttDate($date){
  * (year, month, day, hour, minute, second)
  */
 
-function date_diff($d1, $d2){
+function diff_date($d1, $d2){
   //check higher timestamp and switch if neccessary
   if ($d1 < $d2){
     $temp = $d2;
@@ -84,7 +84,9 @@ function date_diff($d1, $d2){
   }
   //years
   $diff['year'] = $d1['year'] - $d2['year'];
-  return $diff;    
+  return $diff;
+  
 }
+
 
 ?>
