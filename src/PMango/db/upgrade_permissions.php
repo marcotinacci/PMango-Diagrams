@@ -71,7 +71,7 @@ require_once "$baseDir/classes/permissions.class.php";
 require_once "$baseDir/classes/query.class.php";
 
 dPmsg("Creating new Permissions objects");
-$perms =& new dPacl;
+$perms = new dPacl;
 
 // First, create the basic ACL sections.
 $perms->add_object_section('System', "system", 1, 0, "aco");

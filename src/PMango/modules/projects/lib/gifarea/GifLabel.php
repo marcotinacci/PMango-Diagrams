@@ -165,7 +165,7 @@ class GifLabel extends GifArea
 		return $ret."...";
 	}
 
-	private function DeleteSpecialCharacters($txt)
+	private static function DeleteSpecialCharacters($txt)
 	{
 		$res = preg_replace("/(&#[0-9]+;)/"," ",$txt);
 		return $res;

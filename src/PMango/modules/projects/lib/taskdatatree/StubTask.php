@@ -15,8 +15,8 @@ class StubTask{
 	
 	public function __construct()
 	{
-		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="1.".StubTask::$id;
-		$this->data[DataArrayKeyEnumeration::$name]="Task_".StubTask::$id;
+		$this->data[DataArrayKeyEnumeration::$wbsIdentifier]="0";
+		$this->data[DataArrayKeyEnumeration::$name]="The project";
 		
 		StubTask::$id++;
 		

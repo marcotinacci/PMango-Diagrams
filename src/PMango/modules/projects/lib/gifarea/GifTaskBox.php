@@ -28,6 +28,10 @@ class GifTaskBox extends GifArea
 
 		//$uoc = new UserOptionsChoice();
 		$uoc = UserOptionsChoice::GetInstance();
+		/*
+		$tName="";
+		if($task->getCollapsed())
+		$tName="+ ";*/
 		$tName = $task->getInfo()->getWBSId();
 		if($uoc->showTaskNameUserOption())
 		$tName .= " ".$task->getInfo()->getTaskName();
@@ -46,8 +50,8 @@ class GifTaskBox extends GifArea
 		if($uoc->showPlannedTimeFrameUserOption())
 		{
 			$ptf = $task->getInfo()->getPlannedTimeFrame();
-			$PlannedTimeFrame_start = "".date($date_format,strtotime($ptf['start_date']));
-			$PlannedTimeFrame_finish = "".date($date_format,strtotime($ptf['finish_date']));
+			$PlannedTimeFrame_start = "";//"".date($date_format,strtotime($ptf['start_date']));
+			$PlannedTimeFrame_finish = "";//"".date($date_format,strtotime($ptf['finish_date']));
 			$this->subAreas['PlannedTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_start,$fontHeight);
 			$this->subAreas['PlannedTimeFrame_box_finish'] = new GifBoxedLabel($doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_finish,$fontHeight);
 			$curY += $row;
@@ -76,7 +80,10 @@ class GifTaskBox extends GifArea
 			for($i=0; $i<sizeOf($res); $i++)
 			{
 				$curY += 4;
-				$txt = $res[$i]['ActualEffort']."/".$res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
+				$act = 0;
+				if(isset($res[$i]['ActualEffort']))
+					$act = $res[$i]['ActualEffort'];
+				$txt = $act."/".$res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
 					
 				$index = "ResourceLabel_".$i;
 				$this->subAreas[$index] = new GifLabel(8,$curY,$width-6,$resRowSize,$txt,$fontHeight);
@@ -101,10 +108,10 @@ class GifTaskBox extends GifArea
 			$ActualTimeFrame_start = "NA";
 			$ActualTimeFrame_finish = "NA";
 			if(isset($atf['start_date']))
-			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
+			$ActualTimeFrame_start = "";//.date($date_format,strtotime($atf['start_date']));
 
 			if(isset($atf['start_date']))
-			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
+			$ActualTimeFrame_finish = "";//.date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel(0,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
 			$this->subAreas['ActualTimeFrame_box_start']->getLabel()->setUnderline(true);

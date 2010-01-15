@@ -102,7 +102,10 @@ class DataArrayBuilder {
   			$res[$i]['ActualEffort'] = $a[$i]['ActualEffort'];
   			$res[$i]['Role'] = $a[$i]['Role'];
   		}
-  		$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task] = $res;
+  		if(isset($res))
+  			$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task] = $res;
+  		else
+  			$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task]=null;	
 	}
 
 	public function buildPlannedEffort() {

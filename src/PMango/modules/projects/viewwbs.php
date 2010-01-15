@@ -110,7 +110,7 @@ function BuildImage(placeHolder)
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?>
-                	<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>;
+                	<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>"/>;
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
@@ -126,11 +126,9 @@ function BuildImage(placeHolder)
 						<option value="<?php echo ImageDimension::$OptimalDimUserOption; ?>" <?php echo $v==ImageDimension::$OptimalDimUserOption?"selected=\"selected\"":"";?>>Optimal</option>
 						<option value="<?php echo ImageDimension::$DefaultDimUserOption; ?>" <?php echo $v==ImageDimension::$DefaultDimUserOption?"selected=\"selected\"":"";?>>Default</option>
 					</select>
-				</td>
-				<td valign="top" align="left" nowrap="nowrap">
+					<br>
 					<?php $wh = $uoc->getCustomDimValues(); ?>
 					width: <input size="4" type="text" name="<?php echo UserOptionEnumeration::$CustomWidthUserOption; ?>" value="<?php echo $wh['width'];?>"/> px <br>
-					height:<input size="4" type="text" name="<?php echo UserOptionEnumeration::$DefaultHeightUserOption; ?>" value="<?php echo $wh['height'];?>"/> px
 					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowWidthUserOption; ?>" value="0"/>
 					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowHeightUserOption; ?>" value="0"/>
                 </td>

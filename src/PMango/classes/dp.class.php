@@ -103,7 +103,7 @@ class CDpObject {
 			$this->_prefix = $dPconfig['dbprefix'];
 		else
 			$this->_prefix = '';
-		$this->_query =& new DBQuery;
+		$this->_query = new DBQuery;
 	}
 /**
  *	@return string Returns the error message

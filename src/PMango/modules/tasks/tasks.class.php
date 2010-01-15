@@ -248,7 +248,7 @@ class CTask extends CDpObject {
 		$children = $this->getChildren();
 		if (!empty($children))
 		{
-			$tempTask = & new CTask();
+			$tempTask = new CTask();
 			foreach ($children as $child)
 			{
 				$tempTask->load($child);
@@ -274,7 +274,7 @@ class CTask extends CDpObject {
 		$children = $this->getDeepChildren();
 		if (!empty($children))
 		{
-			$tempChild = & new $CTask();
+			$tempChild = new $CTask();
 			foreach ($children as $child)
 			{
 				$tempChild->load($child);
@@ -933,7 +933,7 @@ group by(ut.task_id);";
 		if ($children)
 		{
 			$deep_children = array();
-			$tempTask = &new CTask();
+			$tempTask = new CTask();
 			foreach ($children as $child)
 			{
 				$tempTask->load($child);
@@ -948,7 +948,7 @@ group by(ut.task_id);";
 	private function internalGetDeepChildren() {
 		$children = $this->getChildren();
 		$result = array_merge(array(), $children);
-		$tempTask = &new CTask();
+		$tempTask = new CTask();
 		foreach ($children as $child) {
 			$tempTask->load($child);
 			$result = array_merge($result, $tempTask->internalGetDeepChildren());
@@ -1309,6 +1309,7 @@ group by(ut.task_id);";
 		$q->addWhere("t.task_id IN ($setTid) && !isnull( tl.task_log_start_date ) AND tl.task_log_start_date !=  '0000-00-00 00:00:00'");
 		$q->addOrder('tl.task_log_start_date ASC');
 		$ar = $q->loadList();
+		if(isset($ar[0]))
 		return $ar[0];
 		return "in progress";
 	}
@@ -1327,7 +1328,9 @@ group by(ut.task_id);";
 		$q->addWhere("t.task_id IN ($setTid) && !isnull( tl.task_log_finish_date ) AND tl.task_log_finish_date !=  '0000-00-00 00:00:00'");
 		$q->addOrder('tl.task_log_finish_date DESC');
 		$ar = $q->loadList();
+		if(isset($ar[0]))
 		return $ar[0];
+		return null;
 	}
 
 	function getActualEffort($tid = null, $setTid) {

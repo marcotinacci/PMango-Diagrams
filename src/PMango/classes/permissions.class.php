@@ -476,7 +476,7 @@ class dPacl extends gacl_api {
       }
 	  $q->clear();
     }
-    $perms =& new dPacl;
+    $perms = new dPacl;
     $group_mods = $perms->add_group($group."all", $group."Modules", 10, "axo");//da cambiare il parent
     // devo aggiungerci ipermessi per il gruppo
     return $this->add_group_object($role, "user", $user);//ci devo mettere il gruppo

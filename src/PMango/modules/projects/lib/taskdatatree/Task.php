@@ -102,7 +102,7 @@ class Task{
 	
 	public function getPlannedDuration(){
 		$s_f = $this->getPlannedTimeFrame();
-		$plan_duration = strtotime($s_f["finish_date"])-strtotime($s_f["start_date"]);
+		$plan_duration = "";//strtotime($s_f["finish_date"])-strtotime($s_f["start_date"]);
 		return intval((($plan_duration/60)/60)/24)+1;
 	}
 
@@ -114,9 +114,9 @@ class Task{
 	public function getActualDuration(){
 		$s_f = $this->getActualTimeFrame();
 		if(isset($s_f["finish_date"]) && isset($s_f["start_date"]))
-			$act_duration = strtotime($s_f["finish_date"])-strtotime($s_f["start_date"]);
+			$act_duration = "";//strtotime($s_f["finish_date"])-strtotime($s_f["start_date"]);
 		else if (isset($s_f["start_date"]))
-			$act_duration = strtotime($s_f["finish_date"])-strtotime(date());
+			$act_duration = "";//strtotime($s_f["finish_date"])-strtotime(date());
 		else 
 			$act_duration = "NA";
 		if($act_duration != "NA")

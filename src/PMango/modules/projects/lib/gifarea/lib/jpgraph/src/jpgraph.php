@@ -592,7 +592,7 @@ class DateLocale {
 	}
 		
 	setlocale(LC_TIME, $pLocale);
-
+	
 	return TRUE;
     }
 
@@ -748,7 +748,8 @@ class Graph {
     // aInline		If true the image is streamed back in the call to Stroke()
     //			If false the image is just created in the cache
     function Graph($aWidth=300,$aHeight=200,$aCachedName="",$aTimeOut=0,$aInline=true) {
-	GLOBAL $gJpgBrandTiming;
+	print "w:".$aWidth." h:".$aHeight."<br>";
+    GLOBAL $gJpgBrandTiming;
 	// If timing is used create a new timing object
 	if( $gJpgBrandTiming ) {
 	    global $tim;
