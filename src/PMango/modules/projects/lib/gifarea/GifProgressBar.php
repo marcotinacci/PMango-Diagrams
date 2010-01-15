@@ -44,7 +44,7 @@ class GifProgressBar extends GifArea
 	/* Calculate the completed pixels in proportion */
 	private function getPercentagePixels($percentage,$maxPixels)
 	{
-		return ($percentage*$maxPixels)/100;
+		return intval(($percentage*$maxPixels)/100);
 	}
 }
 
