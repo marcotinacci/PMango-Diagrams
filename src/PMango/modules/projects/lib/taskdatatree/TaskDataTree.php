@@ -134,17 +134,18 @@ class TaskDataTree {
 		//$array =(array)$dependencies;
 		//print " imploded dependencies " . implode(", ", (array)$dependencies);
 			
+		// every element that belong to $array is a string
 		foreach($array as $stringDependency) {
 			//	var_dump( $stringDependency);
 			if ($stringDependency == "") {
 				continue;
 			}
 
+			// parsing the integer
 			$dependency = intval($stringDependency);
 			//print " $dependency ";
 			if(in_array($dependency, $deepChildren)) {
-				//print $dependency . " is a deep child of " .
-				$leaf->getInfo()->getTaskName();
+				//print $dependency . " is a deep child of " . $leaf->getInfo()->getTaskName();
 				//continue;
 			}
 			else {
@@ -176,7 +177,7 @@ class TaskDataTree {
 	 */
 	public function searchNeededLeafThatHaveInDeepChildren($dependency) {
 		//print " saerching parent leaf of " . $dependency . " ";
-		foreach ($this->getVisibleTree()->getLeaves() as $leaf) {
+		foreach ($this->getVisibleLeaves() as $leaf) {
 			//			if ($leaf->getInfo()->getTaskID() == $butLeaf->getInfo()->getTaskID() &&
 			//			$butLeaf != null) {
 			//				continue;

@@ -66,5 +66,8 @@ foreach ($leaves as $leaf) {
 print "<br>preparing the generating process for tn graph: ";
 $tnGenerator = new TaskNetworkChartGenerator();
 $tnGenerator->generateChart();
+$tnGenerator->getChart()->draw();
+//print "<img src=\"". $tnGenerator->getChart() . "\">";
+//$tnGenerator->getChart()->saveToFile("/Users/massimonocentini/tmp/tn.gif");
 
 ?>
