@@ -748,7 +748,9 @@ class Graph {
     // aInline		If true the image is streamed back in the call to Stroke()
     //			If false the image is just created in the cache
     function Graph($aWidth=300,$aHeight=200,$aCachedName="",$aTimeOut=0,$aInline=true) {
-	print "w:".$aWidth." h:".$aHeight."<br>";
+
+// Commented by Marco - Nicco non committare i print di debug
+//	print "w:".$aWidth." h:".$aHeight."<br>";
     GLOBAL $gJpgBrandTiming;
 	// If timing is used create a new timing object
 	if( $gJpgBrandTiming ) {
