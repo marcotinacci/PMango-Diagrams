@@ -1,1 +1,1 @@
-2048 Non-static method Image::CreateFromString() should not be called statically, assuming $this from incompatible context /Users/massimonocentini/Development/EclipseWorkspaces/PHP/MangoGanttCPM/PMango/modules/projects/lib/gifarea/lib/jpgraph/src/jpgraph.php 347
+8 Undefined index:  gd2 /Users/massimonocentini/Development/EclipseWorkspaces/PHP/MangoGanttCPM/PMango/modules/projects/lib/gifarea/lib/jpgraph/src/jpgraph_utils.inc 275

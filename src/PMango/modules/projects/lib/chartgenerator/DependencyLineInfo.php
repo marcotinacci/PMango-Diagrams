@@ -1,5 +1,5 @@
 <?php
-require "./modules/PMangoCPM/chartgenerator/PointInfo.php"; 
+require_once dirname(__FILE__) . "/PointInfo.php"; 
 
 class DependencyLineInfo {
 	/**
