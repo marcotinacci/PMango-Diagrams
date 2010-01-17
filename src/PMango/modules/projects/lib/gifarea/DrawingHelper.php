@@ -342,7 +342,7 @@ class DrawingHelper
 		return $dottedStyle;
 	}
 
-	private function initLineStyle(&$canvas,$lineStyle)
+	private static function initLineStyle(&$canvas,$lineStyle)
 	{
 		//$w = $canvas->img->width;
 		//$h = $canvas->img->height;

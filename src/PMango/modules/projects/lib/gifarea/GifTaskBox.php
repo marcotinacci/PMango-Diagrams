@@ -50,8 +50,8 @@ class GifTaskBox extends GifArea
 		if($uoc->showPlannedTimeFrameUserOption())
 		{
 			$ptf = $task->getInfo()->getPlannedTimeFrame();
-			$PlannedTimeFrame_start = "";//"".date($date_format,strtotime($ptf['start_date']));
-			$PlannedTimeFrame_finish = "";//"".date($date_format,strtotime($ptf['finish_date']));
+			$PlannedTimeFrame_start = "".date($date_format,strtotime($ptf['start_date']));
+			$PlannedTimeFrame_finish = "".date($date_format,strtotime($ptf['finish_date']));
 			$this->subAreas['PlannedTimeFrame_box_start'] = new GifBoxedLabel($gifImage,$this->x,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_start,$fontHeight);
 			$this->subAreas['PlannedTimeFrame_box_finish'] = new GifBoxedLabel($gifImage,$this->x+$doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_finish,$fontHeight);
 			$curY += $row;
@@ -108,10 +108,10 @@ class GifTaskBox extends GifArea
 			$ActualTimeFrame_start = "NA";
 			$ActualTimeFrame_finish = "NA";
 			if(isset($atf['start_date']))
-			$ActualTimeFrame_start = "";//.date($date_format,strtotime($atf['start_date']));
+			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
 
 			if(isset($atf['start_date']))
-			$ActualTimeFrame_finish = "";//.date($date_format,strtotime($atf['finish_date']));
+			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel($gifImage,$this->x,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
 			$this->subAreas['ActualTimeFrame_box_start']->getLabel()->setUnderline(true);

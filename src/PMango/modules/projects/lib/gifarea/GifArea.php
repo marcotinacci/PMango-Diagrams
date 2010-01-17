@@ -42,6 +42,7 @@ class GifArea
 		$this->width = $width;
 		$this->height = $height;
 		$this->subAreas = array();
+		if($GifImage!=null)
 		$this->canvas = $GifImage->getCanvas();
 		//$this->canvas = new CanvasGraph ($width+30, $height+30, 'auto');
 		//$this->canvas->SetMargin(0,0,0,0);
