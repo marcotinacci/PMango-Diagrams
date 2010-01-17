@@ -10,12 +10,12 @@ class GifBoxedLabel extends GifArea
 	private $foreColor = "magenta"; //default è trasparente
 	private $borderColor = "black";
 
-	public function __construct($x, $y, $width, $height, $text, $fontSize=10)
+	public function __construct($gifImage, $x, $y, $width, $height, $text, $fontSize=10)
 	{
-		parent::__construct($x,$y,$width,$height);
+		parent::__construct($gifImage, $x,$y,$width,$height);
 		
-		$this->subAreas['Box']= new GifBox(0, 0, $width, $height);
-		$this->subAreas['Label']= new GifLabel(2, 2, $width-2, $height-2, $text, $fontSize);
+		$this->subAreas['Box']= new GifBox($gifImage, $this->x, $this->y, $width, $height);
+		$this->subAreas['Label']= new GifLabel($gifImage, $this->x+2, $this->y+2, $width-2, $height-2, $text, $fontSize);
 	}
 
 	public function getBox()

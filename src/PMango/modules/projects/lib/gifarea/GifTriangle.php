@@ -8,9 +8,9 @@ class GifTriangle extends GifArea
 	private $foreColor = "black";
 	private $hOrientation = "left";
 
-	public function __construct($x, $y, $width, $height, $hOrientation)
+	public function __construct($gifImage, $x, $y, $width, $height, $hOrientation)
 	{
-		parent::__construct($x,$y,$width,$height);
+		parent::__construct($gifImage, $x,$y,$width,$height);
 		$this->hOrientation = $hOrientation;
 	}
 
@@ -27,15 +27,15 @@ class GifTriangle extends GifArea
 	protected function canvasDraw()
 	{
 		$points = array();
-		$points[0] = 0; 			$points[1] = 0;
-		$points[2] = $this->width; 	$points[3] = 0;
+		$points[0] = $this->x; 			$points[1] = $this->y;
+		$points[2] = $this->x+$this->width; 	$points[3] = $this->y;
 		if($this->hOrientation == "left")
 		{
-			$points[4] = 0; 			$points[5] = $this->height;
+			$points[4] = $this->x; 			$points[5] = $this->y+$this->height;
 		}
 		else
 		{
-			$points[4] = $this->width; 	$points[5] = $this->height;
+			$points[4] = $this->x+$this->width; 	$points[5] = $this->y+$this->height;
 		}
 		$this->canvas->img->SetColor($this->foreColor);
 		$this->canvas->img->FilledPolygon($points);

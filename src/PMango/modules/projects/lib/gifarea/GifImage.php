@@ -17,19 +17,26 @@ class GifImage
 	{
 		$this->width = $width;
 		$this->height = $height;
-		$this->mgraph = new MGraph($width,$height);
+		$this->mgraph = new CanvasGraph($width,$height);
 	}	
 	
 	//Add the specified canvas to the image at position ($x, $y)
+	/*
 	function addCanvas($canvas,$x,$y)
 	{
 		$this->mgraph->add($canvas,$x,$y);
 	}
+	*/
 	
 	//Save the gif to file $FileName
 	function saveToFile($fileName)
 	{
 		$this->mgraph->Stream($fileName);
+	}
+	
+	function &getCanvas()
+	{
+		return $this->mgraph;
 	}
 	
 	//Draw the gif directly in the webpage

@@ -9,20 +9,20 @@ require_once dirname(__FILE__)."/GifBox.php";
 
 class GifProgressBar extends GifArea
 {	
-	function __construct($x, $y, $width, $height, $completed)
+	function __construct($gifImage, $x, $y, $width, $height, $completed)
 	{
-		parent::__construct($x, $y, $width, $height);
+		parent::__construct($gifImage, $x, $y, $width, $height);
 		$p = $this->getPercentagePixels($completed,$width);
 		if($completed <= 99)
 		{
-			$this->subAreas[0]=new GifBox(0, 0, $p, $height);
+			$this->subAreas[0]=new GifBox($gifImage,$this->x, $this->y, $p, $height);
 			$this->subAreas[0]->setForeColor("#7F7F7F");
-			$this->subAreas[1]=new GifBox($p, 0, $width-$p, $height);
+			$this->subAreas[1]=new GifBox($gifImage,$this->x+$p, $this->y, $width-$p, $height);
 			$this->subAreas[1]->setForeColor("white");
 		}
 		else
 		{
-			$this->subAreas[0]=new GifBox(0, 0, $width, $height);
+			$this->subAreas[0]=new GifBox($gifImage,$this->x, $this->y, $width, $height);
 			$this->subAreas[0]->setForeColor("#7F7F7F");
 			//$this->subAreas[1]=new GifBox($p, 0, 0, $height);
 			//$this->subAreas[1]->setForeColor("white");

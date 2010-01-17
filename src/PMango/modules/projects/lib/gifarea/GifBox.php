@@ -9,9 +9,9 @@ class GifBox extends GifArea
 	private $borderColor = "black";
 	private $borderThickness = 1;
 
-	public function __construct($x, $y, $width, $height)
+	public function __construct($gifImage, $x, $y, $width, $height)
 	{
-		parent::__construct($x,$y,$width,$height);
+		parent::__construct($gifImage, $x,$y,$width,$height);
 	}
 
 	public function getForeColor()
@@ -47,10 +47,16 @@ class GifBox extends GifArea
 	protected function canvasDraw()
 	{
 		$this->canvas->img->SetColor($this->borderColor);
-		$this->canvas->img->Bevel(0,0, $this->width, $this->height,2,"black","black");
-		//$this->canvas->img->Rectangle(0, 0, $this->width, $this->height);
-		$this->canvas->img->SetColor($this->foreColor);
-		$this->canvas->img->FilledRectangle($this->borderThickness, $this->borderThickness, $this->width-$this->borderThickness, $this->height-$this->borderThickness);
+		//$this->canvas->img->Bevel($this->x,$this->y, $this->x+$this->width, $this->y+$this->height,2,"black","black");
+		for($i=0;$i<$this->borderThickness;$i++)
+		{
+			$this->canvas->img->Rectangle($this->x+$i,$this->y+$i, $this->x+$this->width-$i, $this->y+$this->height-$i);
+		}
+		if($this->foreColor != "magenta")
+		{
+			$this->canvas->img->SetColor($this->foreColor);
+			$this->canvas->img->FilledRectangle($this->x+$this->borderThickness, $this->y+$this->borderThickness, $this->x+$this->width-$this->borderThickness, $this->y+$this->height-$this->borderThickness);
+		}
 	}
 	
 	public function getTopMiddlePoint()

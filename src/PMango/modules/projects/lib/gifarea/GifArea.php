@@ -35,16 +35,17 @@ class GifArea
 	/* This is an array of GifArea, can be used to realize composition of extended GifArea */
 	protected $subAreas;
 	
-	protected function __construct($x, $y, $width, $height)
+	protected function __construct($GifImage,$x, $y, $width, $height)
 	{
 		$this->x = $x;
 		$this->y = $y;
 		$this->width = $width;
 		$this->height = $height;
 		$this->subAreas = array();
-		$this->canvas = new CanvasGraph ($width+30, $height+30, 'auto');
-		$this->canvas->SetMargin(0,0,0,0);
-		$this->canvas->img->SetMargin(0,0,0,0);
+		$this->canvas = $GifImage->getCanvas();
+		//$this->canvas = new CanvasGraph ($width+30, $height+30, 'auto');
+		//$this->canvas->SetMargin(0,0,0,0);
+		//$this->canvas->img->SetMargin(0,0,0,0);
 	}
 	
 	public function getX()
@@ -80,26 +81,27 @@ class GifArea
 	 * that will be added to the gif. And the order of drawing is from the bottom level to
 	 * the top level of the inheritance.
 	*/
-	public final function drawOn($gifImage)
+	public final function drawOn()
 	{
-		$this->subDrawOn($gifImage,$this->getX(),$this->getY());
+		$this->enableTransparency();
+		$this->subDrawOn($this->getX(),$this->getY());
 	}
 	
 	/* this is just to start the recursive process with specified x and y */
-	private function subDrawOn($gifImage,$x,$y)
+	private function subDrawOn($x,$y)
 	{
-		if($this->transparent)
-			$this->enableTransparency();
+		//if($this->transparent)
+			//$this->enableTransparency();
 		if($this->visible==false)
 			return;
 		foreach ( $this->subAreas as $sub )
 		{
 			//if($sub->transparent)
 				//$this->enableTransparency();
-			$sub->subDrawOn($gifImage,$x+$sub->getX(),$y+$sub->getY());
+			$sub->subDrawOn($x+$sub->getX(),$y+$sub->getY());
 		}
 		$this->canvasDraw();
-		$gifImage->addCanvas($this->canvas,$x,$y);
+		//$gifImage->addCanvas($this->canvas,$x,$y);
 	}
 	
 	/* This is a method to enable transparency in the drawing, is protected beacouse it's 
@@ -108,7 +110,7 @@ class GifArea
 	protected function enableTransparency()
 	{
 		$this->canvas->img->SetColor($this->transparencyColor);
-		$this->canvas->img->FilledRectangle(0,0,$this->width+30, $this->height+30);
+		//$this->canvas->img->FilledRectangle(0,0,$this->width+30, $this->height+30);
 		$this->canvas->img->SetTransparent($this->transparencyColor);
 		$this->canvas->img->SetColor("black");
 	}

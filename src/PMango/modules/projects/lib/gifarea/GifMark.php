@@ -10,11 +10,11 @@ require_once dirname(__FILE__)."/GifLabel.php";
 
 class GifMark extends GifArea
 {	
-	function __construct($x, $y, $width, $priority)
+	function __construct($gifImage, $x, $y, $width, $priority)
 	{
-		parent::__construct($x, $y, $width, $width);
+		parent::__construct($gifImage, $x, $y, $width, $width);
 	
-		$this->subAreas[0]=new GifCircle(0,0,$width/2);
+		$this->subAreas[0]=new GifCircle($gifImage,$this->x,$this->y,intval($width/2));
 		$this->subAreas[0]->setForeColor("white");
 		$this->subAreas[0]->setBorderThickness(2);
 		
@@ -26,10 +26,10 @@ class GifMark extends GifArea
 		if($priority==1)
 			$txt.="!";
 		
-		$xc = (0-$width/2)-6;
-		$yc = (0-$width/2)-2;
+		$xc = $this->x+(0-$width/2)-6;
+		$yc = $this->y+(0-$width/2)-2;
 		
-		$this->subAreas[1]=new GifLabel($xc,$yc,$width+10,$width,$txt,$fontsize);
+		$this->subAreas[1]=new GifLabel($gifImage,$xc,$yc,$width+10,$width,$txt,$fontsize);
 	}
 	
 	/* Set the forecolor of the filled bar */

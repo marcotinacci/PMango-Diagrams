@@ -38,14 +38,15 @@ class DrawingHelper
 		$x_max = max(array($x1,$x2));
 		$y_max = max(array($y1,$y2));
 
-		$canvas = new CanvasGraph ($x_max-$x_min+30, $y_max-$y_min+30, 'auto');
-
+		//$canvas = new CanvasGraph ($x_max-$x_min+30, $y_max-$y_min+30, 'auto');
+		$canvas = $gifImage->getCanvas();
 		DrawingHelper::initLineStyle($canvas,$lineStyle);
 
 		//DrawingHelper::debug($lineStyle->style!=null?$lineStyle->style:"null");
 
-		$canvas->img->StyleLine(abs($x1-$x_min) ,abs($y1-$y_min) ,abs($x2-$x_min) ,abs($y2-$y_min));
-		$gifImage->addCanvas($canvas,$x_min,$y_min);
+		//$canvas->img->StyleLine(abs($x1-$x_min) ,abs($y1-$y_min) ,abs($x2-$x_min) ,abs($y2-$y_min));
+		$canvas->img->StyleLine($x1,$y1,$x2,$y2);
+		//$gifImage->addCanvas($canvas,$x_min,$y_min);
 	}
 
 	private static function calculateHOffset($m,$d)
@@ -343,11 +344,11 @@ class DrawingHelper
 
 	private function initLineStyle(&$canvas,$lineStyle)
 	{
-		$w = $canvas->img->width;
-		$h = $canvas->img->height;
-		$canvas->img->SetColor("magenta");
-		$canvas->img->FilledRectangle(0,0,$w, $h);
-		$canvas->img->SetTransparent("magenta");
+		//$w = $canvas->img->width;
+		//$h = $canvas->img->height;
+		//$canvas->img->SetColor("magenta");
+		//$canvas->img->FilledRectangle(0,0,$w, $h);
+		//$canvas->img->SetTransparent("magenta");
 
 		if($lineStyle == null)
 		$lineStyle = new LineStyle();
@@ -377,13 +378,13 @@ class DrawingHelper
 
 	public static function drawArrow($x,$y,$width,$height,$direction,$gifImage)
 	{
-		$canvas = new CanvasGraph ($width+30, $height+30, 'auto');
+		//$canvas = new CanvasGraph ($width+30, $height+30, 'auto');
 
-		$w = $canvas->img->width;
-		$h = $canvas->img->height;
-		$canvas->img->SetColor("magenta");
-		$canvas->img->FilledRectangle(0,0,$w, $h);
-		$canvas->img->SetTransparent("magenta");
+		$w = $gifImage->getCanvas()->img->width;
+		$h = $gifImage->getCanvas()->img->height;
+		$gifImage->getCanvas()->img->SetColor("magenta");
+		//$gifImage->getCanvas()->img->FilledRectangle(0,0,$w, $h);
+		//$gifImage->getCanvas()->img->SetTransparent("magenta");
 
 		if(strtoupper($direction)=="UP")
 		$points = DrawingHelper::getUpArrowPoints($x,$y,$width,$height);
@@ -394,9 +395,8 @@ class DrawingHelper
 		if(strtoupper($direction)=="RIGHT")
 		$points = DrawingHelper::getRightArrowPoints($x,$y,$width,$height);
 			
-		$canvas->img->SetColor("black");
-		$canvas->img->FilledPolygon($points);
-		$gifImage->addCanvas($canvas,$x-$width/2,$y-$height/2);
+		$gifImage->getCanvas()->img->SetColor("black");
+		$gifImage->getCanvas()->img->FilledPolygon($points);
 	}
 
 	public static function GanttDependencyLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle = null)

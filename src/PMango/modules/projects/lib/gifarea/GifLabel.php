@@ -14,9 +14,9 @@ class GifLabel extends GifArea
 	private $truncate = true;
 	private $underlined = false;
 
-	public function __construct($x, $y, $width, $height, $text, $size)
+	public function __construct($gifImage, $x, $y, $width, $height, $text, $size)
 	{
-		parent::__construct($x,$y,$width,$height);
+		parent::__construct($gifImage, $x,$y,$width,$height);
 		$this->text = $text;
 		$this->size = $size;
 		$this->transparent = false;
@@ -107,7 +107,7 @@ class GifLabel extends GifArea
 		$txt=$this->text;
 		if($this->truncate)
 		$txt = $this->TruncateText($this->text,$this->width,$this->size);
-		$this->canvas->img->SetTransparent("white");
+		//$this->canvas->img->SetTransparent("white");
 
 		$xc = intval($this->width/2);
 		$yc = intval($this->height/2);
@@ -124,7 +124,7 @@ class GifLabel extends GifArea
 		if($this->bold)
 		$style=FS_BOLD;
 
-		$t = new Text( $txt,$xc,$yc );
+		$t = new Text( $txt,$this->x+$xc,$this->y+$yc );
 		$t->SetFont( FF_VERDANA, $style,$this->size);
 		$t->SetColor($this->color);
 		$t->Align($this->hAlign,$this->vAlign);
@@ -133,12 +133,12 @@ class GifLabel extends GifArea
 		if($this->underlined)
 		{
 			$this->canvas->img->SetColor($this->color);
-			$cy = intval(($this->height/2)+($this->size/2))+3;
+			$cy = $this->y+intval(($this->height/2)+($this->size/2))+3;
 			$textWidth=GifLabel::getPixelWidthOfText($txt,$this->size,FF_VERDANA);
 			if(strtoupper($this->hAlign)=="CENTER")
 			{
-				$cx1 = intval(($this->width/2)-($textWidth/2));
-				$cx2 = intval(($this->width/2)+($textWidth/2));
+				$cx1 = $this->x+intval(($this->width/2)-($textWidth/2));
+				$cx2 = $this->x+intval(($this->width/2)+($textWidth/2));
 				$this->canvas->img->line(2+$cx1,$cy,$cx2-3,$cy);
 			}
 			else if(strtoupper($this->hAlign)=="LEFT")
