@@ -5,7 +5,7 @@
  require_once dirname(__FILE__)."./includes/main_functions.php";
  require_once dirname(__FILE__)."./includes/db_connect.php";
  require_once dirname(__FILE__)."./modules/tasks/tasks.class.php";
-*/
+ */
 
 require_once dirname(__FILE__)."/UserOptionEnumeration.php";
 require_once dirname(__FILE__)."/TimeRange.php";
@@ -65,16 +65,49 @@ class UserOptionsChoice {
 	 */
 	public function saveToString(){
 		$pieces = array();
-		for ($i=0; $i<sizeOf($this->array); $i++){
-			if(isset($this->array[$i])){
-				$piece = $this->array[$i];
-				$key = array_keys($this->array[$i]);
-				$pieces[] = $key."_".$piece;
-			}
-		}
+		
+		$pieces[]=isset($this->array[UserOptionEnumeration::$TaskNameUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$OpenInNewWindowUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$PlannedDataUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$PlannedTimeFrameUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$ResourcesUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$ActualTimeFrameUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$ActualDataUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$AlertMarkUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$ReplicateArrowUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption])?1:0; //bool
+		$pieces[]=$this->array[UserOptionEnumeration::$TimeRangeUserOption]; //Enum
+		$pieces[]=$this->array[UserOptionEnumeration::$TimeGrainUserOption]; //Enum
+
+		$pieces[]=$this->array[UserOptionEnumeration::$ImageDimensionsUserOption]; //Enum
+		$pieces[]=$this->array[UserOptionEnumeration::$DefaultWidthUserOption]; //int
+		$pieces[]=$this->array[UserOptionEnumeration::$DefaultHeightUserOption]; //int
+		$pieces[]=$this->array[UserOptionEnumeration::$CustomWidthUserOption]; //int
+		$pieces[]=$this->array[UserOptionEnumeration::$CustomHeightUserOption]; //int
+		$pieces[]=$this->array[UserOptionEnumeration::$FitInWindowWidthUserOption]; //int
+		$pieces[]=$this->array[UserOptionEnumeration::$FitInWindowHeightUserOption]; //int
+
+		$pieces[]=$this->array[UserOptionEnumeration::$TodayDateUserOption]; //date
+		$pieces[]=$this->array[UserOptionEnumeration::$CustomStartDateUserOption]; //date
+		$pieces[]=$this->array[UserOptionEnumeration::$CustomEndDateUserOption]; //date
+
+		// Gantt
+
+		$pieces[]=isset($this->array[UserOptionEnumeration::$EffortInformationUserOption])?1:0; //bool
+		$pieces[]=isset($this->array[UserOptionEnumeration::$FinishToStartDependenciesUserOption])?1:0; //bool
+
+
+
+		// Task Network
+
+		$pieces[]=$this->array[UserOptionEnumeration::$TimeGapsUserOption];
+		$pieces[]=isset($this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies])?1:0;
+		$pieces[]=isset($this->array[UserOptionEnumeration::$CriticalPathUserOption])?1:0;
+		$pieces[]=$this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
+		
 		return implode("|", $pieces);
 	}
-	
+
 	/**
 	 * Set the private variable $array from a string that has all the fields of interest
 	 * (in the form UserOptionEnumerationKey_Value) separated by "|".
@@ -82,15 +115,63 @@ class UserOptionsChoice {
 	 */
 	public function loadFromString($str){
 		$this->array = array();
-		$array = explode("|", $str);
-		for($i=0; $i<sizeOf($array); $i++){
-			//ottengo in $k_v un array di 2 posizioni: chiave_valore
-			$k_v=explode("_", $array[$i]);
-			//in modo da poter settare array con la giusta chiave
-			$this->array[UserOptionEnumeration::$k_v[0]]=$k_v[1];
-		}
+		$pieces = explode("|",$str);
+		
+		if($pieces[0]==1)
+			$this->array[UserOptionEnumeration::$TaskNameUserOption]=true;
+		if($pieces[1]==1)
+			$this->array[UserOptionEnumeration::$OpenInNewWindowUserOption]=true;
+		if($pieces[2]==1)
+			$this->array[UserOptionEnumeration::$PlannedDataUserOption]=true;
+		if($pieces[3]==1)
+			$this->array[UserOptionEnumeration::$PlannedTimeFrameUserOption]=true; //bool
+		if($pieces[4]==1)
+			$this->array[UserOptionEnumeration::$ResourcesUserOption]=true; //bool
+		if($pieces[5]==1)
+			$this->array[UserOptionEnumeration::$ActualTimeFrameUserOption]=true; //bool
+		if($pieces[6]==1)
+			$this->array[UserOptionEnumeration::$ActualDataUserOption]=true; //bool
+		if($pieces[7]==1)
+			$this->array[UserOptionEnumeration::$AlertMarkUserOption]=true; //bool
+		if($pieces[8]==1)
+			$this->array[UserOptionEnumeration::$ReplicateArrowUserOption]=true; //bool
+		if($pieces[9]==1)
+			$this->array[UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption]=true; //bool
+		
+		$this->array[UserOptionEnumeration::$TimeRangeUserOption]=$pieces[10]; //Enum
+		$this->array[UserOptionEnumeration::$TimeGrainUserOption]=$pieces[11]; //Enum
+
+		$this->array[UserOptionEnumeration::$ImageDimensionsUserOption]=$pieces[12]; //Enum
+		$this->array[UserOptionEnumeration::$DefaultWidthUserOption]=$pieces[13]; //int
+		$this->array[UserOptionEnumeration::$DefaultHeightUserOption]=$pieces[14]; //int
+		$this->array[UserOptionEnumeration::$CustomWidthUserOption]=$pieces[15]; //int
+		$this->array[UserOptionEnumeration::$CustomHeightUserOption]=$pieces[16]; //int
+		$this->array[UserOptionEnumeration::$FitInWindowWidthUserOption]=$pieces[17]; //int
+		$this->array[UserOptionEnumeration::$FitInWindowHeightUserOption]=$pieces[18]; //int
+
+		$this->array[UserOptionEnumeration::$TodayDateUserOption]=$pieces[19]; //date
+		$this->array[UserOptionEnumeration::$CustomStartDateUserOption]=$pieces[20]; //date
+		$this->array[UserOptionEnumeration::$CustomEndDateUserOption]=$pieces[21]; //date
+
+		// Gantt
+
+		if($pieces[22]==1)
+			$this->array[UserOptionEnumeration::$EffortInformationUserOption]=true; //bool
+		if($pieces[23]==1)
+			$this->array[UserOptionEnumeration::$FinishToStartDependenciesUserOption]=true; //bool
+
+
+
+		// Task Network
+
+		$pieces[]=$this->array[UserOptionEnumeration::$TimeGapsUserOption]=$pieces[24];
+		if($pieces[25]==1)
+			$this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]=true; //bool
+		if($pieces[26]==1)
+			$this->array[UserOptionEnumeration::$CriticalPathUserOption]=true; //bool
+		$pieces[]=$this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption]=$pieces[27];
 	}
-	
+
 	// metodi che mostrano quali useroption ha selezionato l'utente
 
 	//Common shows
@@ -118,7 +199,7 @@ class UserOptionsChoice {
 							"height"=>$this->array[UserOptionEnumeration::$DefaultHeightUserOption]);
 		return $def_dim;
 	}
-	
+
 	function getFitInWindowDimValues(){
 		$def_dim = array("width"=>$this->array[UserOptionEnumeration::$FitInWindowWidthUserOption],
 							"height"=>$this->array[UserOptionEnumeration::$FitInWindowHeightUserOption]);
@@ -184,15 +265,15 @@ class UserOptionsChoice {
 	function getTimeRangeUserOption() {
 		return $this->array[UserOptionEnumeration::$TimeRangeUserOption];
 	}
-	
+
 	function getCustomRangeValues(){
 		$custom_range = array("start"=>$this->array[UserOptionEnumeration::$CustomStartDateUserOption],
 							"end"=>$this->array[UserOptionEnumeration::$CustomEndDateUserOption],
 							"today"=>$this->array[UserOptionEnumeration::$TodayDateUserOption]
-							);
+		);
 		return $custom_range;
 	}
-	
+
 	function showCustomRangeUserOption() {
 		return isset($this->array[UserOptionEnumeration::$CustomRangeUserOption]);
 	}
