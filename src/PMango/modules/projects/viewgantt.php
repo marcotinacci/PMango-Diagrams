@@ -278,19 +278,18 @@ $_SESSION['uoc'] = serialize($uoc);
 		<?php
 		/*
 		include('modules/report/makePDF.php');
-	
-						$task_level=$explodeTasks;
+			$task_level=$explodeTasks;
 						$q  = new DBQuery;
 						$q->addQuery('projects.project_name');
 						$q->addTable('projects');
 						$q->addWhere("project_id = $project_id ");
 						$name = $q->loadList();
 						$pdf = PM_headerPdf($name[0]['project_name']);
-						//PM_makeWbsPdf($pdf,$basedir."modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."");
-						PM_makeWbsPdf($pdf,$basedir."/modules/projects/lib/chartGenerator/WBSTree.gif");
+						//PM_makeWbsPdf($pdf,"./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."");
+						PM_makeWbsPdf($pdf,"./modules/projects/lib/chartGenerator/WBSTree.gif");
 						//PM_makeWbsPdf($pdf,"http://localhost:8080/Eclipse Project/PMango/application/PMango/modules/projects/lib/chartGenerator/WBSTree.gif");
 						$filename=PM_footerPdf($pdf, $name[0]['project_name'], 5);
-		*/
+						*/
 		?>
 		</td>
 	</tr>
