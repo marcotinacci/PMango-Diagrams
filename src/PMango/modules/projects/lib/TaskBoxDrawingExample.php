@@ -156,12 +156,14 @@ $gTask->drawOn($gif);
 $gifTriangle = new GifTriangle($gif,100,350,20,60,"left");
 $gifTriangle->drawOn();
 
-/*
+
 DrawingHelper::GanttFTSLine(100,100,150,150,10,true,true,false,$gif,null);
 DrawingHelper::GanttFTSLine(100,100,150,50,10,true,true,false,$gif,null);
 DrawingHelper::GanttFTSLine(100,100,50,50,10,true,true,false,$gif,null);
 DrawingHelper::GanttFTSLine(100,100,50,150,10,true,true,false,$gif,null);
-*/
+
+$c = new GifCircle($gif,150,150,4);
+$c->drawOn();
 
 $gif->draw();
 
