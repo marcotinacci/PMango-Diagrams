@@ -1218,7 +1218,7 @@ group by(ut.task_id);";
 		$q->addTable('tasks');
 		$q->addWhere("task_project = $pid");
 		$ar = $q->loadHashList();
-		//print_r($ar);
+//		print_r($ar);
 		$child = array();
 		foreach ($ar as $t => $tparent) {
 			if ($tparent == $tid && $tid != $t) {

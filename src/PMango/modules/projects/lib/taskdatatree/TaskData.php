@@ -211,7 +211,12 @@ class TaskData{
 		$res = array();
 		if($this->children != null){
 			foreach($this->children as $son){
+//				echo "visibleDeepVisit<br>";				
+//				echo "task ".$son->getInfo()->getWBSId()."<br>";
+//				echo "atomico? ".($son->isAtomic()?"si":"no")."<br>";
+//				echo "numero figli: ".count($son->getChildren())."<br>";
 				if($son->getVisibility()){
+//					echo "task visibile!<br><br>";
 					$res[] = $son;
 					$add = $son->visibleDeepVisit();
 					for ($i=0; $i<sizeOf($add); $i++){

@@ -8,7 +8,7 @@ require_once dirname(__FILE__)."/GifProgressBar.php";
 require_once dirname(__FILE__)."/GifTriangle.php";
 require_once dirname(__FILE__)."/../utils/TimeUtils.php";
 
-// TODO: gestire caso task molto stretto coi triangoli
+// TODO: dividere il codice in sotto procedure
 // TODO: label risorse
 
 /**
@@ -124,10 +124,10 @@ class GifGanttTask extends GifArea
 	 * @param today: data odierna
 	 * @param uoc: opzioni utente (UserOptionsChoice)
 	 */
-	function __construct($xStart, $xFinish, $y, $height, $startDate, 
+	function __construct($gifImage, $xStart, $xFinish, $y, $height, $startDate, 
 		$finishDate, $taskData, $today, $uoc)
 	{
-		parent::__construct($xStart, $y,  $xFinish - $xStart, $height);
+		parent::__construct($gifImage, $xStart, $y,  $xFinish - $xStart, $height);
 
 		// task data
 		$this->td = $taskData;
@@ -158,17 +158,29 @@ class GifGanttTask extends GifArea
 
 		// dati task actual (possono non esserci)
 		$actual = $this->td->getInfo()->getActualTimeFrame();
-		if($actual['start_date'] == null){
+//		echo "task: ".$this->td->getInfo()->getWBSId()."<br>";
+//		echo "start date: ".$actual['start_date']."<br>";
+//		echo "finish date: ".$actual['finish_date']."<br>";
+//		echo "today: $today<br><br>";
+		// controllo: se 'i' l'actual non è iniziato
+		if($actual['start_date'] == 'i'){
+			$this->actualStarted = false;			
 			$startActualTS = null;
 			$finishActualTS = null;
 			// coordinate actual
 			$xActual = null;
 			$wActual = null;
-			$this->actualStarted = false;
 		}else{
+			$this->actualStarted = true;
 			$startActualTS = strtotime($actual['start_date']);
-			$finishActualTS = strtotime($actual['finish_date']);
-			// coordinate actual			
+			if($actual['finish_date'] == null){
+				$finishActualTS = $todayTS;
+			}else{
+				$finishActualTS = strtotime($actual['finish_date']);
+			}
+//			echo "start actual ts: $startActualTS <br>";
+//			echo "finish actual ts: $finishActualTS <br><br>";
+			// coordinate actual	
 			$xActual = intval($windowWidth * ($startActualTS-$startTS) 
 				/ $windowDuration);
 			if($this->td->getInfo()->getPercentage() > 99){ // per errori di approssimazione
@@ -177,14 +189,18 @@ class GifGanttTask extends GifArea
 					/ $windowDuration);
 			}else if($todayTS-$startActualTS > 0){
 				// caso task in prosecuzione
-				$wActual = ($windowWidth * ($todayTS-$startActualTS) 
+				$wActual = intval($windowWidth * ($todayTS-$startActualTS) 
 					/ $windowDuration);
-			}else{
+			}else
+			{
 				// caso task anticipato
-				$wActual = ($windowWidth * ($finishActualTS-$startActualTS) 
-					/ $windowDuration);				
+				$wActual = intval($windowWidth * ($finishActualTS-$startActualTS) 
+					/ $windowDuration);
 			}
-			$this->actualStarted = true;
+//			echo "startActualTS: $startActualTS - start date: ".date('Y-m-d H:i:s',$startActualTS)."<br>";
+//			echo "finishActualTS: $finishActualTS - finish date: ".date('Y-m-d H:i:s',$finishActualTS)."<br>";
+//			echo "todayTS: $todayTS - today: $today<br>";
+//			echo "just w actual: $wActual <br><br>";
 		}
 		
 		// coordinate di supporto (non vengono modificate)
@@ -194,7 +210,7 @@ class GifGanttTask extends GifArea
 		$this->trueXActual = $xActual;
 		$this->trueYActual = $yActual;
 		$this->trueWActual = $wActual;
-
+				
 		// caso foglia e caso nodo interno
 		if($this->td->isAtomic()){
 			// se il task è una foglia
@@ -212,8 +228,9 @@ class GifGanttTask extends GifArea
 		if(($xPlanned + $wPlanned > 0) && ($xPlanned < $xFinish - $xStart)){
 			// costruzione del planned
 			$plannedGifBox = new GifBox(
-				$xPlanned, // x
-				0, // y
+				$gifImage,
+				$this->x + $xPlanned, // x
+				$this->y, // y
 				$wPlanned, // width
 				$hPlanned // height
 				);
@@ -225,8 +242,9 @@ class GifGanttTask extends GifArea
 				$this->actualStarted){
 			// costruzione actual
 			$actualGifProgressBar = new GifProgressBar(
-				$xActual,
-				$hPlanned,
+				$gifImage,				
+				$this->x + $xActual,
+				$this->y + $hPlanned,
 				$wActual,
 				intval($height/3),
 				$this->td->getInfo()->getPercentage()
@@ -234,7 +252,7 @@ class GifGanttTask extends GifArea
 		}
 		
 		// costruzione triangoli se il task non è foglia ed è visibile
-		if(!$this->td->isAtomic() && !$this->td->getCollapsed()){
+		if(!$this->td->isAtomic()){
 			if($this->actualStarted){
 				$xLeft = min($xActual, $xPlanned);
 				$xRight = max($xActual+$wActual, $xPlanned+$wPlanned);
@@ -255,28 +273,50 @@ class GifGanttTask extends GifArea
 			if($xLeft >= 0){
 				// genero triangolo sinistro
 				$leftGifTriangle = new GifTriangle(
-					$xLeft, $hPlanned, $this->wTri, $hTri, 'left');
+					$gifImage, $this->x + $xLeft, $this->y + $hPlanned, $this->wTri, $hTri, 'left');
 				$leftGifTriangle->setForeColor($cPlanned);
 			}
 			// se il triangolo destro è visibile
-			if($xRight <= $xFinish - $xStart){
-				// genero triangolo destro
+			if($xRight - $this->wTri <= $xFinish - $xStart){
+				// genero triangolo destro 
 				$rightGifTriangle = new GifTriangle(
-					$xRight - $this->wTri, $hPlanned, $this->wTri, $hTri, 'right');
+				$gifImage, $this->x + $xRight - $this->wTri, $this->y + $hPlanned, $this->wTri, $hTri, 'right');
 				$rightGifTriangle->setForeColor($cPlanned);
 			}
 		}
 		
 		// riga di collegamento actual-planned
-		$this->xP = $xPlanned > $xFinish - $xStart ? $xFinish - $xStart : $xPlanned;
+		$this->xP = $xPlanned; //$xPlanned > $xFinish - $xStart ? $xFinish - $xStart : $xPlanned;
 		$this->wP = $wPlanned;
 		$this->hP = $hPlanned;
-		$this->xA = $xActual > $xFinish - $xStart ? $xFinish - $xStart : $xActual;
+		$this->xA = $xActual; //$xActual > $xFinish - $xStart ? $xFinish - $xStart : $xActual;
 		$this->wA = $wActual;
 		
 		// TODO: inserire se presenti in opzioni utente
 		// label risorse
-		//$this->subAreas['Resources'] = new GifLabel(,,);
+		//($x, $y, $width, $height, $text, $size)
+		if(UserOptionsChoice::GetInstance()->showResourcesUserOption()){
+			$res = $this->td->getInfo()->getResources();
+			$str = "";
+			for($i = 0; $i < count($res); $i++){
+				 //struttura risorsa: (effort, name, rule)
+				$str .= $res[$i]['Effort'].' ph '.$res[$i]['LastName'].' '.$res[$i]['Role'];
+				if($i<count($res)-1){
+					$str .= ', ';
+				}
+			}
+			$this->subAreas['Resources'] = new GifLabel(
+				$gifImage,				
+				$this->x + $xPlanned + $wPlanned + 5,
+				$this->y + ($this->td->isAtomic() ? 0 : -intval($height/3)),
+				$windowWidth,
+				$hPlanned,
+				$str,
+				$this->fontSize
+				);
+			$this->subAreas['Resources']->setVAlign('top');
+			$this->subAreas['Resources']->setHAlign('left');
+		}
 		
 		// DEBUG
 		/*
@@ -305,23 +345,30 @@ class GifGanttTask extends GifArea
 	 */
 	protected function canvasDraw(){
 		// riga di collegamento actual-planned
-
+//		echo "task: ".$this->td->getInfo()->getWBSId()."<br>";
+//		echo "actual started? ".($this->actualStarted?"si":"no")."<br>";
+//		echo "x planned:".$this->xP."<br>";
+//		echo "h planned:".$this->hP."<br>";
+//		echo "w planned:".$this->wP."<br>";	
+//		echo "x actual:".$this->xA."<br>";
+//		echo "w actual:".$this->wA."<br><br>";
+		
 		if($this->actualStarted){
 			if(($this->xP + $this->wP) < $this->xA){
 				$this->canvas->img->setColor('black');
 				$this->canvas->img->line(
-					$this->xP+$this->wP,
-					$this->hP,
-					$this->xA,
-					$this->hP
+					$this->x + $this->xP+$this->wP,
+					$this->y + $this->hP,
+					$this->x + $this->xA,
+					$this->y + $this->hP
 				);
 			}else if(($this->xA + $this->wA)< $this->xP){
 				$this->canvas->img->setColor('black');
 				$this->canvas->img->line(
-					$this->xA+$this->wA,
-					$this->hP,
-					$this->xP,
-					$this->hP
+					$this->x + $this->xA+$this->wA,
+					$this->y + $this->hP,
+					$this->x + $this->xP,
+					$this->y + $this->hP
 				);			
 			}
 		}

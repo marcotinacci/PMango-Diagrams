@@ -42,7 +42,7 @@ class TaskDataTreeGenerator{
 		die("Node '$id' not found!");
 	}
 
-	private function buildTaskMap() {
+	private function buildTaskMap() {		
 		$tasks = $this->getData();
 
 		//print "<br>Tasks count: " . count($tasks);
@@ -214,19 +214,19 @@ class TaskDataTreeGenerator{
 	 * @return $recovered_data sono i dati recuperati riguardanti i task
 	 */
 	public function getData(){
-		//	$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));
+		//	$recovered_data=array(array("wbsIdentifier"=>"1", "name"=>"Analisi"),array("wbsIdentifier"=>"2", "name"=>"Sviluppo"),array("wbsIdentifier"=>"1.1", "name"=>"Use Case"),array("wbsIdentifier"=>"1.2", "name"=>"Domain Model"),array("wbsIdentifier"=>"2.1", "name"=>"Progettazione"),array("wbsIdentifier"=>"2.2", "name"=>"Codifica"),array("wbsIdentifier"=>"2.1.1", "name"=>"TaskBox"), array("wbsIdentifier"=>"2.1.2", "name"=>"Gantt"));	
 		$recovered_data = array();
 		$task_ids = array();
 		$project_id = defVal(@$_REQUEST['project_id'], 0);
 		if($project_id==0){
 			die("ERROR: project not found!");
 		}
-		// $project_id = 0; // ?? stub ?? non esiste il progetto zero
+		// $project_id = 0; // ?? stub ?? non esiste il progetto zero		
 		$sql = 'SELECT task_id FROM tasks WHERE task_project ='.$project_id;
 		$task_ids = db_loadList($sql);
 		for ($i=0; $i<sizeOf($task_ids); $i++){
 			$current_task = Task::makeTask($task_ids[$i]['task_id']);
-			$recovered_data[] = $current_task;
+			$recovered_data[] = $current_task;			
 		}
 		return $recovered_data;
 	}

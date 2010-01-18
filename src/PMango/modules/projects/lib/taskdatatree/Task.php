@@ -36,16 +36,15 @@ class Task{
 	public static function MakeTask($task_id) {
 		// creating the object that build the associative array
 		$dataArrayBuilder = new DataArrayBuilder($task_id);
-		$dataArrayDirector = new DataArrayDirector($dataArrayBuilder);
+		$dataArrayDirector = new DataArrayDirector($dataArrayBuilder);		
 		$dataArrayDirector->composeArray();
 
-		// resulting task
-		$task = new Task();
+		// resulting task		
+		$task = new Task();		
 		$task->data = $dataArrayBuilder->getAssociativeArray();
-		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;
+		$task->data[DataArrayKeyEnumeration::$task_id] = $task_id;		
 		$task->_cTask = new CTask();
-		$task->_cTask->load($task_id);
-		
+		$task->_cTask->load($task_id);		
 		return $task;
 	}
 
