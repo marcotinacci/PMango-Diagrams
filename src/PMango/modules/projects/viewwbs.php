@@ -83,7 +83,7 @@ function getPageWidth()
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	divImage.innerHTML = "<img src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+getPageWidth()+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 </script>
 
