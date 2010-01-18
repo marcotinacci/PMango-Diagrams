@@ -18,6 +18,7 @@ class GifImage
 		$this->width = $width;
 		$this->height = $height;
 		$this->mgraph = new CanvasGraph($width,$height);
+		$this->mgraph->img->SetImgFormat("gif");
 	}	
 	
 	//Add the specified canvas to the image at position ($x, $y)
