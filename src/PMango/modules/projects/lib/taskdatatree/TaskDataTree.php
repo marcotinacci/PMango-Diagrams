@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__) . "/../chartgenerator/DependencyDescriptor.php";
 
 /**
  * Questa classe è la struttura dati per la gestione delle informazioni dei task
@@ -51,7 +52,7 @@ class TaskDataTree {
 		$res = $this->root->visibleDeepVisit();
 		return $res;
 	}
-	
+
 	public function wideVisit(){
 		$res = $this->root->wideVisit();
 		return $res;
@@ -61,7 +62,7 @@ class TaskDataTree {
 		$leaves = $this->root->getLeaves();
 		return $leaves;
 	}
-	
+
 	public function getVisibleLeaves() {
 		return $this->root->getVisibleLeaves();
 	}
@@ -108,7 +109,7 @@ class TaskDataTree {
 	public function computeDependencyRelationOnVisibleTasks() {
 		//$this->leaves = $this->getVisibleTree()->getLeaves();
 		$result = array();
-		
+
 		foreach ($this->getVisibleLeaves() as $leaf) {
 			$deepChildren = $leaf->getInfo()->getCTask()->getDeepChildren();
 			//			print "<br>deep children of " . $leaf->getInfo()->getCTask()->task_id .
@@ -144,12 +145,16 @@ class TaskDataTree {
 			// parsing the integer
 			$dependency = intval($stringDependency);
 			//print " $dependency ";
-			if(in_array($dependency, $deepChildren)) {
+
+			// if the neededTask is in the same subtree of
+			// $task_id, I haven't nothing to do
+			if(!in_array($dependency, $deepChildren)) {
 				//print $dependency . " is a deep child of " . $leaf->getInfo()->getTaskName();
 				//continue;
-			}
-			else {
-				$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren($dependency);
+				$dependencyDescriptor = new DependencyDescriptor();
+
+				$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren(
+				$dependency, $dependencyDescriptor);
 
 				if(!$neededLeaf) {
 					print "no parent left found for : " . $dependency;
@@ -160,22 +165,46 @@ class TaskDataTree {
 						$result[$neededLeaf->getInfo()->getTaskID()] = array();
 					}
 					$leafId = $leaf->getInfo()->getTaskID();
-					if(!in_array($leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
-						$result[$neededLeaf->getInfo()->getTaskID()][] = $leafId;
+
+					$dependencyDescriptor->dependentTaskId = $leafId;
+						
+					if ($this->isStartingTask($leaf, $task_id)) {
+						$taskPosition = TaskLevelPositionEnum::$starting;
+					}
+					else {
+						$taskPosition = TaskLevelPositionEnum::$inner;
+					}
+						
+					$dependencyDescriptor->dependentTaskPositionEnum = $taskPosition;
+
+					if(!$this->containsDependencyDescriptor(
+					$leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
+						$result[$neededLeaf->getInfo()->getTaskID()][] =
+						$dependencyDescriptor;
 					}
 				}
 			}
 		}
 	}
 
+	private function containsDependencyDescriptor($leafId, $array) {
+		foreach ($array as $dependencyDescriptor) {
+			if($dependencyDescriptor->dependantTaskId == $leafId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Metodo che ritorna la foglia contenente il task necessario in una relazione di dipendenza
 	 * @param integer $dependency the task identifier of the needed task
-	 * @param TaskData $butLeaf la foglia da saltare per evitare confronti che sicuramente si conosce che
-	 * 	la foglia non sia presente
+	 * @param DependencyDescriptor $dependencyDescriptor descriptor of the dependency to be
+	 * updated with the needed side information.
 	 * @return TaskData if the leaf is found, else false
 	 */
-	public function searchNeededLeafThatHaveInDeepChildren($dependency) {
+	public function searchNeededLeafThatHaveInDeepChildren(
+	$dependency, & $dependencyDescriptor) {
 		//print " saerching parent leaf of " . $dependency . " ";
 		foreach ($this->getVisibleLeaves() as $leaf) {
 			//			if ($leaf->getInfo()->getTaskID() == $butLeaf->getInfo()->getTaskID() &&
@@ -183,13 +212,36 @@ class TaskDataTree {
 			//				continue;
 			//			}
 
-			if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren()) ||
-			$dependency == $leaf->getInfo()->getTaskID()) {
+			if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren())) {
 				//print " Leaf that contains $dependency is " . $leaf->getInfo()->getTaskID();
+				$dependencyDescriptor->neededTaskId = $leaf->getInfo()->getTaskID();
+
+				if ($this->isEndingTask($leaf, $dependency)) {
+					$taskPosition = TaskLevelPositionEnum::$ending;
+				}
+				else {
+					$taskPosition = TaskLevelPositionEnum::$inner;
+				}
+
+				$dependencyDescriptor->neededTaskPositionEnum = $taskPosition;
+				return $leaf;
+			}
+
+			if ($dependency == $leaf->getInfo()->getTaskID()) {
+				$dependencyDescriptor->neededTaskId = $leaf->getInfo()->getTaskID();
+				$dependencyDescriptor->neededTaskPositionEnum = DependencyDescriptor::$ending;
 				return $leaf;
 			}
 		}
 		return false;
+	}
+
+	private function isEndingTask($leaf, $dependency) {
+		// check if the endDate($dependency) >= endDate($leaf);
+	}
+
+	private function isStartingTask($leaf, $dependency) {
+		// check if the endDate($dependency) >= endDate($leaf);
 	}
 
 	/**
