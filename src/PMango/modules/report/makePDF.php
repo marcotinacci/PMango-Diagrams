@@ -1269,7 +1269,7 @@ function PM_sortChildTask($tasks, $parent, $task_level, $tasks_opened, $tasks_cl
 return $a_task;
 }
 
-function PM_makeWbsPdf($pdf,$generatorUrl)
+function PM_makeGanttPdf(&$pdf,$generatorUrl)
 {
 	global $AppUI, $brd, $orient;
 	
@@ -1278,7 +1278,21 @@ function PM_makeWbsPdf($pdf,$generatorUrl)
 	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
 	//Logo
 	//$pdf=new FPDF();
-	$pdf->Image($generatorUrl,11,17);
+	$pdf->Image($generatorUrl,10,50,190);
+	//Line break
+	$pdf->Ln(10);
+}
+
+function PM_makeWbsPdf(&$pdf,$generatorUrl)
+{
+	global $AppUI, $brd, $orient;
+	
+	$pdf->SetFont('Arial','B',16);
+	//Title
+	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
+	//Logo
+	//$pdf=new FPDF();
+	$pdf->Image($generatorUrl,10,50,190);
 	//Line break
 	$pdf->Ln(10);
 }
