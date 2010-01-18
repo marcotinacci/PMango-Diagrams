@@ -540,45 +540,45 @@ class DrawingHelper
 
 	private static function getUpArrowPoints($x,$y,$width,$height)
 	{
-		$xoffset = $width/2;
-		$yoffset = $height/2;
+		$xoffset = 0;//$width/2;
+		$yoffset = 0;//$height/2;
 
-		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
-		$points[2]=0+$width/2+$xoffset; $points[3]=$height/2+$yoffset;
-		$points[4]=0-$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		$points[0]=$x+$xoffset;				$points[1]=$y+$yoffset;
+		$points[2]=$x+$width/2+$xoffset; 	$points[3]=$y+$height/2+$yoffset;
+		$points[4]=$x-$width/2+$xoffset;	$points[5]=$y+$height/2+$yoffset;
 		return $points;
 	}
 
 	private static function getDownArrowPoints($x,$y,$width,$height)
 	{
-		$xoffset = $width/2;
-		$yoffset = $height/2;
+		$xoffset = 0;//$width/2;
+		$yoffset = 0;//$height/2;
 
-		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
-		$points[2]=0+$width/2+$xoffset; $points[3]=-$height/2+$yoffset;
-		$points[4]=0-$width/2+$xoffset;	$points[5]=-$height/2+$yoffset;
+		$points[0]=$x+$xoffset;				$points[1]=$y+$yoffset;
+		$points[2]=$x+$width/2+$xoffset; 	$points[3]=$y-$height/2+$yoffset;
+		$points[4]=$x-$width/2+$xoffset;	$points[5]=$y-$height/2+$yoffset;
 		return $points;
 	}
 
 	private static function getLeftArrowPoints($x,$y,$width,$height)
 	{
-		$xoffset = $width/2;
-		$yoffset = $height/2;
+		$xoffset = 0;//$width/2;
+		$yoffset = 0;//$height/2;
 
-		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
-		$points[2]=0+$width/2+$xoffset; $points[3]=-$height/2+$yoffset;
-		$points[4]=0+$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		$points[0]=$x+$xoffset;			$points[1]=$y+$yoffset;
+		$points[2]=$x+$width/2+$xoffset; $points[3]=$y-$height/2+$yoffset;
+		$points[4]=$x+$width/2+$xoffset;	$points[5]=$y+$height/2+$yoffset;
 		return $points;
 	}
 
 	private static function getRightArrowPoints($x,$y,$width,$height)
 	{
-		$xoffset = $width/2;
-		$yoffset = $height/2;
+		$xoffset = 0;//$width/2;
+		$yoffset = 0;//$height/2;
 
-		$points[0]=0+$xoffset;			$points[1]=0+$yoffset;
-		$points[2]=0-$width/2+$xoffset; $points[3]=-$height/2+$yoffset;
-		$points[4]=0-$width/2+$xoffset;	$points[5]=$height/2+$yoffset;
+		$points[0]=$x+$xoffset;			$points[1]=$y+$yoffset;
+		$points[2]=$x-$width/2+$xoffset; $points[3]=$y-$height/2+$yoffset;
+		$points[4]=$x-$width/2+$xoffset;	$points[5]=$y+$height/2+$yoffset;
 		return $points;
 	}
 
