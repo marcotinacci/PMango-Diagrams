@@ -148,12 +148,12 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 		
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($this->getNumLevel()+2)*$max+$max;
+		$height=($this->getNumLevel())*($max+$max/2)+50;
 		
 		$this->gif = new GifImage($this->getWidth(),$height); 
 		
 		//alt per spaziare un livello dall'altro
-		$alt=$height-($max/2);
+		$alt=$height;
 		
 		/*
 		 *  matrice usata per memorizzare i task inseriti, in modo da poter 
