@@ -19,6 +19,9 @@ class WBSChartGenerator extends ChartGenerator{
 	private  $width=1200;	
 	private $boxWidth;
 	private $numleaves;
+	private $gif;
+	
+	private $numlevel;
 	
 	/**
 	 * Funzione di generazione grafica delle WBS
@@ -34,13 +37,22 @@ class WBSChartGenerator extends ChartGenerator{
 		$this->makeWBSTaskNode();		
 	}
 	
-	public function setNumLeaves($numleaves)
+	private function setNumLeaves($numleaves)
 	{
 		$this->numleaves=$numleaves;
 	}
-	public function getNumLeaves()
+	private function getNumLeaves()
 	{
 		return $this->numleaves;
+	}
+	
+	private function setNumLevel($numlevel)
+	{
+		$this->numlevel=$numlevel;
+	}
+	private function getNumLevel()
+	{
+		return $this->numlevel;
 	}
 	
 	/**
@@ -49,24 +61,22 @@ class WBSChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
 	protected function makeWBSTaskNode(){
-		//$UOC = new UserOptionsChoice();
-				
+						
 		$areas=array();
-		
-		$tdt=new StubTask();
-		$taskData=new TaskData();
-		$taskData->setInfo($tdt);
-		
+				
 		$nodi=array();
 		
 		$tree = new TaskDataTreeGenerator();
 		$treeData = $tree->generateTaskDataTree();
 		
+		//Imposta la larghezza del box
 		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
 				
+		
 		//vettore di foglie dell'albero
 		$leav=array();
 		
+		//array di nodi dell'albero
 		$nodi=array();
 		
 		//Il vettore $nodi viene riempito con tutti i nodi del tree presi con una visita in profondità
@@ -87,8 +97,8 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$CLiv+=1;
 		$Livello=$CLiv;
-				
-		$larghezza=$this->getNumLeaves()*$this->boxWidth+100;
+		$this->setNumLevel($CLiv);
+		$larghezza=$this->getNumLeaves()*($this->boxWidth+20);
 		
 		
 		//Configura la dimensioni dell'immagine, secondo le scelte dell'utente
@@ -120,9 +130,13 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		$occorrenze=1;
 		
-		//I seguenti cicli for scandiscono tutti i task data per scoprire 
-		//quello ad altezza maggiore
-		for($i=$CLiv-1;$i>=0;$i--)
+		/*
+		 *  I seguenti cicli for scandiscono tutti i task data per scoprire
+		 *  quello ad altezza maggiore, che verrà usato come modello per 
+		 *  spaziare i box per livello 
+		 */
+		$max=0;
+		for($i=$this->getNumLevel()-1;$i>=0;$i--)
 		{			
 			for($j=0;$j<$this->getNumLeaves();$j++)
 			{
@@ -134,35 +148,55 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 		
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($CLiv+($CLiv+1))*$max+50;
+		$height=($this->getNumLevel()+($this->getNumLevel()+1))*$max+50;
+		
+		$this->gif = new GifImage($this->getWidth(),$height); 
+		
 		//Spazio tra un livello ed un altro
 		$alt=$height-2*$max;
 		
+		/*
+		 *  matrice usata per memorizzare i task inseriti, in modo da poter 
+		 *  essere collegati tra loro secondo la corretta gerarchia
+		*/
+		
 		$Link=array(array());
-		$l=0;		//Indice per vettore areas
 		
-		
+		//Indice usato per il riempimento del vettore areas (contentente task node)
+		$l=0;		
 		
 		//Il seguente blocco di codice esegue in un'unica passata il posizionamento
-		//dei tasknode e salva nelle due matrici LinkX e LinkY le coordinate
-		for($i=$CLiv;$i>=0;$i--)
+		//dei tasknode e salva gli stessi nella matrice Link
+		for($i=$this->getNumLevel();$i>=0;$i--)
 		{			
 			for($j=0;$j<$this->getNumLeaves();$j++)
 			{
+				/*
+				 *  Controlla il livello, se è lo zero (posto per la radice) allora
+				 *  crea un nodo fittizio dallo stub (nodo del progetto) per posizionarlo 
+				 *  a capo dei sottoalberi
+				 */
+				
 				if($Livello==0)
 				{
+					
 					$occorrenze = $this->getOccorrence($leav,$leav[$j]);
-					$cord1 = ((($occorrenze)*$dimBlocco)/2);
-					$cord2 = ((($j)*$dimBlocco));
-						
+					//$cord1 = ((($occorrenze)*$dimBlocco)/2);
+					//$cord2 = ((($j)*$dimBlocco));
+					
+					//Nodo radice creato dallo stub task 
 					$t = new StubTask();
 					$td = new TaskData($t);
 					
+					/*
+					 *  Per posizionare il nodo radice prende le coordinate del primo e
+					 *  dell'ultimo nodo di livello 1 e si calcola il punto di mezzo
+					 */
 					$cordinata1=$Link[1][0]->getX()+$this->boxWidth;
 					$cordinata2=$Link[1][Count($Link[1])-1]->getX();
 					$cordinata=$cordinata1+($cordinata2-$cordinata1)/2;
 																		
-					$areas[$l] = new GifTaskBox($cordinata-($this->boxWidth/2),$alt,$this->boxWidth,30,$td);
+					$areas[$l] = new GifTaskBox($this->gif,$cordinata-($this->boxWidth/2),$alt,$this->boxWidth,30,$td);
 					for($k = 0;$k < $occorrenze;$k++)
 					{
 						$leav[$j+$k]=$leav[$j+$k]->getParent();
@@ -175,13 +209,14 @@ class WBSChartGenerator extends ChartGenerator{
 				{
 					if($leav[$j]!=null)
 					{
+						//Verifica che il nodo puntato sia del livello corretto per il posizionamento
 						if(($leav[$j]->getInfo()->getLevel())==$Livello)
 						{		
-							$occorrenze = $this->getOccorrence($leav,$leav[$j],$this->getNumLeaves);
-							//Se vi è una solo occorrenza allora posiziona lo scatolotto esattamente sopra il figlio
+							$occorrenze = $this->getOccorrence($leav,$leav[$j]);
+							//Se vi è una solo occorrenza allora posiziona lo "scatolotto" esattamente sopra il figlio
 							if($occorrenze == 1)
 							{
-								$areas[$l] = new GifTaskBox(((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j]);
+								$areas[$l] = new GifTaskBox($this->gif,((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j]);
 								$Link[$i][$j]=$areas[$l];
 								$leav[$j]=$leav[$j]->getParent();
 								$l++;
@@ -189,13 +224,17 @@ class WBSChartGenerator extends ChartGenerator{
 							//Altrimenti se il padre ha più figli viene messo al centro
 							else if($occorrenze > 1)
 							{
-								//prende i figli del padre
-								//cerca occorrenze del primo, cerca occorrenze fino all'ennesimo figlio
+																
+								/*
+					 			 *  Per posizionare il nodo padre prende le coordinate del suo primo 
+					 			 *  figlio e dell'ultimo, e calcola il punto di mezzo
+					             */
+								
 								$cord1=$Link[$i+1][$j]->getX()+$this->boxWidth;;
 								$cord2=$Link[$i+1][$j+$occorrenze-1]->getX();
 								
 								$cordinata=$cord1+(($cord2-$cord1)/2);		
-								$areas[$l] = new GifTaskBox(($cordinata-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j]);
+								$areas[$l] = new GifTaskBox($this->gif,($cordinata-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j]);
 								for($k=0;$k<$occorrenze;$k++)
 								{
 									$leav[$j+$k]=$leav[$j+$k]->getParent();
@@ -214,28 +253,26 @@ class WBSChartGenerator extends ChartGenerator{
 	
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
 	if(Count($areas)>0)
-		$this->makeWBSDependencies($Link,$CLiv,$areas,$height);
+		$this->makeWBSDependencies($Link,$areas,$height);
 }
 	
 	/**
 	 * Funzione che assegna le dipendenze ai nodi della WBS
 	 * @see chartgenerator/ChartGenerator#generateChart()
 	 */
-	protected function makeWBSDependencies($Link,$CLiv,$areas,$height){
+	protected function makeWBSDependencies($Link,$areas,$height){
 		
 		$s = new LineStyle();
 		$s->style = "solid";
 		$s->weight = 2;
 		$s->color = "black";
 		
-		$gif = new GifImage($this->getWidth(),$height);
 
 		$arrayDrawLine=array();
 		$XToDraw=array();
 		$YToDraw=array();
 		
-		
-		for($i=0;$i<$CLiv-1;$i++)
+		for($i=0;$i<$this->getNumLevel()-1;$i++)
 		{
 			$arrayDrawLine=$Link[$i];
 						
@@ -264,7 +301,7 @@ class WBSChartGenerator extends ChartGenerator{
 						}
 						//echo Count($XToDraw);			
 						//if($LinkX[$i+1][$j]!=null){
-							DrawingHelper::ExplodedUpRectangularLineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$XToDraw,$YToDraw,$gif,$s);
+							DrawingHelper::ExplodedUpRectangularLineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$XToDraw,$YToDraw,$this->gif,$s);
 						//}
 						//echo "<br>";	
 					
@@ -278,7 +315,7 @@ class WBSChartGenerator extends ChartGenerator{
 							$hspace=$Link[$i][$j]->getEffectiveHeight();
 						}					
 						if(isset($Link[$i+1][$j])){
-							DrawingHelper::LineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$Link[$i+1][$j]->getX()+($this->boxWidth/2),$Link[$i+1][$j]->getY(),$gif,$s);
+							DrawingHelper::LineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$Link[$i+1][$j]->getX()+($this->boxWidth/2),$Link[$i+1][$j]->getY(),$this->gif,$s);
 						}	
 					}
 				}	
@@ -288,9 +325,9 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		
 		foreach($areas as $a)
-			$a->drawOn($gif);
-		$gif->draw();
-		$gif->saveToFile("./WBSTree.gif");
+			$a->drawOn();
+		$this->gif->draw();
+		$this->gif->saveToFile("./WBSTree.gif");
 		
 	}
 	
