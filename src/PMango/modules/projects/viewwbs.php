@@ -86,7 +86,6 @@ function BuildImage(placeHolder)
 	divImage.innerHTML = "<img style='max-width:"+getPageWidth()+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 </script>
-
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
 <tr>
     <td>
@@ -110,7 +109,7 @@ function BuildImage(placeHolder)
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?>
-                	<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>"/>;
+                	<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>"/>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
