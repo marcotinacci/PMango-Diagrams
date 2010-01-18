@@ -465,7 +465,7 @@ class CTask extends CDpObject {
 	 *	@param	integer	ID of the task we want dependencies
 	 *	@return	string	comma delimited list of tasks id's
 	 **/
-	function staticGetDependencies ($taskId) {
+	static function staticGetDependencies ($taskId) {
 		if (empty($taskId))
 		return '';
 		$sql = "
