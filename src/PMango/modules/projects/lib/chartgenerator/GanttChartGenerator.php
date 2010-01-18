@@ -13,7 +13,7 @@ require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.7
+ * @version: 0.8
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -266,7 +266,7 @@ class GanttChartGenerator extends ChartGenerator{
 					}else{
 						$sProj = min($planned['start_date'],$actual['start_date'],$sProj);
 					}
-					if($actual['finish'] == null){
+					if($actual['finish_date'] == null){
 //						echo "max: ".$planned['finish_date'].",$tempToday,$fProj <br>";
 						$fProj = max($planned['finish_date'],$tempToday,$fProj);
 					}else{
@@ -580,18 +580,32 @@ class GanttChartGenerator extends ChartGenerator{
 //					echo "task_id k ".$this->tasks[$k]->getInfo()->getTaskID()."<br>";
 					if($this->tasks[$k]->getInfo()->getTaskID() == $id_dep){
 //						echo " dep $id_dep <br>";
-						$point1 = $this->gTasks[$i]->getPlannedRightMiddlePoint();
-						$point2 = $this->gTasks[$k]->getPlannedLeftMiddlePoint();
+						if($this->tasks[$i]->getCollapsed()){
+							$point1 = $this->gTasks[$i]->getPlannedBottomMiddlePoint();
+							$middleOut = true;
+						}else{
+							$point1 = $this->gTasks[$i]->getPlannedRightMiddlePoint();
+							$middleOut = false;
+						}
+						if($this->tasks[$k]->getCollapsed()){
+							$point2 = $this->gTasks[$k]->getPlannedTopMiddlePoint();
+							$middleIn = true;							
+						}else{
+							$point2 = $this->gTasks[$k]->getPlannedLeftMiddlePoint();
+							$middleIn = false;
+						}
 //						echo "p1: (".$point1['x'].",".$point1['y'].")<br>";
 //						echo "p2: (".$point2['x'].",".$point2['y'].")<br>";
-// GanttFTSLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$middleIn,$middleOut,$gifImage,$lineStyle = null)												
-						DrawingHelper::GanttDependencyLine(
+// GanttFTSLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$middleIn,$middleOut,$gifImage,$lineStyle = null)
+						DrawingHelper::GanttFTSLine(
 							$point1['x'],
 							$point1['y'],
 							$point2['x'],
 							$point2['y'],
 							10,
 							true,
+							$middleIn,
+							$middleOut,
 							$this->chart,
 							new LineStyle('#7F7F7F')
 						);

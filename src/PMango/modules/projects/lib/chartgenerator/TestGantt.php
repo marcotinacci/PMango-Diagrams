@@ -3,14 +3,14 @@
 //error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 //error_reporting(E_ALL & ~E_NOTICE);
 
-$file=fopen("./gantt_errors.txt","w");
+/*$file=fopen("./gantt_errors.txt","w");
 function myerrorhandler($errno,$errstr,$errfile,$errline)
 {
 	global $file;
 	fwrite($file,$errno . " " . $errstr . " " . $errfile  . " " . $errline . "\n");
 	return true;
 }
-set_error_handler("myerrorhandler");
+set_error_handler("myerrorhandler");*/
 //--------------------------------------------------
 $baseDir = dirname(__FILE__)."/../../../..";
 require_once "$baseDir/includes/config.php";
