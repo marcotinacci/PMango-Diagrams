@@ -110,7 +110,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 				/*
 				 * cloning the critical path domain object to duplicate the info
-				 * to have one clone foreach fork of the path
+				 * to have one object foreach fork of the path
 				 */
 				$cpdoClone = $this->buildNewCriticalPathDomainObjectFrom(
 				$criticalPathDomainObject,
@@ -139,29 +139,32 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 					$this->drawedTasksMap[$dependantTaskId] = $dependentTask;
 				}
 
-
+				/*
+				 * Move the recursive call before the above conditional logic, keep the result point and manage
+				 * the dependency line info respect to that point
+				 */
 				$this->internalGenerateChart($dependentTask, $cpdoClone, $horizontal + $this->getGapBetweenHorizonalTasks()
 				+ AbstractTaskDataDrawer::$width);
 
 			}
-			
+				
 			if (!($dependency->getNeededTask() instanceof StartMilestoneDependencyProxy)) {
 
-			$freezeVertical += $this->calculateSpan($dependency);
+				$freezeVertical += $this->calculateSpan($dependency);
 
-			$exitPoint = $dependency->getDrawer()->computeExitPoint(new PointInfo($horizontal, $freezeVertical));
-			foreach($entryPointArray as $task_id => $entryPoint) {
-				print "<br>" . $dependency->getNeededTask()->getInfo()->getTaskID() . 
+				$exitPoint = $dependency->getDrawer()->computeExitPoint(new PointInfo($horizontal, $freezeVertical));
+				foreach($entryPointArray as $task_id => $entryPoint) {
+					print "<br>" . $dependency->getNeededTask()->getInfo()->getTaskID() .
 				" dependency is start milestone? " . $dependency->neededTaskIsStartMilestone() . " / is end milestone? " . $dependency->neededTaskIsEndMilestone();
-				if ($dependency->getNeededTask() instanceof StartMilestoneDependencyProxy) {
-					print "<br>needed task is a proxy: " . $dependency->getNeededTask()->getInfo()->pippo;
+					if ($dependency->getNeededTask() instanceof StartMilestoneDependencyProxy) {
+						print "<br>needed task is a proxy: " . $dependency->getNeededTask()->getInfo()->pippo;
 
+					}
+					$dependencyLine = $this->buildDependencyLine($dependency->getNeededTask()->getInfo()->getTaskID(), $task_id, $exitPoint, $entryPoint);
 				}
-				$dependencyLine = $this->buildDependencyLine($dependency->getNeededTask()->getInfo()->getTaskID(), $task_id, $exitPoint, $entryPoint);
-			}
 
 
-			
+					
 				$dependency->getDrawer()->drawOn($this->getChart(), new PointInfo($horizontal, $freezeVertical));
 			}
 		}
@@ -231,6 +234,11 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				$root->_dependencies[] = $dependency;
 				print "<br>added root for: " . $dependency->_taskData->getInfo()->getTaskID();
 			}
+				
+			// the end node it's not necessary because he can't be drawed within the drawing of
+			// the others node. Only at the end he know the vertical and horizontal position
+			// that can stay on.
+			// remove the following code
 			if(!$dependency->hasDependentTasks()) {
 				$end->_fathersDependencies[] = $dependency;
 				$dependency->_dependencies[] = $end;
@@ -285,6 +293,9 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 	private function appendCriticalPathDomainObject($criticalPathDomainObject, $dependency) {
 		// calculating the last time gap and add this information to the domain object
+		// --> pass the information relative to the end milestone of the project, may be
+		// --> istantiating a project entity (if exists) and get the two dates, start and end.
+		// --> pass to the method the end date or the entire project entity
 		$criticalPathDomainObject->setLastGap($dependency->getNeededTask()->getInfo());
 
 		// adding the path to the table
@@ -364,6 +375,9 @@ interface IDependency {
 	public function hasDependentTasks();
 	public function getDependentTasks();
 	public function neededTaskIsStartMilestone();
+	/*
+	 * remove the following method
+	 */
 	public function neededTaskIsEndMilestone();
 	//public function getEndPointDrawer();
 	//public function neededTaskIsStartMilestone();
@@ -415,6 +429,11 @@ class DefaultDependency implements IDependency {
 	//	}
 
 	private function initDrawer() {
+		/*
+		 * add a if branch to check if the needed task is the start
+		 * milestone. Then allocate the right drawer
+		 */
+
 		if($this->neededTaskIsAtomic()) {
 			$this->_drawer = new AtomicTaskDataDrawer($this);
 		}
@@ -453,6 +472,11 @@ class DefaultDependency implements IDependency {
 	 * return boolean
 	 */
 	public function hasDependentTasks() {
+		/*
+		 * the following conditional logic is not correct because the end milestone
+		 * has no such responsibility to be capturated with some abstraction.
+		 * remove the IF and leave only the original code.
+		 */
 		if (count($this->_dependencies) == 1) {
 			if ($this->_dependencies[0]->neededTaskIsEndMilestone()) {
 				return false;
@@ -471,7 +495,7 @@ class DefaultDependency implements IDependency {
 			return $this->_drawer;
 		}
 		else{
-			print ("No drawer are implemented for the kind of the undarlying task data with id = " . 
+			die ("No drawer are implemented for the kind of the undarlying task data with id = " .
 			$this->getNeededTask()->getInfo()->getTaskID());
 		}
 	}
