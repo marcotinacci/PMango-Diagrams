@@ -31,7 +31,7 @@ class GifImage
 	//Save the gif to file $FileName
 	function saveToFile($fileName)
 	{
-		$this->mgraph->Stream($fileName);
+		$this->mgraph->Stroke($fileName);
 	}
 	
 	function &getCanvas()
