@@ -98,7 +98,7 @@ class WBSChartGenerator extends ChartGenerator{
 		$CLiv+=1;
 		$Livello=$CLiv;
 		$this->setNumLevel($CLiv);
-		$larghezza=$this->getNumLeaves()*($this->boxWidth+20);
+		$larghezza=$this->getNumLeaves()*($this->boxWidth+50);
 		
 		
 		//Configura la dimensioni dell'immagine, secondo le scelte dell'utente
