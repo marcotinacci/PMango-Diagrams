@@ -280,7 +280,7 @@ class WBSChartGenerator extends ChartGenerator{
 			for($j=0;$j<=$this->getNumLeaves()-1;$j++)
 			{
 				
-				if($arrayDrawLine[$j]!=""){
+				if(isset($arrayDrawLine[$j]) && $arrayDrawLine[$j]!=""){
 					$occorrenze=$this->getOccorrence($arrayDrawLine,$arrayDrawLine[$j]);
 						
 					if($occorrenze>1)
@@ -347,9 +347,9 @@ class WBSChartGenerator extends ChartGenerator{
 	protected function getOccorrence($array,$valore)
 	{
 		$contatore=0;
-		for($h=0;$h<$this->getNumLeaves();$h++)
+		for($h=0; $h<$this->getNumLeaves(); $h++)
 		{
-			if($array[$h]==$valore)
+			if(isset($array[$h]) && $array[$h]==$valore)
 			{
 				$contatore++;		
 			}
