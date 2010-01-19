@@ -22,6 +22,12 @@ class DependencyDescriptor {
 	
 	var $dependentTaskId;
 	var $neededTaskId;
+	
+	public function __toString() {
+		return "(needed exit: " . $this->neededTaskPositionEnum . 
+		", dep id: " . $this->dependentTaskId . 
+		", dep entry: " . $this->dependentTaskPositionEnum . ")";
+	}
 }
 
 /**

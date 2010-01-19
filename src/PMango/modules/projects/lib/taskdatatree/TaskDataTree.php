@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__FILE__) . "/../chartgenerator/DependencyDescriptor.php";
+require_once dirname(__FILE__) . "/../commons/DateComparer.php";
 
 /**
  * Questa classe è la struttura dati per la gestione delle informazioni dei task
@@ -189,7 +190,7 @@ class TaskDataTree {
 
 	private function containsDependencyDescriptor($leafId, $array) {
 		foreach ($array as $dependencyDescriptor) {
-			if($dependencyDescriptor->dependantTaskId == $leafId) {
+			if($dependencyDescriptor->dependentTaskId == $leafId) {
 				return true;
 			}
 		}
@@ -242,6 +243,31 @@ class TaskDataTree {
 
 	private function isStartingTask($leaf, $dependency) {
 		// check if the endDate($dependency) >= endDate($leaf);
+		//print date_parse($leaf->getInfo()->getCTask()->task_start_date);
+		print "ciao";
+		$leafDate = new CDate($leaf->getInfo()->getCTask()->task_start_date);
+		print "ciao";
+		$depCTask = new CTask();
+		$depCTask->load($dependency);
+		$depDate = new CDate($depCTask->task_start_date);
+		$comparison = new CDate();
+		print "ciao";
+		print "<br>the comparison between dep: " .
+		$depCTask->task_start_date .
+		" and leaf: " .
+		$leaf->getInfo()->getCTask()->task_start_date . 
+		" is " . $comparison->compare($depDate, $leafDate);
+		
+		//return $comparison->compare($depDate, $leafDate) < 1;
+		
+		$depCTask = new CTask();
+		$depCTask->load($dependency);
+		$dateComparer = new DateComparer($depCTask->task_start_date);
+		print "using a date comparer: " . $dateComparer->compare(
+			$leaf->getInfo()->getCTask()->task_start_date);
+		return $dateComparer->compare(
+			$leaf->getInfo()->getCTask()->task_start_date) != 
+			DateComparisonResult::$great;
 	}
 
 	/**
