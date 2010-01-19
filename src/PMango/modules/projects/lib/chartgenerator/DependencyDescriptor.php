@@ -9,24 +9,51 @@
  */
 class DependencyDescriptor {
 	/**
-	 * 
+	 * Position relative to the entry point for the dependent task
 	 * @var TaskLevelPositionEnum
 	 */
 	var $dependentTaskPositionEnum;
 	
 	/**
-	 * 
+	 * Position relative to the exit point for the needed task
 	 * @var TaskLevelPositionEnum
 	 */
 	var $neededTaskPositionEnum;
 	
+	/**
+	 * task id of the leaf that contains (or is) the dependent task
+	 * present in a finish-to-start relation pair.
+	 * @var integer
+	 */
 	var $dependentTaskId;
+	
+	/**
+	 * task id of the leaf that contains (or is) the needed task
+	 * present in a finish-to-start relation pair.
+	 * @var integer
+	 */
 	var $neededTaskId;
 	
+	/**
+	 * task id of the dependent task that is really associated in a relation
+	 * pair
+	 * @var integer
+	 */
+	var $reallyDependentTaskId;
+	
+	/**
+	 * task id of the needed task that is really associated in a relation
+	 * pair
+	 * @var integer
+	 */
+	var $reallyNeededTaskId;
+	
 	public function __toString() {
-		return "(needed exit: " . $this->neededTaskPositionEnum . 
-		", dep id: " . $this->dependentTaskId . 
-		", dep entry: " . $this->dependentTaskPositionEnum . ")";
+		return "really relation pair = (" . $this->reallyNeededTaskId . ", " . 
+			$this->reallyDependentTaskId . ") / " . 
+			"leaves triple: (needed exit: " . $this->neededTaskPositionEnum . 
+			", dep id: " . $this->dependentTaskId . 
+			", dep entry: " . $this->dependentTaskPositionEnum . ")";
 	}
 }
 

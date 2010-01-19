@@ -51,10 +51,10 @@ foreach ($visibleleaves as $leaf) {
 print "<br>analising deep dependency...";
 $dependencyMap = $tdt->computeDependencyRelationOnVisibleTasks();
 foreach ($dependencyMap as $needed => $dependants) {
-	print "<br>Needed leaf task: " . $needed . 
-	" that has this dependants: " . implode(", ", $dependants);
+	print "<br>Needed leaf task: " . $needed; 
+//	" that has this dependants: " . implode(", ", $dependants);
 	foreach ($dependants as $depDescriptor) {
-		print " / " . $depDescriptor->toString();
+		print "<br> / " . $depDescriptor;
 	}
 }
 

@@ -128,6 +128,7 @@ class TaskDataTree {
 	}
 
 	private function analizeDependencies($task_id, $deepChildren, $leaf, & $result) {
+		print "<br> analising dependency for " . $task_id;
 		$dependencies = CTask::staticGetDependencies($task_id);
 		$array = explode(",", $dependencies);
 		//print_r($array);
@@ -168,7 +169,9 @@ class TaskDataTree {
 					$leafId = $leaf->getInfo()->getTaskID();
 
 					$dependencyDescriptor->dependentTaskId = $leafId;
+					$dependencyDescriptor->reallyDependentTaskId = $task_id;
 						
+					$taskPosition = null;
 					if ($this->isStartingTask($leaf, $task_id)) {
 						$taskPosition = TaskLevelPositionEnum::$starting;
 					}
@@ -177,12 +180,14 @@ class TaskDataTree {
 					}
 						
 					$dependencyDescriptor->dependentTaskPositionEnum = $taskPosition;
+					print $dependencyDescriptor;
 
-					if(!$this->containsDependencyDescriptor(
-					$leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
+//					if(!$this->containsDependencyDescriptor(
+//						$leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
+						
 						$result[$neededLeaf->getInfo()->getTaskID()][] =
-						$dependencyDescriptor;
-					}
+							$dependencyDescriptor;
+//					}
 				}
 			}
 		}
@@ -216,7 +221,9 @@ class TaskDataTree {
 			if (in_array($dependency, $leaf->getInfo()->getCTask()->getDeepChildren())) {
 				//print " Leaf that contains $dependency is " . $leaf->getInfo()->getTaskID();
 				$dependencyDescriptor->neededTaskId = $leaf->getInfo()->getTaskID();
-
+				$dependencyDescriptor->reallyNeededTaskId = $dependency;
+				
+				$taskPosition = null;
 				if ($this->isEndingTask($leaf, $dependency)) {
 					$taskPosition = TaskLevelPositionEnum::$ending;
 				}
@@ -229,8 +236,13 @@ class TaskDataTree {
 			}
 
 			if ($dependency == $leaf->getInfo()->getTaskID()) {
+				
 				$dependencyDescriptor->neededTaskId = $leaf->getInfo()->getTaskID();
+				
+				$dependencyDescriptor->reallyNeededTaskId = $leaf->getInfo()->getTaskID();
+				
 				$dependencyDescriptor->neededTaskPositionEnum = DependencyDescriptor::$ending;
+				
 				return $leaf;
 			}
 		}
@@ -238,33 +250,20 @@ class TaskDataTree {
 	}
 
 	private function isEndingTask($leaf, $dependency) {
-		// check if the endDate($dependency) >= endDate($leaf);
+		$depCTask = new CTask();
+		$depCTask->load($dependency);
+		$dateComparer = new DateComparer($depCTask->task_finish_date);
+
+		return $dateComparer->compare(
+			$leaf->getInfo()->getCTask()->task_finish_date) != 
+			DateComparisonResult::$less;
 	}
 
 	private function isStartingTask($leaf, $dependency) {
-		// check if the endDate($dependency) >= endDate($leaf);
-		//print date_parse($leaf->getInfo()->getCTask()->task_start_date);
-		print "ciao";
-		$leafDate = new CDate($leaf->getInfo()->getCTask()->task_start_date);
-		print "ciao";
-		$depCTask = new CTask();
-		$depCTask->load($dependency);
-		$depDate = new CDate($depCTask->task_start_date);
-		$comparison = new CDate();
-		print "ciao";
-		print "<br>the comparison between dep: " .
-		$depCTask->task_start_date .
-		" and leaf: " .
-		$leaf->getInfo()->getCTask()->task_start_date . 
-		" is " . $comparison->compare($depDate, $leafDate);
-		
-		//return $comparison->compare($depDate, $leafDate) < 1;
-		
 		$depCTask = new CTask();
 		$depCTask->load($dependency);
 		$dateComparer = new DateComparer($depCTask->task_start_date);
-		print "using a date comparer: " . $dateComparer->compare(
-			$leaf->getInfo()->getCTask()->task_start_date);
+		
 		return $dateComparer->compare(
 			$leaf->getInfo()->getCTask()->task_start_date) != 
 			DateComparisonResult::$great;
