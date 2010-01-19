@@ -156,6 +156,8 @@ function BuildImage(placeHolder)
 				echo UserOptionEnumeration::$AlertMarkUserOption.":".$uoc->showAlertMarkUserOption()."<br>";
 				echo UserOptionEnumeration::$ResourcesUserOption.":".$uoc->showResourcesUserOption()."<br>";
 				*/
+				
+				require_once dirname(__FILE__) . '/lib/taskdatatree/UnitTests.php';
 				 
 				?>
 				
