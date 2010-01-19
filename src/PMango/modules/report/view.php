@@ -221,6 +221,10 @@ function check(){
 					<option value="2" <?echo ($_POST['append_order_a']=="2")? "selected":""?>>2
 					<option value="3" <?echo ($_POST['append_order_a']=="3")? "selected":""?>>3
 					<option value="4" <?echo ($_POST['append_order_a']=="4")? "selected":""?>>4
+					<option value="5" <?echo ($_POST['append_order_a']=="5")? "selected":""?>>5
+					<option value="6" <?echo ($_POST['append_order_a']=="6")? "selected":""?>>6
+					<option value="7" <?echo ($_POST['append_order_a']=="7")? "selected":""?>>7
+					
 				</select>
 				</td>
 				<td nowrap="nowrap" align="center">
@@ -261,6 +265,9 @@ function check(){
 					<option value="1" <?echo ($_POST['append_order_b']=="1")? "selected":""?>>1
 					<option value="3" <?echo ($_POST['append_order_b']=="3")? "selected":""?>>3
 					<option value="4" <?echo ($_POST['append_order_b']=="4")? "selected":""?>>4
+					<option value="5" <?echo ($_POST['append_order_b']=="5")? "selected":""?>>5
+					<option value="6" <?echo ($_POST['append_order_b']=="6")? "selected":""?>>6
+					<option value="7" <?echo ($_POST['append_order_b']=="7")? "selected":""?>>7
 				</select>
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
@@ -301,6 +308,9 @@ function check(){
 					<option value="1" <?echo ($_POST['append_order_c']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_c']=="2")? "selected":""?>>2
 					<option value="4" <?echo ($_POST['append_order_c']=="4")? "selected":""?>>4
+					<option value="5" <?echo ($_POST['append_order_c']=="5")? "selected":""?>>5
+					<option value="6" <?echo ($_POST['append_order_c']=="6")? "selected":""?>>6
+					<option value="7" <?echo ($_POST['append_order_c']=="7")? "selected":""?>>7
 				</select>
 				</td>
 				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
@@ -333,7 +343,7 @@ function check(){
 				</td>
 				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
 				<?php echo "<a href='./index.php?m=report&a=view&reset=log&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
-				<?php echo "<a href='./index.php?m=projects&a=view&tab=3&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
+				<?php echo "<a href='./index.php?m=projects&a=view&tab=5&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
 				<select name="append_order_d" class="text">
@@ -341,10 +351,101 @@ function check(){
 					<option value="1" <?echo ($_POST['append_order_d']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_d']=="2")? "selected":""?>>2
 					<option value="3" <?echo ($_POST['append_order_d']=="3")? "selected":""?>>3
+					<option value="5" <?echo ($_POST['append_order_d']=="5")? "selected":""?>>5
+					<option value="6" <?echo ($_POST['append_order_d']=="6")? "selected":""?>>6
+					<option value="7" <?echo ($_POST['append_order_d']=="7")? "selected":""?>>7
 				</select>
 				</td>
 				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
 				<input type="checkbox" name="new_page_d" <?echo ($_POST['new_page_d'])?"checked":"";?>>
+				</td>
+			</tr>
+			<tr >
+				<td nowrap='nowrap'>
+				</td>
+				<td nowrap='nowrap'>
+					<? $task_log = CReport::getLogReport($project_id); ?>
+				</td>
+				<td nowrap='nowrap' colspan="4">
+				</td>
+			</tr>
+			<tr>
+				<td colspan='6'>
+				<br>
+				</td>
+			</tr>
+			<!-- GANTT REPORT -->
+			<tr>
+				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
+					<input type="checkbox" name="add_log" <?echo ($_POST['add_gantt'])?"checked":"";echo ($disable_report[0]['l_report_sdate'])?"":"disabled";?>>
+				</td>
+				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
+					<strong><?php echo $AppUI->_( 'Gantt Chart' );?></strong>
+				</td>
+				<td width="100%" style="border-top: outset #d1d1cd 1px">
+				&nbsp;
+				</td>
+				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
+				<?php echo "<a href='./index.php?m=report&a=view&reset=gantt&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
+				<?php echo "<a href='./index.php?m=projects&a=view&tab=3&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
+				</td>
+				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
+				<select name="append_order_d" class="text">
+					<option value="4" <?echo ($_POST['append_order_e']=="5")? "selected":""?>>5
+					<option value="1" <?echo ($_POST['append_order_e']=="1")? "selected":""?>>1
+					<option value="2" <?echo ($_POST['append_order_e']=="2")? "selected":""?>>2
+					<option value="3" <?echo ($_POST['append_order_e']=="3")? "selected":""?>>3
+					<option value="5" <?echo ($_POST['append_order_e']=="4")? "selected":""?>>4
+					<option value="6" <?echo ($_POST['append_order_e']=="6")? "selected":""?>>6
+					<option value="7" <?echo ($_POST['append_order_e']=="7")? "selected":""?>>7
+				</select>
+				</td>
+				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
+				<input type="checkbox" name="new_page_d" <?echo ($_POST['new_page_e'])?"checked":"";?>>
+				</td>
+			</tr>
+			<tr >
+				<td nowrap='nowrap'>
+				</td>
+				<td nowrap='nowrap'>
+					<? $task_log = CReport::getLogReport($project_id); ?>
+				</td>
+				<td nowrap='nowrap' colspan="4">
+				</td>
+			</tr>
+			<tr>
+				<td colspan='6'>
+				<br>
+				</td>
+			</tr>
+			<!-- WBS REPORT -->
+			<tr>
+				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
+					<input type="checkbox" name="add_log" <?echo ($_POST['add_wbs'])?"checked":"";echo ($disable_report[0]['l_report_sdate'])?"":"disabled";?>>
+				</td>
+				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
+					<strong><?php echo $AppUI->_( 'WBS Chart' );?></strong>
+				</td>
+				<td width="100%" style="border-top: outset #d1d1cd 1px">
+				&nbsp;
+				</td>
+				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
+				<?php echo "<a href='./index.php?m=report&a=view&reset=wbs&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
+				<?php echo "<a href='./index.php?m=projects&a=view&tab=4&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
+				</td>
+				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
+				<select name="append_order_d" class="text">
+					<option value="4" <?echo ($_POST['append_order_f']=="6")? "selected":""?>>6
+					<option value="1" <?echo ($_POST['append_order_f']=="1")? "selected":""?>>1
+					<option value="2" <?echo ($_POST['append_order_f']=="2")? "selected":""?>>2
+					<option value="3" <?echo ($_POST['append_order_f']=="3")? "selected":""?>>3
+					<option value="5" <?echo ($_POST['append_order_f']=="4")? "selected":""?>>4
+					<option value="6" <?echo ($_POST['append_order_f']=="5")? "selected":""?>>5
+					<option value="7" <?echo ($_POST['append_order_f']=="7")? "selected":""?>>7
+				</select>
+				</td>
+				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
+				<input type="checkbox" name="new_page_d" <?echo ($_POST['new_page_f'])?"checked":"";?>>
 				</td>
 			</tr>
 			<tr >
@@ -463,7 +564,7 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 	$pdf = PM_headerPdf($name,$page,$border,$group_name,$image_file);
 	$i=0;
 
-	for($k=1;$k<=4;$k++){
+	for($k=1;$k<=7;$k++){
 	 
 	 	if(isset($_POST['add_properties'])&&($_POST['append_order_a']==$k)){
 			if($task_properties){
@@ -499,6 +600,33 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 			  PM_makeLogPdf($pdf, $project_id, $task_log[0], $task_log[1], $task_log[2], $task_log[3], $task_log[4]);
 			  $pdf->Ln(8);
 			}else $msg.="No Tasks Log Report defined!";
+		}
+		
+		if(isset($_POST['add_gantt'])&&($_POST['append_order_e']==$k)){
+		 	if($task_log!=0){
+			  $i++;
+			  if(isset($_POST['new_page_d'])) $pdf->AddPage($page);
+			  	PM_makeGanttPdf($pdf);
+			  $pdf->Ln(8);
+			}else $msg.="No Gantt Chart Report defined!";
+		}
+		
+		if(isset($_POST['add_wbs'])&&($_POST['append_order_f']==$k)){
+		 	if($task_log!=0){
+			  $i++;
+			  if(isset($_POST['new_page_d'])) $pdf->AddPage($page);
+			  	PM_makeWbsPdf($pdf);
+			  $pdf->Ln(8);
+			}else $msg.="No WBS Chart Report defined!";
+		}
+		
+		if(isset($_POST['add_tasknet'])&&($_POST['append_order_g']==$k)){
+		 	if($task_log!=0){
+			  $i++;
+			  if(isset($_POST['new_page_d'])) $pdf->AddPage($page);
+			 	PM_makeTaskNetworkPdf($pdf);
+			  $pdf->Ln(8);
+			}else $msg.="No Task Network Chart Report defined!";
 		}
 }	
 	

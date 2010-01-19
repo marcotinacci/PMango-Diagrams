@@ -1269,13 +1269,15 @@ function PM_sortChildTask($tasks, $parent, $task_level, $tasks_opened, $tasks_cl
 return $a_task;
 }
 
-function PM_makeGanttPdf(&$pdf,$generatorUrl)
+function PM_makeGanttPdf(&$pdf)
 {
 	global $AppUI, $brd, $orient;
 	
+	$generatorUrl = "report_gif_gantt_".$AppUI->user_id.".gif";
+	
 	$pdf->SetFont('Arial','B',16);
 	//Title
-	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
+	$pdf->Cell(0,10,"Gantt Chart",'LRTB',1,'C');
 	//Logo
 	//$pdf=new FPDF();
 	$pdf->Image($generatorUrl,10,50,190);
@@ -1283,11 +1285,29 @@ function PM_makeGanttPdf(&$pdf,$generatorUrl)
 	$pdf->Ln(10);
 }
 
-function PM_makeWbsPdf(&$pdf,$generatorUrl)
+function PM_makeWbsPdf(&$pdf)
 {
 	global $AppUI, $brd, $orient;
 	
+	$generatorUrl = "./modules/projects/lib/chartGenerator/report_gif_wbs_".$AppUI->user_id.".gif";
+	
 	$pdf->SetFont('Arial','B',16);
+	//Title
+	$pdf->Cell(0,10,"Wbs Chart",'LRTB',1,'C');
+	//Logo
+	//$pdf=new FPDF();
+	$pdf->Image($generatorUrl,10,50,190);
+	//Line break
+	$pdf->Ln(10);
+}
+
+function PM_makeTaskNetworkPdf(&$pdf)
+{
+	global $AppUI, $brd, $orient;
+	
+	$generatorUrl = "report_gif_tn_".$AppUI->user_id.".gif";
+	
+	$pdf->SetFont('Task Network Chart','B',16);
 	//Title
 	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
 	//Logo

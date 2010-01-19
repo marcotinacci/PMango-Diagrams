@@ -246,10 +246,10 @@ class CReport extends CDpObject {
 		$user_id = $AppUI->user_id;
 		$project_id=$pid;
 		
-		$sql="SELECT properties, prop_summary FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
+		$sql="SELECT wbs_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
 		$wbs_param = db_loadList($sql);
 
-		if($wbs_param[0]['properties']!=null){
+		if($wbs_param[0]['wbs_user_options']!=null){
 				$string=str_replace("@","'",$wbs_param[0]['properties']);
 				$summary=explode("|",$wbs_param[0]['prop_summary']);
 				$string2="Project isn't ";
