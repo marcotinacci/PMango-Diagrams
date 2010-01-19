@@ -52,7 +52,7 @@
 ---------------------------------------------------------------------------
 */
 
-GLOBAL  $group_id, $min_view, $m, $a;
+GLOBAL  $group_id, $min_view, $m, $a, $AppUI;
 
 ini_set('memory_limit', $dPconfig['reset_memory_limit']);
 $min_view = defVal( @$min_view, false);
@@ -65,6 +65,21 @@ require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionsChoice.php";
 $uoc = UserOptionsChoice::GetInstance();
 $uoc->setFromArray($_POST);
 $_SESSION['uoc'] = serialize($uoc);
+
+if(dPgetParam( $_POST, 'addreport', '' )==1)
+{
+	$textUoc = $uoc->saveToString();
+	$sql="UPDATE
+			reports
+		  SET
+		  	wbs_user_options='$textUoc'
+		  WHERE 
+		  	reports.project_id=".$project_id." 
+		  AND 
+		  	reports.user_id=".$AppUI->user_id;
+	$db_roles = db_loadList($sql);
+}
+
 ?>
 
 <script language="javascript">
@@ -138,6 +153,41 @@ function BuildImage(placeHolder)
 					onclick='submit();'>
                 </td>		
                 </form>  		
+				<td align="right">
+				<form name='pdf_options' method='POST' action='<?php echo $query_string; ?>'>
+				<?if ($_POST['make_pdf']=="true")	{
+					include('modules/report/makePDF.php');
+
+					$q  = new DBQuery;
+					$q->addQuery('projects.project_name');
+					$q->addTable('projects');
+					$q->addWhere("project_id = $project_id ");
+					$name = $q->loadList();
+					
+					$q  = new DBQuery;
+					$q->addTable('groups');
+					$q->addTable('projects');
+					$q->addQuery('groups.group_name');
+					$q->addWhere("projects.project_group = groups.group_id and projects.project_id = '$project_id'");
+					$group = $q->loadList();
+					
+					foreach ($group as $g){
+						$group_name=$g['group_name'];
+					}
+					
+					$pdf = PM_headerPdf($name[0]['project_name'],'P',1,$group_name);
+					PM_makeWBSPdf($pdf);
+					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 1);
+					?>
+					<a href="<?echo $filename;?>"><img src="./modules/report/images/pdf_report.gif" alt="PDF Report" border="0" align="absbottom"></a><?
+				}?>
+				
+				
+					<input type="hidden" name="make_pdf" value="false" />
+					<input type="button" class="button" value="<?php echo $AppUI->_( 'Make PDF ' );?>" onclick='document.pdf_options.make_pdf.value="true"; document.pdf_options.submit();'>
+					<input type="hidden" name="addreport" value="-1" />
+					<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report ' );?>" onclick='document.pdf_options.addreport.value="1"; document.pdf_options.submit();'>
+				</td>
 			</tr>
 		</table> 
 				
