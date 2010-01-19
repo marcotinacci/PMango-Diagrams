@@ -89,16 +89,16 @@ function getPageWidth()
 	//IE
 	if(!window.innerWidth)
 	{
-		return document.body.clientWidth-40;
+		return document.body.clientWidth-45;
 	}
 	//w3c
-	return window.innerWidth-40;
+	return window.innerWidth-45;
 }
 
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	divImage.innerHTML = "<img style='max-width:"+getPageWidth()+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 </script>
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
@@ -108,6 +108,9 @@ function BuildImage(placeHolder)
 			<tr>
 				<form name="editFrm" method="POST" action="?<?php echo "m=$m&a=$a&project_id=$project_id"; ?>">
                 <td valign="top" align="left" nowrap="nowrap">
+                <?php
+					print $uoc->saveToString();
+				?>	
                 	<b>Show:</b>&nbsp;
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">                          

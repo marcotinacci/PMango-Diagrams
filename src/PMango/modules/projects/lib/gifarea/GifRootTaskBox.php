@@ -31,7 +31,8 @@ class GifRootTaskBox extends GifArea
 		/*
 		$tName="";
 		if($task->getCollapsed())
-		$tName="+ ";*/
+		$tName="+ ";
+		*/
 		$tName = $task->getInfo()->getWBSId();
 		if($uoc->showTaskNameUserOption())
 		$tName .= " ".$task->getInfo()->getTaskName();

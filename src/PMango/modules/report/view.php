@@ -144,7 +144,7 @@ if($_GET['reset']){
 }
 
 
-$sql="SELECT p_report_sdate, a_report_sdate, l_report_sdate, properties FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
+$sql="SELECT p_report_sdate, a_report_sdate, l_report_sdate, properties, gantt_user_options, wbs_user_options, tasknet_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
 $disable_report = db_loadList($sql);
 ?>
 
@@ -171,9 +171,14 @@ function showhide(layer_ref) {
 }
 
 function check(){
-	if((!document.make_pdf_options.add_properties.checked)&&(!document.make_pdf_options.add_planned.checked)&&(!document.make_pdf_options.add_actual.checked)&&(!document.make_pdf_options.add_log.checked)){
-			alert("Please, select a Report.");
-	}else {document.make_pdf_options.submit();}
+	if((!document.make_pdf_options.add_properties.checked)&&(!document.make_pdf_options.add_planned.checked)&&(!document.make_pdf_options.add_actual.checked)&&(!document.make_pdf_options.add_log.checked)&&(!document.make_pdf_options.add_gantt.checked)&&(!document.make_pdf_options.add_wbs.checked))
+	{
+		alert("Please, select a Report.");
+	}
+	else
+	{
+		document.make_pdf_options.submit();
+	}
 }
 </script>
 
@@ -377,7 +382,7 @@ function check(){
 			<!-- GANTT REPORT -->
 			<tr>
 				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
-					<input type="checkbox" name="add_log" <?echo ($_POST['add_gantt'])?"checked":"";echo ($disable_report[0]['l_report_sdate'])?"":"disabled";?>>
+					<input type="checkbox" name="add_gantt" <?echo ($_POST['add_gantt'])?"checked":"";echo ($disable_report[0]['gantt_user_options'])?"":"disabled";?>>
 				</td>
 				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
 					<strong><?php echo $AppUI->_( 'Gantt Chart' );?></strong>
@@ -390,7 +395,7 @@ function check(){
 				<?php echo "<a href='./index.php?m=projects&a=view&tab=3&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
-				<select name="append_order_d" class="text">
+				<select name="append_order_e" class="text">
 					<option value="4" <?echo ($_POST['append_order_e']=="5")? "selected":""?>>5
 					<option value="1" <?echo ($_POST['append_order_e']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_e']=="2")? "selected":""?>>2
@@ -401,14 +406,14 @@ function check(){
 				</select>
 				</td>
 				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
-				<input type="checkbox" name="new_page_d" <?echo ($_POST['new_page_e'])?"checked":"";?>>
+				<input type="checkbox" name="new_page_e" <?echo ($_POST['new_page_e'])?"checked":"";?>>
 				</td>
 			</tr>
 			<tr >
 				<td nowrap='nowrap'>
 				</td>
 				<td nowrap='nowrap'>
-					<? $task_log = CReport::getLogReport($project_id); ?>
+					<? $task_log = CReport::getWBSReport($project_id); ?>
 				</td>
 				<td nowrap='nowrap' colspan="4">
 				</td>
@@ -421,7 +426,7 @@ function check(){
 			<!-- WBS REPORT -->
 			<tr>
 				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
-					<input type="checkbox" name="add_log" <?echo ($_POST['add_wbs'])?"checked":"";echo ($disable_report[0]['l_report_sdate'])?"":"disabled";?>>
+					<input type="checkbox" name="add_wbs" <?echo ($_POST['add_wbs'])?"checked":"";echo ($disable_report[0]['wbs_user_options'])?"":"disabled";?>>
 				</td>
 				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
 					<strong><?php echo $AppUI->_( 'WBS Chart' );?></strong>
@@ -434,7 +439,7 @@ function check(){
 				<?php echo "<a href='./index.php?m=projects&a=view&tab=4&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
-				<select name="append_order_d" class="text">
+				<select name="append_order_f" class="text">
 					<option value="4" <?echo ($_POST['append_order_f']=="6")? "selected":""?>>6
 					<option value="1" <?echo ($_POST['append_order_f']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_f']=="2")? "selected":""?>>2
@@ -445,14 +450,14 @@ function check(){
 				</select>
 				</td>
 				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
-				<input type="checkbox" name="new_page_d" <?echo ($_POST['new_page_f'])?"checked":"";?>>
+				<input type="checkbox" name="new_page_f" <?echo ($_POST['new_page_f'])?"checked":"";?>>
 				</td>
 			</tr>
 			<tr >
 				<td nowrap='nowrap'>
 				</td>
 				<td nowrap='nowrap'>
-					<? $task_log = CReport::getLogReport($project_id); ?>
+					<? $task_log = CReport::getWBSReport($project_id); ?>
 				</td>
 				<td nowrap='nowrap' colspan="4">
 				</td>
@@ -603,30 +608,25 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 		}
 		
 		if(isset($_POST['add_gantt'])&&($_POST['append_order_e']==$k)){
-		 	if($task_log!=0){
 			  $i++;
-			  if(isset($_POST['new_page_d'])) $pdf->AddPage($page);
+			  if(isset($_POST['new_page_e'])) $pdf->AddPage($page);
 			  	PM_makeGanttPdf($pdf);
 			  $pdf->Ln(8);
-			}else $msg.="No Gantt Chart Report defined!";
 		}
 		
 		if(isset($_POST['add_wbs'])&&($_POST['append_order_f']==$k)){
-		 	if($task_log!=0){
 			  $i++;
-			  if(isset($_POST['new_page_d'])) $pdf->AddPage($page);
+			  print "Ciao";
+			  if(isset($_POST['new_page_f'])) $pdf->AddPage($page);
 			  	PM_makeWbsPdf($pdf);
 			  $pdf->Ln(8);
-			}else $msg.="No WBS Chart Report defined!";
 		}
 		
 		if(isset($_POST['add_tasknet'])&&($_POST['append_order_g']==$k)){
-		 	if($task_log!=0){
 			  $i++;
-			  if(isset($_POST['new_page_d'])) $pdf->AddPage($page);
+			  if(isset($_POST['new_page_g'])) $pdf->AddPage($page);
 			 	PM_makeTaskNetworkPdf($pdf);
 			  $pdf->Ln(8);
-			}else $msg.="No Task Network Chart Report defined!";
 		}
 }	
 	

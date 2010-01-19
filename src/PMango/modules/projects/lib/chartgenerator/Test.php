@@ -1,9 +1,10 @@
 <?php
 
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+$file=fopen("./errors.txt","w");
 function myerrorhandler($errno,$errstr,$errfile,$errline)
 {
-	$file=fopen("./errors.txt","w");
+	global $file;
 	fwrite($file,$errno . " " . $errstr . " " . $errfile  . " " . $errline . "\n");
 	return true;
 }

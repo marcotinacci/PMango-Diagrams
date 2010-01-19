@@ -327,7 +327,10 @@ class WBSChartGenerator extends ChartGenerator{
 		foreach($areas as $a)
 			$a->drawOn();
 		$this->gif->draw();
-		$this->gif->saveToFile("./WBSTree.gif");
+		
+		global $AppUI;
+		$generatorUrl = "report_gif_wbs_".$AppUI->user_id.".gif";
+		$this->gif->saveToFile($generatorUrl);
 		
 	}
 	
