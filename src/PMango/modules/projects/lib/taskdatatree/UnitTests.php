@@ -53,10 +53,15 @@ $dependencyMap = $tdt->computeDependencyRelationOnVisibleTasks();
 foreach ($dependencyMap as $needed => $dependants) {
 	print "<br>Needed leaf task: " . $needed; 
 //	" that has this dependants: " . implode(", ", $dependants);
-	foreach ($dependants as $depDescriptor) {
-		print "<br> / " . $depDescriptor;
+	foreach ($dependants as $depDescriptorId => $descriptorsArray) {
+		print "<br> / for " . $depDescriptorId . " exists these descriptors: ";
+		foreach($descriptorsArray as $descriptor) {
+			print "<br>" . $descriptor;
+		}
 	}
 }
+
+die("almeno sono arrivato fino a qui");
 
 print "<br>Puning the unvisible tasks...";
 $tdt->getVisibleTree();

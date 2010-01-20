@@ -185,12 +185,37 @@ class TaskDataTree {
 //					if(!$this->containsDependencyDescriptor(
 //						$leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
 						
-						$result[$neededLeaf->getInfo()->getTaskID()][] =
-							$dependencyDescriptor;
+					$this->updateResultDictionary(
+						$result, 
+						$neededLeaf->getInfo()->getTaskID(), 
+						$leafId, 
+						$dependencyDescriptor);
+						
+//						$result[$neededLeaf->getInfo()->getTaskID()][] =
+//							$dependencyDescriptor;
 //					}
 				}
 			}
 		}
+	}
+	
+	private function updateResultDictionary(
+		& $resultDictionary, $neededLeafID, $dependentLeafID, $dependencyDescriptor) {
+		
+		if(!array_key_exists($neededLeafID, $resultDictionary)) {
+			$resultDictionary[$neededLeafID] = array();
+			$resultDictionary[$neededLeafID][$dependentLeafID] = array();
+			//$result[$neededLeafID][$dependentLeafID][] = $dependencyDescriptor;
+		}
+		else {
+			if(!array_key_exists($dependentLeafID, $resultDictionary[$neededLeafID])) {
+				$resultDictionary[$neededLeafID][$dependentLeafID] = array();
+			}
+			
+			
+		}
+		
+		$resultDictionary[$neededLeafID][$dependentLeafID][] = $dependencyDescriptor;
 	}
 
 	private function containsDependencyDescriptor($leafId, $array) {
@@ -241,7 +266,7 @@ class TaskDataTree {
 				
 				$dependencyDescriptor->reallyNeededTaskId = $leaf->getInfo()->getTaskID();
 				
-				$dependencyDescriptor->neededTaskPositionEnum = DependencyDescriptor::$ending;
+				$dependencyDescriptor->neededTaskPositionEnum = TaskLevelPositionEnum::$ending;
 				
 				return $leaf;
 			}
