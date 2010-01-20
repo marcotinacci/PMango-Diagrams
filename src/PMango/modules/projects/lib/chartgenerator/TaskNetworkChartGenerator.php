@@ -73,7 +73,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 		AbstractTaskDataDrawer::$userOptionChoice = $userOptionChoice;
 
-		print "<br>the best width for taskboxes is " . AbstractTaskDataDrawer::$width;
+		//print "<br>the best width for taskboxes is " . AbstractTaskDataDrawer::$width;
 
 		// building the canvas
 		$this->chart = new GifImage(1000, 800);
@@ -200,21 +200,27 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 		// building the internal graph relation
 		foreach ($tdt->computeDependencyRelationOnVisibleTasks() as
-		$neededTaskId => $dependantTasksIds) {
+		$neededTaskId => $dependantTasksdictionary) {
+			
 			$this->checkDependencyExistence($tdt->selectTask($neededTaskId),
 			$analizedDependency);
 
-			foreach ($dependantTasksIds as $dependantId) {
+			foreach ($dependantTasksdictionary as $dependantId => $dependencydescriptors) {
 				$this->checkDependencyExistence($tdt->selectTask($dependantId),
-				$analizedDependency);
+					$analizedDependency);
 
 				// update the needed task adding a child
 				$analizedDependency[$neededTaskId]->_dependencies[] =
-				$analizedDependency[$dependantId];
+					$analizedDependency[$dependantId];
 
 				// update the dependant task adding a father
 				$analizedDependency[$dependantId]->_fathersDependencies[] =
-				$analizedDependency[$neededTaskId];
+					$analizedDependency[$neededTaskId];
+				
+				// setting the dependencies descriptors array relative to
+				// a pair ($neededTaskid, $dependantTaskId)
+				$analizedDependency[$dependantId]->_dependencyDescriptors = 
+					$dependencydescriptors;
 			}
 		}
 
@@ -398,6 +404,7 @@ class DefaultDependency implements IDependency {
 	var $_drawer;
 	var $_fathersDependencies = array();
 	var $_dependencyType;
+	var $_dependencyDescriptors;
 
 	/**
 	 * constructor

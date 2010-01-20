@@ -121,14 +121,20 @@ class TaskDataTree {
 				$this->analizeDependencies($child, $deepChildren, $leaf, $result);
 			}
 
-			// the following line is correct only if the $leaf is atomic
-			$this->analizeDependencies($leaf->getInfo()->getTaskID(), array(), $leaf, $result);
+			// analizing the dependencies for the leaf itself. Pass the deepChildren
+			// vector because dependencies between father and one of it's deep children
+			// must not be shown. 
+			$this->analizeDependencies(
+				$leaf->getInfo()->getTaskID(), 
+				$deepChildren, 
+				$leaf, 
+				$result);
 		}
 		return $result;
 	}
 
 	private function analizeDependencies($task_id, $deepChildren, $leaf, & $result) {
-		print "<br> analising dependency for " . $task_id;
+		// print "<br> analising dependency for " . $task_id;
 		$dependencies = CTask::staticGetDependencies($task_id);
 		$array = explode(",", $dependencies);
 		//print_r($array);
@@ -150,7 +156,8 @@ class TaskDataTree {
 
 			// if the neededTask is in the same subtree of
 			// $task_id, I haven't nothing to do
-			if(!in_array($dependency, $deepChildren)) {
+			if(!in_array($dependency, $deepChildren) &&
+				$dependency != $leaf->getInfo()->getTaskID()) {
 				//print $dependency . " is a deep child of " . $leaf->getInfo()->getTaskName();
 				//continue;
 				$dependencyDescriptor = new DependencyDescriptor();
@@ -158,9 +165,9 @@ class TaskDataTree {
 				$neededLeaf = $this->searchNeededLeafThatHaveInDeepChildren(
 				$dependency, $dependencyDescriptor);
 
-				if(!$neededLeaf) {
-					print "no parent left found for : " . $dependency;
-				}
+//				if(!$neededLeaf) {
+//					//print "no parent left found for : " . $dependency;
+//				}
 				//print " the parent needed leaf is: " . $neededLeaf->getInfo()->getTaskName();
 				if($neededLeaf != false) {
 					if(!isset($result[$neededLeaf->getInfo()->getTaskID()])) {
@@ -200,7 +207,10 @@ class TaskDataTree {
 	}
 	
 	private function updateResultDictionary(
-		& $resultDictionary, $neededLeafID, $dependentLeafID, $dependencyDescriptor) {
+		& $resultDictionary, 
+		$neededLeafID, 
+		$dependentLeafID, 
+		$dependencyDescriptor) {
 		
 		if(!array_key_exists($neededLeafID, $resultDictionary)) {
 			$resultDictionary[$neededLeafID] = array();
@@ -210,9 +220,7 @@ class TaskDataTree {
 		else {
 			if(!array_key_exists($dependentLeafID, $resultDictionary[$neededLeafID])) {
 				$resultDictionary[$neededLeafID][$dependentLeafID] = array();
-			}
-			
-			
+			}	
 		}
 		
 		$resultDictionary[$neededLeafID][$dependentLeafID][] = $dependencyDescriptor;
@@ -235,7 +243,7 @@ class TaskDataTree {
 	 * @return TaskData if the leaf is found, else false
 	 */
 	public function searchNeededLeafThatHaveInDeepChildren(
-	$dependency, & $dependencyDescriptor) {
+		$dependency, & $dependencyDescriptor) {
 		//print " saerching parent leaf of " . $dependency . " ";
 		foreach ($this->getVisibleLeaves() as $leaf) {
 			//			if ($leaf->getInfo()->getTaskID() == $butLeaf->getInfo()->getTaskID() &&
