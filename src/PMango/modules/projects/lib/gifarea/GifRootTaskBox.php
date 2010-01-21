@@ -16,9 +16,9 @@ class GifRootTaskBox extends GifArea
 	private $marked;
 	private $effectiveHeight=0;
 
-	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $task)
+	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $project)
 	{
-		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight*7);
+		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight);
 
 		$row=$singleRowHeight;
 		//$module = $height%6;
@@ -28,16 +28,10 @@ class GifRootTaskBox extends GifArea
 
 		//$uoc = new UserOptionsChoice();
 		$uoc = UserOptionsChoice::GetInstance();
-		/*
-		$tName="";
-		if($task->getCollapsed())
-		$tName="+ ";
-		*/
-		$tName = $task->getInfo()->getWBSId();
-		if($uoc->showTaskNameUserOption())
-		$tName .= " ".$task->getInfo()->getTaskName();
-		$this->subAreas['TaskName_box'] = new GifBoxedLabel($gifImage,$this->x,$curY,$width,$row,$tName,$fontHeight);
-		$this->subAreas['TaskName_box']->getLabel()->setBold(true);
+		
+		$tName = $project->getProjectName();
+		$this->subAreas['ProjectName_box'] = new GifBoxedLabel($gifImage,$this->x,$curY,$width,$row,$tName,$fontHeight);
+		$this->subAreas['ProjectName_box']->getLabel()->setBold(true);
 		$curY += $row;
 
 		/*
@@ -144,9 +138,10 @@ class GifRootTaskBox extends GifArea
 			$this->subAreas['Percentage']= new GifProgressBar($gifImage,$this->x, $curY ,$width, intval($row/4),$task->getInfo()->getPercentage());
 			$curY += intval($row/4);
 		}
+		*/
 		$this->subAreas['CompleteBox'] = new GifBox($gifImage,$this->x,$this->y,$width,$curY-$this->y);
 		$this->subAreas['CompleteBox']->setBorderThickness(2);
-
+		/*
 		if($uoc->showAlertMarkUserOption())
 		{
 			if($task->isMarked() == DeltaInfoEnum::$good_news)
@@ -167,7 +162,8 @@ class GifRootTaskBox extends GifArea
 
 	public function setFontSize($size)
 	{
-		$this->subAreas['TaskName_box']->getLabel()->setFontSize($size);
+		$this->subAreas['ProjectName_box']->getLabel()->setFontSize($size);
+		/*
 		$this->subAreas['PlannedTimeFrame_box_start']->getLabel()->setFontSize($size);
 		$this->subAreas['PlannedTimeFrame_box_finish']->getLabel()->setFontSize($size);
 		$this->subAreas['PlannedData_box_D']->getLabel()->setFontSize($size);
@@ -186,63 +182,12 @@ class GifRootTaskBox extends GifArea
 			$i++;
 			$index = "ResourceLabel_".$i;
 		}
+		*/
 	}
 
 	public function getEffectiveHeight()
 	{
 		return $this->effectiveHeight;
-	}
-
-	public static function getTaskBoxesBestWidth($taskDataTree,$userOptionChoise,$fontSize,$font)
-	{
-		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance();
-		$max = 0;
-		$taskBoxes=$taskDataTree->deepVisit();
-		foreach($taskBoxes as $taskBox)
-		{
-			$wbsIdWidth = GifLabel::getPixelWidthOfText($taskBox->getInfo()->getWBSId(),$fontSize,$font);
-
-			$boxMax = $wbsIdWidth;
-			if($uoc->showTaskNameUserOption())
-				$boxMax*=2;
-
-			if($uoc->showActualTimeFrameUserOption() || $uoc->showPlannedTimeFrameUserOption())
-			{
-				$dateWidth = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font);
-				if($dateWidth > $boxMax)
-					$boxMax = $dateWidth*2+5;
-			}
-			
-			if($uoc->showActualDataUserOption())
-			{
-				$actualData = $taskBox->getInfo()->getActualData();
-				$actualTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($actualData,$fontSize,$font);
-				if($actualTripleW > $boxMax)
-				$boxMax = $actualTripleW;
-			}
-
-			if($uoc->showPlannedDataUserOption())
-			{
-				$plannedData = $taskBox->getInfo()->getPlannedData();
-				$plannedTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($plannedData,$fontSize,$font);
-				if($plannedTripleW > $boxMax)
-				$boxMax = $plannedTripleW;
-			}
-			if($boxMax > $max)
-			$max = $boxMax;
-		}
-		return $max+10;
-	}
-
-	private static function getBestWidthOfMultipleDataRow($data,$fontSize,$font)
-	{
-		$actW=array();
-		foreach($data as $value)
-		{
-			$actW[] = GifLabel::getPixelWidthOfText($value,$fontSize,$font);
-		}
-		return sizeOf($actW)*(max($actW)+5);
 	}
 
 	public function getTopMiddlePoint()

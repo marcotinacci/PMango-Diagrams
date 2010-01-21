@@ -171,7 +171,7 @@ class GifLabel extends GifArea
 		return $res;
 	}
 
-	public static function getPixelWidthOfText($txt,$fontSize,$font=FF_VERDANA)
+	public static function getPixelWidthOfText($txt,$fontSize=10,$font=FF_VERDANA)
 	{
 		$offset = $fontSize*(8/10);
 		return intval(strlen(GifLabel::DeleteSpecialCharacters($txt))*$offset);
