@@ -1,4 +1,7 @@
 <?php 
+
+require_once dirname(__FILE__).'/../../../../classes/date.class.php';
+
 class DateComparer {
 	private $date;
 	private $comparison;

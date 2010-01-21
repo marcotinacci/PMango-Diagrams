@@ -117,7 +117,7 @@ class DataArrayBuilder {
 
 	public function buildActualEffort() {
 		$this->_associativeArray[DataArrayKeyEnumeration::$act_effort] =
-		$this->_CTaskObject->getActualEffort($this->_CTaskObject->task_id, null);
+		$this->_CTaskObject->getActualEffort($this->_CTaskObject->task_id, $this->_CTaskObject->getChild());
 	}
 
 	public function buildPlannedCost() {
@@ -127,7 +127,7 @@ class DataArrayBuilder {
 	
 	public function buildActualCost() {
 		$this->_associativeArray[DataArrayKeyEnumeration::$act_cost] =
-		$this->_CTaskObject->getActualCost($this->_CTaskObject->task_id, null);
+		$this->_CTaskObject->getActualCost($this->_CTaskObject->task_id, $this->_CTaskObject->getChild());
 	}
 
 	public function buildPercentage() {
