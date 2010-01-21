@@ -18,7 +18,7 @@ class GifTaskBox extends GifArea
 
 	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $task)
 	{
-		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight*7);
+		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight);
 
 		$row=$singleRowHeight;
 		//$module = $height%6;
@@ -48,7 +48,7 @@ class GifTaskBox extends GifArea
 		$tripleSubBoxWidth = intval($width/3);
 		$tripleSubBoxPixelCarry = $width%3;
 
-		$date_format = "o.m.d";
+		$date_format = "Y.m.d";
 		
 		if($uoc->showPlannedTimeFrameUserOption())
 		{
