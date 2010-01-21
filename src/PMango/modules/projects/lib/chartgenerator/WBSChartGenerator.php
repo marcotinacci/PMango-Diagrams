@@ -1,9 +1,12 @@
 <?php
 
 require_once dirname(__FILE__)."/../gifarea/GifTaskBox.php";
+require_once dirname(__FILE__)."/../gifarea/GifRootTaskBox.php";
+require_once dirname(__FILE__)."/../taskdatatree/Project.php";
 require_once dirname(__FILE__)."/../gifarea/DrawingHelper.php";
-require_once dirname(__FILE__)."/./ChartGenerator.php";
+require_once dirname(__FILE__)."/ChartGenerator.php";
 require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
+
 
 /**
  * Questa classe implementa il metodo di generazione delle WBS
@@ -80,9 +83,10 @@ class WBSChartGenerator extends ChartGenerator{
 		$nodi=array();
 		
 		//Il vettore $nodi viene riempito con tutti i nodi del tree presi con una visita in profondità
-		$nodi=$treeData->getVisibleTree()->deepVisit();
+		$nodi=$treeData->visibleDeepVisit();
+		
 		//Il vettore $leav viene riempito con tutte le foglie del tree
-		$leav = $treeData->getLeaves();
+		$leav = $treeData->getVisibleLeaves();
 				
 		//Viene contato e memorizzato il numero di foglie presenti
 		$this->setNumLeaves(Count($leav));
@@ -185,8 +189,9 @@ class WBSChartGenerator extends ChartGenerator{
 					//$cord2 = ((($j)*$dimBlocco));
 					
 					//Nodo radice creato dallo stub task 
-					$t = new StubTask();
-					$td = new TaskData($t);
+					$project = new Project();
+					$project->loadProjectInfo();
+					$rootWidth = GifLabel::getPixelWidthOfText($project->getProjectName())+20;
 					
 					/*
 					 *  Per posizionare il nodo radice prende le coordinate del primo e
@@ -196,7 +201,7 @@ class WBSChartGenerator extends ChartGenerator{
 					$cordinata2=$Link[1][Count($Link[1])-1]->getX();
 					$cordinata=$cordinata1+($cordinata2-$cordinata1)/2;
 																		
-					$areas[$l] = new GifTaskBox($this->gif,$cordinata-($this->boxWidth/2),$alt,$this->boxWidth,30,$td);
+					$areas[$l] = new GifRootTaskBox($this->gif,$cordinata-($this->boxWidth/2),$alt,$rootWidth,30,$project);
 					for($k = 0;$k < $occorrenze;$k++)
 					{
 						$leav[$j+$k]=$leav[$j+$k]->getParent();
