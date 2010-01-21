@@ -11,6 +11,7 @@ require_once dirname(__FILE__)."/UserOptionEnumeration.php";
 require_once dirname(__FILE__)."/TimeRange.php";
 require_once dirname(__FILE__)."/TimeGrainEnum.php";
 require_once dirname(__FILE__)."/ImageDimension.php";
+require_once dirname(__FILE__)."/../chartgenerator/ChartTypesEnum.php";
 
 /**
  *
@@ -30,6 +31,7 @@ require_once dirname(__FILE__)."/ImageDimension.php";
 class UserOptionsChoice {
 
 	private static $instance;
+	private $instanceName = "";
 	// preparing the query to fetch the root task
 	var	$map;
 
@@ -305,15 +307,36 @@ class UserOptionsChoice {
 	}
 
 
-	public static function &GetInstance() {
-		if(!isset(UserOptionsChoice::$instance) && isset($_SESSION['uoc']))
+	public static function &GetInstance($instanceName="default") {
+		if(!isset(UserOptionsChoice::$instance) && isset($_SESSION["uoc_$instanceName"]))
 		{
-			UserOptionsChoice::$instance = unserialize($_SESSION['uoc']);
+			UserOptionsChoice::$instance = unserialize($_SESSION["uoc_$instanceName"]);
 		}
 		if(!isset(UserOptionsChoice::$instance)) {
+			UserOptionsChoice::$instance->instanceName = $instanceName;
 			UserOptionsChoice::$instance = new UserOptionsChoice();
 		}
+		//CONTROLLO SE DEVE ESSERE AGGIORNATA DA UN QUALCHE FORM
+		if(isset($_GET["REFRESH_UOC_$instanceName"]))
+		{
+			UserOptionsChoice::$instance->setFromArray($_GET);
+		}
+		else if(isset($_POST["REFRESH_UOC_$instanceName"]))
+		{
+			UserOptionsChoice::$instance->setFromArray($_POST);
+		}
 		return UserOptionsChoice::$instance;
+	}
+	
+	public function saveOnSession()
+	{
+		$_SESSION["uoc_".$this->instanceName] = serialize(UserOptionsChoice::$instance);
+	}
+	
+	public function getRefreshHiddenField()
+	{
+		$instanceName = $this->instanceName;
+		return "<input type='hidden' name='REFRESH_UOC_$instanceName' value='1'>";
 	}
 
 	/**

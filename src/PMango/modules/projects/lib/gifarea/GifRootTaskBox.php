@@ -27,7 +27,7 @@ class GifRootTaskBox extends GifArea
 		$curY = $this->y;
 
 		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance();
+		$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		
 		$tName = $project->getProjectName();
 		$this->subAreas['ProjectName_box'] = new GifBoxedLabel($gifImage,$this->x,$curY,$width,$row,$tName,$fontHeight);

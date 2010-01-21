@@ -60,11 +60,11 @@ $project_id = defVal( @$_GET['project_id'], 0);
 
 require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php"; 
 require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionsChoice.php";
+require_once dirname(__FILE__)."/lib/chartgenerator/ChartTypesEnum.php";
 
 //$uoc = new UserOptionsChoice();
-$uoc = UserOptionsChoice::GetInstance();
-$uoc->setFromArray($_POST);
-$_SESSION['uoc'] = serialize($uoc);
+$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
+$uoc->saveOnSession();
 
 if(dPgetParam( $_POST, 'addreport', '' )==1)
 {
@@ -98,7 +98,8 @@ function getPageWidth()
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$WBS."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 </script>
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
@@ -145,6 +146,7 @@ function BuildImage(placeHolder)
 					width: <input size="4" type="text" name="<?php echo UserOptionEnumeration::$CustomWidthUserOption; ?>" value="<?php echo $wh['width'];?>"/> px <br>
 					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowWidthUserOption; ?>" value="0"/>
 					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowHeightUserOption; ?>" value="0"/>
+					<?php print $uoc->getRefreshHiddenField();?>
                 </td>
                 <td width="100%"></td>
                 <td valign="bottom" align="right">

@@ -9,6 +9,7 @@ require_once dirname(__FILE__)."/GifProgressBar.php";
 require_once dirname(__FILE__)."/GifMark.php";
 require_once dirname(__FILE__)."/GifBoxedLabel.php";
 require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
+require_once dirname(__FILE__)."/../chartgenerator/ChartTypesEnum.php";
 
 class GifTaskBox extends GifArea
 {
@@ -29,7 +30,7 @@ class GifTaskBox extends GifArea
 		$curY = $this->y;
 
 		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance();
+		$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		
 		$tName="";
 		if($task->getCollapsed())
@@ -204,7 +205,7 @@ class GifTaskBox extends GifArea
 	public static function getTaskBoxesBestWidth($taskDataTree,$userOptionChoise,$fontSize,$font)
 	{
 		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance();
+		$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		$max = 0;
 		$taskBoxes=$taskDataTree->visibleDeepVisit();
 		foreach($taskBoxes as $taskBox)
