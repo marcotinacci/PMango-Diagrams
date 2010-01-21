@@ -850,17 +850,14 @@ class CTask extends CDpObject {
 
 	function getAssignedUsers(){
 		$sql="
-		 SELECT u.user_last_name AS LastName, ut.effort AS Effort, pr.proles_name AS Role,  IF( task_log_creator IS NULL , 0, sum( tl.task_log_hours ) ) AS ActualEffort
-FROM users AS u, (
-user_tasks AS ut
-LEFT OUTER JOIN task_log AS tl ON ut.task_id = tl.task_log_task
-), project_roles AS pr
-WHERE ut.task_id = ".$this->task_id." AND ut.user_id = u.user_id
-AND pr.proles_id = ut.proles_id
-AND (tl.task_log_creator IS NULL OR ut.user_id = tl.task_log_creator) 
-GROUP BY (
-u.user_id
-)";
+		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role, IF( task_log_creator IS NULL , 0, sum( task_log.task_log_hours ) ) AS ActualEffort
+		 FROM users, user_tasks
+		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
+		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
+ 		 WHERE user_tasks.task_id = ".$this->task_id."
+		 AND user_tasks.user_id = users.user_id
+		 AND project_roles.proles_id = user_tasks.proles_id
+		 GROUP BY (users.user_id)";
 
 		$list = db_loadList($sql);
 		return $list;
