@@ -2,8 +2,6 @@
 
 require_once dirname(__FILE__).'/LineStyle.php';
 
-$debugging = false;
-
 class DrawingHelper
 {
 	/* This method draw a line from the point ($x1,$y1) to point ($x2,$y2). */
@@ -582,7 +580,7 @@ class DrawingHelper
 		return $points;
 	}
 
-	private function debug($msg)
+	public static function debug($msg)
 	{
 		global $debugging;
 		if($debugging)

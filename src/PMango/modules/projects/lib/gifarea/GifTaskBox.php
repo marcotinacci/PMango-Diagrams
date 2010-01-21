@@ -20,6 +20,8 @@ class GifTaskBox extends GifArea
 	{
 		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight);
 
+		DrawingHelper::debug("<b>Entered in ".$task->getInfo()->getTaskName()."</b>");
+		
 		$row=$singleRowHeight;
 		//$module = $height%6;
 		$fontHeight = $row/3;
@@ -30,7 +32,6 @@ class GifTaskBox extends GifArea
 		$uoc = UserOptionsChoice::GetInstance();
 		
 		$tName="";
-		//print $task->getCollapsed()?1:0;
 		if($task->getCollapsed())
 		{
 			$tName="+ ";
@@ -59,7 +60,6 @@ class GifTaskBox extends GifArea
 			$this->subAreas['PlannedTimeFrame_box_finish'] = new GifBoxedLabel($gifImage,$this->x+$doubleSubBoxWidth,$curY,$doubleSubBoxWidth,$row,$PlannedTimeFrame_finish,$fontHeight);
 			$curY += $row;
 		}
-
 		if($uoc->showPlannedDataUserOption())
 		{
 			$planned = $task->getInfo()->getPlannedData();
@@ -71,7 +71,6 @@ class GifTaskBox extends GifArea
 			$this->subAreas['PlannedData_box_Money'] = new GifBoxedLabel($gifImage,$this->x+2*$tripleSubBoxWidth,$curY,$tripleSubBoxWidth+$tripleSubBoxPixelCarry,$row,$Planned_Money,$fontHeight);
 			$curY += $row;
 		}
-
 		if($uoc->showResourcesUserOption())
 		{
 			$res=$task->getInfo()->getResources();
@@ -122,7 +121,6 @@ class GifTaskBox extends GifArea
 			$this->subAreas['ActualTimeFrame_box_finish']->getLabel()->setUnderline(true);
 			$curY += $row;
 		}
-
 		if($uoc->showActualDataUserOption())
 		{
 			$actual = $task->getInfo()->getActualData();
@@ -139,7 +137,6 @@ class GifTaskBox extends GifArea
 			$this->subAreas['ActualData_box_Money']->getLabel()->setUnderline(true);
 			$curY += $row;
 		}
-
 		if($uoc->showActualDataUserOption())
 		{
 			$this->subAreas['Percentage']= new GifProgressBar($gifImage,$this->x, $curY ,$width, intval($row/4),$task->getInfo()->getPercentage());
@@ -147,13 +144,24 @@ class GifTaskBox extends GifArea
 		}
 		$this->subAreas['CompleteBox'] = new GifBox($gifImage,$this->x,$this->y,$width,$curY-$this->y);
 		$this->subAreas['CompleteBox']->setBorderThickness(2);
-
 		if($uoc->showAlertMarkUserOption())
 		{
-			if($task->isMarked() == DeltaInfoEnum::$good_news)
+			$markVal = $task->isMarked();
+			if($markVal == DeltaInfoEnum::$good_news)
+			{
 			$this->subAreas['Mark']= new GifMark($gifImage,$this->x+$width, $this->y ,$row, 0);
-			else if($task->isMarked() == DeltaInfoEnum::$bad_news)
-			$this->subAreas['Mark']= new GifMark($gifImage,$this->x+$width, $this->y ,$row, 1);
+				DrawingHelper::debug("Good Marked");
+			}
+			else if($markVal == DeltaInfoEnum::$bad_news)
+			{
+				$this->subAreas['Mark']= new GifMark($gifImage,$this->x+$width, $this->y ,$row, 1);
+				DrawingHelper::debug("Bad Marked");
+			}
+			else
+			{
+				DrawingHelper::debug("Failed");
+			}
+			DrawingHelper::debug("<b>Exited</b><br>");
 		}
 		$this->task = $task;
 

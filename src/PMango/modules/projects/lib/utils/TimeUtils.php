@@ -25,6 +25,15 @@ function mangoToGanttDate($date){
 	return substr($date,0,4).'-'.substr($date,4,2).'-'.substr($date,6,2).' 00:00:00';
 }
 
+
+/*This method expect a date in full timestamp format YYYY-MM-DD HH:mm:ss and return only the
+* date in the format YYYY-MM-DD */
+function getDateOnly($fullDate)
+{
+	$pieces = explode(" ",$fullDate);
+	return $pieces[0];
+}
+
 /** 
  * compares two timestamps and returns array with differencies 
  * (year, month, day, hour, minute, second)

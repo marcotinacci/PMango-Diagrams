@@ -33,6 +33,7 @@ class DateComparer {
 		die("DateComparer: impossible to reach this point! " . 
 		"Date comparison not executed.");
 	}
+	
 }
 
 class DateComparisonResult {

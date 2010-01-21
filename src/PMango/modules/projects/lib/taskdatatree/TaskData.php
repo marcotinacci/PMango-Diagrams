@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__)."/DeltaInfoEnum.php";
+require_once dirname(__FILE__)."/../utils/TimeUtils.php";
 
 /**
  * Questa classe rappresenta i singoli nodi della struttura TaskDataTree.
@@ -165,32 +166,59 @@ class TaskData{
 		$actual_cost = $this->info->getActualCost();
 		$planned_cost = $this->info->getPlannedCost();
 		
+		$planned_time["start_date"]=getDateOnly($planned_time["start_date"]);
+		$planned_time["finish_date"]=getDateOnly($planned_time["finish_date"]);
+		$actual_time["start_date"]=getDateOnly($actual_time["start_date"]);
+		$actual_time["finish_date"]=getDateOnly($actual_time["finish_date"]);
+		
+		/*DEBUG
+		print "<b>TaskData: ".$this->info->getTaskName()."</b><br>";
+		print "planned_start_date: ".$planned_time["start_date"]."<br>";
+		print "planned_finish_date: ".$planned_time["finish_date"]."<br>";
+		print "actual_start_date: ".$actual_time["start_date"]."<br>";
+		print "actual_finish_date: ".$actual_time["finish_date"]."<br>";
+		
+		print "actual_eff: ".$actual_eff."<br>";
+		print "planned_eff: ".$planned_eff."<br>";
+		
+		print "actual_cost: ".$actual_cost."<br>";
+		print "planned_cost: ".$planned_cost."<br>";
+		*/
+		
 		if($actual_time["start_date"]>$planned_time["start_date"]){
+			//print "ActualStart > PlannedStart BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
 		if($actual_time["finish_date"]>$planned_time["finish_date"]){
+			//print "ActualFinish > PlannedFinish BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
 		if($actual_eff>$planned_eff){
+			//print "ActualEffort > PlannedEffort BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
 		if($actual_cost>$planned_cost){
+			//print "ActualCost > PlannedCost BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
-
 		if($actual_time["start_date"]<$planned_time["start_date"]){
+			//print "ActualStart < PlannedStart GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
 		if($actual_time["finish_date"]<$planned_time["finish_date"]){
+			//print "ActualFinish < PlannedFinish GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
 		if($actual_eff<$planned_eff){
+			//print "ActualEffort < PlannedEffort GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
 		if($actual_cost<$planned_cost){
+			//print "ActualCost < PlannedCost GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
-		return DeltaInfoEnum::$no_marks;
+		//print "NO MARKS<br><br>";
+		return DeltaInfoEnum::$no_mark;
 	}
 
 	public function deepVisit(){
