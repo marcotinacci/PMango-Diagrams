@@ -195,7 +195,9 @@ class gacl {
 		$acl_result = $this->acl_query($aco_section_value, $aco_value, $aro_section_value, $aro_value, $axo_section_value, $axo_value, $root_aro_group, $root_axo_group);
 
 		if ($acl_result)
+		{
 			return $acl_result['allow'];
+		}
 		else
 			return false;
 	}

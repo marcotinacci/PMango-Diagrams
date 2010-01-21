@@ -164,11 +164,11 @@ class TaskData{
 		$planned_eff = $this->info->getPlannedEffort();
 		$actual_cost = $this->info->getActualCost();
 		$planned_cost = $this->info->getPlannedCost();
-
+		
 		if($actual_time["start_date"]>$planned_time["start_date"]){
 			return DeltaInfoEnum::$bad_news;
 		}
-		if($actual_time["start_date"]>$planned_time["start_date"]){
+		if($actual_time["finish_date"]>$planned_time["finish_date"]){
 			return DeltaInfoEnum::$bad_news;
 		}
 		if($actual_eff>$planned_eff){

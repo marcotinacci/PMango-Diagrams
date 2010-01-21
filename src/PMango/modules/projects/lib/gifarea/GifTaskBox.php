@@ -31,11 +31,11 @@ class GifTaskBox extends GifArea
 		
 		$tName="";
 		//print $task->getCollapsed()?1:0;
-		if($task->getCollapsed()==true)
+		if($task->getCollapsed())
 		{
 			$tName="+ ";
 		}
-		$tName = $task->getInfo()->getWBSId();
+		$tName .= $task->getInfo()->getWBSId().".";
 		if($uoc->showTaskNameUserOption())
 		$tName .= " ".$task->getInfo()->getTaskName();
 		$this->subAreas['TaskName_box'] = new GifBoxedLabel($gifImage,$this->x,$curY,$width,$row,$tName,$fontHeight);
@@ -198,10 +198,10 @@ class GifTaskBox extends GifArea
 		//$uoc = new UserOptionsChoice();
 		$uoc = UserOptionsChoice::GetInstance();
 		$max = 0;
-		$taskBoxes=$taskDataTree->deepVisit();
+		$taskBoxes=$taskDataTree->visibleDeepVisit();
 		foreach($taskBoxes as $taskBox)
 		{
-			$wbsIdWidth = GifLabel::getPixelWidthOfText($taskBox->getInfo()->getWBSId(),$fontSize,$font);
+			$wbsIdWidth = GifLabel::getPixelWidthOfText("+ ".$taskBox->getInfo()->getWBSId().".",$fontSize,$font);
 
 			$boxMax = $wbsIdWidth;
 			if($uoc->showTaskNameUserOption() || $uoc->showTaskNameUserOption() || $uoc->showResourcesUserOption())
