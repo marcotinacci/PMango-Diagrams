@@ -187,7 +187,7 @@ class TaskDataTree {
 					}
 						
 					$dependencyDescriptor->dependentTaskPositionEnum = $taskPosition;
-					print $dependencyDescriptor;
+//					print $dependencyDescriptor;
 
 //					if(!$this->containsDependencyDescriptor(
 //						$leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
@@ -306,9 +306,9 @@ class TaskDataTree {
 	 * Metodo invocato su un albero, che ne restituisce una copia contenente solo i nodi visibili
 	 * @return TaskDataTree
 	 */
-	public function getVisibleTree(){
-		$v_tdt = $this;
-		$v_tdt->getRoot()->visibilityCheck();
-		return $v_tdt;
-	}
+//	public function getVisibleTree(){
+//		$v_tdt = $this;
+//		$v_tdt->getRoot()->visibilityCheck();
+//		return $v_tdt;
+//	}
 }
