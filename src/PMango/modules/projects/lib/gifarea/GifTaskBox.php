@@ -204,8 +204,8 @@ class GifTaskBox extends GifArea
 			$wbsIdWidth = GifLabel::getPixelWidthOfText($taskBox->getInfo()->getWBSId(),$fontSize,$font);
 
 			$boxMax = $wbsIdWidth;
-			if($uoc->showTaskNameUserOption())
-				$boxMax*=2;
+			if($uoc->showTaskNameUserOption() || $uoc->showTaskNameUserOption())
+				$boxMax = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font)*2+5;
 
 			if($uoc->showActualTimeFrameUserOption() || $uoc->showPlannedTimeFrameUserOption())
 			{
