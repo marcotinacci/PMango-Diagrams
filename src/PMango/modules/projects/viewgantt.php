@@ -174,7 +174,6 @@ $_SESSION['uoc'] = serialize($uoc);
                 <td valign="top" align="left" nowrap="nowrap">
                 	<input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption; ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "TaskName"; ?><br>
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption; ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?><br>
-                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$CriticalPathUserOption; ?>" <?php echo $uoc->showCriticalPathUserOption()?"checked":""; ?>> <?php echo "CriticalPath"; ?>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
