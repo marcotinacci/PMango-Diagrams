@@ -191,6 +191,7 @@ class WBSChartGenerator extends ChartGenerator{
 					//Nodo radice creato dallo stub task 
 					$project = new Project();
 					$project->loadProjectInfo();
+
 					$rootWidth = GifLabel::getPixelWidthOfText($project->getProjectName())+20;
 					
 					/*
@@ -201,7 +202,8 @@ class WBSChartGenerator extends ChartGenerator{
 					$cordinata2=$Link[1][Count($Link[1])-1]->getX();
 					$cordinata=$cordinata1+($cordinata2-$cordinata1)/2;
 																		
-					$areas[$l] = new GifRootTaskBox($this->gif,$cordinata-($this->boxWidth/2),$alt,$rootWidth,30,$project);
+					$areas[$l] = new GifRootTaskBox($this->gif,$cordinata-($rootWidth/2),$alt,$rootWidth,30,$project);
+					
 					for($k = 0;$k < $occorrenze;$k++)
 					{
 						$leav[$j+$k]=$leav[$j+$k]->getParent();
@@ -271,7 +273,10 @@ class WBSChartGenerator extends ChartGenerator{
 		$s->style = "solid";
 		$s->weight = 2;
 		$s->color = "black";
-		
+
+		$project = new Project();
+		$project->loadProjectInfo();
+		$rootWidth = GifLabel::getPixelWidthOfText($project->getProjectName())+20;
 
 		$arrayDrawLine=array();
 		$XToDraw=array();
@@ -304,11 +309,15 @@ class WBSChartGenerator extends ChartGenerator{
 						if(isset($Link[$i][$j])){
 							$hspace=$Link[$i][$j]->getEffectiveHeight();	
 						}
-						//echo Count($XToDraw);			
-						//if($LinkX[$i+1][$j]!=null){
+
+						if($i==0)
+						{
+							DrawingHelper::ExplodedUpRectangularLineFromTo($Link[$i][$j]->getX()+($rootWidth/2),$Link[$i][$j]->getY()+$hspace,$XToDraw,$YToDraw,$this->gif,$s);
+						}
+						else{
 							DrawingHelper::ExplodedUpRectangularLineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$XToDraw,$YToDraw,$this->gif,$s);
-						//}
-						//echo "<br>";	
+						}
+						
 					
 						$j+=$occorrenze-1;	
 					
@@ -320,7 +329,14 @@ class WBSChartGenerator extends ChartGenerator{
 							$hspace=$Link[$i][$j]->getEffectiveHeight();
 						}					
 						if(isset($Link[$i+1][$j])){
-							DrawingHelper::LineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$Link[$i+1][$j]->getX()+($this->boxWidth/2),$Link[$i+1][$j]->getY(),$this->gif,$s);
+							if($i==0)
+							{
+								DrawingHelper::LineFromTo($Link[$i][$j]->getX()+($rootWidth/2),$Link[$i][$j]->getY()+$hspace,$Link[$i+1][$j]->getX()+($this->boxWidth/2),$Link[$i+1][$j]->getY(),$this->gif,$s);
+							}
+							else{
+								DrawingHelper::LineFromTo($Link[$i][$j]->getX()+($this->boxWidth/2),$Link[$i][$j]->getY()+$hspace,$Link[$i+1][$j]->getX()+($this->boxWidth/2),$Link[$i+1][$j]->getY(),$this->gif,$s);
+							}
+
 						}	
 					}
 				}	
