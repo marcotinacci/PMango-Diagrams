@@ -1,7 +1,7 @@
 <?php
 //ini_set('display_errors', 0);
 //error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
-//error_reporting(E_ALL & ~E_NOTICE);
+error_reporting(E_ALL & ~E_NOTICE);
 
 /*$file=fopen("./gantt_errors.txt","w");
 function myerrorhandler($errno,$errstr,$errfile,$errline)

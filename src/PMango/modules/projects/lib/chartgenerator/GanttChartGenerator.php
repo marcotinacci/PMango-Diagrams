@@ -13,7 +13,7 @@ require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.8
+ * @version: 0.9
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -73,7 +73,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Larghezza della grana
 	 * @var int
 	 */
-	protected $minGrainWidth = 10;
+	protected $minGrainWidth = 20;
 
 	/**
 	 * Data di inizio visualizzazione
@@ -198,7 +198,7 @@ class GanttChartGenerator extends ChartGenerator{
 	 * calcola lo spazio occupato dalla colonna di sinistra, necessita la gifImage 
 	 * chart generata
 	 */
-	protected function getLeftColumnWidth(){
+	protected function getLeftColumnWidth($optimal = false){
 		$maxlen = 0;
 		foreach($this->tasks as $task){
 			$str = $task->getInfo()->getWBSId();
@@ -207,7 +207,7 @@ class GanttChartGenerator extends ChartGenerator{
 			}
 			$maxlen = max($maxlen,GifLabel::getPixelWidthOfText($str,$this->fontSize));
 		}
-		if($maxlen > intval($this->leftColumnSpace * $this->chart->getWidth())+1){
+		if(!$optimal && $maxlen > intval($this->leftColumnSpace * $this->chart->getWidth())+1){
 			return intval($this->leftColumnSpace * $this->chart->getWidth()+1);
 		}else{
 			return $maxlen + $this->tol;
@@ -219,14 +219,13 @@ class GanttChartGenerator extends ChartGenerator{
 	 * visualizzazione
 	 */
 	protected function setGrain(){
-		// FIX: adattare la grana
 		// acquisizione tipo di grana
 		switch(UserOptionsChoice::GetInstance()->getTimeGrainUserOption()){
 			case TimeGrainEnum::$HourlyGrainUserOption: $this->grainLevel = 5; break;
 			case TimeGrainEnum::$DailyGrainUserOption: $this->grainLevel = 4; break;
-			default:			
 			case TimeGrainEnum::$WeaklyGrainUserOption: $this->grainLevel = 3; break;
 			case TimeGrainEnum::$MonthlyGrainUserOption: $this->grainLevel = 2; break;
+			default:
 			case TimeGrainEnum::$AnnuallyGrainUserOption: $this->grainLevel = 1; break;
 		}		
 	}
@@ -266,10 +265,11 @@ class GanttChartGenerator extends ChartGenerator{
 					}else{
 						$sProj = min($planned['start_date'],$actual['start_date'],$sProj);
 					}
-					if($actual['finish_date'] == null){
+					if($actual['finish_date'] == null || $this->tasks[$i]->getInfo()->getPercentage() <= 99){
 //						echo "max: ".$planned['finish_date'].",$tempToday,$fProj <br>";
 						$fProj = max($planned['finish_date'],$tempToday,$fProj);
 					}else{
+//						echo "max: ".$planned['finish_date'].",".$actual['finish_date'].",$fProj <br>";						
 						$fProj = max($planned['finish_date'],$actual['finish_date'],$fProj);
 					}
 				}
@@ -299,7 +299,6 @@ class GanttChartGenerator extends ChartGenerator{
 			break;
 		}
 		
-		//echo "inizio $start - fine $end";		
 		$this->sDate = $start;
 		$this->fDate = $end;
 		$this->today = mangoToGanttDate($dates['today']);	
@@ -319,47 +318,63 @@ class GanttChartGenerator extends ChartGenerator{
 			break;			
 			case ImageDimension::$OptimalDimUserOption:
 			// FIX: non funziona
-				$diff = diff_date(mktime($this->fDate),mktime($this->sDate));
+//			echo "inizio ".$this->sDate." - fine ".$this->fDate." <br>";	
+//			echo "inizio ".strtotime($this->sDate)." - fine ".strtotime($this->fDate)." <br>";		
+						
+				$diff = diff_date(strtotime($this->fDate),strtotime($this->sDate));
+/* DEBUG:
+				echo "<br>numero secondi: ".$diff['second'];
+				echo "<br>numero minuti: ".$diff['minute'];								
+				echo "<br>numero ore: ".$diff['hour'];
+				echo "<br>numero giorni: ".$diff['day'];
+				echo "<br>numero mesi: ".$diff['month'];
+				echo "<br>numero anni: ".$diff['year'];
+*/
+ // (year, month, day, hour, minute, second)	
+				$time = mktime($diff['hour'],$diff['minute'],$diff['second'],$diff['month']+1,$diff['day']+1,$diff['year']+1970);
+//				echo "time: $time <br>";
 				switch($this->grainLevel){
 					case 5: // ore
-						$width = $diff[3] * $this->minGrainWidth + $this->getLeftColumnWidth() + 2*$this->tol;
+						$width = ($time / (60*60)) * $this->minGrainWidth + $this->getLeftColumnWidth(true) + 2*$this->tol;
 					break;
 					case 4: // giorni
-						$width = $diff[2] * $this->minGrainWidth + $this->getLeftColumnWidth() + 2*$this->tol;
+						$width = ($time / (24*60*60)) * $this->minGrainWidth + $this->getLeftColumnWidth(true) + 2*$this->tol;
 					break;
 					case 3: // settimane
-						$width = intval($diff[2] * $this->minGrainWidth / 7) + $this->getLeftColumnWidth() + 2*$this->tol;
+						$width = ($time / (7*24*60*60)) * $this->minGrainWidth + $this->getLeftColumnWidth(true) + 2*$this->tol;					
 					break;
 					case 2: // mesi
-						$width = $diff[1] * $this->minGrainWidth + $this->getLeftColumnWidth() + 2*$this->tol;
+						$width = ($time / (31*24*60*60)) * $this->minGrainWidth + $this->getLeftColumnWidth(true) + 2*$this->tol;										
 					break;
 					case 1: // anni
-						$width = $diff[0] * $this->minGrainWidth + $this->getLeftColumnWidth() + 2*$this->tol;
+						$width = ($time / (365*24*60*60)) * $this->minGrainWidth + $this->getLeftColumnWidth(true) + 2*$this->tol;										
 					break;					
 				}
 			break;
 			case ImageDimension::$DefaultDimUserOption:
+			// TODO: acquisire da file di configurazione
 				$width =	800;
 			break;
 		}
 		
-		// adatta la grana
-//		w:diff = wg:tg , wg = w*tg / diff >= mingrainwidth?
-		do{
-			switch($this->grainLevel){
-				default:
-				case 5: $timeGrain = 60*60; break;
-				case 4: $timeGrain = 24*60*60; break;
-				case 3: $timeGrain = 7*24*60*60; break;
-				case 2: $timeGrain = 30*24*60*60; break; // approssimato un mese a 30 giorni
-				case 1: $timeGrain = 365*24*60*60; break; // approssimato un anno a 365
-			}
-			$grainWidth = ($width * $timeGrain) / (strtotime($this->fDate) - strtotime($this->sDate));
-			if($grainWidth < $this->minGrainWidth && $this->grainLevel > 1){
-				$this->grainLevel--;
-			}
-		}while($grainWidth < $this->minGrainWidth && $this->grainLevel > 1);
-		
+		if(UserOptionsChoice::GetInstance()->getImageDimensionUserOption() == 
+			ImageDimension::$OptimalDimUserOption){
+			// adatta la grana				
+			do{
+				switch($this->grainLevel){
+					default:
+					case 5: $timeGrain = 60*60; break;
+					case 4: $timeGrain = 24*60*60; break;
+					case 3: $timeGrain = 7*24*60*60; break;
+					case 2: $timeGrain = 30*24*60*60; break; // approssimato un mese a 30 giorni
+					case 1: $timeGrain = 365*24*60*60; break; // approssimato un anno a 365
+				}
+				$grainWidth = ($width * $timeGrain) / (strtotime($this->fDate) - strtotime($this->sDate));
+				if($grainWidth < $this->minGrainWidth && $this->grainLevel > 1){
+					$this->grainLevel--;
+				}
+			}while($grainWidth < $this->minGrainWidth && $this->grainLevel > 1);
+		}
 		$this->chart = new GifImage(
 			$width, 
 			$this->grainLevel * $this->labelGrainHeight + 2*$this->tol + 
@@ -559,7 +574,6 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/GanttChartGenerator#makeGanttTaskBox()	
 	 */
 	protected function makeGanttDependencies(){
-		$this->deps;
 //		echo "begin scanning visible tasks<br>";
 		// per ogni task visibile
 		for($i=0 ; $i<$this->numTasks; $i++){

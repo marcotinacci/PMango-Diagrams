@@ -292,7 +292,6 @@ class GifGanttTask extends GifArea
 		$this->xA = $xActual; //$xActual > $xFinish - $xStart ? $xFinish - $xStart : $xActual;
 		$this->wA = $wActual;
 		
-		// TODO: inserire se presenti in opzioni utente
 		// label risorse
 		//($x, $y, $width, $height, $text, $size)
 		if(UserOptionsChoice::GetInstance()->showResourcesUserOption()){
