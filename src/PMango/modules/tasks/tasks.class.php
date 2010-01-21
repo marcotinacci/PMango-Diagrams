@@ -850,17 +850,19 @@ class CTask extends CDpObject {
 
 	function getAssignedUsers(){
 		$sql="
-		SELECT u.user_last_name AS LastName, ut.effort AS Effort, pr.proles_name AS Role, sum(tl.task_log_hours) as ActualEffort
+		 SELECT u.user_last_name AS LastName, ut.effort AS Effort, pr.proles_name AS Role, sum( tl.task_log_hours ) AS ActualEffort
 FROM users AS u, (
 user_tasks AS ut
 LEFT OUTER JOIN task_log AS tl ON ut.task_id = tl.task_log_task
 ), project_roles AS pr
-WHERE ut.task_id = ".$this->task_id."
-AND ut.user_id = u.user_id
+WHERE ut.task_id = ".$this->task_id." AND ut.user_id = u.user_id
 AND pr.proles_id = ut.proles_id
-group by(ut.task_id);";
+AND ut.user_id = tl.task_log_creator
+GROUP BY (
+u.user_id
+)";
 
-		$list = db_loadList($sql, "user_id");
+		$list = db_loadList($sql);
 		return $list;
 	}
 
