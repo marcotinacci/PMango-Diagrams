@@ -108,9 +108,6 @@ function BuildImage(placeHolder)
 			<tr>
 				<form name="editFrm" method="POST" action="?<?php echo "m=$m&a=$a&project_id=$project_id"; ?>">
                 <td valign="top" align="left" nowrap="nowrap">
-                <?php
-					print $uoc->saveToString();
-				?>	
                 	<b>Show:</b>&nbsp;
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">                          
