@@ -28,10 +28,10 @@ class GifTaskBox extends GifArea
 
 		//$uoc = new UserOptionsChoice();
 		$uoc = UserOptionsChoice::GetInstance();
-		/*
+		
 		$tName="";
 		if($task->getCollapsed())
-		$tName="+ ";*/
+		$tName="+ ";
 		$tName = $task->getInfo()->getWBSId();
 		if($uoc->showTaskNameUserOption())
 		$tName .= " ".$task->getInfo()->getTaskName();
