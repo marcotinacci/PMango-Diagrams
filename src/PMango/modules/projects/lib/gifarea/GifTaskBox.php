@@ -113,7 +113,7 @@ class GifTaskBox extends GifArea
 			if(isset($atf['start_date']))
 			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
 
-			if(isset($atf['start_date']))
+			if(isset($atf['finish_date']))
 			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel($gifImage,$this->x,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
