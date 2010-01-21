@@ -857,8 +857,7 @@ LEFT OUTER JOIN task_log AS tl ON ut.task_id = tl.task_log_task
 ), project_roles AS pr
 WHERE ut.task_id = ".$this->task_id." AND ut.user_id = u.user_id
 AND pr.proles_id = ut.proles_id
-AND (ut.user_id = tl.task_log_creator
-OR tl.task_log_creator IS NULL) 
+AND (tl.task_log_creator IS NULL OR ut.user_id = tl.task_log_creator) 
 GROUP BY (
 u.user_id
 )";
