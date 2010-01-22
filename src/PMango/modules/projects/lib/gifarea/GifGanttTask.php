@@ -74,7 +74,7 @@ class GifGanttTask extends GifArea
 	 * dimensione dei font
 	 * @var fontSize
 	 */	
-	protected $fontSize = 10;
+	protected $fontSize = 8;
 	
 	/**
 	 * coordinata x reale del box planned	

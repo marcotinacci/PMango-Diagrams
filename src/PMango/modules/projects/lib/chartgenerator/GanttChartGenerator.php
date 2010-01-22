@@ -15,7 +15,7 @@ require_once dirname(__FILE__).'/ChartTypesEnum.php';
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.9
+ * @version: 0.10
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -167,7 +167,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->tasks = $this->tdt->visibleDeepVisit();
 
 		// prendi le dipendenze
-		$this->deps = $this->tdt->computeDependencyRelationOnVisibleTasks();
+		$this->dep = $this->tdt->computeDependencyRelationOnVisibleTasks();
 
 		// calcola una sola volta il numero dei task dell'albero visibile
 		$this->numTasks = sizeOf($this->tasks);
@@ -188,10 +188,13 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->verticalSpace - $this->tol;		
 				
 		// generazione grafica
-		$this->makeBorder();
-		$this->makeRightColumn();
+		$this->makeFront();
+		$this->makeTitle();
+		$this->makeGanttTaskBox();
+		$this->makeGanttDependencies();
+		$this->makeTodayLine();
 		$this->makeLeftColumn();
-		
+		$this->borderRemark();
 		// stampa
 		$this->chart->draw();		
 	}
@@ -388,21 +391,7 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->numTasks*($this->verticalSpace + $this->labelHeight) + 
 			$this->verticalSpace);
 	}
-
-	/**
-	 * Funzione di generazione grafica del bordo dell'immagine
-	 */	
-	protected function makeBorder(){
-		$box = new GifBox(
-			$this->chart,
-			0,
-			0,
-			$this->chart->getWidth()-1,
-			$this->chart->getHeight()-1
-		);
-		$box->drawOn();
-	}
-	
+		
 	/**
 	 * Funzione di generazione della testata del diagramma
 	 */	
@@ -469,7 +458,6 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->chart->getHeight() - $this->yCenter - $this->tol // altezza
 		);
 		
-// TODO: commentato per vedere i task sottostanti, decommentare poi
 		$leftCol->setForeColor('white');
 		$leftCol->drawOn();
 
@@ -497,31 +485,6 @@ class GanttChartGenerator extends ChartGenerator{
 			$label->setHAlign('left');
 			$label->drawOn();
 		}
-	}
-	
-	/**
-	 * Funzione di generazione grafica della parte grafica del Gantt nella parte 
-	 * destra
-	 */
-	protected function makeRightColumn(){
-		// larghezza della colonna destra
-		$wRightCol = $this->chart->getWidth() - $this->xCenter - $this->tol;
-	
-		// disegno il box della colonna destra
-		$rightCol = new GifBox(
-			$this->chart,			
-			$this->xCenter,
-			$this->tol,
-			$wRightCol,
-			$this->chart->getHeight() - 2*$this->tol
-		);
-		$rightCol->drawOn();
-
-		$this->makeFront();
-		$this->makeTitle();
-		$this->makeGanttTaskBox();
-//		$this->makeGanttDependencies();
-		$this->makeTodayLine();
 	}
 
 	/**
@@ -582,40 +545,44 @@ class GanttChartGenerator extends ChartGenerator{
 	 * @see chartgenerator/GanttChartGenerator#makeGanttTaskBox()	
 	 */
 	protected function makeGanttDependencies(){
-//		echo "begin scanning visible tasks<br>";
+//		DEBUG:
+//		foreach($this->dep as $key => $d){
+//			echo "key: $key <br>";
+//		}
 		foreach($this->tasks as $needKey => $needTask){
-			echo "need: ".$needTask->getInfo()->getTaskID()."<br>";
 			if(!array_key_exists($needTask->getInfo()->getTaskID(),$this->dep)){
 				continue;
 			}
+//			echo "need: ".$needTask->getInfo()->getTaskID()."<br>";			
 			$deps = $this->dep[$needTask->getInfo()->getTaskID()];
 			foreach($this->tasks as $depKey => $depTask){
-				echo "need: ".$needTask->getInfo()->getTaskID()."<br>";
+//				echo "-need: ".$needTask->getInfo()->getTaskID()."<br>";
 				if(!array_key_exists($depTask->getInfo()->getTaskID(),$deps)){
 					continue;
 				}
 				$descs = $deps[$depTask->getInfo()->getTaskID()];
 				foreach($descs as $desc){
-//					echo "need: ".$tasks[$needKey]->getInfo()->getWBSId()."<br>";
-//					echo "dep: ".$tasks[$depKey]->getInfo()->getWBSId()."<br>";					
-					if($desc->dependentTaskPositionEnum == 'ending'){
+//					echo "dep pos: ".$desc->dependentTaskPositionEnum."<br>";
+//					echo "need pos: ".$desc->neededTaskPositionEnum."<br>";
+					if($desc->neededTaskPositionEnum == TaskLevelPositionEnum::$ending){
 						// ending
 						$point1 = $this->gTasks[$needKey]->getPlannedRightMiddlePoint();
-						$middleIn = false;
-					}else{
-						// inner
-						$point1 = $this->gTasks[$needKey]->getPlannedBottomMiddlePoint();
-						$middleIn = true;						
-					}
-					if($desc->neededTaskPositionEnum == 'starting'){
-						// starting
-						$point2 = $this->gTasks[$depKey]->getPlannedLeftMiddlePoint();
 						$middleOut = false;						
 					}else{
 						// inner
-						$point2 = $this->gTasks[$depKey]->getPlannedTopMiddlePoint();
+						$point1 = $this->gTasks[$needKey]->getPlannedBottomMiddlePoint();
 						$middleOut = true;						
 					}
+					if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
+						// starting
+						$point2 = $this->gTasks[$depKey]->getPlannedLeftMiddlePoint();
+						$middleIn = false;
+					}else{
+						// inner
+						$point2 = $this->gTasks[$depKey]->getPlannedTopMiddlePoint();
+						$middleIn = true;						
+					}
+
 					DrawingHelper::GanttFTSLine(
 						$point1['x'],
 						$point1['y'],
@@ -659,7 +626,8 @@ class GanttChartGenerator extends ChartGenerator{
 			case 3:	
 				$days = 7;
 				$formatDate = 'd/m';	
-				$beginDate = date('Y-m-d',$startTS).' 00:00:00';
+// mktime($diff['hour'],$diff['minute'],$diff['second'],$diff['month']+1,$diff['day']+1,$diff['year']+1970);				
+				$beginDate = date('Y-m-d',($startTS - ((date('w',$startTS)-1)%7)*24*60*60)).' 00:00:00';
 				$HAlign = 'left';
 			break;
 			case 2:
@@ -691,7 +659,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$this->tol + ($level-1)*$this->labelGrainHeight, // y
 				$xCurrent - $xPrec, // larghezza
 				$this->labelGrainHeight, // altezza
-				date($formatDate,$precTS), // data
+				$formatDate == 'D' ? substr(date($formatDate,$precTS),0,1) : date($formatDate,$precTS), // data
 				$this->fontSize // dim font
 			);
 			$slice->getLabel()->setHAlign($HAlign);
@@ -709,7 +677,7 @@ class GanttChartGenerator extends ChartGenerator{
 					$xCurrent,
 					$yfGrid,
 					$this->chart,
-					new LineStyle('#7F7F7F')
+					new LineStyle('#7F7F7F',1,'dotted')
 				);
 			}
 			// passa all'intervallo successivo
@@ -725,11 +693,82 @@ class GanttChartGenerator extends ChartGenerator{
 			$this->tol + ($level-1)*$this->labelGrainHeight, // y
 			$this->xCenter + $wCal - $xPrec, // larghezza
 			$this->labelGrainHeight, // altezza
-			date($formatDate,$precTS), // data
+			$formatDate == 'D' ? substr(date($formatDate,$precTS),0,1) : date($formatDate,$precTS), // data
 			$this->fontSize // dim font
 		);
-		$slice->getLabel()->setHAlign($HAlign);		
+		$slice->getLabel()->setHAlign($HAlign);	
 		$slice->getBox()->setForeColor('white');			
 		$slice->drawOn();
+	}
+
+	/**
+	 * funzione di decorazione del diagramma
+	 */	
+	protected function borderRemark(){
+		// bordo esterno
+		$box = new GifBox(
+			$this->chart,
+			$this->tol,
+			$this->tol,
+			$this->chart->getWidth() - 2*$this->tol,
+			$this->chart->getHeight() - 2*$this->tol
+			);
+		$box->setBorderThickness(2);
+		$box->drawOn();	
+
+		// margine sinistro
+		$mLeft = new GifBox(
+			$this->chart,
+			0,
+			0,
+			$this->tol -1,
+			$this->chart->getHeight()-1
+			);
+		$mLeft->setForeColor('white');
+		$mLeft->setBorderThickness(0);
+		$mLeft->drawOn();
+		
+		// margine destro
+		$mRight = new GifBox(
+			$this->chart,
+			$this->chart->getWidth() - $this->tol +1,
+			0,
+			$this->tol,
+			$this->chart->getHeight()-1
+			);
+		$mRight->setForeColor('white');
+		$mRight->setBorderThickness(0);
+		$mRight->drawOn();
+		
+		// cornice
+		$ext = new GifBox(
+			$this->chart,
+			0,
+			0,
+			$this->chart->getWidth()-1,
+			$this->chart->getHeight()-1
+		);
+		$ext->setBorderThickness(2);		
+		$ext->drawOn();		
+		
+		// riga verticale
+		DrawingHelper::LineFromTo(
+			$this->xCenter,
+			$this->tol,
+			$this->xCenter,
+			$this->chart->getHeight() - $this->tol,
+			$this->chart,
+			new LineStyle('black',2)
+		);
+		
+		// riga orizzontale
+		DrawingHelper::LineFromTo(
+			$this->tol,
+			$this->yCenter,
+			$this->chart->getWidth() - $this->tol,
+			$this->yCenter,
+			$this->chart,
+			new LineStyle('black',2)
+		);		
 	}
 }
