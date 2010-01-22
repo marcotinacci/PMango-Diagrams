@@ -107,7 +107,10 @@ class DataArrayBuilder {
   		{
   			$res[$i]['LastName'] = $a[$i]['LastName'];
   			$res[$i]['Effort'] = $a[$i]['Effort'];
-  			$res[$i]['ActualEffort'] = $a[$i]['ActualEffort'];
+			// usare funzione getActualEffort perché $a[$i]['ActualEffort'] non calcola gli actual dei nodi interni
+  			$res[$i]['ActualEffort'] = $this->_CTaskObject->getActualEffort(
+				$this->_CTaskObject->task_id, 
+				$this->_CTaskObject->getChild());
   			$res[$i]['Role'] = $a[$i]['Role'];
   		}
   		if(isset($res))
