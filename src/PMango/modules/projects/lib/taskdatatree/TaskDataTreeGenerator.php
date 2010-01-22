@@ -23,15 +23,6 @@ require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 class TaskDataTreeGenerator{
 	private $tasksMap;
 
-	/**
-	 * Questo metodo genera un TaskDataTree utilizzando getData() per
-	 * recuperare i dati dal DB (considerando le uoc).
-	 * @return TaskDataTree
-	 */
-	public function stubGenerateTaskDataTree(){
-		return new StubTaskDataTree();
-	}
-
 	private function findTaskDataIdInArray($array,$id)
 	{
 		foreach($array as $a)
