@@ -17,7 +17,7 @@ class GifTaskBox extends GifArea
 	private $marked;
 	private $effectiveHeight=0;
 
-	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $task)
+	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $task, &$uoc)
 	{
 		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight);
 
@@ -30,7 +30,6 @@ class GifTaskBox extends GifArea
 		$curY = $this->y;
 
 		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		
 		$tName="";
 		if($task->getCollapsed())
@@ -202,10 +201,10 @@ class GifTaskBox extends GifArea
 		return $this->effectiveHeight;
 	}
 
-	public static function getTaskBoxesBestWidth($taskDataTree,$userOptionChoise,$fontSize,$font)
+	public static function getTaskBoxesBestWidth($taskDataTree,&$userOptionChoise,$fontSize,$font)
 	{
-		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
+		$uoc = &$userOptionChoise;
+		//$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		$max = 0;
 		$taskBoxes=$taskDataTree->visibleDeepVisit();
 		foreach($taskBoxes as $taskBox)
