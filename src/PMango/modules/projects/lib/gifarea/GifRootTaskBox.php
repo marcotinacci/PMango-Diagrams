@@ -16,7 +16,7 @@ class GifRootTaskBox extends GifArea
 	private $marked;
 	private $effectiveHeight=0;
 
-	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $project)
+	function __construct($gifImage,$x, $y, $width, $singleRowHeight, $project, &$uoc)
 	{
 		parent::__construct($gifImage, $x, $y, $width, $singleRowHeight);
 
@@ -27,7 +27,6 @@ class GifRootTaskBox extends GifArea
 		$curY = $this->y;
 
 		//$uoc = new UserOptionsChoice();
-		$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		
 		$tName = $project->getProjectName();
 		$this->subAreas['ProjectName_box'] = new GifBoxedLabel($gifImage,$this->x,$curY,$width,$row,$tName,$fontHeight);
