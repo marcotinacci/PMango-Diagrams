@@ -146,7 +146,8 @@ function scrollNext() {
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$Gantt."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 
 </script>
@@ -154,9 +155,8 @@ function BuildImage(placeHolder)
 
 <?php
 //$uoc = new UserOptionsChoice();
-$uoc = UserOptionsChoice::GetInstance();
-$uoc->setFromArray($_POST);
-$_SESSION['uoc'] = serialize($uoc);
+$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt);
+$uoc->saveOnSession();
 ?>
 
 <table width="100%" border="0" cellpadding="4"

@@ -106,7 +106,7 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		
 		//Configura la dimensioni dell'immagine, secondo le scelte dell'utente
-		$UOC=UserOptionsChoice::GetInstance();
+		$UOC=UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		$dimension=$UOC->getImageDimensionUserOption();
 		if($dimension==ImageDimension::$CustomDimUserOption)
 		{
