@@ -157,7 +157,8 @@ class TaskDataTree {
 			// if the neededTask is in the same subtree of
 			// $task_id, I haven't nothing to do
 			if(!in_array($dependency, $deepChildren) &&
-				$dependency != $leaf->getInfo()->getTaskID()) {
+				$dependency != $leaf->getInfo()->getTaskID() && 
+				$dependency != $task_id) { // to remove che recursive dependency from one task with himself
 				//print $dependency . " is a deep child of " . $leaf->getInfo()->getTaskName();
 				//continue;
 				$dependencyDescriptor = new DependencyDescriptor();
@@ -187,7 +188,7 @@ class TaskDataTree {
 					}
 						
 					$dependencyDescriptor->dependentTaskPositionEnum = $taskPosition;
-//					print $dependencyDescriptor;
+					//print $dependencyDescriptor;
 
 //					if(!$this->containsDependencyDescriptor(
 //						$leafId, $result[$neededLeaf->getInfo()->getTaskID()])) {
@@ -306,9 +307,9 @@ class TaskDataTree {
 	 * Metodo invocato su un albero, che ne restituisce una copia contenente solo i nodi visibili
 	 * @return TaskDataTree
 	 */
-//	public function getVisibleTree(){
-//		$v_tdt = $this;
-//		$v_tdt->getRoot()->visibilityCheck();
-//		return $v_tdt;
-//	}
+	public function getVisibleTree(){
+		$v_tdt = $this;
+		$v_tdt->getRoot()->visibilityCheck();
+		return $v_tdt;
+	}
 }
