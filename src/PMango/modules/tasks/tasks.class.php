@@ -848,9 +848,10 @@ class CTask extends CDpObject {
 		}
 	}
 
+	//Non funziona
 	function getAssignedUsers(){
 		$sql="
-		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
+		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role, IF(task_log_creator IS NULL, 0, SUM(task_log_hours)) AS ActualEffort
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
@@ -863,7 +864,7 @@ class CTask extends CDpObject {
 		return $list;
 	}
 	
-	function getResourceActualEffortInTask(){
+	/*function getResourceActualEffortInTask(){
 		$sql="
 		 SELECT users.user_id
 		 FROM users, user_tasks
@@ -896,7 +897,7 @@ class CTask extends CDpObject {
 			}
 			return $result;
 		}
-	}
+	}*/
 
 	/**
 	 *  Calculate the extent of utilization of user assignments
