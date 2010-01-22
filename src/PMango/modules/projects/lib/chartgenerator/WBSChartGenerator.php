@@ -154,7 +154,7 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 		
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($this->getNumLevel())*($max+$max/2)+50;
+		$height=($this->getNumLevel())*($max+$max/2)-$max+50;
 		
 		$this->gif = new GifImage($this->getWidth(),$height); 
 		
@@ -196,6 +196,9 @@ class WBSChartGenerator extends ChartGenerator{
 
 					$rootWidth = GifLabel::getPixelWidthOfText($project->getProjectName())+20;
 					
+					if($max > 60)
+						$alt+=$max;
+
 					/*
 					 *  Per posizionare il nodo radice prende le coordinate del primo e
 					 *  dell'ultimo nodo di livello 1 e si calcola il punto di mezzo
