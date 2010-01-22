@@ -72,8 +72,11 @@ class WBSChartGenerator extends ChartGenerator{
 		$tree = new TaskDataTreeGenerator();
 		$treeData = $tree->generateTaskDataTree();
 		
+		
+		$UOC=&UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
+		
 		//Imposta la larghezza del box
-		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,null,10,FF_VERDANA);
+		$this->boxWidth=GifTaskBox::getTaskBoxesBestWidth($treeData,$UOC,10,FF_VERDANA);
 				
 		
 		//vettore di foglie dell'albero
@@ -106,7 +109,6 @@ class WBSChartGenerator extends ChartGenerator{
 		
 		
 		//Configura la dimensioni dell'immagine, secondo le scelte dell'utente
-		$UOC=UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 		$dimension=$UOC->getImageDimensionUserOption();
 		if($dimension==ImageDimension::$CustomDimUserOption)
 		{
@@ -144,9 +146,9 @@ class WBSChartGenerator extends ChartGenerator{
 		{			
 			for($j=0;$j<$this->getNumLeaves();$j++)
 			{
-				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null))
+				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,$UOC))
 				{
-					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,null);	
+					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,$UOC);	
 				}				
 			}
 		}

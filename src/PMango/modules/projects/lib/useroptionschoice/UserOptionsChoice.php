@@ -35,11 +35,11 @@ class UserOptionsChoice {
 	private $alreadyRefreshed = false;
 	public function hasBeenRefreshed()
 	{
-		return $alreadyRefreshed;
+		return $this->alreadyRefreshed;
 	}
-	public function setRefreshed()
+	public function setRefreshed($value)
 	{
-		$this->alreadyRefreshed = true;
+		$this->alreadyRefreshed = $value;
 	}
 	// preparing the query to fetch the root task
 	var	$map;
@@ -56,9 +56,9 @@ class UserOptionsChoice {
 	 */
 	var $taskInformationRetriever;
 
-	private function __construct($instanceName) {
+	private function __construct($Name) {
 
-		$this->$instanceName=$instanceName;
+		$this->instanceName = $Name;
 		// setting only once the retriever
 		$this->taskInformationRetriever = new DefaultTaskInformationRetriever();
 	}
@@ -320,24 +320,25 @@ class UserOptionsChoice {
 	public static function &GetInstance($instanceName="default") {
 		if(!isset(UserOptionsChoice::$instances["uoc_$instanceName"]) && isset($_SESSION["uoc_$instanceName"]))
 		{
-//			print "instance 'uoc_$instanceName' loaded from session";
+			//print "instance 'uoc_$instanceName' loaded from session";
 			UserOptionsChoice::$instances["uoc_$instanceName"] = unserialize($_SESSION["uoc_$instanceName"]);
+			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed(false);
 		}
 		if(!isset(UserOptionsChoice::$instances["uoc_$instanceName"])) {
-//			print "instance 'uoc_$instanceName' created new";
+			//print "instance 'uoc_$instanceName' created new";
 			UserOptionsChoice::$instances["uoc_$instanceName"] = new UserOptionsChoice($instanceName);
 		}
 		//CONTROLLO SE DEVE ESSERE AGGIORNATA DA UN QUALCHE FORM
 		if(!UserOptionsChoice::$instances["uoc_$instanceName"]->hasBeenRefreshed() && isset($_GET["REFRESH_UOC_$instanceName"]))
 		{
-//			print "instance 'uoc_$instanceName' setted from get";
-			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed();
+			//print "instance 'uoc_$instanceName' setted from get";
+			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed(true);
 			UserOptionsChoice::$instances["uoc_$instanceName"]->setFromArray($_GET);
 		}
 		else if(!UserOptionsChoice::$instances["uoc_$instanceName"]->hasBeenRefreshed() && isset($_POST["REFRESH_UOC_$instanceName"]))
 		{
-//			print "instance 'uoc_$instanceName' setted from post";
-			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed();
+			//print "instance 'uoc_$instanceName' setted from post";
+			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed(true);
 			UserOptionsChoice::$instances["uoc_$instanceName"]->setFromArray($_POST);
 		}
 		return UserOptionsChoice::$instances["uoc_$instanceName"];
@@ -345,7 +346,9 @@ class UserOptionsChoice {
 	
 	public function saveOnSession()
 	{
-		$_SESSION["uoc_".$this->instanceName] = serialize(UserOptionsChoice::$instances["uoc_".$this->instanceName]);
+		$instanceName = $this->instanceName;
+		//print "instance 'uoc_$instanceName' saved to session";
+		$_SESSION["uoc_$instanceName"] = serialize(UserOptionsChoice::$instances["uoc_$instanceName"]);
 	}
 	
 	public function getRefreshHiddenField()
