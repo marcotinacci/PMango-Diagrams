@@ -850,7 +850,7 @@ class CTask extends CDpObject {
 
 	function getAssignedUsers(){
 		$sql="
-		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role, IF( task_log_creator IS NULL , 0, sum( task_log.task_log_hours ) ) AS ActualEffort
+		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
@@ -861,6 +861,41 @@ class CTask extends CDpObject {
 
 		$list = db_loadList($sql);
 		return $list;
+	}
+	
+	function getResourceActualEffortInTask(){
+		$sql="
+		 SELECT users.user_id
+		 FROM users, user_tasks
+		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
+		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
+ 		 WHERE user_tasks.task_id = ".$this->task_id."
+		 AND user_tasks.user_id = users.user_id
+		 AND project_roles.proles_id = user_tasks.proles_id
+		 GROUP BY (users.user_id)";
+		
+		$list = db_loadList($sql);
+		foreach($list as $rid){
+			$sql="
+			SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
+		 	FROM task_log
+ 		 	WHERE task_log_task = ".$this->task_id."
+		 	AND task_log_creator = ".$rid;
+			$result;
+			$res = db_loadList($sql);
+			if($res=='composed'){
+				$children = $this->getChildren();
+				foreach($children as $son){
+					$CTask_son = new CTask();
+					$CTask_son->load($son);
+					$result += $CTask_son->getResourceActualEffortInTask();
+				}
+			}
+			else{
+				$result = $res;
+			}
+			return $result;
+		}
 	}
 
 	/**

@@ -107,9 +107,9 @@ class DataArrayBuilder {
   		{
   			$res[$i]['LastName'] = $a[$i]['LastName'];
   			$res[$i]['Effort'] = $a[$i]['Effort'];
-  			$res[$i]['ActualEffort'] = $a[$i]['ActualEffort'];
-  			$res[$i]['Role'] = $a[$i]['Role'];
+  			$res[$i+1]['Role'] = $a[$i]['Role'];
   		}
+  		$res[$i-1]['ActualEffort'] = $this->_CTaskObject->getResourceActualEffortInTask();
   		if(isset($res))
   			$this->_associativeArray[DataArrayKeyEnumeration::$assigned_to_task] = $res;
   		else

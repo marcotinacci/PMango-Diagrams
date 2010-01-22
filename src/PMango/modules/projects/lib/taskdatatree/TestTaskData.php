@@ -3,6 +3,7 @@
 $baseDir = dirname(__FILE__)."/../../../../";
 require_once "$baseDir/includes/config.php";
 require_once "$baseDir/includes/session.php";
+require_once "$baseDir/includesdb_connect.php";
 
 // manage the session variable(s)
 dPsessionStart(array('AppUI'));
@@ -111,4 +112,21 @@ $AppUI =& $_SESSION['AppUI'];
 	}
 
 	echo "<br>La stringa presa passo passo dall'array viene: ".$str_curr;
+	
+	
+	
+	$sql="
+		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role, IF( task_log_creator IS NULL , 0, sum( task_log.task_log_hours ) ) AS ActualEffort
+		 FROM users, user_tasks
+		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
+		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
+ 		 WHERE user_tasks.task_id = 8
+		 AND user_tasks.user_id = users.user_id
+		 AND project_roles.proles_id = user_tasks.proles_id
+		 GROUP BY (users.user_id)";
+
+		$list = db_loadList($sql);
+		for($i=0; $i<sizeOf($list); $i++){
+			echo "<br>Query AssignedUser del task di id 8: ".$list[$i].", ";
+		}
 ?>
