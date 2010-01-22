@@ -8,6 +8,8 @@ require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
 require_once dirname(__FILE__).'/../utils/TimeUtils.php';
 require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
+require_once dirname(__FILE__).'/../taskdatatree/Project.php';
+require_once dirname(__FILE__).'/ChartTypesEnum.php';
 
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
@@ -175,7 +177,7 @@ class GanttChartGenerator extends ChartGenerator{
 
 		// acquisizione tipo di grana
 		$this->setGrain();
-		
+
 		// costruisci il canvas (necessita grana)
 		$this->makeCanvas();
 
@@ -202,7 +204,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$maxlen = 0;
 		foreach($this->tasks as $task){
 			$str = $task->getInfo()->getWBSId();
-			if(UserOptionsChoice::GetInstance()->showTaskNameUserOption()){
+			if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showTaskNameUserOption()){
 				$str = $str.$task->getInfo()->getTaskName();
 			}
 			$maxlen = max($maxlen,GifLabel::getPixelWidthOfText($str,$this->fontSize));
@@ -220,12 +222,12 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function setGrain(){
 		// acquisizione tipo di grana
-		switch(UserOptionsChoice::GetInstance()->getTimeGrainUserOption()){
+		switch(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getTimeGrainUserOption()){
+			default:
 			case TimeGrainEnum::$HourlyGrainUserOption: $this->grainLevel = 5; break;
 			case TimeGrainEnum::$DailyGrainUserOption: $this->grainLevel = 4; break;
 			case TimeGrainEnum::$WeaklyGrainUserOption: $this->grainLevel = 3; break;
 			case TimeGrainEnum::$MonthlyGrainUserOption: $this->grainLevel = 2; break;
-			default:
 			case TimeGrainEnum::$AnnuallyGrainUserOption: $this->grainLevel = 1; break;
 		}		
 	}
@@ -235,11 +237,11 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function setTimeRange(){
 		// ricava date start finish e today da opzioni utente
-		switch(UserOptionsChoice::GetInstance()->getTimeRangeUserOption()){
+		switch(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getTimeRangeUserOption()){
 			
  			// inizio e fine custom			
 			case TimeRange::$CustomRangeUserOption:
-				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
 				$start = mangoToGanttDate($dates['start']);
 				$end = add_date(mangoToGanttDate($dates['end']),0,1);
 			break;
@@ -247,7 +249,7 @@ class GanttChartGenerator extends ChartGenerator{
 			default:
 			// inizio e fine del progetto
 			case TimeRange::$WholeProjectRangeUserOption: 
-				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
 				$tempToday = mangoToGanttDate($dates['today']);
 //				echo "today: ".$dates['today']."<br>";
 				$sProj = null;
@@ -285,7 +287,7 @@ class GanttChartGenerator extends ChartGenerator{
 			
 			// inizio custom e fine today
 			case TimeRange::$FromStartToNowRangeUserOption:
-				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
 				$start = mangoToGanttDate($dates['start']);
 				$end = add_date(mangoToGanttDate($dates['today']),0,1);
 				
@@ -293,7 +295,7 @@ class GanttChartGenerator extends ChartGenerator{
 			
 			// inizio today e fine custom
 			case TimeRange::$FromNowToEndRangeUserOption:
-				$dates = UserOptionsChoice::GetInstance()->getCustomRangeValues();
+				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
 				$start = add_date(mangoToGanttDate($dates['today']),0,-1);
 				$end = add_date(mangoToGanttDate($dates['end']),0,1);
 			break;
@@ -308,10 +310,14 @@ class GanttChartGenerator extends ChartGenerator{
 	 * Funzione di generazione del canvas
 	 */	
 	protected function makeCanvas(){
-		switch(UserOptionsChoice::GetInstance()->getImageDimensionUserOption()){
+		switch(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getImageDimensionUserOption()){
 			case ImageDimension::$CustomDimUserOption:
-				$values = UserOptionsChoice::GetInstance()->getCustomDimValues();
+				$values = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomDimValues();
 				$width = $values['width'];
+				if($width == ''){
+					// TODO: prendere il valore di default da opzioni di configurazione
+					$width = 800;
+				}
 			break;			
 			case ImageDimension::$FitInWindowDimUserOption:
 				$width = $_GET[UserOptionEnumeration::$FitInWindowWidthUserOption] - 40;
@@ -351,13 +357,14 @@ class GanttChartGenerator extends ChartGenerator{
 					break;					
 				}
 			break;
+			default:
 			case ImageDimension::$DefaultDimUserOption:
 			// TODO: acquisire da file di configurazione
 				$width =	800;
 			break;
-		}
-		
-		if(UserOptionsChoice::GetInstance()->getImageDimensionUserOption() == 
+		}		
+		// se non viene scelta la optimal view adatta la grana
+		if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getImageDimensionUserOption() != 
 			ImageDimension::$OptimalDimUserOption){
 			// adatta la grana				
 			do{
@@ -431,17 +438,18 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function makeTitle(){
 		// titolo progetto
-		// TODO: titolo e colore progetto		
+		$p = new Project();
+		$p->loadProjectInfo();
 		$title = new GifBoxedLabel(
 			$this->chart,			
 			$this->tol, // x
 			$this->tol, // y
 			$this->xCenter - $this->tol, // larghezza
 			$this->yCenter - $this->tol, // altezza
-			"Project Title", // titolo
+			$p->getProjectName(), // titolo
 			$this->fontSize // dim font
 			);
-		$title->getBox()->setForeColor('green');
+		$title->getBox()->setForeColor('white');
 		$title->drawOn();				
 	}
 	
@@ -470,7 +478,7 @@ class GanttChartGenerator extends ChartGenerator{
 		{
 			$label = $this->tasks[$i]->getInfo()->getWBSiD();
 			// mostra il nome del task se specificato nelle opzioni utente
-			if(UserOptionsChoice::GetInstance()->showTaskNameUserOption()){
+			if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showTaskNameUserOption()){
 				$label = $label.' '.$this->tasks[$i]->getInfo()->getTaskName();
 			}
 			
@@ -512,7 +520,7 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeFront();
 		$this->makeTitle();
 		$this->makeGanttTaskBox();
-		$this->makeGanttDependencies();
+//		$this->makeGanttDependencies();
 		$this->makeTodayLine();
 	}
 
@@ -575,56 +583,51 @@ class GanttChartGenerator extends ChartGenerator{
 	 */
 	protected function makeGanttDependencies(){
 //		echo "begin scanning visible tasks<br>";
-		// per ogni task visibile
-		for($i=0 ; $i<$this->numTasks; $i++){
-			// prendi il vettore delle dipendenze
-			$taskDeps = $this->deps[$this->tasks[$i]->getInfo()->getTaskID()];
-			// per ogni dipendenza del task $i
-			$numDep = sizeOf($taskDeps);
-//			echo "task_id i ".$this->tasks[$i]->getInfo()->getTaskID()."<br>";			
-//			echo "begin scanning deps ($numDep)<br>";
-			for($j=0 ; $j < $numDep; $j++){
-				// prendi l'id della dipendenza
-				$id_dep = $taskDeps[$j];
-				// cercala nei nodi visibili
-//				echo "begin scanning visible tasks in deps<br>";
-//				echo "task_id j ".$id_dep."<br>";				
-				for($k=0 ; $k < $this->numTasks; $k++){
-					// se $k è la dipendenza di $i
-//					echo "task_id k ".$this->tasks[$k]->getInfo()->getTaskID()."<br>";
-					if($this->tasks[$k]->getInfo()->getTaskID() == $id_dep){
-//						echo " dep $id_dep <br>";
-						if($this->tasks[$i]->getCollapsed()){
-							$point1 = $this->gTasks[$i]->getPlannedBottomMiddlePoint();
-							$middleOut = true;
-						}else{
-							$point1 = $this->gTasks[$i]->getPlannedRightMiddlePoint();
-							$middleOut = false;
-						}
-						if($this->tasks[$k]->getCollapsed()){
-							$point2 = $this->gTasks[$k]->getPlannedTopMiddlePoint();
-							$middleIn = true;							
-						}else{
-							$point2 = $this->gTasks[$k]->getPlannedLeftMiddlePoint();
-							$middleIn = false;
-						}
-//						echo "p1: (".$point1['x'].",".$point1['y'].")<br>";
-//						echo "p2: (".$point2['x'].",".$point2['y'].")<br>";
-// GanttFTSLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$middleIn,$middleOut,$gifImage,$lineStyle = null)
-						DrawingHelper::GanttFTSLine(
-							$point1['x'],
-							$point1['y'],
-							$point2['x'],
-							$point2['y'],
-							10,
-							true,
-							$middleIn,
-							$middleOut,
-							$this->chart,
-							new LineStyle('#7F7F7F')
-						);
-						break;
+		foreach($this->tasks as $needKey => $needTask){
+			echo "need: ".$needTask->getInfo()->getTaskID()."<br>";
+			if(!array_key_exists($needTask->getInfo()->getTaskID(),$this->dep)){
+				continue;
+			}
+			$deps = $this->dep[$needTask->getInfo()->getTaskID()];
+			foreach($this->tasks as $depKey => $depTask){
+				echo "need: ".$needTask->getInfo()->getTaskID()."<br>";
+				if(!array_key_exists($depTask->getInfo()->getTaskID(),$deps)){
+					continue;
+				}
+				$descs = $deps[$depTask->getInfo()->getTaskID()];
+				foreach($descs as $desc){
+//					echo "need: ".$tasks[$needKey]->getInfo()->getWBSId()."<br>";
+//					echo "dep: ".$tasks[$depKey]->getInfo()->getWBSId()."<br>";					
+					if($desc->dependentTaskPositionEnum == 'ending'){
+						// ending
+						$point1 = $this->gTasks[$needKey]->getPlannedRightMiddlePoint();
+						$middleIn = false;
+					}else{
+						// inner
+						$point1 = $this->gTasks[$needKey]->getPlannedBottomMiddlePoint();
+						$middleIn = true;						
 					}
+					if($desc->neededTaskPositionEnum == 'starting'){
+						// starting
+						$point2 = $this->gTasks[$depKey]->getPlannedLeftMiddlePoint();
+						$middleOut = false;						
+					}else{
+						// inner
+						$point2 = $this->gTasks[$depKey]->getPlannedTopMiddlePoint();
+						$middleOut = true;						
+					}
+					DrawingHelper::GanttFTSLine(
+						$point1['x'],
+						$point1['y'],
+						$point2['x'],
+						$point2['y'],
+						10,
+						true,
+						$middleIn,
+						$middleOut,
+						$this->chart,
+						new LineStyle('#7F7F7F')
+					);					
 				}
 			}
 		}

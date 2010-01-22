@@ -162,8 +162,8 @@ class GifGanttTask extends GifArea
 //		echo "start date: ".$actual['start_date']."<br>";
 //		echo "finish date: ".$actual['finish_date']."<br>";
 //		echo "today: $today<br><br>";
-		// controllo: se 'i' l'actual non è iniziato
-		if($actual['start_date'] == 'i'){
+		// controllo se l'actual non è iniziato
+		if($actual['start_date'] == ''){
 			$this->actualStarted = false;			
 			$startActualTS = null;
 			$finishActualTS = null;
@@ -294,7 +294,7 @@ class GifGanttTask extends GifArea
 		
 		// label risorse
 		//($x, $y, $width, $height, $text, $size)
-		if(UserOptionsChoice::GetInstance()->showResourcesUserOption()){
+		if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showResourcesUserOption()){
 			$res = $this->td->getInfo()->getResources();
 			$str = "";
 			for($i = 0; $i < count($res); $i++){

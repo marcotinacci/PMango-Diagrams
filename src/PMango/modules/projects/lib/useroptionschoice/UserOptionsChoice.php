@@ -320,23 +320,23 @@ class UserOptionsChoice {
 	public static function &GetInstance($instanceName="default") {
 		if(!isset(UserOptionsChoice::$instances["uoc_$instanceName"]) && isset($_SESSION["uoc_$instanceName"]))
 		{
-			//print "instance 'uoc_$instanceName' loaded from session";
+//			print "instance 'uoc_$instanceName' loaded from session";
 			UserOptionsChoice::$instances["uoc_$instanceName"] = unserialize($_SESSION["uoc_$instanceName"]);
 		}
 		if(!isset(UserOptionsChoice::$instances["uoc_$instanceName"])) {
-			//print "instance 'uoc_$instanceName' created new";
+//			print "instance 'uoc_$instanceName' created new";
 			UserOptionsChoice::$instances["uoc_$instanceName"] = new UserOptionsChoice($instanceName);
 		}
 		//CONTROLLO SE DEVE ESSERE AGGIORNATA DA UN QUALCHE FORM
 		if(!UserOptionsChoice::$instances["uoc_$instanceName"]->hasBeenRefreshed() && isset($_GET["REFRESH_UOC_$instanceName"]))
 		{
-			//print "instance 'uoc_$instanceName' setted from get";
+//			print "instance 'uoc_$instanceName' setted from get";
 			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed();
 			UserOptionsChoice::$instances["uoc_$instanceName"]->setFromArray($_GET);
 		}
 		else if(!UserOptionsChoice::$instances["uoc_$instanceName"]->hasBeenRefreshed() && isset($_POST["REFRESH_UOC_$instanceName"]))
 		{
-			//print "instance 'uoc_$instanceName' setted from post";
+//			print "instance 'uoc_$instanceName' setted from post";
 			UserOptionsChoice::$instances["uoc_$instanceName"]->setRefreshed();
 			UserOptionsChoice::$instances["uoc_$instanceName"]->setFromArray($_POST);
 		}
