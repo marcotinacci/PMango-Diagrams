@@ -874,7 +874,7 @@ class CTask extends CDpObject {
 		 AND project_roles.proles_id = user_tasks.proles_id
 		 GROUP BY (users.user_id)";
 		
-		$list = db_loadList($sql);
+		$list = db_loadColumn($sql);
 		foreach($list as $rid){
 			$sql="
 			SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
