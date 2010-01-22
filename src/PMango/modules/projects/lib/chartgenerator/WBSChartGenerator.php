@@ -202,7 +202,7 @@ class WBSChartGenerator extends ChartGenerator{
 					$cordinata2=$Link[1][Count($Link[1])-1]->getX();
 					$cordinata=$cordinata1+($cordinata2-$cordinata1)/2;
 																		
-					$areas[$l] = new GifRootTaskBox($this->gif,$cordinata-($rootWidth/2),$alt,$rootWidth,30,$project);
+					$areas[$l] = new GifRootTaskBox($this->gif,$cordinata-($rootWidth/2),$alt,$rootWidth,30,$project,$UOC);
 					
 					for($k = 0;$k < $occorrenze;$k++)
 					{
@@ -223,7 +223,7 @@ class WBSChartGenerator extends ChartGenerator{
 							//Se vi è una solo occorrenza allora posiziona lo "scatolotto" esattamente sopra il figlio
 							if($occorrenze == 1)
 							{
-								$areas[$l] = new GifTaskBox($this->gif,((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j]);
+								$areas[$l] = new GifTaskBox($this->gif,((($j+1)*$dimBlocco)-($dimBlocco/2))-($this->boxWidth/2),$alt,$this->boxWidth,30,$leav[$j],$UOC);
 								$Link[$i][$j]=$areas[$l];
 								$leav[$j]=$leav[$j]->getParent();
 								$l++;
@@ -241,7 +241,7 @@ class WBSChartGenerator extends ChartGenerator{
 								$cord2=$Link[$i+1][$j+$occorrenze-1]->getX();
 								
 								$cordinata=$cord1+(($cord2-$cord1)/2);		
-								$areas[$l] = new GifTaskBox($this->gif,($cordinata-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j]);
+								$areas[$l] = new GifTaskBox($this->gif,($cordinata-($this->boxWidth/2)),$alt,$this->boxWidth,30,$leav[$j],$UOC);
 								for($k=0;$k<$occorrenze;$k++)
 								{
 									$leav[$j+$k]=$leav[$j+$k]->getParent();
