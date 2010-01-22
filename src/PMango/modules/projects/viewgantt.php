@@ -252,6 +252,7 @@ $uoc->saveOnSession();
 				<?php $wh = $uoc->getCustomDimValues(); ?>
 				<br> width: <input size="4" type="text" name="<?php echo UserOptionEnumeration::$CustomWidthUserOption; ?>" value="<?php echo $wh['width'];?>"/> px 
 				<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowWidthUserOption; ?>" value="0"/>
+				<?php print $uoc->getRefreshHiddenField();?>
              </td>				
 				<td width="100%"></td>
 				<td align="right" valign="bottom">
