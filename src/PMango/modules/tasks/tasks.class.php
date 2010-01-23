@@ -851,7 +851,7 @@ class CTask extends CDpObject {
 	//Non funziona
 	function getAssignedUsers(){
 		$sql="
-		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role, IF(task_log_creator IS NULL, 0, SUM(task_log_hours)) AS ActualEffort
+		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
@@ -893,7 +893,7 @@ class CTask extends CDpObject {
 				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
 		 		 FROM task_log
 	   			 WHERE task_log_task = ".$this->task_id."
-		 		 AND task_log_creator = ".$rid;
+		 		 AND task_log_creator = ".$rid[0];
 				$result;
 				$res = db_loadList($sql);
 				if($res=='composed'){
