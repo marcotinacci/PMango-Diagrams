@@ -189,7 +189,8 @@ class TaskData{
 		DrawingHelper::debug($actual_time["finish_date"]." è l'actual finish date di ".$this->getInfo()->getTaskID());
 		DrawingHelper::debug($actual_cost." è l'actual cost di ".$this->getInfo()->getTaskID());
 		DrawingHelper::debug($actual_eff." è l'actual effort di ".$this->getInfo()->getTaskID());
-		
+		DrawingHelper::debug($today." è today");
+		DrawingHelper::debug($planned["start_date"]." è planned start date");
 		if($actual_time["start_date"]!=""){
 			DrawingHelper::debug("1");
 			if($actual_time["start_date"]>$planned_time["start_date"]){
