@@ -851,7 +851,7 @@ class CTask extends CDpObject {
 
 	function getAssignedUsers(){
 		$sql="
-		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
+		 SELECT users.user_id AS ID, users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
@@ -867,24 +867,19 @@ class CTask extends CDpObject {
 	
 	/*Ritorna la lista di user_id delle risorse assegnate al task*/
 	 
-	private function getResourceList(){
-	 	$sql="
+	private function getResourceList($tid = null){
+	 	$tid = !empty($tid) ? $tid : $this->task_id;
+		$sql="
 		 SELECT users.user_id
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
- 		 WHERE user_tasks.task_id = ".$this->task_id." 
+	 	 WHERE user_tasks.task_id = ".$tid." 
 		 AND user_tasks.user_id = users.user_id 
 		 AND project_roles.proles_id = user_tasks.proles_id 
 		 GROUP BY (users.user_id)";
-	 	
-	 	DrawingHelper::debug("Costruzione della lista chiamata da ".$this->task_id);
+		
 		$list = db_loadList($sql);
-		for($i=0; $i<sizeOf($list); $i++){
-			for($j=0; $j<sizeOf($list[$i]); $j++){
-				DrawingHelper::debug("Elem (".$i.", ".$j.") -> ".$list[$i][$j]);
-			}
-		}
 		return $list;
 	}
 	
@@ -892,67 +887,45 @@ class CTask extends CDpObject {
 	/*
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
 	 */
-	function getResourceActualEffortInTask($rid = null){
-	 	$list = $this->getResourceList();
-	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list));
-	 	if($rid==null){
-	 		for($i=0; $i<sizeOf($list);$i++){
-	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
-	 			$result = 0;
-				$sql="
-				 SELECT IF( task_log_creator IS NOT NULL ,
-				 	   (SELECT SUM( task_log_hours )
-						FROM task_log
-						WHERE task_log_task =".$this->task_id."
-						AND task_log_creator =".$list[$i][0]."),
-				  'composed' )
-				 FROM users, user_tasks
-				 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
-				 AND task_log.task_log_creator = user_tasks.user_id )
-				 WHERE user_tasks.task_id = ".$this->task_id."
-				 AND user_tasks.user_id = users.user_id";
-				
-				$res = db_loadList($sql);
-				DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0][0]);
-				
-				if($res[0][0]=='composed'){
-					
-					$children = $this->getChildren();
-					
-					foreach($children as $son){
-						DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
-						$CTask_son = new CTask();
-						$CTask_son->load($son);
-						$result += $CTask_son->getResourceActualEffortInTask($rid);
-					}
-					return $result;
-				}
-				else{
-					DrawingHelper::debug("Aggiungo le seguenti ore: ".$res[0][0]);
-					$result += $res[0][0];
-					DrawingHelper::debug("Siamo arrivati a: ".$result." per il task".$this-task_id);
+	function getResourceActualEffortInTask($rid){
+ 		DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
+ 		$result = 0;
+		$sql="
+		 SELECT IF( task_log_creator IS NOT NULL ,
+		 	   (SELECT SUM( task_log_hours )
+				FROM task_log
+				WHERE task_log_task =".$this->task_id."
+				AND task_log_creator =".$rid."),
+		  'composed' )
+		 FROM users, user_tasks
+		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
+		 AND task_log.task_log_creator = user_tasks.user_id )
+		 WHERE user_tasks.task_id = ".$this->task_id."
+		 AND user_tasks.user_id = users.user_id";
+		
+		$res = db_loadList($sql);
+		DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0][0]);
+		
+		if($res[0][0]=='composed'){
+			$children = $this->getChildren();
+			foreach($children as $son){
+				$list = $this->getResourceList($son);
+				if(in_array($rid, $list)){
+					DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
+					$CTask_son = new CTask();
+					$CTask_son->load($son);
+					$result += $CTask_son->getResourceActualEffortInTask($rid);
 				}
 			}
 			return $result;
-	 	}
-		else{
-			if(in_array($rid, $list)){
-				DrawingHelper::debug($rid." è stato trovato nella lista di utenti del task ".$this->task_id);
-				$sql="
-				 SELECT SUM(task_log_hours)
-			 	 FROM task_log
-	 		 	 WHERE task_log_task = ".$this->task_id." 
-			 	 AND task_log_creator = ".$rid[0][0]."
-			 	 GROUP BY (task_log_creator)";
-				$res = db_loadList($sql);
-				DrawingHelper::debug("Risultato ".$res[0][0]);
-				return $res[0][0];
-			}
-			else{
-				DrawingHelper::debug($rid." NON è stato trovato nella lista di utenti del task ".$this->task_id);
-				return 0;
-			}
 		}
+		else{
+			DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
+			$result = $res[0][0];
+			DrawingHelper::debug("Siamo arrivati a: ".$result." per il task".$this-task_id);
+		}
+		DrawingHelper::debug("Totale: ".$result);
+		return $result;
 	}
 	/**
 	 *  Calculate the extent of utilization of user assignments
