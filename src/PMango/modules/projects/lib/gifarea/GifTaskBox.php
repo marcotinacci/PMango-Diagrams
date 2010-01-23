@@ -147,7 +147,7 @@ class GifTaskBox extends GifArea
 		if($uoc->showAlertMarkUserOption())
 		{
 			$dates = $uoc->getCustomRangeValues();
-			$markVal = $task->isMarked($dates['today']);
+			$markVal = $task->isMarked(mangoToGanttDate($dates['today']));
 			if($markVal == DeltaInfoEnum::$good_news)
 			{
 			$this->subAreas['Mark']= new GifMark($gifImage,$this->x+$width, $this->y ,$row, 0);
