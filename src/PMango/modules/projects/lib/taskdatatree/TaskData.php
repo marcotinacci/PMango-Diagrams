@@ -185,34 +185,52 @@ class TaskData{
 		print "planned_cost: ".$planned_cost."<br>";
 		*/
 		
-		if($actual_time["start_date"]>$planned_time["start_date"] || ($actual_time["start_date"]==null && $today>$planned_time["start_date"])){
-			//print "ActualStart > PlannedStart BAD NEWS<br><br>";
-			return DeltaInfoEnum::$bad_news;
+		if($actual_time["start_date"]!=null){
+			if($actual_time["start_date"]>$planned_time["start_date"]){
+				//print "ActualStart > PlannedStart BAD NEWS<br><br>";
+				return DeltaInfoEnum::$bad_news;
+			}
+			if($actual_time["start_date"]<$planned_time["start_date"]){
+				//print "ActualStart < PlannedStart GOOD NEWS<br><br>";
+				return DeltaInfoEnum::$good_news;
+			}
 		}
-		if($actual_time["finish_date"]>$planned_time["finish_date"]){
-			//print "ActualFinish > PlannedFinish BAD NEWS<br><br>";
-			return DeltaInfoEnum::$bad_news;
+		else{
+			if($today>$planned_time["start_date"]){
+				return DeltaInfoEnum::$bad_news;
+			}
 		}
+		
+		if($actual_time["finish_date"]!=null){
+			if($actual_time["finish_date"]>$planned_time["finish_date"]){
+				return DeltaInfoEnum::$bad_news;
+			}
+			if($actual_time["finish_date"]<$planned_time["finish_date"]){
+				//print "ActualFinish < PlannedFinish GOOD NEWS<br><br>";
+				return DeltaInfoEnum::$good_news;
+			}
+		}
+		else{
+			if($today>$planned_time["finish_date"]){
+				return DeltaInfoEnum::$bad_news;
+			}
+		}
+		
 		if($actual_eff>$planned_eff){
 			//print "ActualEffort > PlannedEffort BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
+		
 		if($actual_cost>$planned_cost){
 			//print "ActualCost > PlannedCost BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
-		if($actual_time["start_date"]<$planned_time["start_date"]){
-			//print "ActualStart < PlannedStart GOOD NEWS<br><br>";
-			return DeltaInfoEnum::$good_news;
-		}
-		if($actual_time["finish_date"]<$planned_time["finish_date"]){
-			//print "ActualFinish < PlannedFinish GOOD NEWS<br><br>";
-			return DeltaInfoEnum::$good_news;
-		}
+		
 		if($actual_eff<$planned_eff){
 			//print "ActualEffort < PlannedEffort GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
+		
 		if($actual_cost<$planned_cost){
 			//print "ActualCost < PlannedCost GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
