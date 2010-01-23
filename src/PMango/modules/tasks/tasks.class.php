@@ -894,7 +894,7 @@ class CTask extends CDpObject {
 		 		 FROM task_log
 	   			 WHERE task_log_task = ".$this->task_id."
 		 		 AND task_log_creator = ".$rid[0];
-				$result;
+				$result = 0;
 				$res = db_loadList($sql);
 				if($res=='composed'){
 					DrawingHelper::debug("TASK COMPOSTO");
@@ -922,7 +922,7 @@ class CTask extends CDpObject {
 			 	 AND task_log_creator = ".$rid;
 				$res = db_loadList($sql);
 				DrawingHelper::debug("RISULTATO TROVATO".$res[0]);
-				return $res[0];
+				return $res[0][0];
 			}
 			else{
 				return 0;
