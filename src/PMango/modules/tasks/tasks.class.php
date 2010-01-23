@@ -877,7 +877,9 @@ class CTask extends CDpObject {
 		 AND user_tasks.user_id = users.user_id 
 		 AND project_roles.proles_id = user_tasks.proles_id 
 		 GROUP BY (users.user_id)";
-		return $list = db_loadList($sql);
+	 	
+		$list = db_loadList($sql);
+		return $list;
 	}
 	
 	
@@ -888,25 +890,29 @@ class CTask extends CDpObject {
 	 	$list = $this->getResourceList();
 	 	if($rid==null){
 	 		foreach($list as $rid){
-	 			DrawingHelper::debug("LA RESOURCE_ID è NULL, OTTENIAMO: ".$rid);
+	 			$result = 0;
+	 			
 				$sql="
 				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
 		 		 FROM task_log
 	   			 WHERE task_log_task = ".$this->task_id." 
 		 		 AND task_log_creator = ".$rid[0]."
 		 		 GROUP BY (task_log_creator)";
-				$result = 0;
+				
 				$res = db_loadList($sql);
+				
 				if($res=='composed'){
-					DrawingHelper::debug("TASK COMPOSTO");
+					
 					$children = $this->getChildren();
+					
 					foreach($children as $son){
-						DrawingHelper::debug("TASK ID DEL FIGLIO IN QUESTIONE: ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
 						$result += $CTask_son->getResourceActualEffortInTask($rid);
 					}
+					return $result;
 				}
+				
 				else{
 					$result += $res[0][0];
 				}
@@ -915,15 +921,13 @@ class CTask extends CDpObject {
 	 	}
 		else{
 			if(in_array($rid, $list)){
-				DrawingHelper::debug("E' NELL'ARRAY!");
 				$sql="
 				 SELECT SUM(task_log_hours)
 			 	 FROM task_log
 	 		 	 WHERE task_log_task = ".$this->task_id." 
-			 	 AND task_log_creator = ".$rid[0]."
+			 	 AND task_log_creator = ".$rid[0][0]."
 			 	 GROUP BY (task_log_creator)";
 				$res = db_loadList($sql);
-				DrawingHelper::debug("RISULTATO TROVATO".$res[0]);
 				return $res[0][0];
 			}
 			else{
