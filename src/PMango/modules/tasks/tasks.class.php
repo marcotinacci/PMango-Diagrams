@@ -864,8 +864,11 @@ class CTask extends CDpObject {
 		return $list;
 	}
 	
-	/*function getResourceActualEffortInTask(){
-		$sql="
+	
+	/*Ritorna la lista di user_id delle risorse assegnate al task*/
+	 
+	private function getResourceList(){
+	 	$sql="
 		 SELECT users.user_id
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
@@ -874,31 +877,53 @@ class CTask extends CDpObject {
 		 AND user_tasks.user_id = users.user_id
 		 AND project_roles.proles_id = user_tasks.proles_id
 		 GROUP BY (users.user_id)";
-		
-		$list = db_loadColumn($sql);
-		foreach($list as $rid){
-			$sql="
-			SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
-		 	FROM task_log
- 		 	WHERE task_log_task = ".$this->task_id."
-		 	AND task_log_creator = ".$rid;
-			$result;
-			$res = db_loadList($sql);
-			if($res=='composed'){
-				$children = $this->getChildren();
-				foreach($children as $son){
-					$CTask_son = new CTask();
-					$CTask_son->load($son);
-					$result += $CTask_son->getResourceActualEffortInTask();
+		return $list = db_loadList($sql);
+	}
+	
+	
+	/*
+	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
+	 */
+	function getResourceActualEffortInTask($rid = null){
+	 	$list = $this->getResourceList();;
+	 	if($rid==null){
+	 		foreach($list as $rid){
+				$sql="
+				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
+		 		 FROM task_log
+	   			 WHERE task_log_task = ".$this->task_id."
+		 		 AND task_log_creator = ".$rid;
+				$result;
+				$res = db_loadList($sql);
+				if($res=='composed'){
+					$children = $this->getChildren();
+					foreach($children as $son){
+						$CTask_son = new CTask();
+						$CTask_son->load($son);
+						$result += $CTask_son->getResourceActualEffortInTask($rid);
+					}
 				}
+				else{
+					$result = $res[0];
+				}
+			return $result;
+			}
+	 	}
+		else{
+			if(in_array($rid, $list)){
+				$sql="
+				 SELECT SUM(task_log_hours)
+			 	 FROM task_log
+	 		 	 WHERE task_log_task = ".$this->task_id."
+			 	 AND task_log_creator = ".$rid;
+				$res = db_loadList($sql);
+				return $res[0];
 			}
 			else{
-				$result = $res;
+				return 0;
 			}
-			return $result;
 		}
-	}*/
-
+	}
 	/**
 	 *  Calculate the extent of utilization of user assignments
 	 *  @param string hash   a hash for the returned hashList
