@@ -848,7 +848,7 @@ class CTask extends CDpObject {
 		}
 	}
 
-	//Non funziona
+
 	function getAssignedUsers(){
 		$sql="
 		 SELECT users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
@@ -919,7 +919,7 @@ class CTask extends CDpObject {
 				 SELECT SUM(task_log_hours)
 			 	 FROM task_log
 	 		 	 WHERE task_log_task = ".$this->task_id."
-			 	 AND task_log_creator = ".$rid;
+			 	 AND task_log_creator = ".$rid[0];
 				$res = db_loadList($sql);
 				DrawingHelper::debug("RISULTATO TROVATO".$res[0]);
 				return $res[0][0];
