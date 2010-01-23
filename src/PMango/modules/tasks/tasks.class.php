@@ -888,8 +888,11 @@ class CTask extends CDpObject {
 	 */
 	function getResourceActualEffortInTask($rid = null){
 	 	$list = $this->getResourceList();
+	 	$list = $list[0];
 	 	if($rid==null){
+	 		
 	 		foreach($list as $rid){
+	 			
 	 			$result = 0;
 	 			
 				$sql="
