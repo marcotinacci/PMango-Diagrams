@@ -185,8 +185,8 @@ class TaskData{
 		print "planned_cost: ".$planned_cost."<br>";
 		*/
 		
-		DrawingHelper::debug($actual_time["start_date"]." è l'actual start date di ".$this->getInfo()->getTaskID());
-		if($actual_time["start_date"]!=null){
+		//DrawingHelper::debug($actual_time["start_date"]." è l'actual start date di ".$this->getInfo()->getTaskID());
+		if($actual_time["start_date"]!=""){
 			if($actual_time["start_date"]>$planned_time["start_date"]){
 				//print "ActualStart > PlannedStart BAD NEWS<br><br>";
 				return DeltaInfoEnum::$bad_news;
@@ -202,7 +202,7 @@ class TaskData{
 			}
 		}
 		
-		if($actual_time["finish_date"]!=null){
+		if($actual_time["finish_date"]!=""){
 			if($actual_time["finish_date"]>$planned_time["finish_date"]){
 				return DeltaInfoEnum::$bad_news;
 			}
