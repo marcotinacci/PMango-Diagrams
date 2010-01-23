@@ -898,8 +898,7 @@ class CTask extends CDpObject {
 				AND task_log_creator =".$rid."),
 		  'composed' )
 		 FROM users, user_tasks
-		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
-		 AND task_log.task_log_creator = user_tasks.user_id )
+		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task)
 		 WHERE user_tasks.task_id = ".$this->task_id."
 		 AND user_tasks.user_id = users.user_id";
 		
