@@ -878,6 +878,7 @@ class CTask extends CDpObject {
 		 AND project_roles.proles_id = user_tasks.proles_id 
 		 GROUP BY (users.user_id)";
 	 	
+	 	DrawingHelper::debug("Costruzione della lista chiamata da ".$this->task_id);
 		$list = db_loadList($sql);
 		for($i=0; $i<sizeOf($list); $i++){
 			for($j=0; $j<sizeOf($list[$i]); $j++){
