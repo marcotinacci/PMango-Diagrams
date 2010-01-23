@@ -892,7 +892,7 @@ class CTask extends CDpObject {
 	 	if($rid==null){
 	 		
 	 		foreach($list as $rid){
-	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid);
+	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid[0]);
 	 			$result = 0;
 				$sql="
 				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
