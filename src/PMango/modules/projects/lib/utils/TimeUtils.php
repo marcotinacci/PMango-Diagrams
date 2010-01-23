@@ -21,7 +21,7 @@ function add_date($givendate,$hour=0,$day=0,$mth=0,$yr=0) {
 	return $newdate;
 }
 
-function mangoToGanttDate($date){
+function ymdToDate($date){
 	return substr($date,0,4).'-'.substr($date,4,2).'-'.substr($date,6,2).' 00:00:00';
 }
 

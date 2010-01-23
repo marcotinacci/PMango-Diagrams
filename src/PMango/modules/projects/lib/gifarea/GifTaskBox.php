@@ -109,10 +109,10 @@ class GifTaskBox extends GifArea
 			
 			$ActualTimeFrame_start = "NA";
 			$ActualTimeFrame_finish = "NA";
-			if(isset($atf['start_date']))
+			if($atf['start_date'] != '')
 			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
 
-			if(isset($atf['finish_date']))
+			if($atf['finish_date'] != '')
 			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel($gifImage,$this->x,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
@@ -147,7 +147,7 @@ class GifTaskBox extends GifArea
 		if($uoc->showAlertMarkUserOption())
 		{
 			$dates = $uoc->getCustomRangeValues();
-			$markVal = $task->isMarked(mangoToGanttDate($dates['today']));
+			$markVal = $task->isMarked(ymdToDate($dates['today']));
 			if($markVal == DeltaInfoEnum::$good_news)
 			{
 			$this->subAreas['Mark']= new GifMark($gifImage,$this->x+$width, $this->y ,$row, 0);
