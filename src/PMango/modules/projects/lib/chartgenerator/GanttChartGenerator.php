@@ -15,7 +15,7 @@ require_once dirname(__FILE__).'/ChartTypesEnum.php';
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.10
+ * @version: 0.11
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -171,12 +171,12 @@ class GanttChartGenerator extends ChartGenerator{
 
 		// calcola una sola volta il numero dei task dell'albero visibile
 		$this->numTasks = sizeOf($this->tasks);
-		
-		// imposta date start, finish e today
-		$this->setTimeRange();
 
 		// acquisizione tipo di grana
 		$this->setGrain();
+		
+		// imposta date start, finish e today
+		$this->setTimeRange();
 
 		// costruisci il canvas (necessita grana)
 		$this->makeCanvas();
@@ -239,6 +239,17 @@ class GanttChartGenerator extends ChartGenerator{
 	 * funzione che imposta le date start, finish e today
 	 */
 	protected function setTimeRange(){
+		// setta la tolleranza
+		$tolH = 0; $tolD = 0; $tolM = 0; $tolY = 0;
+		switch($this->grainLevel){
+			default:
+			case 5: $tolH = 1; break;
+			case 4: $tolD = 1; break;
+			case 3: $tolD = 7; break;
+			case 2: $tolM = 1; break;
+			case 1: $tolY = 1; break;						
+		}
+		
 		// ricava date start finish e today da opzioni utente
 		switch(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getTimeRangeUserOption()){
 			
@@ -280,27 +291,51 @@ class GanttChartGenerator extends ChartGenerator{
 				}
 //				echo "inizio $sProj - fine $fProj <br>";
 				if($sProj == null){
-					$start = $dates['today'];
-					$end = add_date($start,0,1);
+					$start = add_date($dates['today'],-$tolH,-$tolD,-$tolM,-$tolY);
+				}else{
+					$start = add_date($sProj,-$tolH,-$tolD,-$tolM,-$tolY);
 				}
-				
-				$start = add_date($sProj,0,-1);
-				$end = add_date($fProj,0,1);
+				$end = add_date($fProj,$tolH,$tolD,$tolM,$tolY);					
 			break;
 			
-			// inizio custom e fine today
+			// inizio project e fine today
 			case TimeRange::$FromStartToNowRangeUserOption:
 				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$start = mangoToGanttDate($dates['start']);
-				$end = add_date(mangoToGanttDate($dates['today']),0,1);
-				
+				$sProj = $dates['today'];
+				for($i=0; $i<$this->numTasks; $i++){
+					$td = $this->tasks[$i];
+					$planned = $td->getInfo()->getPlannedTimeFrame();
+					$actual = $td->getInfo()->getActualTimeFrame();
+					if($actual['start_date'] == null && $sProj == null){
+						$sProj = $planned['start_date'];
+					}else if($actual['start_date'] == null && $sProj != null){
+						$sProj = min($planned['start_date'],$sProj);
+					}else if($actual['start_date'] != null && $sProj == null){
+						$sProj = min($planned['start_date'],$actual['start_date']);
+					}else{
+						$sProj = min($planned['start_date'],$actual['start_date'],$sProj);
+					}
+				}
+				$start = add_date($sProj,-$tolH,-$tolD,-$tolM,-$tolY);				
+				$end = add_date($dates['today'],$tolH,$tolD,$tolM,$tolY);
 			break;
 			
-			// inizio today e fine custom
+			// inizio today e fine project
 			case TimeRange::$FromNowToEndRangeUserOption:
 				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$start = add_date(mangoToGanttDate($dates['today']),0,-1);
-				$end = add_date(mangoToGanttDate($dates['end']),0,1);
+				$fProj = mangoToGanttDate($dates['today']);;
+				for($i=0; $i<$this->numTasks; $i++){
+					$td = $this->tasks[$i];
+					$planned = $td->getInfo()->getPlannedTimeFrame();
+					$actual = $td->getInfo()->getActualTimeFrame();
+					if($actual['finish_date'] == null || $this->tasks[$i]->getInfo()->getPercentage() <= 99){
+						$fProj = max($planned['finish_date'],$fProj);
+					}else{				
+						$fProj = max($planned['finish_date'],$actual['finish_date'],$fProj);
+					}
+				}
+				$start = add_date($dates['today'],-$tolH,-$tolD,-$tolM,-$tolY);
+				$end = add_date($fProj,$tolH,$tolD,$tolM,$tolY);				
 			break;
 		}
 		
@@ -326,7 +361,6 @@ class GanttChartGenerator extends ChartGenerator{
 				$width = $_GET[UserOptionEnumeration::$FitInWindowWidthUserOption] - 40;
 			break;			
 			case ImageDimension::$OptimalDimUserOption:
-			// FIX: non funziona
 //			echo "inizio ".$this->sDate." - fine ".$this->fDate." <br>";	
 //			echo "inizio ".strtotime($this->sDate)." - fine ".strtotime($this->fDate)." <br>";		
 						
@@ -438,7 +472,7 @@ class GanttChartGenerator extends ChartGenerator{
 			$p->getProjectName(), // titolo
 			$this->fontSize // dim font
 			);
-		$title->getBox()->setForeColor('white');
+//		$title->getBox()->setForeColor('white');
 		$title->drawOn();				
 	}
 	
