@@ -609,22 +609,22 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 		
 		if(isset($_POST['add_gantt'])&&($_POST['append_order_e']==$k)){
 			  $i++;
-			  if(isset($_POST['new_page_e'])) $pdf->AddPage($page);
-			  	PM_makeGanttPdf($pdf);
+			  $pdf->addPage('L');
+			  PM_makeGanttPdf($pdf);
 			  $pdf->Ln(8);
 		}
 		
 		if(isset($_POST['add_wbs'])&&($_POST['append_order_f']==$k)){
 			  $i++;
-			  if(isset($_POST['new_page_f'])) $pdf->AddPage($page);
-			  	PM_makeWbsPdf($pdf);
+			  $pdf->addPage('L');
+			  PM_makeWbsPdf($pdf);
 			  $pdf->Ln(8);
 		}
 		
 		if(isset($_POST['add_tasknet'])&&($_POST['append_order_g']==$k)){
 			  $i++;
-			  if(isset($_POST['new_page_g'])) $pdf->AddPage($page);
-			 	PM_makeTaskNetworkPdf($pdf);
+			  $pdf->addPage('L');
+			 PM_makeTaskNetworkPdf($pdf);
 			  $pdf->Ln(8);
 		}
 }	

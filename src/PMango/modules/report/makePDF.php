@@ -68,7 +68,7 @@ switch($dPconfig['currency_symbol']){
 
 define("CURRENCY",$currency);
 
-function PM_isNewPage($pdf,$h=0,$orient,$type=0){
+function PM_isNewPage(&$pdf,$h=0,$orient,$type=0){
 	if($h+0.5>($pdf->h-20)-$pdf->GetY()) {
      	if($type==0){
 		  	$pdf->SetY($pdf->GetY()-CELLH);
@@ -77,7 +77,7 @@ function PM_isNewPage($pdf,$h=0,$orient,$type=0){
 	}	
 }
 
-function PM_wordCut($pdf,$string='',$maxlen=0){
+function PM_wordCut(&$pdf,$string='',$maxlen=0){
 	$t_name='';
 	$width=0;
 	$wordwidth = $pdf->GetStringWidth($string);
@@ -138,7 +138,7 @@ function PM_getHeight($task_id, $roles){
 	}	
 }
 
-function PM_printRoles($pdf, $roles, $task_id, $w, $y=0){
+function PM_printRoles(&$pdf, $roles, $task_id, $w, $y=0){
 	
 	if($roles=="P"){
 		$sql="SELECT DISTINCT users.user_last_name, users.user_first_name FROM users,project_roles,user_tasks
@@ -375,7 +375,7 @@ function PM_headerPdf($project_name, $page='P', $border=1, $group='', $image_fil
 	return $pdf;
 }
 
-function PM_footerPdf($pdf, $project_name, $p=0){
+function PM_footerPdf(&$pdf, $project_name, $p=0){
 
 	switch($p){
 	 	case 0: $filename=$project_name.".pdf";
@@ -399,7 +399,7 @@ function PM_footerPdf($pdf, $project_name, $p=0){
 
 
 
-function PM_makePropPdf($pdf, $properties, $project_id, $page='P'){
+function PM_makePropPdf(&$pdf, $properties, $project_id, $page='P'){
 	global $brd, $AppUI;
 	$top='LRT';
 	$lr='LR';
@@ -629,7 +629,7 @@ function PM_makePropPdf($pdf, $properties, $project_id, $page='P'){
 	$pdf->SetLineWidth(0.05);
 } 
 
-function PM_makeLogPdf($pdf, $project_id, $user_id, $hide_inactive, $hide_complete, $start_date, $end_date){
+function PM_makeLogPdf(&$pdf, $project_id, $user_id, $hide_inactive, $hide_complete, $start_date, $end_date){
 
 	global $AppUI, $brd, $orient;
 	$df = $AppUI->getPref('SHDATEFORMAT');
@@ -862,7 +862,7 @@ function PM_makeLogPdf($pdf, $project_id, $user_id, $hide_inactive, $hide_comple
 	$pdf->SetLineWidth(0.05);
 }
 
-function PM_makeTaskPdf($pdf, $project_id, $task_level, $tasks_closed, $tasks_opened, $roles, $tview, $start, $end, $showIncomplete){
+function PM_makeTaskPdf(&$pdf, $project_id, $task_level, $tasks_closed, $tasks_opened, $roles, $tview, $start, $end, $showIncomplete){
 
 	global $AppUI, $brd, $orient;
 
@@ -1274,13 +1274,13 @@ function PM_makeGanttPdf(&$pdf)
 	global $AppUI, $brd, $orient;
 	
 	$generatorUrl = "./modules/projects/lib/chartGenerator/report_gif_Gantt_".$AppUI->user_id.".gif";
-	
-	$pdf->SetFont('Arial','B',16);
-	//Title
-	$pdf->Cell(0,10,"Gantt Chart",'LRTB',1,'C');
-	$pdf->Image($generatorUrl,10,50,190);
-	//Line break
-	$pdf->Ln(10);
+
+	$size = PM_GetBestSize($generatorUrl);
+
+	$pdf->SetFont('Arial','B',10);
+	$pdf->Cell(0,4,"Gantt Chart",0,1,'L');
+	$pdf->Ln();
+	$pdf->Image($generatorUrl,null,null,$size['width'],$size['height']);
 }
 
 function PM_makeWbsPdf(&$pdf)
@@ -1289,12 +1289,13 @@ function PM_makeWbsPdf(&$pdf)
 	
 	$generatorUrl = "./modules/projects/lib/chartGenerator/report_gif_WBS_".$AppUI->user_id.".gif";
 	
-	$pdf->SetFont('Arial','B',16);
-	//Title
-	$pdf->Cell(0,10,"Wbs Chart",'LRTB',1,'C');
-	$pdf->Image($generatorUrl,10,50,190);
-	//Line break
-	$pdf->Ln(10);
+	$size = PM_GetBestSize($generatorUrl);
+	
+	$pdf->SetFont('Arial','B',10);
+	$pdf->Cell(0,4,"WBS Chart",0,1,'L');
+	$pdf->Ln();
+	$pdf->Image($generatorUrl,null,null,$size['width'],$size['height']);
+
 }
 
 function PM_makeTaskNetworkPdf(&$pdf)
@@ -1303,13 +1304,17 @@ function PM_makeTaskNetworkPdf(&$pdf)
 	
 	$generatorUrl = "./modules/projects/lib/chartGenerator/report_gif_tn_".$AppUI->user_id.".gif";
 	
-	$pdf->SetFont('Task Network Chart','B',16);
-	//Title
-	$pdf->Cell(0,10,"WBS",'LRTB',1,'C');
-	$pdf->Image($generatorUrl,10,50,190);
+	$size = PM_GetBestSize($generatorUrl);
 	
-	//Line break
-	$pdf->Ln(10);
+	$pdf->SetFont('Arial','B',10);
+	$pdf->Cell(0,4,"Task Network Chart",0,1,'L');
+	$pdf->Ln();
+	$pdf->Image($generatorUrl,null,null,$size['width'],$size['height']);
+}
+
+function PM_GetBestSize($gifPath)
+{
+	return array("width"=>277,"height"=>160);
 }
 
 ?>
