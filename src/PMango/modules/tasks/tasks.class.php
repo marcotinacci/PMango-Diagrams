@@ -888,13 +888,12 @@ class CTask extends CDpObject {
 	 */
 	function getResourceActualEffortInTask($rid = null){
 	 	$list = $this->getResourceList();
-	 	$list = $list[0];
+	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list));
 	 	if($rid==null){
 	 		
 	 		foreach($list as $rid){
-	 			
+	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid);
 	 			$result = 0;
-	 			
 				$sql="
 				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
 		 		 FROM task_log
@@ -909,6 +908,7 @@ class CTask extends CDpObject {
 					$children = $this->getChildren();
 					
 					foreach($children as $son){
+						DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
 						$result += $CTask_son->getResourceActualEffortInTask($rid);
@@ -924,6 +924,7 @@ class CTask extends CDpObject {
 	 	}
 		else{
 			if(in_array($rid, $list)){
+				DrawingHelper::debug($rid." è stato trovato nella lista di utenti del task ".$this->task_id);
 				$sql="
 				 SELECT SUM(task_log_hours)
 			 	 FROM task_log
@@ -931,9 +932,11 @@ class CTask extends CDpObject {
 			 	 AND task_log_creator = ".$rid[0][0]."
 			 	 GROUP BY (task_log_creator)";
 				$res = db_loadList($sql);
+				DrawingHelper::debug("Risultato ".$res[0][0]);
 				return $res[0][0];
 			}
 			else{
+				DrawingHelper::debug($rid." NON è stato trovato nella lista di utenti del task ".$this->task_id);
 				return 0;
 			}
 		}
