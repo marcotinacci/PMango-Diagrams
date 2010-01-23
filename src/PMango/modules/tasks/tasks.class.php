@@ -873,9 +873,9 @@ class CTask extends CDpObject {
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
- 		 WHERE user_tasks.task_id = ".$this->task_id."
-		 AND user_tasks.user_id = users.user_id
-		 AND project_roles.proles_id = user_tasks.proles_id
+ 		 WHERE user_tasks.task_id = ".$this->task_id." 
+		 AND user_tasks.user_id = users.user_id 
+		 AND project_roles.proles_id = user_tasks.proles_id 
 		 GROUP BY (users.user_id)";
 		return $list = db_loadList($sql);
 	}
@@ -892,8 +892,9 @@ class CTask extends CDpObject {
 				$sql="
 				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
 		 		 FROM task_log
-	   			 WHERE task_log_task = ".$this->task_id."
-		 		 AND task_log_creator = ".$rid[0];
+	   			 WHERE task_log_task = ".$this->task_id." 
+		 		 AND task_log_creator = ".$rid[0]."
+		 		 GROUP BY (task_log_creator)";
 				$result = 0;
 				$res = db_loadList($sql);
 				if($res=='composed'){
@@ -918,8 +919,9 @@ class CTask extends CDpObject {
 				$sql="
 				 SELECT SUM(task_log_hours)
 			 	 FROM task_log
-	 		 	 WHERE task_log_task = ".$this->task_id."
-			 	 AND task_log_creator = ".$rid[0];
+	 		 	 WHERE task_log_task = ".$this->task_id." 
+			 	 AND task_log_creator = ".$rid[0]."
+			 	 GROUP BY (task_log_creator)";
 				$res = db_loadList($sql);
 				DrawingHelper::debug("RISULTATO TROVATO".$res[0]);
 				return $res[0][0];
