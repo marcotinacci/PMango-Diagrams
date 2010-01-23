@@ -191,52 +191,66 @@ class TaskData{
 		DrawingHelper::debug($actual_eff." è l'actual effort di ".$this->getInfo()->getTaskID());
 		
 		if($actual_time["start_date"]!=""){
+			DrawingHelper::debug("1");
 			if($actual_time["start_date"]>$planned_time["start_date"]){
+				DrawingHelper::debug("2");
 				//print "ActualStart > PlannedStart BAD NEWS<br><br>";
 				return DeltaInfoEnum::$bad_news;
 			}
 			if($actual_time["start_date"]<$planned_time["start_date"]){
+				DrawingHelper::debug("3");
 				//print "ActualStart < PlannedStart GOOD NEWS<br><br>";
 				return DeltaInfoEnum::$good_news;
 			}
 		}
 		else{
+			DrawingHelper::debug("4");
 			if($today>$planned_time["start_date"]){
+				DrawingHelper::debug("5");
 				return DeltaInfoEnum::$bad_news;
 			}
 		}
 		
 		if($actual_time["finish_date"]!=""){
+			DrawingHelper::debug("6");
 			if($actual_time["finish_date"]>$planned_time["finish_date"]){
+				DrawingHelper::debug("7");
 				return DeltaInfoEnum::$bad_news;
 			}
 			if($actual_time["finish_date"]<$planned_time["finish_date"]){
+				DrawingHelper::debug("8");
 				//print "ActualFinish < PlannedFinish GOOD NEWS<br><br>";
 				return DeltaInfoEnum::$good_news;
 			}
 		}
 		else{
+			DrawingHelper::debug("9");
 			if($today>$planned_time["finish_date"]){
+				DrawingHelper::debug("10");
 				return DeltaInfoEnum::$bad_news;
 			}
 		}
 		
 		if($actual_eff>$planned_eff){
+			DrawingHelper::debug("11");
 			//print "ActualEffort > PlannedEffort BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
 		
 		if($actual_cost>$planned_cost){
+			DrawingHelper::debug("12");
 			//print "ActualCost > PlannedCost BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
 		
 		if($actual_eff<$planned_eff){
+			DrawingHelper::debug("13");
 			//print "ActualEffort < PlannedEffort GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
 		
 		if($actual_cost<$planned_cost){
+			DrawingHelper::debug("14");
 			//print "ActualCost < PlannedCost GOOD NEWS<br><br>";
 			return DeltaInfoEnum::$good_news;
 		}
