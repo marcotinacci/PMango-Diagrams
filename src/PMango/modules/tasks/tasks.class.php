@@ -926,12 +926,13 @@ class CTask extends CDpObject {
 					}
 					return $result;
 				}
-				
 				else{
+					DrawingHelper::debug("Aggiungo le seguenti ore: ".$res[0][0]);
 					$result += $res[0][0];
+					DrawingHelper::debug("Siamo arrivati a: ".$result." per il task".$this-task_id);
 				}
-			return $result;
 			}
+			return $result;
 	 	}
 		else{
 			if(in_array($rid, $list)){
