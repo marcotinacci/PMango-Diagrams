@@ -887,19 +887,19 @@ class CTask extends CDpObject {
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
 	 */
 	function getResourceActualEffortInTask($rid = null){
-	 	$list = $this->getResourceList();
+	 	$rid_list = $this->getResourceList();
 	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list));
 	 	if($rid==null){
 	 		
-	 		for($i=0; $i<sizeOf($list); $i++){
-	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid[$i]);
+	 		for($i=0; $i<sizeOf($rid_list); $i++){
+	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid_list[$i]);
 	 			$result = 0;
 				$sql="
 				 SELECT IF( task_log_creator IS NOT NULL ,
 				 	   (SELECT SUM( task_log_hours )
 						FROM task_log
 						WHERE task_log_task =".$this->task_id."
-						AND task_log_creator =".$rid[$i]."),
+						AND task_log_creator =".$rid_list[$i]."),
 				  'composed' )
 				 FROM users, user_tasks
 				 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
