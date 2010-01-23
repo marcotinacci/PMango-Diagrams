@@ -129,6 +129,7 @@ class UserOptionsChoice {
 		$this->array = array();
 		$pieces = explode("|",$str);
 		
+		
 		if($pieces[0]==1)
 			$this->array[UserOptionEnumeration::$TaskNameUserOption]=true;
 		if($pieces[1]==1)
@@ -176,12 +177,12 @@ class UserOptionsChoice {
 
 		// Task Network
 
-		$pieces[]=$this->array[UserOptionEnumeration::$TimeGapsUserOption]=$pieces[24];
+		$this->array[UserOptionEnumeration::$TimeGapsUserOption]=$pieces[24];
 		if($pieces[25]==1)
 			$this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]=true; //bool
 		if($pieces[26]==1)
 			$this->array[UserOptionEnumeration::$CriticalPathUserOption]=true; //bool
-		$pieces[]=$this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption]=$pieces[27];
+		$pieces[27]=$this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
 	}
 
 	// metodi che mostrano quali useroption ha selezionato l'utente

@@ -130,6 +130,7 @@ class GifLabel extends GifArea
 		$t->Align($this->hAlign,$this->vAlign);
 		//$t->ParagraphAlign($this->vAlign);
 		$this->canvas->add($t);
+		$c = new CanvasGraph();
 		if($this->underlined)
 		{
 			$this->canvas->img->SetColor($this->color);

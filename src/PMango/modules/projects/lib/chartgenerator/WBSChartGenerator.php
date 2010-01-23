@@ -355,8 +355,6 @@ class WBSChartGenerator extends ChartGenerator{
 		$this->gif->draw();
 		
 		global $AppUI;
-		$generatorUrl = "report_gif_wbs_".$AppUI->user_id.".gif";
-		$this->gif->saveToFile($generatorUrl);
 		
 	}
 	

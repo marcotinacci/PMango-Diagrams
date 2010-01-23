@@ -137,4 +137,9 @@ if($chart_type == ChartTypesEnum::$TaskNetwork)
 	$chart = new TaskNetworkChartGenerator();
 }
 $chart->generateChart();
+if(isset($_REQUEST['CREATE_REPORT']))
+{
 $chart->getChart()->saveToFile("report_gif_".$chart_type."_".$AppUI->user_id.".gif");
+}
+
+?>

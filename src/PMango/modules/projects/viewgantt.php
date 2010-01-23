@@ -85,6 +85,28 @@ if (!@$min_view) {
 }
 ?>
 
+<?php
+//$uoc = new UserOptionsChoice();
+$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt);
+$uoc->saveOnSession();
+
+$produceReport = dPgetParam( $_POST, 'addreport', '' );
+if($produceReport==1)
+{
+	$textUoc = $uoc->saveToString();
+	$sql="UPDATE
+			reports
+		  SET
+		  	gantt_user_options='$textUoc'
+		  WHERE 
+		  	reports.project_id=".$project_id." 
+		  AND 
+		  	reports.user_id=".$AppUI->user_id;
+	$db_roles = db_loadList($sql);
+}
+
+?>
+
 <script language="javascript">
 
 function getPageWidth()
@@ -147,17 +169,11 @@ function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
 	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
-	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$Gantt."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$Gantt.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 
 </script>
 
-
-<?php
-//$uoc = new UserOptionsChoice();
-$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt);
-$uoc->saveOnSession();
-?>
 
 <table width="100%" border="0" cellpadding="4"
 	cellspacing="0">
@@ -260,7 +276,43 @@ $uoc->saveOnSession();
 					value="<?php echo $AppUI->_( 'submit' );?>"
 					onclick='if (document.editFrm.<?php echo UserOptionEnumeration::$CustomEndDateUserOption; ?>.value < document.editFrm.<?php echo UserOptionEnumeration::$CustomStartDateUserOption; ?>.value) alert("Start date must before end date"); else submit();'>
 				</td>
-				</form>				
+				</form>	
+				<!-- REPORT -->
+				<td align="right" valign='bottom'>
+				<form name='pdf_options' method='POST' action='<?php echo $query_string; ?>'>
+				<?if ($_POST['make_pdf']=="true")	{
+					include('modules/report/makePDF.php');
+
+					$q  = new DBQuery;
+					$q->addQuery('projects.project_name');
+					$q->addTable('projects');
+					$q->addWhere("project_id = $project_id ");
+					$name = $q->loadList();
+					
+					$q  = new DBQuery;
+					$q->addTable('groups');
+					$q->addTable('projects');
+					$q->addQuery('groups.group_name');
+					$q->addWhere("projects.project_group = groups.group_id and projects.project_id = '$project_id'");
+					$group = $q->loadList();
+					
+					foreach ($group as $g){
+						$group_name=$g['group_name'];
+					}
+					
+					$pdf = PM_headerPdf($name[0]['project_name'],'P',1,$group_name);
+					PM_makeGanttPdf($pdf);
+					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 1);
+					?>
+					<a href="<?echo $filename;?>"><img src="./modules/report/images/pdf_report.gif" alt="PDF Report" border="0" align="absbottom"></a><?
+				}?>
+				
+					<input type="hidden" name="make_pdf" value="false" />
+					<input type="button" class="button" value="<?php echo $AppUI->_( 'Make PDF ' );?>" onclick='document.pdf_options.make_pdf.value="true"; document.pdf_options.submit();'>
+					<br><br>
+					<input type="hidden" name="addreport" value="-1" />
+					<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report ' );?>" onclick='document.pdf_options.addreport.value="1"; document.pdf_options.submit();'>
+				</td>			
 			</tr>
 
 		</table>
@@ -279,12 +331,12 @@ $uoc->saveOnSession();
 		/*
 		include('modules/report/makePDF.php');
 			$task_level=$explodeTasks;
-						$q  = new DBQuery;
-						$q->addQuery('projects.project_name');
-						$q->addTable('projects');
-						$q->addWhere("project_id = $project_id ");
-						$name = $q->loadList();
-						$pdf = PM_headerPdf($name[0]['project_name']);
+			$q  = new DBQuery;
+			$q->addQuery('projects.project_name');
+			$q->addTable('projects');
+			$q->addWhere("project_id = $project_id ");
+			$name = $q->loadList();
+			$pdf = PM_headerPdf($name[0]['project_name']);
 						//PM_makeWbsPdf($pdf,"./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."");
 						PM_makeWbsPdf($pdf,"./modules/projects/lib/chartGenerator/WBSTree.gif");
 						//PM_makeWbsPdf($pdf,"http://localhost:8080/Eclipse Project/PMango/application/PMango/modules/projects/lib/chartGenerator/WBSTree.gif");

@@ -50,6 +50,7 @@
 -------------------------------------------------------------------------------------------
 */
 
+require_once dirname(__FILE__)."/../Projects/lib/useroptionschoice/UserOptionsChoice.php";
 require_once( $AppUI->getSystemClass ('dp' ) );
 $AppUI->savePlace();
 /**
@@ -246,10 +247,10 @@ class CReport extends CDpObject {
 		$user_id = $AppUI->user_id;
 		$project_id=$pid;
 		
-		$sql="SELECT wbs_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
+		$sql="SELECT properties, prop_summary FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
 		$wbs_param = db_loadList($sql);
 
-		if($wbs_param[0]['wbs_user_options']!=null){
+		if($wbs_param[0]['properties']!=null){
 				$string=str_replace("@","'",$wbs_param[0]['properties']);
 				$summary=explode("|",$wbs_param[0]['prop_summary']);
 				$string2="Project isn't ";
@@ -274,7 +275,92 @@ class CReport extends CDpObject {
 		echo $s;
 		
 		return $string;	
+	}
 	
+	function getGanttChartReport($pid){
+		
+		GLOBAL $AppUI;
+		$user_id = $AppUI->user_id;
+		$project_id=$pid;
+		
+		$sql="SELECT gantt_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
+		$wbs_param = db_loadList($sql);
+
+		$string = "<b>Selected options:</b><br>";
+		
+		if($wbs_param[0]['gantt_user_options']!=null){
+			$uoc = &UserOptionsChoice::GetInstance("report_gantt");
+			$uoc->loadFromString($wbs_param[0]['gantt_user_options']);
+			//$uoc = new UserOptionsChoice();
+			if($uoc->showTaskNameUserOption())
+				$string.=" - Show TaskNames<br>";
+			if($uoc->showResourcesUserOption())
+				$string.=" - Show Resources<br>";
+			if($uoc->getTimeRangeUserOption()==TimeRange::$CustomRangeUserOption)
+			{
+				$dates=$uoc->getCustomRangeValues();
+				$string.=" - Time range is from ".$dates['start']." to ".$dates['end'];
+			}
+			if($uoc->getTimeRangeUserOption()==TimeRange::$WholeProjectRangeUserOption)
+			{
+				$dates=$uoc->getCustomRangeValues();
+				$string.=" - Time range is the whole project";
+			}
+			if($uoc->getTimeRangeUserOption()==TimeRange::$FromStartToNowRangeUserOption)
+			{
+				$dates=$uoc->getCustomRangeValues();
+				$string.=" - Time range is from ".$dates['start']." to ".$dates['today'];
+			}
+			if($uoc->getTimeRangeUserOption()==TimeRange::$FromNowToEndRangeUserOption)
+			{
+				$dates=$uoc->getCustomRangeValues();
+				$string.=" - Time range is from ".$dates['today']." to ".$dates['end'];
+			}
+		}
+		else
+		{
+			"No Gantt chart requested";
+		}
+		
+		return $string;	
+	}
+	
+	function getWBSChartReport($pid){
+		
+		GLOBAL $AppUI;
+		$user_id = $AppUI->user_id;
+		$project_id=$pid;
+		
+		$sql="SELECT wbs_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
+		$wbs_param = db_loadList($sql);
+
+		$string = "<b>Selected options:</b><br>";
+		
+		if($wbs_param[0]['wbs_user_options']!=null){
+			$uoc = &UserOptionsChoice::GetInstance("report_wbs");
+			$uoc->loadFromString($wbs_param[0]['wbs_user_options']);
+			//$uoc = new UserOptionsChoice();
+			if($uoc->showTaskNameUserOption())
+				$string.=" - Show TaskNames<br>";
+			if($uoc->showAlertMarkUserOption())
+				$string.=" - Show AlertMarks<br>";
+			if($uoc->showPlannedDataUserOption())
+				$string.=" - Show PlannedData<br>";
+			if($uoc->showPlannedTimeFrameUserOption())
+				$string.=" - Show PlannedTimeFrame<br>";	
+			if($uoc->showActualDataUserOption())
+				$string.=" - Show ActualData<br>";
+			if($uoc->showActualTimeFrameUserOption())
+				$string.=" - Show ActualTimeFrame<br>";
+			if($uoc->showResourcesUserOption())
+				$string.=" - Show Resources<br>";
+		}
+		else
+		{
+			"No WBS chart requested";
+		}
+		
+		return $string;	
 	}
 	
 

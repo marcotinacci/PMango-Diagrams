@@ -66,7 +66,8 @@ require_once dirname(__FILE__)."/lib/chartgenerator/ChartTypesEnum.php";
 $uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
 $uoc->saveOnSession();
 
-if(dPgetParam( $_POST, 'addreport', '' )==1)
+$produceReport = dPgetParam( $_POST, 'addreport', '' );
+if($produceReport==1)
 {
 	$textUoc = $uoc->saveToString();
 	$sql="UPDATE
@@ -98,8 +99,8 @@ function getPageWidth()
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
-	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$WBS."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/Test.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$WBS.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 </script>
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
@@ -154,8 +155,9 @@ function BuildImage(placeHolder)
 					value="<?php echo $AppUI->_( 'submit' );?>"
 					onclick='submit();'>
                 </td>		
-                </form>  		
-				<td align="right">
+                </form>  
+                <!-- REPORT -->		
+				<td align="right" valign='bottom'>
 				<form name='pdf_options' method='POST' action='<?php echo $query_string; ?>'>
 				<?if ($_POST['make_pdf']=="true")	{
 					include('modules/report/makePDF.php');
@@ -184,9 +186,9 @@ function BuildImage(placeHolder)
 					<a href="<?echo $filename;?>"><img src="./modules/report/images/pdf_report.gif" alt="PDF Report" border="0" align="absbottom"></a><?
 				}?>
 				
-				
 					<input type="hidden" name="make_pdf" value="false" />
 					<input type="button" class="button" value="<?php echo $AppUI->_( 'Make PDF ' );?>" onclick='document.pdf_options.make_pdf.value="true"; document.pdf_options.submit();'>
+					<br><br>
 					<input type="hidden" name="addreport" value="-1" />
 					<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report ' );?>" onclick='document.pdf_options.addreport.value="1"; document.pdf_options.submit();'>
 				</td>

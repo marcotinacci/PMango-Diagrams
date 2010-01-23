@@ -396,24 +396,24 @@ function check(){
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
 				<select name="append_order_e" class="text">
-					<option value="4" <?echo ($_POST['append_order_e']=="5")? "selected":""?>>5
+					<option value="5" <?echo ($_POST['append_order_e']=="5")? "selected":""?>>5
 					<option value="1" <?echo ($_POST['append_order_e']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_e']=="2")? "selected":""?>>2
 					<option value="3" <?echo ($_POST['append_order_e']=="3")? "selected":""?>>3
-					<option value="5" <?echo ($_POST['append_order_e']=="4")? "selected":""?>>4
+					<option value="4" <?echo ($_POST['append_order_e']=="4")? "selected":""?>>4
 					<option value="6" <?echo ($_POST['append_order_e']=="6")? "selected":""?>>6
 					<option value="7" <?echo ($_POST['append_order_e']=="7")? "selected":""?>>7
 				</select>
 				</td>
 				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
-				<input type="checkbox" name="new_page_e" <?echo ($_POST['new_page_e'])?"checked":"";?>>
+				<input disabled type="checkbox" name="new_page_e" <?echo ($_POST['new_page_e'])?"checked":"checked";?>>
 				</td>
 			</tr>
 			<tr >
 				<td nowrap='nowrap'>
 				</td>
 				<td nowrap='nowrap'>
-					<? $task_log = CReport::getWBSReport($project_id); ?>
+				<?php print CReport::getGanttChartReport($project_id); ?>
 				</td>
 				<td nowrap='nowrap' colspan="4">
 				</td>
@@ -440,24 +440,24 @@ function check(){
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
 				<select name="append_order_f" class="text">
-					<option value="4" <?echo ($_POST['append_order_f']=="6")? "selected":""?>>6
+					<option value="6" <?echo ($_POST['append_order_f']=="6")? "selected":""?>>6
 					<option value="1" <?echo ($_POST['append_order_f']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_f']=="2")? "selected":""?>>2
 					<option value="3" <?echo ($_POST['append_order_f']=="3")? "selected":""?>>3
-					<option value="5" <?echo ($_POST['append_order_f']=="4")? "selected":""?>>4
-					<option value="6" <?echo ($_POST['append_order_f']=="5")? "selected":""?>>5
+					<option value="4" <?echo ($_POST['append_order_f']=="4")? "selected":""?>>4
+					<option value="5" <?echo ($_POST['append_order_f']=="5")? "selected":""?>>5
 					<option value="7" <?echo ($_POST['append_order_f']=="7")? "selected":""?>>7
 				</select>
 				</td>
 				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
-				<input type="checkbox" name="new_page_f" <?echo ($_POST['new_page_f'])?"checked":"";?>>
+				<input disabled type="checkbox" name="new_page_f" <?echo ($_POST['new_page_f'])?"checked":"checked";?>>
 				</td>
 			</tr>
 			<tr >
 				<td nowrap='nowrap'>
 				</td>
 				<td nowrap='nowrap'>
-					<? $task_log = CReport::getWBSReport($project_id); ?>
+					<?php print CReport::getWBSChartReport($project_id); ?>
 				</td>
 				<td nowrap='nowrap' colspan="4">
 				</td>
@@ -616,7 +616,6 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 		
 		if(isset($_POST['add_wbs'])&&($_POST['append_order_f']==$k)){
 			  $i++;
-			  print "Ciao";
 			  if(isset($_POST['new_page_f'])) $pdf->AddPage($page);
 			  	PM_makeWbsPdf($pdf);
 			  $pdf->Ln(8);
