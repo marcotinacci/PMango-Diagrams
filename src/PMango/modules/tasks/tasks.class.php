@@ -885,9 +885,10 @@ class CTask extends CDpObject {
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
 	 */
 	function getResourceActualEffortInTask($rid = null){
-	 	$list = $this->getResourceList();;
+	 	$list = $this->getResourceList();
 	 	if($rid==null){
 	 		foreach($list as $rid){
+	 			DrawingHelper::debug("LA RESOURCE_ID è NULL, OTTENIAMO: ".$rid);
 				$sql="
 				 SELECT IF(task_log_creator IS NOT NULL, SUM(task_log_hours), 'composed')
 		 		 FROM task_log
@@ -896,8 +897,10 @@ class CTask extends CDpObject {
 				$result;
 				$res = db_loadList($sql);
 				if($res=='composed'){
+					DrawingHelper::debug("TASK COMPOSTO");
 					$children = $this->getChildren();
 					foreach($children as $son){
+						DrawingHelper::debug("TASK ID DEL FIGLIO IN QUESTIONE: ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
 						$result += $CTask_son->getResourceActualEffortInTask($rid);
@@ -911,12 +914,14 @@ class CTask extends CDpObject {
 	 	}
 		else{
 			if(in_array($rid, $list)){
+				DrawingHelper::debug("E' NELL'ARRAY!");
 				$sql="
 				 SELECT SUM(task_log_hours)
 			 	 FROM task_log
 	 		 	 WHERE task_log_task = ".$this->task_id."
 			 	 AND task_log_creator = ".$rid;
 				$res = db_loadList($sql);
+				DrawingHelper::debug("RISULTATO TROVATO".$res[0]);
 				return $res[0];
 			}
 			else{
@@ -2450,8 +2455,5 @@ function sort_by_item_title( $title, $item_name, $item_type )
 
 	echo '</a>';
 }
-
-
-
 
 ?>
