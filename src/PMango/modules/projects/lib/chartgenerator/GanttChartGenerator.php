@@ -11,15 +11,23 @@ require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
 require_once dirname(__FILE__).'/../taskdatatree/Project.php';
 require_once dirname(__FILE__).'/ChartTypesEnum.php';
 
+$debugging = false;
+
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.11
+ * @version: 1.0
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
 class GanttChartGenerator extends ChartGenerator{
+	
+	/**
+	 * Pixel che spaziano le frecce dai box
+	 * @var int
+	 */	
+	protected $arrowOffset = 10;
 	
 	/**
 	 * Pixel che spaziano in verticale i tasks
@@ -140,7 +148,7 @@ class GanttChartGenerator extends ChartGenerator{
 	/**
 	 * Costruttore
 	 */
-	public function __construct(){
+	public function __construct(){	
 		parent::__construct();
 	}
 /*	DEBUG
@@ -260,15 +268,15 @@ class GanttChartGenerator extends ChartGenerator{
  			// inizio e fine custom			
 			case TimeRange::$CustomRangeUserOption:
 				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$start = mangoToGanttDate($dates['start']);
-				$end = add_date(mangoToGanttDate($dates['end']),0,1);
+				$start = ymdToDate($dates['start']);
+				$end = add_date(ymdToDate($dates['end']),0,1);
 			break;
 			
 			default:
 			// inizio e fine del progetto
 			case TimeRange::$WholeProjectRangeUserOption: 
 				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$tempToday = mangoToGanttDate($dates['today']);
+				$tempToday = ymdToDate($dates['today']);
 //				echo "today: ".$dates['today']."<br>";
 				$sProj = null;
 				$fProj = null;
@@ -327,7 +335,7 @@ class GanttChartGenerator extends ChartGenerator{
 			// inizio today e fine project
 			case TimeRange::$FromNowToEndRangeUserOption:
 				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$fProj = mangoToGanttDate($dates['today']);;
+				$fProj = ymdToDate($dates['today']);;
 				for($i=0; $i<$this->numTasks; $i++){
 					$td = $this->tasks[$i];
 					$planned = $td->getInfo()->getPlannedTimeFrame();
@@ -345,7 +353,7 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		$this->sDate = $start;
 		$this->fDate = $end;
-		$this->today = mangoToGanttDate($dates['today']);	
+		$this->today = ymdToDate($dates['today']);	
 	}
 	
 	/**
@@ -587,14 +595,15 @@ class GanttChartGenerator extends ChartGenerator{
 //		foreach($this->dep as $key => $d){
 //			echo "key: $key <br>";
 //		}
-		$depOffset = array();
-		foreach($this->tasks as $taskKey =>$task){
-			$depOffset[$taskKey]['up'] = $this->gTasks[$taskKey]->getPlannedTopMiddlePoint();
-			$depOffset[$taskKey]['left'] = $this->gTasks[$taskKey]->getPlannedLeftMiddlePoint();
-//			echo "task: $taskKey - left: ".$depOffset[$taskKey]['left']['x'].",".
-//				$depOffset[$taskKey]['left']['y']." - up: ".$depOffset[$taskKey]['up']['x'].
-//				",".$depOffset[$taskKey]['up']['y']."<br>";
-		}
+		
+		$lineList = array();
+//		if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+			$depOffset = array();
+			foreach($this->tasks as $taskKey =>$task){
+				$depOffset[$taskKey]['up'] = $this->gTasks[$taskKey]->getPlannedTopMiddlePoint();
+				$depOffset[$taskKey]['left'] = $this->gTasks[$taskKey]->getPlannedLeftMiddlePoint();
+			}
+//		}
 		foreach($this->tasks as $needKey => $needTask){
 			if(!array_key_exists($needTask->getInfo()->getTaskID(),$this->dep)){
 				continue;
@@ -621,48 +630,114 @@ class GanttChartGenerator extends ChartGenerator{
 					}
 					if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
 						// starting
+						// TODO: attendere uoc
 //						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
 							$point2 = $depOffset[$depKey]['left'];
+							if(isset($depOffset[$depKey]['arrow'])){
+								if($depOffset[$depKey]['arrow'] == 'up'){
+									DrawingHelper::drawArrow($point2['x'],$point2['y'],6,10,'up',$this->chart);
+								}else if($depOffset[$depKey]['arrow'] == 'down'){
+									DrawingHelper::drawArrow($point2['x'],$point2['y'],6,10,'down',$this->chart);
+								}
+							}
+
 //						}else{
-							
+//							$point2 = $this->gTasks[$taskKey]->getPlannedLeftMiddlePoint();
 //						}
 						$middleIn = false;
 					}else{
 						// inner
+						// TODO: attendere uoc						
 //						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
 							$point2 = $depOffset[$depKey]['up'];
+							if(isset($depOffset[$depKey]['arrow'])){
+								if($depOffset[$depKey]['arrow'] == 'left'){
+									DrawingHelper::drawArrow($point2['x'],$point2['y'],10,6,'left',$this->chart);
+								}else if($depOffset[$depKey]['arrow'] == 'right'){
+									DrawingHelper::drawArrow($point2['x'],$point2['y'],10,6,'right',$this->chart);
+								}
+							}							
+
 //						}else{
-							
+//							$point2 = $this->gTasks[$taskKey]->getPlannedTopMiddlePoint();							
 //						}
 						$middleIn = true;						
 					}
 
-					$line = DrawingHelper::GanttFTSLine(
+					$line = DrawingHelper::GetGanttFTSLine(
 						$point1['x'],
 						$point1['y'],
 						$point2['x'],
 						$point2['y'],
-						10,
+						$this->arrowOffset,
+						$middleIn,
+						$middleOut
+					);
+					
+					// rintracciamento collisioni
+					$count = -1;
+					for($i = 0; $i < count($lineList); $i++){
+						if(DrawingHelper::linesCross($lineList[$i]['line'],$line,$this->chart)){
+							$count = max($count, $lineList[$i]['count']);							
+						}
+//						echo " - inizio: (".$lineList[$i]['line'][0]->horizontal.",".
+//							$lineList[$i]['line'][0]->vertical.") - fine: (".$lineList[$i]['line'][count($lineList[$i]['line'])-1]->horizontal.",".
+//								$lineList[$i]['line'][count($lineList[$i]['line'])-1]->vertical.")- count: ".$lineList[$i]['count']."<br>";
+					}
+					$count++;
+					$lineList[] = array('line' => $line, 'count' => $count);
+//					echo "stampa FTS: da $needKey a $depKey <br>";
+//					echo "middle in: $middleIn - middle out: $middleOut <br>";
+//					echo "x1: ".$point1['x']." y1: ".$point1['y']."<br>";
+//					echo "x2: ".$point2['x']." y2: ".$point2['y']."<br>";
+
+					$style = $count > 0 ?  
+						new LineStyle('#7F7F7F',1,'solid',$count,5):
+						new LineStyle('#7F7F7F');
+						
+					DrawingHelper::GanttFTSLine(
+						$point1['x'],
+						$point1['y'],
+						$point2['x'],
+						$point2['y'],
+						$this->arrowOffset,
 						true,
 						$middleIn,
 						$middleOut,
 						$this->chart,
-						new LineStyle('#7F7F7F')
+						$style
 					);			
-					
-					if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
-						// starting
-//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+						// TODO: attendere uoc					
+//					if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+						if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
+							// starting
 							$depOffset[$depKey]['left']['x'] -= 
-								$line[count($line)-1]->horizontal - $line[count($line)-2]->horizontal;
-//						}
-					}else{
-						// inner
-//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+								abs($line[count($line)-1]->horizontal - $line[count($line)-2]->horizontal);
+
+							$y1 = $line[count($line)-3]->vertical;	
+							$y2 = $line[count($line)-2]->vertical;
+							$y3 = $line[count($line)-1]->vertical;
+							
+							if($y2 > $y1){
+								$depOffset[$depKey]['arrow'] = 'down';
+							}else if($y2 < $y1){
+								$depOffset[$depKey]['arrow'] = 'up';
+							}							
+						}else{
+							// inner
 							$depOffset[$depKey]['up']['y'] -= 
-								$line[count($line)-1]->vertical - $line[count($line)-2]->vertical;
-//						}		
-					}					
+								abs($line[count($line)-1]->vertical - $line[count($line)-2]->vertical);		
+
+							$x1 = $line[count($line)-3]->horizontal;
+							$x2 = $line[count($line)-2]->horizontal;
+							$x3 = $line[count($line)-1]->horizontal;								
+							if($x2 > $x1){
+								$depOffset[$depKey]['arrow'] = 'right';									
+							}else if($x2 < $x1){
+								$depOffset[$depKey]['arrow'] = 'left';									
+							}								
+						}					
+//					}
 				}
 			}
 		}
