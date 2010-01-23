@@ -191,7 +191,11 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeFront();
 		$this->makeTitle();
 		$this->makeGanttTaskBox();
-		$this->makeGanttDependencies();
+		// TODO: attendere l'opzione utente
+		//if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->
+		//	showFinishToStartDependenciesUserOption()){
+			$this->makeGanttDependencies();			
+		//}
 		$this->makeTodayLine();
 		$this->makeLeftColumn();
 		$this->borderRemark();
@@ -285,7 +289,7 @@ class GanttChartGenerator extends ChartGenerator{
 //						echo "max: ".$planned['finish_date'].",$tempToday,$fProj <br>";
 						$fProj = max($planned['finish_date'],$tempToday,$fProj);
 					}else{
-//						echo "max: ".$planned['finish_date'].",".$actual['finish_date'].",$fProj <br>";						
+//						echo "max: ".$planned['finish_date'].",".$actual['finish_date'].",$fProj <br>";
 						$fProj = max($planned['finish_date'],$actual['finish_date'],$fProj);
 					}
 				}
@@ -583,6 +587,14 @@ class GanttChartGenerator extends ChartGenerator{
 //		foreach($this->dep as $key => $d){
 //			echo "key: $key <br>";
 //		}
+		$depOffset = array();
+		foreach($this->tasks as $taskKey =>$task){
+			$depOffset[$taskKey]['up'] = $this->gTasks[$taskKey]->getPlannedTopMiddlePoint();
+			$depOffset[$taskKey]['left'] = $this->gTasks[$taskKey]->getPlannedLeftMiddlePoint();
+//			echo "task: $taskKey - left: ".$depOffset[$taskKey]['left']['x'].",".
+//				$depOffset[$taskKey]['left']['y']." - up: ".$depOffset[$taskKey]['up']['x'].
+//				",".$depOffset[$taskKey]['up']['y']."<br>";
+		}
 		foreach($this->tasks as $needKey => $needTask){
 			if(!array_key_exists($needTask->getInfo()->getTaskID(),$this->dep)){
 				continue;
@@ -609,15 +621,23 @@ class GanttChartGenerator extends ChartGenerator{
 					}
 					if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
 						// starting
-						$point2 = $this->gTasks[$depKey]->getPlannedLeftMiddlePoint();
+//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+							$point2 = $depOffset[$depKey]['left'];
+//						}else{
+							
+//						}
 						$middleIn = false;
 					}else{
 						// inner
-						$point2 = $this->gTasks[$depKey]->getPlannedTopMiddlePoint();
+//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+							$point2 = $depOffset[$depKey]['up'];
+//						}else{
+							
+//						}
 						$middleIn = true;						
 					}
 
-					DrawingHelper::GanttFTSLine(
+					$line = DrawingHelper::GanttFTSLine(
 						$point1['x'],
 						$point1['y'],
 						$point2['x'],
@@ -628,7 +648,21 @@ class GanttChartGenerator extends ChartGenerator{
 						$middleOut,
 						$this->chart,
 						new LineStyle('#7F7F7F')
-					);					
+					);			
+					
+					if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
+						// starting
+//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+							$depOffset[$depKey]['left']['x'] -= 
+								$line[count($line)-1]->horizontal - $line[count($line)-2]->horizontal;
+//						}
+					}else{
+						// inner
+//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+							$depOffset[$depKey]['up']['y'] -= 
+								$line[count($line)-1]->vertical - $line[count($line)-2]->vertical;
+//						}		
+					}					
 				}
 			}
 		}

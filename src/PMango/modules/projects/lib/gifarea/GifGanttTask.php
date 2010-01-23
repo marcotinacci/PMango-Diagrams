@@ -9,7 +9,6 @@ require_once dirname(__FILE__)."/GifTriangle.php";
 require_once dirname(__FILE__)."/../utils/TimeUtils.php";
 
 // TODO: dividere il codice in sotto procedure
-// TODO: label risorse
 
 /**
  * Questa classe implementa la generazione grafica del task nel diagramma Gantt
@@ -411,7 +410,7 @@ class GifGanttTask extends GifArea
 	public function getPlannedTopMiddlePoint()
 	{
 		$point = array();
-		$point['x']=$this->getX() + intval($this->trueXPlanned+($this->trueWPlanned/2));
+		$point['x']=intval($this->getX() + intval($this->trueXPlanned+($this->trueWPlanned/2)));
 		$point['y']=$this->getY() + $this->trueYPlanned;
 		return $point;
 	}
@@ -419,7 +418,7 @@ class GifGanttTask extends GifArea
 	public function getPlannedBottomMiddlePoint()
 	{
 		$point = array();
-		$point['x']=$this->getX() + $this->trueXPlanned+($this->trueWPlanned/2);
+		$point['x']=intval($this->getX() + $this->trueXPlanned+($this->trueWPlanned/2));
 		$point['y']=$this->getY() + $this->trueYPlanned+($this->hP);
 		return $point;
 	}
@@ -428,7 +427,7 @@ class GifGanttTask extends GifArea
 	{
 		$point = array();
 		$point['x']=$this->getX() + $this->trueXPlanned;
-		$point['y']=$this->getY() + $this->trueYPlanned+($this->hP/2);
+		$point['y']=intval($this->getY() + $this->trueYPlanned+($this->hP/2));
 		return $point;
 	}
 	
@@ -436,7 +435,7 @@ class GifGanttTask extends GifArea
 	{
 		$point = array();
 		$point['x']=$this->getX() + $this->trueXPlanned+($this->trueWPlanned);
-		$point['y']=$this->getY() + $this->trueYPlanned+($this->hP/2);
+		$point['y']=intval($this->getY() + $this->trueYPlanned+($this->hP/2));
 		return $point;
 	}
 	

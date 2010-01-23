@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__).'/LineStyle.php';
+require_once dirname(__FILE__).'/../chartgenerator/PointInfo.php';
 
 class DrawingHelper
 {
@@ -396,7 +397,7 @@ class DrawingHelper
 		$gifImage->getCanvas()->img->SetColor("black");
 		$gifImage->getCanvas()->img->FilledPolygon($points);
 	}
-
+/*
 	public static function GanttDependencyLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle = null)
 	{
 		$halfQuote = ($y2-$y1)/2;
@@ -420,27 +421,36 @@ class DrawingHelper
 			DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
 		}
 	}
-
+*/
 
 	public static function GanttFTSLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$middleIn,$middleOut,$gifImage,$lineStyle = null)
 	{
+		$points = array();
 		$halfQuote = ($y2-$y1)/2;
 		$halfX = ($x2-$x1)/2;
 		if($middleIn && $middleOut)
 		{
 			if($y1<$y2)
 			{
+				$points[] = new PointInfo($x1,$y1);
 				DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$halfQuote,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x1,$y1+$halfQuote);
 				DrawingHelper::LineFromTo($x1,$y1+$halfQuote,$x2,$y1+$halfQuote,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2,$y1+$halfQuote);				
 				DrawingHelper::LineFromTo($x2,$y1+$halfQuote,$x2,$y2,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2,$y2);				
 				if($endWithArrow)
 				DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
 			}
 			else
 			{
+				$points[] = new PointInfo($x1,$y1);				
 				DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x1,$y1+$offset);				
 				DrawingHelper::LineFromTo($x1,$y1+$offset,$x2,$y1+$offset,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2,$y1+$offset);				
 				DrawingHelper::LineFromTo($x2,$y1+$offset,$x2,$y2,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2,$y2);				
 				if($endWithArrow)
 				DrawingHelper::drawArrow($x2,$y2,10,10,"up",$gifImage);
 			}
@@ -451,17 +461,25 @@ class DrawingHelper
 			{
 				if($x1<=$x2)
 				{
+					$points[] = new PointInfo($x1,$y1);
 					DrawingHelper::LineFromTo($x1,$y1,$x1,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1,$y2);
 					DrawingHelper::LineFromTo($x1,$y2,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
 				}
 				if($x1>$x2)
 				{
+					$points[] = new PointInfo($x1,$y1);
 					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$halfQuote,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1,$y1+$halfQuote);										
 					DrawingHelper::LineFromTo($x1,$y1+$halfQuote,$x2-$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2-$offset,$y1+$halfQuote);					
 					DrawingHelper::LineFromTo($x2-$offset,$y1+$halfQuote,$x2-$offset,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2-$offset,$y2);					
 					DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);					
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
 				}
@@ -470,17 +488,30 @@ class DrawingHelper
 			{
 				if($x1<=$x2)
 				{
-					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
-					DrawingHelper::GanttDependencyLine($x1,$y1+$offset,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1,$y1);
+					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);					
+					//DrawingHelper::GanttDependencyLine($x1,$y1+$offset,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1,$y1+$offset);
+					DrawingHelper::LineFromTo($x1,$y1+$offset,$x1+$halfX,$y1+$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$halfX,$y1+$offset);					
+					DrawingHelper::LineFromTo($x1+$halfX,$y1+$offset,$x1+$halfX,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$halfX,$y2);					
+					DrawingHelper::LineFromTo($x1+$halfX,$y2,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
 				}
 				else
 				{
+					$points[] = new PointInfo($x1,$y1);					
 					DrawingHelper::LineFromTo($x1,$y1,$x1,$y1+$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1,$y1+$offset);					
 					DrawingHelper::LineFromTo($x1,$y1+$offset,$x2-$offset,$y1+$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2-$offset,$y1+$offset);					
 					DrawingHelper::LineFromTo($x2-$offset,$y1+$offset,$x2-$offset,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2-$offset,$y2);					
 					DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);					
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
 				}
@@ -492,17 +523,25 @@ class DrawingHelper
 			{
 				if($x1<=$x2)
 				{
+					$points[] = new PointInfo($x1,$y1);					
 					DrawingHelper::LineFromTo($x1,$y1,$x2,$y1,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y1);					
 					DrawingHelper::LineFromTo($x2,$y1,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);					
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
 				}
 				if($x1>$x2)
 				{
+					$points[] = new PointInfo($x1,$y1);					
 					DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$offset,$y1);					
 					DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$offset,$y1+$halfQuote);					
 					DrawingHelper::LineFromTo($x1+$offset,$y1+$halfQuote,$x2,$y1+$halfQuote,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y1+$halfQuote);					
 					DrawingHelper::LineFromTo($x2,$y1+$halfQuote,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);					
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
 				}
@@ -511,19 +550,29 @@ class DrawingHelper
 			{
 				if($x1<=$x2)
 				{
+					$points[] = new PointInfo($x1,$y1);					
 					DrawingHelper::LineFromTo($x1,$y1,$x1+$halfX,$y1,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$halfX,$y1);					
 					DrawingHelper::LineFromTo($x1+$halfX,$y1,$x1+$halfX,$y2-$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$halfX,$y2-$offset);					
 					DrawingHelper::LineFromTo($x1+$halfX,$y2-$offset,$x2,$y2-$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2-$offset);					
 					DrawingHelper::LineFromTo($x2,$y2-$offset,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);					
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
 				}
 				else
 				{
+					$points[] = new PointInfo($x1,$y1);
 					DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$offset,$y1);					
 					DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y2-$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x1+$offset,$y2-$offset);					
 					DrawingHelper::LineFromTo($x1+$offset,$y2-$offset,$x2,$y2-$offset,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2-$offset);					
 					DrawingHelper::LineFromTo($x2,$y2-$offset,$x2,$y2,$gifImage,$lineStyle);
+					$points[] = new PointInfo($x2,$y2);					
 					if($endWithArrow)
 					DrawingHelper::drawArrow($x2,$y2,10,10,"down",$gifImage);
 				}
@@ -531,10 +580,45 @@ class DrawingHelper
 		}
 		else if(!$middleIn && !$middleOut)
 		{
-			DrawingHelper::GanttDependencyLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle);
+			//DrawingHelper::GanttDependencyLine($x1,$y1,$x2,$y2,$offset,$endWithArrow,$gifImage,$lineStyle);
+			if($x1<=$x2)
+			{
+				$points[] = new PointInfo($x1,$y1);
+				DrawingHelper::LineFromTo($x1,$y1,$x1+$halfX,$y1,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x1+$halfX,$y1);				
+				DrawingHelper::LineFromTo($x1+$halfX,$y1,$x1+$halfX,$y2,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x1+$halfX,$y2);				
+				DrawingHelper::LineFromTo($x1+$halfX,$y2,$x2,$y2,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2,$y2);				
+				if($endWithArrow)
+				DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+			}
+			else
+			{
+				$points[] = new PointInfo($x1,$y1);				
+				DrawingHelper::LineFromTo($x1,$y1,$x1+$offset,$y1,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x1+$offset,$y1);
+				DrawingHelper::LineFromTo($x1+$offset,$y1,$x1+$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x1+$offset,$y1+$halfQuote);
+				DrawingHelper::LineFromTo($x1+$offset,$y1+$halfQuote,$x2-$offset,$y1+$halfQuote,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2-$offset,$y1+$halfQuote);				
+				DrawingHelper::LineFromTo($x2-$offset,$y1+$halfQuote,$x2-$offset,$y2,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2-$offset,$y2);				
+				DrawingHelper::LineFromTo($x2-$offset,$y2,$x2,$y2,$gifImage,$lineStyle);
+				$points[] = new PointInfo($x2,$y2);				
+				if($endWithArrow)
+				DrawingHelper::drawArrow($x2,$y2,10,10,"right",$gifImage);
+			}			
 		}
+		return $points;
 	}
 
+	public static function linesCross($l1,$l2){
+		for($i = 0; $i < count($l1); $i++){
+			
+		}
+		return false;
+	}
 
 	private static function getUpArrowPoints($x,$y,$width,$height)
 	{
