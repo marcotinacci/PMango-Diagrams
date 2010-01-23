@@ -895,7 +895,12 @@ class CTask extends CDpObject {
 	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid[0]);
 	 			$result = 0;
 				$sql="
-				 SELECT IF( task_log_creator IS NOT NULL , SUM( task_log_hours ) , 'composed' )
+				 SELECT IF( task_log_creator IS NOT NULL ,
+				 	   (SELECT SUM( task_log_hours )
+						FROM task_log
+						WHERE task_log_task =".$this->task_id."
+						AND task_log_creator =".$rid[0]."),
+				  'composed' )
 				 FROM users, user_tasks
 				 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
 				 AND task_log.task_log_creator = user_tasks.user_id )
