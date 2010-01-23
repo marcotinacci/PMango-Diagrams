@@ -904,27 +904,28 @@ class CTask extends CDpObject {
 		 AND user_tasks.user_id = users.user_id";
 		
 		$res = db_loadList($sql);
-		//DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0][0]);
+		DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0][0]);
 		
 		if($res[0][0]=='composed'){
 			$children = $this->getChildren();
 			foreach($children as $son){
 				$list = $this->getResourceList($son);
+				DrawingHelper::debug("Checking ".$son);
 				if(in_array($rid, $list[0])){
-					//DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
+					DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 					$CTask_son = new CTask();
 					$CTask_son->load($son);
 					$result += $CTask_son->getResourceActualEffortInTask($rid);
 				}
 			}
+			DrawingHelper::debug("ALLA FINE DEL GIRO OTTENIAMO ".$result);
 			return $result;
 		}
 		else{
-			//DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
+			DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
 			$result = $res[0][0];
-			//DrawingHelper::debug("Siamo arrivati a: ".$result." per il task".$this-task_id);
 		}
-		//DrawingHelper::debug("Totale: ".$result);
+		DrawingHelper::debug("Totale: ".$result);
 		return $result;
 	}
 	/**
