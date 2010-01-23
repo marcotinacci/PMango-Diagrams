@@ -919,7 +919,6 @@ class CTask extends CDpObject {
 				}
 			}
 			DrawingHelper::debug("ALLA FINE DEL GIRO OTTENIAMO ".$result);
-			return $result;
 		}
 		else{
 			DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
