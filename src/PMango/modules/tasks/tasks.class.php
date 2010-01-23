@@ -916,7 +916,7 @@ class CTask extends CDpObject {
 				}
 				DrawingHelper::debug("Checking ".$son);
 				for($i=0; $i<sizeOf($list); $i++){
-					if($rid==$list[i][0]){
+					if($rid==$list[$i][0]){
 						DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
