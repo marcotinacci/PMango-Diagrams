@@ -891,7 +891,7 @@ class CTask extends CDpObject {
 	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list)."  ELEMENTI");
 	 	for($i=0; $i<sizeOf($list); $i++){
 	 		for($j=0; $j<sizeOf($list[$i]); $j++){
-	 			DrawingHelper::debug("Elemento (".$i.", ".$j.")-> ".$list[$i][$j]);
+	 			DrawingHelper::debug("Elemento (".$i.", ".$j.")-> ".$list[$i]);
 	 		}
 	 	}
 	 	if($rid==null){
