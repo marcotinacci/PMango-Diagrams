@@ -891,15 +891,15 @@ class CTask extends CDpObject {
 	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list));
 	 	if($rid==null){
 	 		
-	 		foreach($list as $rid){
-	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid[0]);
+	 		for($i=0; $i<sizeOf($list); $i++){
+	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid[$i]);
 	 			$result = 0;
 				$sql="
 				 SELECT IF( task_log_creator IS NOT NULL ,
 				 	   (SELECT SUM( task_log_hours )
 						FROM task_log
 						WHERE task_log_task =".$this->task_id."
-						AND task_log_creator =".$rid[0]."),
+						AND task_log_creator =".$rid[$i]."),
 				  'composed' )
 				 FROM users, user_tasks
 				 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
