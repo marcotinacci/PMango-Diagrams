@@ -15,7 +15,7 @@ require_once dirname(__FILE__)."/../utils/TimeUtils.php";
  * Questa classe implementa la generazione grafica del task nel diagramma Gantt
  *
  * @author: Marco Tinacci
- * @version: 0.7
+ * @version: 0.8
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
@@ -304,17 +304,21 @@ class GifGanttTask extends GifArea
 					$str .= ', ';
 				}
 			}
-			$this->subAreas['Resources'] = new GifLabel(
-				$gifImage,				
-				$this->x + $xPlanned + $wPlanned + 5,
-				$this->y + ($this->td->isAtomic() ? 0 : -intval($height/3)),
-				$windowWidth,
-				$hPlanned,
-				$str,
-				$this->fontSize
-				);
-			$this->subAreas['Resources']->setVAlign('top');
-			$this->subAreas['Resources']->setHAlign('left');
+			// se la label comincia dentro al gantt stampala
+			$xLabel = $this->x + $xPlanned + $wPlanned + 5;
+			if($xLabel >= $this->x){
+				$this->subAreas['Resources'] = new GifLabel(
+					$gifImage,				
+					$xLabel,
+					$this->y + ($this->td->isAtomic() ? 0 : -intval($height/3)),
+					$xFinish - $xLabel,
+					$hPlanned,
+					$str,
+					$this->fontSize
+					);
+				$this->subAreas['Resources']->setVAlign('top');
+				$this->subAreas['Resources']->setHAlign('left');
+			}
 		}
 		
 		// DEBUG
