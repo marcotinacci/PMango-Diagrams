@@ -912,11 +912,11 @@ class CTask extends CDpObject {
 			foreach($children as $son){
 				$list = $this->getResourceList($son);
 				for($i=0; $i<sizeOf($list);$i++){
-						DrawingHelper::debug("ResList Elem(".$i.") -> ".$list[$i]);
+						DrawingHelper::debug("ResList Elem(".$i.") -> ".$list[$i][0]);
 				}
 				DrawingHelper::debug("Checking ".$son);
-				for($i=0; $i<sizeOf($list[0]); $i++){
-					if($rid==$list[i]){
+				for($i=0; $i<sizeOf($list); $i++){
+					if($rid==$list[i][0]){
 						DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
