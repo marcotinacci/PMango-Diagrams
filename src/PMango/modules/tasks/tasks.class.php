@@ -879,6 +879,11 @@ class CTask extends CDpObject {
 		 GROUP BY (users.user_id)";
 	 	
 		$list = db_loadList($sql);
+		for($i=0; $i<sizeOf($list); $i++){
+			for($j=0; $j<sizeOf($list[$i]); $j++){
+				DrawingHelper::debug("Elem (".$i.", ".$j.") -> ".$list[$i][$j]);
+			}
+		}
 		return $list;
 	}
 	
@@ -888,7 +893,7 @@ class CTask extends CDpObject {
 	 */
 	function getResourceActualEffortInTask($rid = null){
 	 	$list = $this->getResourceList();
-	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list)."  ELEMENTI");
+	 	DrawingHelper::debug("Lunghezza della lista di user del task ".$this->task_id.": ".sizeOf($list));
 	 	if($rid==null){
 	 		for($i=0; $i<sizeOf($list);$i++){
 	 			DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
