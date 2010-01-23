@@ -888,7 +888,7 @@ class CTask extends CDpObject {
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
 	 */
 	function getResourceActualEffortInTask($rid){
- 		DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
+ 		//DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
  		$result = 0;
 		$sql="
 		 SELECT IF( task_log_creator IS NOT NULL ,
@@ -904,14 +904,14 @@ class CTask extends CDpObject {
 		 AND user_tasks.user_id = users.user_id";
 		
 		$res = db_loadList($sql);
-		DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0][0]);
+		//DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0][0]);
 		
 		if($res[0][0]=='composed'){
 			$children = $this->getChildren();
 			foreach($children as $son){
 				$list = $this->getResourceList($son);
 				if(in_array($rid, $list)){
-					DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
+					//DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 					$CTask_son = new CTask();
 					$CTask_son->load($son);
 					$result += $CTask_son->getResourceActualEffortInTask($rid);
@@ -920,11 +920,11 @@ class CTask extends CDpObject {
 			return $result;
 		}
 		else{
-			DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
+			//DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
 			$result = $res[0][0];
-			DrawingHelper::debug("Siamo arrivati a: ".$result." per il task".$this-task_id);
+			//DrawingHelper::debug("Siamo arrivati a: ".$result." per il task".$this-task_id);
 		}
-		DrawingHelper::debug("Totale: ".$result);
+		//DrawingHelper::debug("Totale: ".$result);
 		return $result;
 	}
 	/**
