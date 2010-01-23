@@ -908,7 +908,7 @@ class CTask extends CDpObject {
 					}
 				}
 				else{
-					$result = $res[0][0];
+					$result += $res[0][0];
 				}
 			return $result;
 			}
