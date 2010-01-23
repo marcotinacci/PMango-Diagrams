@@ -902,9 +902,9 @@ class CTask extends CDpObject {
 		 		 GROUP BY (task_log_creator)";
 				
 				$res = db_loadList($sql);
-				DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res);
+				DrawingHelper::debug("il Risultato della query nel primo foreach è ".$res[0]);
 				
-				if($res=='composed'){
+				if($res[0]=='composed'){
 					
 					$children = $this->getChildren();
 					
