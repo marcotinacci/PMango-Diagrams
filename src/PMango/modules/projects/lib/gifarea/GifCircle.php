@@ -50,7 +50,7 @@ class GifCircle extends GifArea
 		$yc = $this->y+intval($this->height/2);
 		
 		$this->canvas->img->SetColor($this->borderColor);
-		for($i=0;$i<$this->borderThickness;$i++)
+		for($i=0;$i<=$this->borderThickness;$i++)
 		{
 			$this->canvas->img->Circle($xc,$yc,intval($this->width/2)-$i);
 		}

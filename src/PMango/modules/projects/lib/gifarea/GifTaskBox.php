@@ -201,7 +201,7 @@ class GifTaskBox extends GifArea
 		return $this->effectiveHeight;
 	}
 
-	public static function getTaskBoxesBestWidth($taskDataTree,&$userOptionChoise,$fontSize,$font)
+	public static function getTaskBoxesBestWidth($taskDataTree,&$userOptionChoise,$fontSize=10,$font=FF_ARIAL,$fontStyle=FS_NORMAL)
 	{
 		$uoc = &$userOptionChoise;
 		//$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$WBS);
@@ -209,15 +209,15 @@ class GifTaskBox extends GifArea
 		$taskBoxes=$taskDataTree->visibleDeepVisit();
 		foreach($taskBoxes as $taskBox)
 		{
-			$wbsIdWidth = GifLabel::getPixelWidthOfText("+ ".$taskBox->getInfo()->getWBSId().".",$fontSize,$font);
+			$wbsIdWidth = GifLabel::getPixelWidthOfText("+ ".$taskBox->getInfo()->getWBSId().".",$fontSize,$font,FS_BOLD);
 
 			$boxMax = $wbsIdWidth;
 			if($uoc->showTaskNameUserOption() || $uoc->showTaskNameUserOption() || $uoc->showResourcesUserOption())
-				$boxMax = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font)*2+5;
+				$boxMax = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font,$fontStyle)*2+5;
 
 			if($uoc->showActualTimeFrameUserOption() || $uoc->showPlannedTimeFrameUserOption())
 			{
-				$dateWidth = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font);
+				$dateWidth = GifLabel::getPixelWidthOfText("0000.00.00",$fontSize,$font,$fontStyle);
 				if($dateWidth > $boxMax)
 					$boxMax = $dateWidth*2+5;
 			}
@@ -225,7 +225,7 @@ class GifTaskBox extends GifArea
 			if($uoc->showActualDataUserOption())
 			{
 				$actualData = $taskBox->getInfo()->getActualData();
-				$actualTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($actualData,$fontSize,$font);
+				$actualTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($actualData,$fontSize,$font,$fontStyle);
 				if($actualTripleW > $boxMax)
 				$boxMax = $actualTripleW;
 			}
@@ -233,7 +233,7 @@ class GifTaskBox extends GifArea
 			if($uoc->showPlannedDataUserOption())
 			{
 				$plannedData = $taskBox->getInfo()->getPlannedData();
-				$plannedTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($plannedData,$fontSize,$font);
+				$plannedTripleW = GifTaskBox::getBestWidthOfMultipleDataRow($plannedData,$fontSize,$font,$fontStyle);
 				if($plannedTripleW > $boxMax)
 				$boxMax = $plannedTripleW;
 			}
@@ -243,14 +243,14 @@ class GifTaskBox extends GifArea
 		return $max+10;
 	}
 
-	private static function getBestWidthOfMultipleDataRow($data,$fontSize,$font)
+	private static function getBestWidthOfMultipleDataRow($data,$fontSize,$font,$fontStyle)
 	{
 		$actW=array();
 		foreach($data as $value)
 		{
-			$actW[] = GifLabel::getPixelWidthOfText($value,$fontSize,$font);
+			$actW[] = GifLabel::getPixelWidthOfText($value,$fontSize,$font,$fontStyle);
 		}
-		return sizeOf($actW)*(max($actW)+5);
+		return sizeOf($actW)*(max($actW)+15);
 	}
 
 	public function getTopMiddlePoint()

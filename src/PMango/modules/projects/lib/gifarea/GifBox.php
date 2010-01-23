@@ -46,8 +46,11 @@ class GifBox extends GifArea
 	
 	protected function canvasDraw()
 	{
+		if($this->width == 0)
+			return;
 		$this->canvas->img->SetColor($this->borderColor);
 		$this->canvas->img->setLineStyle("solid");
+		$this->canvas->img->SetLineWeight(1);
 		//$this->canvas->img->Bevel($this->x,$this->y, $this->x+$this->width, $this->y+$this->height,2,"black","black");
 		for($i=0;$i<$this->borderThickness;$i++)
 		{
