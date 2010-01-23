@@ -158,7 +158,7 @@ class TaskData{
 	 * A seconda della risposta si può settare l'alert mark più appropriato (se risulta necessario)
 	 * @return DeltaInfoEnum
 	 */
-	public function isMarked(){
+	public function isMarked($today){
 		$actual_time = $this->info->getActualTimeFrame();
 		$planned_time = $this->info->getPlannedTimeFrame();
 		$actual_eff = $this->info->getActualEffort();
@@ -185,7 +185,7 @@ class TaskData{
 		print "planned_cost: ".$planned_cost."<br>";
 		*/
 		
-		if($actual_time["start_date"]>$planned_time["start_date"]){
+		if($actual_time["start_date"]>$planned_time["start_date"] || ($actual_time["start_date"]==null && $today>$planned_time["start_date"])){
 			//print "ActualStart > PlannedStart BAD NEWS<br><br>";
 			return DeltaInfoEnum::$bad_news;
 		}
