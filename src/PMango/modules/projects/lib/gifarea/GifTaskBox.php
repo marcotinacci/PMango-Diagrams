@@ -146,7 +146,8 @@ class GifTaskBox extends GifArea
 		$this->subAreas['CompleteBox']->setBorderThickness(2);
 		if($uoc->showAlertMarkUserOption())
 		{
-			$markVal = $task->isMarked();
+			$dates = $uoc->getCustomRangeValues();
+			$markVal = $task->isMarked($dates['today']);
 			if($markVal == DeltaInfoEnum::$good_news)
 			{
 			$this->subAreas['Mark']= new GifMark($gifImage,$this->x+$width, $this->y ,$row, 0);
