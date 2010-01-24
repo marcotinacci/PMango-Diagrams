@@ -894,7 +894,7 @@ class CTask extends CDpObject {
 				FROM task_log JOIN project_roles ON (task_log.task_log_proles_id = project_roles.proles_id)
 				WHERE task_log_task =".$this->task_id."
 				AND task_log_creator =".$rid."
-				AND proles_name=".$role."),
+				AND proles_name='".$role."'),
 		  'composed' )
 		 FROM users, user_tasks
 		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task),
