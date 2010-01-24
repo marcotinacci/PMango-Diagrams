@@ -45,8 +45,6 @@ Class UserOptionEnumeration {
 	public static $EffortInformationUserOption = "EffortInformationUserOption";
 	public static $FinishToStartDependenciesUserOption = "FinishToStartDependenciesUserOption";
 	
-	
-	
 	// Task Network
 	
 	public static $TimeGapsUserOption = "TimeGapsUserOption";

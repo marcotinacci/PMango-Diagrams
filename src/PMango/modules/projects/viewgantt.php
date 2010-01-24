@@ -190,6 +190,8 @@ function BuildImage(placeHolder)
                 <td valign="top" align="left" nowrap="nowrap">
                 	<input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption; ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "TaskName"; ?><br>
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption; ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?><br>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$FinishToStartDependenciesUserOption; ?>" <?php echo $uoc->showFinishToStartDependenciesUserOption()?"checked":""; ?>> <?php echo "Dependencies"; ?><br>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ReplicateArrowUserOption; ?>" <?php echo $uoc->showReplicateArrowUserOption()?"checked":""; ?>> <?php echo "Replicated Arrows"; ?><br>
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
@@ -301,8 +303,8 @@ function BuildImage(placeHolder)
 					}
 					
 					$pdf = PM_headerPdf($name[0]['project_name'],'L',1,$group_name);
-					PM_makeGanttPdf($pdf);
-					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 1);
+					PM_makeGanttPdf($pdf,"pdf");
+					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 6);
 					?>
 					<a href="<?echo $filename;?>"><img src="./modules/report/images/pdf_report.gif" alt="PDF Report" border="0" align="absbottom"></a><?
 				}?>
@@ -327,22 +329,6 @@ function BuildImage(placeHolder)
 				</td>
 			</tr>
 		</table>
-		<?php
-		/*
-		include('modules/report/makePDF.php');
-			$task_level=$explodeTasks;
-			$q  = new DBQuery;
-			$q->addQuery('projects.project_name');
-			$q->addTable('projects');
-			$q->addWhere("project_id = $project_id ");
-			$name = $q->loadList();
-			$pdf = PM_headerPdf($name[0]['project_name']);
-						//PM_makeWbsPdf($pdf,"./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."");
-						PM_makeWbsPdf($pdf,"./modules/projects/lib/chartGenerator/WBSTree.gif");
-						//PM_makeWbsPdf($pdf,"http://localhost:8080/Eclipse Project/PMango/application/PMango/modules/projects/lib/chartGenerator/WBSTree.gif");
-						$filename=PM_footerPdf($pdf, $name[0]['project_name'], 5);
-						*/
-		?>
 		</td>
 	</tr>
 </table>

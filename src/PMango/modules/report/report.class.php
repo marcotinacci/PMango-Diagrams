@@ -319,7 +319,7 @@ class CReport extends CDpObject {
 		}
 		else
 		{
-			"No Gantt chart requested";
+			return "No Gantt chart requested";
 		}
 		
 		return $string;	
@@ -357,12 +357,28 @@ class CReport extends CDpObject {
 		}
 		else
 		{
-			"No WBS chart requested";
+			return "No WBS chart requested";
 		}
 		
 		return $string;	
 	}
 	
+	function getTaskNetworkChartReport($pid){
+		GLOBAL $AppUI;
+		$user_id = $AppUI->user_id;
+		$project_id=$pid;
+		
+		$sql="SELECT tasknet_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
+		$wbs_param = db_loadList($sql);
 
+		$string = "<b>Selected options:</b><br>";
+		
+		if($wbs_param[0]['tasknet_user_options']!=null){
+		}
+		else
+		{
+			return "No Task Network chart requested";
+		}
+	}
 }
 ?>

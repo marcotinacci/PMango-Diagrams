@@ -141,5 +141,6 @@ if(isset($_REQUEST['CREATE_REPORT']))
 {
 $chart->getChart()->saveToFile("report_gif_".$chart_type."_".$AppUI->user_id.".gif");
 }
+$chart->getChart()->saveToFile("pdf_gif_".$chart_type."_".$AppUI->user_id.".gif");
 
 ?>

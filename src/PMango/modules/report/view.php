@@ -139,6 +139,16 @@ if($_GET['reset']){
 	if($_GET['reset']=='log'){
 		$sql="UPDATE reports SET l_hide_inactive = NULL ,l_hide_complete = NULL ,l_user_id = NULL ,l_report_sdate = NULL ,l_report_edate = NULL WHERE reports.project_id =".$project_id." AND reports.user_id=".$user_id;}			
 	
+	if($_GET['reset']=='gantt'){
+		$sql="UPDATE reports SET gantt_user_options = NULL WHERE reports.project_id =".$project_id." AND reports.user_id=".$user_id;}			
+	
+	if($_GET['reset']=='wbs'){
+		$sql="UPDATE reports SET wbs_user_options = NULL WHERE reports.project_id =".$project_id." AND reports.user_id=".$user_id;}				
+	
+	if($_GET['reset']=='tasknet'){
+		$sql="UPDATE reports SET tasknet_user_options = NULL WHERE reports.project_id =".$project_id." AND reports.user_id=".$user_id;}			
+		
+
 	db_exec( $sql ); db_error();	
 	
 }
@@ -436,7 +446,7 @@ function check(){
 				</td>
 				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
 				<?php echo "<a href='./index.php?m=report&a=view&reset=wbs&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
-				<?php echo "<a href='./index.php?m=projects&a=view&tab=4&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
+				<?php echo "<a href='./index.php?m=projects&a=view&tab=2&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
 				<select name="append_order_f" class="text">
@@ -458,6 +468,50 @@ function check(){
 				</td>
 				<td nowrap='nowrap'>
 					<?php print CReport::getWBSChartReport($project_id); ?>
+				</td>
+				<td nowrap='nowrap' colspan="4">
+				</td>
+			</tr>
+			<tr>
+				<td colspan='6'>
+				<br>
+				</td>
+			</tr>
+			<!-- Tasknetwork REPORT -->
+			<tr>
+				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
+					<input type="checkbox" name="add_tasknet" <?echo ($_POST['add_tasknet'])?"checked":"";echo ($disable_report[0]['tasknet_user_options'])?"":"disabled";?>>
+				</td>
+				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
+					<strong><?php echo $AppUI->_( 'Task Network Chart' );?></strong>
+				</td>
+				<td width="100%" style="border-top: outset #d1d1cd 1px">
+				&nbsp;
+				</td>
+				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
+				<?php echo "<a href='./index.php?m=report&a=view&reset=tasknet&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
+				<?php echo "<a href='./index.php?m=projects&a=view&tab=4&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
+				</td>
+				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
+				<select name="append_order_g" class="text">
+					<option value="7" <?echo ($_POST['append_order_g']=="7")? "selected":""?>>7
+					<option value="1" <?echo ($_POST['append_order_g']=="1")? "selected":""?>>1
+					<option value="2" <?echo ($_POST['append_order_g']=="2")? "selected":""?>>2
+					<option value="3" <?echo ($_POST['append_order_g']=="3")? "selected":""?>>3
+					<option value="4" <?echo ($_POST['append_order_g']=="4")? "selected":""?>>4
+					<option value="5" <?echo ($_POST['append_order_g']=="5")? "selected":""?>>5
+					<option value="6" <?echo ($_POST['append_order_g']=="6")? "selected":""?>>6
+				</select>
+				</td>
+				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
+				<input disabled type="checkbox" name="new_page_g" <?echo ($_POST['new_page_g'])?"checked":"checked";?>>
+				</td>
+			</tr>
+			<tr >
+				<td nowrap='nowrap'>
+				</td>
+				<td nowrap='nowrap'>
+					<?php print CReport::getTaskNetworkChartReport($project_id); ?>
 				</td>
 				<td nowrap='nowrap' colspan="4">
 				</td>
@@ -610,21 +664,21 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 		if(isset($_POST['add_gantt'])&&($_POST['append_order_e']==$k)){
 			  $i++;
 			  $pdf->addPage('L');
-			  PM_makeGanttPdf($pdf);
+			  PM_makeGanttPdf($pdf,"report");
 			  $pdf->Ln(8);
 		}
 		
 		if(isset($_POST['add_wbs'])&&($_POST['append_order_f']==$k)){
 			  $i++;
 			  $pdf->addPage('L');
-			  PM_makeWbsPdf($pdf);
+			  PM_makeWbsPdf($pdf,"report");
 			  $pdf->Ln(8);
 		}
 		
 		if(isset($_POST['add_tasknet'])&&($_POST['append_order_g']==$k)){
 			  $i++;
 			  $pdf->addPage('L');
-			 PM_makeTaskNetworkPdf($pdf);
+			  PM_makeTaskNetworkPdf($pdf,"report");
 			  $pdf->Ln(8);
 		}
 }	

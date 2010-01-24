@@ -83,7 +83,7 @@ class GifTaskBox extends GifArea
 			{
 				$curY += 4;
 				$act = 0;
-				if(isset($res[$i]['ActualEffort']))
+				if(isset($res[$i]['ActualEffort']) && $res[$i]['ActualEffort'] != "")
 					$act = $res[$i]['ActualEffort'];
 				$txt = $act."/".$res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
 					
@@ -109,10 +109,10 @@ class GifTaskBox extends GifArea
 			
 			$ActualTimeFrame_start = "NA";
 			$ActualTimeFrame_finish = "NA";
-			if($atf['start_date'] != '')
+			if(isset($atf['start_date']) && $atf['start_date'] != "")
 			$ActualTimeFrame_start = "".date($date_format,strtotime($atf['start_date']));
 
-			if($atf['finish_date'] != '')
+			if(isset($atf['finish_date']) && $atf['finish_date'] != "")
 			$ActualTimeFrame_finish = "".date($date_format,strtotime($atf['finish_date']));
 			
 			$this->subAreas['ActualTimeFrame_box_start'] = new GifBoxedLabel($gifImage,$this->x,$curY,$doubleSubBoxWidth,$row,$ActualTimeFrame_start,$fontHeight);
