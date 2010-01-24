@@ -194,9 +194,14 @@ class TaskData{
 		if($actual_time["start_date"]!="" && $actual_time["start_date"]>$planned_time["start_date"]){
 			return DeltaInfoEnum::$bad_news;
 		}
-		if($actual_time["start_date"]=="" && $today>$planned_time["start_date"]){
-			return DeltaInfoEnum::$bad_news;			
-		}
+		if($actual_time["start_date"]==""){
+			if($today>$planned_time["start_date"]){
+				return DeltaInfoEnum::$bad_news;			
+			}
+			else{
+				return DeltaInfoEnum::$no_mark;
+			}
+		} 
 		if($actual_time["finish_date"]!="" && $actual_time["finish_date"]>$planned_time["finish_date"]){
 			return DeltaInfoEnum::$bad_news;		
 		}
