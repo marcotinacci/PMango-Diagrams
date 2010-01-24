@@ -310,10 +310,11 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	private $taskboxes = array();
 	
 	private function drawDependencyLine() {
+		$horizontalsNotAvailable = array();
 		foreach ($this->dependencyLinesArray as $dependentLeafId => $positionsArray) {
 			DrawingHelper::debug("printing dependency entry for " . $dependentLeafId);
 				
-			if(count($positionsArray[TaskLevelPositionEnum::$starting] > 0)) {
+			if(count($positionsArray[TaskLevelPositionEnum::$starting]) > 0) {
 				
 				$first = true;
 				$dependentEntryPointInfo = null;
@@ -331,35 +332,58 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							
 						$brokerHorizontal = $dependencyLineInfo->
 							computeHorizontal();
+
+						// questo while se nn va toglierlo
+						while(in_array($brokerHorizontal, $horizontalsNotAvailable)) {
+							$brokerHorizontal -= $this->getHorizontalGapForExistingDependency();
+						}
+						// anche questa riga sotto
+						$horizontalsNotAvailable[] = $brokerHorizontal;
 							
 						$this->drawLineOnChart($exitPoint, $entryPoint, 
-							$brokerHorizontal - $exitPoint->horizontal, true);
-							
-						DrawingHelper::debug("drawed line for a first dependency");
-							
+							$brokerHorizontal - $exitPoint->horizontal);
+
 						$dependentEntryPointInfo = new PointInfo(
 							$brokerHorizontal, 
 							$entryPoint->vertical);
 						
+						$direction = null;
+						if($dependentEntryPointInfo->vertical > $exitPoint->vertical) {
+							$direction = "DOWN";
+						}
+						else if($dependentEntryPointInfo->vertical < $exitPoint->vertical) {
+							$direction = "UP";	
+						} 
+						else {
+							$direction = "RIGHT";
+						}
+						
+						if(count($positionsArray[TaskLevelPositionEnum::$starting]) > 1) {
+							DrawingHelper::drawArrow($dependentEntryPointInfo->horizontal, 
+								$dependentEntryPointInfo->vertical, 
+								10, 10, $direction, $this->chart);	
+						}
 					}
 					else {
 						$exitPoint = $dependencyLineInfo->
 							computeNeededExitPointInfo();
 
 						$entryPoint = clone $dependentEntryPointInfo;
-							
-						$dependentEntryPointInfo->horizontal -= 
-							$this->getHorizontalGapForExistingDependency();
+
+						// se non va lasciare solo il corpo del do-while
+						do {
+							$dependentEntryPointInfo->horizontal -= 
+								$this->getHorizontalGapForExistingDependency();
+						} while(in_array($dependentEntryPointInfo->horizontal, $horizontalsNotAvailable));
 							
 						$this->drawLineOnChart($exitPoint, 
 							$entryPoint,
 							$dependentEntryPointInfo->horizontal - 
-								$exitPoint->horizontal, false);
-						
-					}			
+								$exitPoint->horizontal);
+					}		
 				}
 			}	
-			else if(count($positionsArray[TaskLevelPositionEnum::$inner] > 0)) {
+			else if(count($positionsArray[TaskLevelPositionEnum::$inner]) > 0) {
 				
 			}
 		}
@@ -367,11 +391,15 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	
 	private function drawLineOnChart($fromPoint, 
 		$toPoint, 
-		$horizontalOffset, 	
-		$replicateArrow) {
+		$horizontalOffset) {
 		DrawingHelper::segmentedOffsetLine($fromPoint->horizontal, $fromPoint->vertical, 
 			$horizontalOffset, $toPoint->vertical - $fromPoint->vertical, 
 			$toPoint->horizontal, $toPoint->vertical, $this->chart);
+			
+		DrawingHelper::drawArrow($toPoint->horizontal, 
+							$toPoint->vertical, 
+							10, 10, "RIGHT", $this->chart);
+						
 	}
 	
 	private function isDependencyAlreadyConsidered($dependency_task_id) {
@@ -467,7 +495,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 	private function getHorizontalGapForExistingDependency() {
 		// return a constant
-		return 5;
+		return 10;
 	}
 
 	private function buildDependencyLine($neededTask_id, $task_id, $exitPoint, $entryPoint) {
@@ -822,7 +850,7 @@ interface ITaskDataDrawer {
 abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
 	public static $width;
 	public static $singleRowHeight;
-	public static $composedVerticalLineLength = 5;
+	public static $composedVerticalLineLength = 10;
 	public static $userOptionChoice;
 
 	var $_dependency;
@@ -956,6 +984,9 @@ class CommonTaskDataDrawer extends AbstractTaskDataDrawer {
 				$endPoint->horizontal, 
 				$endPoint->vertical,
 				$gifImage);
+				
+			DrawingHelper::drawArrow($endPoint->horizontal, $endPoint->vertical, 
+				10, 10, "DOWN", $gifImage);
 				
 			$returnPoint->vertical = $endPoint->vertical;//AbstractTaskDataDrawer::$composedVerticalLineLength;
 		}
