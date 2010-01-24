@@ -306,11 +306,17 @@ class GifGanttTask extends GifArea
 			// se la label comincia dentro al gantt stampala
 			$xLabel = $this->x + $xPlanned + $wPlanned + 5;
 			if($xLabel >= $this->x){
+				// la larghezza non deve superare un sesto dell'area di disegno
+				if($xFinish - $xLabel > ($xFinish - $xStart) / 6){
+					$lw = intval(($xFinish - $xStart) / 6);
+				}else{
+					$lw = $xFinish - $xLabel;
+				}
 				$this->subAreas['Resources'] = new GifLabel(
 					$gifImage,				
 					$xLabel,
 					$this->y + ($this->td->isAtomic() ? 0 : -intval($height/3)),
-					$xFinish - $xLabel,
+					$lw,
 					$hPlanned,
 					$str,
 					$this->fontSize
