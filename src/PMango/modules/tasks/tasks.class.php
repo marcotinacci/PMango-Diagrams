@@ -881,6 +881,22 @@ class CTask extends CDpObject {
 		return $list;
 	}
 	
+	private function getRoleListForUser($rid){
+		$sql="
+		 SELECT p.proles_name
+		 FROM user_tasks AS u
+		 JOIN project_roles AS p ON ( u.proles_id = p.proles_id )
+		 WHERE u.user_id = ".$rid." 
+		 AND u.task_id = ".$this->task_id;
+		
+		$array = array();
+		$list = db_loadList($sql);
+		for($i=0; $i<sizeOf($list);$i++){
+			$array[]=$list[$i][0];
+		}
+		return $array;
+	}
+	
 	
 	/*
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
@@ -888,6 +904,10 @@ class CTask extends CDpObject {
 	function getResourceActualEffortInTask($rid, $role){
  		DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$rid);
  		$result = 0;
+ 		if(!in_array($role, $this->getRoleListForUser($rid))){
+ 			DrawingHelper::debug($role." non è un ruolo diponibile per la risorsa ".$rid." nel task ".$this->task_id);
+ 			return 0;
+ 		}
 		$sql="
 		 SELECT IF( task_log_creator IS NOT NULL ,
 		 	   (SELECT SUM( task_log_hours )
