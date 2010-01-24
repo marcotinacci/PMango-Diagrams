@@ -341,7 +341,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 						$horizontalsNotAvailable[] = $brokerHorizontal;
 							
 						$this->drawLineOnChart($exitPoint, $entryPoint, 
-							$brokerHorizontal - $exitPoint->horizontal);
+							$brokerHorizontal - $exitPoint->horizontal, true);
 
 						$dependentEntryPointInfo = new PointInfo(
 							$brokerHorizontal, 
@@ -379,26 +379,94 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 						$this->drawLineOnChart($exitPoint, 
 							$entryPoint,
 							$dependentEntryPointInfo->horizontal - 
-								$exitPoint->horizontal);
+								$exitPoint->horizontal, true);
 					}		
 				}
 			}	
 			else if(count($positionsArray[TaskLevelPositionEnum::$inner]) > 0) {
-				
+				$first = true;
+				$dependentEntryPointInfo = null;
+				foreach ($positionsArray[TaskLevelPositionEnum::$inner] as 
+					$dependencyLineInfo) {
+					
+					if ($first) {
+						$first = false;
+						
+						$entryPoint = $dependencyLineInfo->
+							computeDependentEntryPointInfo();
+							
+						$exitPoint = $dependencyLineInfo->
+							computeNeededExitPointInfo();
+							
+						$brokerHorizontal = $dependencyLineInfo->
+							computeHorizontal();
+
+						// questo while se nn va toglierlo
+						while(in_array($brokerHorizontal, $horizontalsNotAvailable)) {
+							$brokerHorizontal -= $this->getHorizontalGapForExistingDependency();
+						}
+						
+						// anche questa riga sotto
+						$horizontalsNotAvailable[] = $brokerHorizontal;
+							
+						$this->drawLineOnChart($exitPoint, $entryPoint, 
+							$brokerHorizontal - $exitPoint->horizontal, false);
+
+						$dependentEntryPointInfo = new PointInfo(
+							$brokerHorizontal, 
+							$entryPoint->vertical);
+						
+						$direction = null;
+						if($dependentEntryPointInfo->vertical > $exitPoint->vertical) {
+							$direction = "DOWN";
+						}
+						else if($dependentEntryPointInfo->vertical < $exitPoint->vertical) {
+							$direction = "UP";	
+						} 
+						else {
+							$direction = "RIGHT";
+						}
+						
+						if(count($positionsArray[TaskLevelPositionEnum::$inner]) > 1) {
+							DrawingHelper::drawArrow($dependentEntryPointInfo->horizontal, 
+								$dependentEntryPointInfo->vertical, 
+								10, 10, $direction, $this->chart);	
+						}
+					}
+					else {
+						$exitPoint = $dependencyLineInfo->
+							computeNeededExitPointInfo();
+
+						$entryPoint = clone $dependentEntryPointInfo;
+
+						// se non va lasciare solo il corpo del do-while
+						do {
+							$dependentEntryPointInfo->horizontal -= 
+								$this->getHorizontalGapForExistingDependency();
+						} while(in_array($dependentEntryPointInfo->horizontal, $horizontalsNotAvailable));
+							
+						$this->drawLineOnChart($exitPoint, 
+							$entryPoint,
+							$dependentEntryPointInfo->horizontal - 
+								$exitPoint->horizontal, false);
+					}		
+				}				
 			}
 		}
 	}
 	
 	private function drawLineOnChart($fromPoint, 
 		$toPoint, 
-		$horizontalOffset) {
+		$horizontalOffset, $drawArrow) {
 		DrawingHelper::segmentedOffsetLine($fromPoint->horizontal, $fromPoint->vertical, 
 			$horizontalOffset, $toPoint->vertical - $fromPoint->vertical, 
 			$toPoint->horizontal, $toPoint->vertical, $this->chart);
 			
-		DrawingHelper::drawArrow($toPoint->horizontal, 
+		if($drawArrow) {
+			DrawingHelper::drawArrow($toPoint->horizontal, 
 							$toPoint->vertical, 
 							10, 10, "RIGHT", $this->chart);
+		}
 						
 	}
 	
