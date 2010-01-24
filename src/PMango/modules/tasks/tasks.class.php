@@ -851,14 +851,12 @@ class CTask extends CDpObject {
 
 	function getAssignedUsers(){
 		$sql="
-		 SELECT users.user_id AS ID, users.user_last_name AS LastName, user_tasks.effort AS Effort, project_roles.proles_name AS Role
-		 FROM users, user_tasks
-		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task
-		 AND task_log.task_log_creator = user_tasks.user_id ) , project_roles
- 		 WHERE user_tasks.task_id = ".$this->task_id."
-		 AND user_tasks.user_id = users.user_id
-		 AND project_roles.proles_id = user_tasks.proles_id
-		 GROUP BY (users.user_id)";
+		 SELECT u.user_last_name AS LastName, u.user_first_name AS FirstName, pr.proles_name AS Role, ut.effort AS Effort
+		 FROM user_tasks AS ut, users AS u, project_roles AS pr
+		 WHERE u.user_id = ut.user_id
+		 AND pr.proles_id = ut.proles_id
+		 AND ut.proles_id >0
+		 AND ut.task_id = ".$this->task_id;
 
 		$list = db_loadList($sql);
 		return $list;
@@ -887,20 +885,23 @@ class CTask extends CDpObject {
 	/*
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
 	 */
-	function getResourceActualEffortInTask($rid){
+	function getResourceActualEffortInTask($rid, $role){
  		//DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
  		$result = 0;
 		$sql="
 		 SELECT IF( task_log_creator IS NOT NULL ,
 		 	   (SELECT SUM( task_log_hours )
-				FROM task_log
+				FROM task_log JOIN project_roles ON (task_log.task_log_proles_id = project_roles.proles_id)
 				WHERE task_log_task =".$this->task_id."
-				AND task_log_creator =".$rid."),
+				AND task_log_creator =".$rid."
+				AND proles_name=".$role."),
 		  'composed' )
 		 FROM users, user_tasks
-		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task)
+		 LEFT OUTER JOIN task_log ON ( user_tasks.task_id = task_log.task_log_task),
+		 project_roles
 		 WHERE user_tasks.task_id = ".$this->task_id."
-		 AND user_tasks.user_id = users.user_id";
+		 AND user_tasks.user_id = users.user_id
+		 AND project_roles.proles_id = user_tasks.proles_id";
 		
 		$res = db_loadList($sql);
 		//DrawingHelper::debug("il Risultato della query è ".$res[0][0]." per la risorsa ".$rid);
@@ -919,7 +920,10 @@ class CTask extends CDpObject {
 						//DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
-						$result += $CTask_son->getResourceActualEffortInTask($rid);
+						$curr_result = $CTask_son->getResourceActualEffortInTask($rid, $role);
+						if($curr_result != null){
+							$result += $curr_result;
+						}
 					}
 				}
 			}

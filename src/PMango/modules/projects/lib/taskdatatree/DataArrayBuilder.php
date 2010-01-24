@@ -108,7 +108,7 @@ class DataArrayBuilder {
   			//DrawingHelper::debug("Builder: Stiamo costruendo la risorsa ".$a[$i]['ID']);
   			$res[$i]['LastName'] = $a[$i]['LastName'];
   			$res[$i]['Effort'] = $a[$i]['Effort'];
-  			$res[$i]['ActualEffort'] = $this->_CTaskObject->getResourceActualEffortInTask($a[$i]['ID']);
+  			$res[$i]['ActualEffort'] = $this->_CTaskObject->getResourceActualEffortInTask($a[$i]['ID'], $a[$i]['Role']);
   			$res[$i]['Role'] = $a[$i]['Role'];
   		}
   		if(isset($res))
