@@ -851,7 +851,7 @@ class CTask extends CDpObject {
 
 	function getAssignedUsers(){
 		$sql="
-		 SELECT u.user_last_name AS LastName, u.user_first_name AS FirstName, pr.proles_name AS Role, ut.effort AS Effort
+		 SELECT u.user_id AS ID, u.user_last_name AS LastName, u.user_first_name AS FirstName, pr.proles_name AS Role, ut.effort AS Effort
 		 FROM user_tasks AS ut, users AS u, project_roles AS pr
 		 WHERE u.user_id = ut.user_id
 		 AND pr.proles_id = ut.proles_id
