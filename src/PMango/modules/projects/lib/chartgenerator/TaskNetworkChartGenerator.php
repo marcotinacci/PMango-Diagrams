@@ -101,18 +101,20 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		//DrawingHelper::debug("Taskboxes");
 		
 		foreach ($this->taskboxes as $task_id => $taskbox) {
-			$gifTaskbox = new GifTaskBox($this->chart, 
-				$taskbox->pointInfo->horizontal, 
-				$taskbox->pointInfo->vertical, 
-				AbstractTaskDataDrawer::$width, 
-				AbstractTaskDataDrawer::$singleRowHeight, 
-				$taskbox->dependency->getNeededTask(), 
-				AbstractTaskDataDrawer::$userOptionChoice);
-
-			$gifTaskbox->drawOn();
+//			$gifTaskbox = new GifTaskBox($this->chart, 
+//				$taskbox->pointInfo->horizontal, 
+//				$taskbox->pointInfo->vertical, 
+//				AbstractTaskDataDrawer::$width, 
+//				AbstractTaskDataDrawer::$singleRowHeight, 
+//				$taskbox->dependency->getNeededTask(), 
+//				AbstractTaskDataDrawer::$userOptionChoice);
+//
+//			$gifTaskbox->drawOn();
+			
+			$taskbox->dependency->getDrawer()->drawOn($this->chart, $taskbox->pointInfo);
 	
 			DrawingHelper::debug("Drawed " . $task_id . " " . 
-				$taskbox->dependency->getNeededTask()->getInfo()->task_id);
+				$taskbox->dependency->getNeededTask()->getInfo()->getTaskID());
 		}		
 	}
 	
@@ -136,8 +138,6 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			//print "<br>freezed vertical $freezeVertical";
 
 			//$entryPointArray = array();
-
-			$lastDependency = null;
 			
 			foreach ($dependency->getDependentTasks() as $dependentTask) {
 
@@ -189,8 +189,6 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 //					$this->drawedTasksMap[$dependantTaskId] = $dependentTask;
 //				}
 
-				$lastDependency = $dependentTask;
-
 			}
 				
 //			if (!($dependency->getNeededTask() instanceof StartMilestoneDependencyProxy)) {
@@ -214,19 +212,38 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 //			}
 			
 			$dependencyTaskId = $dependency->getNeededTask()->getInfo()->getTaskID();
-			
+
 			if(!$this->isDependencyAlreadyConsidered($dependencyTaskId) &&
 				!($dependency->getNeededTask() instanceof StartMilestoneDependencyProxy)) {
 
-				
-					
-				$freezeVertical += $this->calculateSpan($dependency);
+				$freezeVertical += $this->calculateSpan($dependency, $freezeVertical);
 				
 				$this->appendTaskBox($dependency, new PointInfo($horizontal, $freezeVertical));
 				
 				$this->vertical += $dependency->getDrawer()->computeHeight() + 
 					$this->getGapBetweenVerticalTasks();
 				
+			}
+		
+			$neededTaskBoxDrawInformation = $this->taskboxes[$dependencyTaskId];
+			
+			// generating the dependency
+			foreach ($dependency->_dependencyDescriptors as 
+				$dependentTaskId => $dependencyDescriptors) {
+
+				DrawingHelper::debug("analizing dependency descriptors for " . 
+					$dependentTaskId);
+						
+				$dependentTaskBoxDrawInformation = $this->taskboxes[$dependentTaskId];
+
+				foreach ($dependencyDescriptors as $dependencyDescriptor) {
+					$dependencyLineInfo = new DependencyLineInfo();
+					$dependencyLineInfo->neededTaskboxDrawInformation = $neededTaskBoxDrawInformation;
+					$dependencyLineInfo->dependentTaskboxDrawInformation = $dependentTaskBoxDrawInformation;
+					$dependencyLineInfo->dependencyDescriptor = $dependencyDescriptor;
+					
+					$this->appendDependencyLineInfo($dependencyLineInfo);
+				}
 			}
 			
 			return $this->taskboxes[$dependencyTaskId]->pointInfo;
@@ -258,6 +275,28 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		}
 	}
 	
+	public function appendDependencyLineInfo($dependencyLineInfo) {
+		$key = $dependencyLineInfo->dependentTaskboxDrawInformation->
+			dependency->getNeededTask()->getInfo()->getTaskID();
+		
+		if(!array_key_exists($key, $this->dependencyLinesArray)) {
+			$this->dependencyLinesArray[$key] = array();
+			$this->dependencyLinesArray[$key][TaskLevelPositionEnum::$starting] = array();
+			$this->dependencyLinesArray[$key][TaskLevelPositionEnum::$inner] = array();
+		}
+		
+		$dependentEntryPosition = $dependencyLineInfo->dependencyDescriptor->
+			dependentTaskPositionEnum;
+
+		if(!array_key_exists($dependentEntryPosition, 
+			$this->dependencyLinesArray[$key])) {
+			DrawingHelper::debug("Impossible to have exit point for a dependent entry logic!");
+		}
+		
+		$this->dependencyLinesArray[$key][$dependentEntryPosition][] = $dependencyLineInfo;
+		
+	}
+	
 	public function appendTaskBox($dependency, $pointInfo) {
 		$dependencyTaskId = $dependency->getNeededTask()->getInfo()->getTaskID();
 		$taskBoxDrawInfo = new TaskboxDrawInformation();
@@ -267,6 +306,19 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	}
 	
 	private $taskboxes = array();
+	
+	private function drawDependencyLine() {
+		foreach ($this->dependencyLinesArray as $dependentLeafId => $positionsArray) {
+			DrawingHelper::debug("printing dependency entry for " . $dependentLeafId);
+				
+			if(count($positionsArray[TaskLevelPositionEnum::$starting] > 0)) {
+				
+			}	
+			else if(count($positionsArray[TaskLevelPositionEnum::$inner] > 0)) {
+				
+			}
+		}
+	}
 	
 	private function isDependencyAlreadyConsidered($dependency_task_id) {
 		return array_key_exists($dependency_task_id, $this->taskboxes);
@@ -305,9 +357,11 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				
 				// setting the dependencies descriptors array relative to
 				// a pair ($neededTaskid, $dependantTaskId)
-				$analizedDependency[$dependantId]->_dependencyDescriptors = 
-					$dependencydescriptors;
+//				$analizedDependency[$dependantId]->_dependencyDescriptors = 
+//					$dependencydescriptors;
 			}
+			
+			$analizedDependency[$neededTaskId]->_dependencyDescriptors = $dependantTasksdictionary;
 		}
 
 		$root = new DefaultDependency(null);
@@ -359,7 +413,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 	private function getHorizontalGapForExistingDependency() {
 		// return a constant
-		return 3;
+		return 5;
 	}
 
 	private function buildDependencyLine($neededTask_id, $task_id, $exitPoint, $entryPoint) {
@@ -410,9 +464,11 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	//		return $entryPoint;
 	//	}
 
-	private function calculateSpan($dependency) {
-		$span = ($this->vertical - $dependency->getDrawer()->computeHeight() 
-			- $this->getGapBetweenVerticalTasks()) / 2;
+	private function calculateSpan($dependency, $freezedVertical) {
+		$span = ($this->vertical -
+			$freezedVertical - 
+			$dependency->getDrawer()->computeHeight() - 
+			$this->getGapBetweenVerticalTasks()) / 2.0;
 
 		if ($span < 0) {
 			$this->vertical += -$span;
@@ -572,6 +628,8 @@ class DefaultDependency implements IDependency {
 	}
 
 	public function getDrawer() {
+		return new CommonTaskDataDrawer($this);
+		
 		if($this->neededTaskIsAtomic()) {
 			$this->_drawer = new AtomicTaskDataDrawer($this);
 		}
@@ -592,28 +650,64 @@ class DefaultDependency implements IDependency {
 				$this->getNeededTask()->getInfo()->getTaskID());
 		}
 	}
+	
+	public function hasInnerNeededTasks() {
+		foreach ($this->_dependencies as $dependent) {
+			
+			foreach ($dependent->_dependencyDescriptors
+				as $dependencyDescriptor) {
+
+				if ($dependencyDescriptor->neededTaskId == 
+						$this->getNeededTask()->getInfo()->getTaskID() &&
+					$dependencyDescriptor->neededTaskPositionEnum ==
+						TaskLevelPositionEnum::$inner) {
+
+					return true;
+							
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public function hasInnerDependentTasks() {
+		foreach ($this->_fathersDependencies as $fatherDependency) {
+			
+			foreach ($fatherDependency->_dependencyDescriptors
+				as $dependencyDescriptor) {
+
+				if ($dependencyDescriptor->dependentTaskId == 
+						$this->getNeededTask()->getInfo()->getTaskID() &&
+					$dependencyDescriptor->dependentTaskPositionEnum ==
+						TaskLevelPositionEnum::$inner) {
+
+					return true;
+							
+				}
+			}
+		}
+		
+		return false;
+	}
 }
 
 class StartMilestoneDependencyProxy {
 	var $pippo = 5;
 
 	public function getInfo() {
-		//print "<br>start milestone proxy activated!";
 		return $this;
 	}
 
 	public function getTaskID() {
-		//print "<br>start milestone proxy activated!";
 		return DependencyType::$start;
 	}
 
 	public function isAtomic() {
-		//print "<br>start milestone proxy activated!";
 		return false;
 	}
 
 	public function getCollapsed() {
-		//print "<br>start milestone proxy activated!";
 		return false;
 	}
 
@@ -635,8 +729,8 @@ interface ITaskDataDrawer {
 	 * @param PointInfo $initialTopLeftCorner
 	 * @return PointInfo
 	 */
-	public function computeEntryPoint($initialTopLeftCorner);
-	public function computeExitPoint($initialTopLeftCorner);
+//	public function computeEntryPoint($initialTopLeftCorner);
+//	public function computeExitPoint($initialTopLeftCorner);
 	public function computeHeight();
 
 	/**
@@ -645,7 +739,7 @@ interface ITaskDataDrawer {
 	 * @param PointInfo $initialPoint
 	 * @return void
 	 */
-	public function drawOn($gifImage, $initialPoint);
+	public function drawOn(& $gifImage, $initialPoint);
 }
 
 abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
@@ -662,42 +756,88 @@ abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
 
 	public function computeHeight() {
 		
-		$height = GifTaskBox::getEffectiveHeightOfTaskBox(
-			$this->_dependency->getNeededTask(), 
-			AbstractTaskDataDrawer::$singleRowHeight, 
-			AbstractTaskDataDrawer::$userOptionChoice);
-			
-			DrawingHelper::debug("Height for " . 
-			$this->_dependency->getNeededTask()->getInfo()->getTaskID() . " is " . $height);
-			
-		return $height;
+		return $this->computeTaskBoxHeight();
+		
+//		$height = GifTaskBox::getEffectiveHeightOfTaskBox(
+//			$this->_dependency->getNeededTask(), 
+//			AbstractTaskDataDrawer::$singleRowHeight, 
+//			AbstractTaskDataDrawer::$userOptionChoice);
+//			
+//			DrawingHelper::debug("Height for " . 
+//			$this->_dependency->getNeededTask()->getInfo()->getTaskID() . " is " . $height);
+//			
+//		return $height;
 	}
 
-	public function drawOn($gifImage, $initialPoint) {
+	public function drawOn(& $gifImage, $initialPoint) {
 		$drawingPoint = $initialPoint;
-		$drawingPoint = $this->onDependencySegmentDrawing($gifImage, $drawingPoint);
+		$drawingPoint = $this->onEntryDependencySegmentDrawing($gifImage, $drawingPoint);
 		$drawingPoint = $this->onTaskBoxDrawing($gifImage, $drawingPoint);
-		$drawingPoint = $this->onDependencySegmentDrawing($gifImage, $drawingPoint);
+		$drawingPoint = $this->onExitDependencySegmentDrawing($gifImage, $drawingPoint);
 	}
 
-	protected function onDependencySegmentDrawing($gifImage, $initialPoint) {
+	protected function onEntryDependencySegmentDrawing(& $gifImage, $initialPoint) {
+		return $initialPoint;
+	}
+	
+	protected function onExitDependencySegmentDrawing(& $gifImage, $initialPoint) {
 		return $initialPoint;
 	}
 
-	protected function onTaskBoxDrawing($gifImage, $initialPoint) {
-		// the size of each row is correct to be hard coded like this fashion??
-		$gifTaskBox = new GifTaskBox($initialPoint->horizontal, $initialPoint->vertical,
-		AbstractTaskDataDrawer::$width, 30, $this->_dependency->getNeededTask());
+	private function onTaskBoxDrawing(& $gifImage, $initialPoint) {
 
-		$gifTaskBox->drawOn($gifImage);
+		DrawingHelper::debug("private drawing of gifimage with dimension: " . $gifImage->getWidth());
+		$gifTaskbox = new GifTaskBox($gifImage, 
+				$initialPoint->horizontal, 
+				$initialPoint->vertical, 
+				AbstractTaskDataDrawer::$width, 
+				AbstractTaskDataDrawer::$singleRowHeight, 
+				$this->_dependency->getNeededTask(), 
+				AbstractTaskDataDrawer::$userOptionChoice);
 
-		return new PointInfo($initialPoint->horizontal, $initialPoint->vertical + $this->computeTaskBoxHeight($gifTaskBox));
+		$gifTaskbox->drawOn();
+		
+		return new PointInfo($initialPoint->horizontal, 
+			$initialPoint->vertical + $this->computeTaskBoxHeight());
 	}
 
-	private function computeTaskBoxHeight($gifTaskBox) {
-		GifTaskBox::getEffectiveHeightOfTaskBox($this->_dependency,
-		30, self::$userOptionChoice);
+	private function computeTaskBoxHeight() {
+		return GifTaskBox::getEffectiveHeightOfTaskBox(
+			$this->_dependency->getNeededTask(), 
+			AbstractTaskDataDrawer::$singleRowHeight, 
+			AbstractTaskDataDrawer::$userOptionChoice);
 	}
+}
+
+class CommonTaskDataDrawer extends AbstractTaskDataDrawer {
+	public function __construct($dependency) {
+		parent::__construct($dependency);
+	}
+	
+	public function computeHeight() { 
+		$innersCount = 0;
+		
+		if($this->_dependency->hasInnerNeededTasks()) {
+			$innersCount = $innersCount + 1;	
+		}
+		
+		if($this->_dependency->hasInnerDependentTasks()) {
+			$innersCount = $innersCount + 1;	
+		}
+		
+		return parent::computeHeight() + 
+			($innersCount * AbstractTaskDataDrawer::$composedVerticalLineLength);
+	}
+
+//	public function computeEntryPoint($initialTopLeftCorner) {
+//		return new PointInfo(0, 0);
+//	}
+//
+//	public function computeExitPoint($initialTopLeftCorner) {
+//		return new PointInfo(0, 0);
+//	}
+	
+	//onDependencySegmentDrawing($gifImage, $drawingPoint)
 }
 
 class StartMilestoneDrawer extends AbstractTaskDataDrawer {
@@ -728,58 +868,59 @@ class StartMilestoneDrawer extends AbstractTaskDataDrawer {
 	
 }
 
-class AtomicTaskDataDrawer extends AbstractTaskDataDrawer {
-	public function __construct($dependency) {
-		parent::__construct($dependency);
-	}
 
-	public function computeEntryPoint($initialTopLeftCorner) {
-		return new PointInfo($initialTopLeftCorner->horizontal,
-		$initialTopLeftCorner->vertical + ($this->computeHeight() / 2));
-	}
-
-	public function computeExitPoint($initialTopLeftCorner) {
-		return new PointInfo($initialTopLeftCorner->horizontal +
-		AbstractTaskDataDrawer::$width,
-		$initialTopLeftCorner->vertical + ($this->computeHeight() / 2));
-	}
-}
-
-class ComposedTaskDataDrawer extends AbstractTaskDataDrawer {
-	public function __construct($dependency) {
-		parent::__construct($dependency);
-	}
-
-	public function computeEntryPoint($initialTopLeftCorner) {
-		return new PointInfo($initialTopLeftCorner->horizontal +
-		(AbstractTaskDataDrawer::$width / 2), $initialTopLeftCorner->vertical);
-	}
-
-	public function computeExitPoint($initialTopLeftCorner) {
-		return new PointInfo($initialTopLeftCorner->horizontal +
-		(AbstractTaskDataDrawer::$width / 2), $initialTopLeftCorner->vertical + $this->computeHeight());
-	}
-
-	public function computeheight() {
-		// taking the standard height of the task box
-		$result = parent::computeHeight();
-
-		// adding the top segment to represent the entry dependency if this exists
-		$result += $this->_dependency->hasFathersDependency() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;
-
-		// adding the bottom segment to represent the exit dependency if this exists
-		$result += $this->_dependency->hasDependentTasks() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;
-
-		return $result;
-	}
-
-	protected function onDependencySegmentDrawing($gifImage, $initialPoint) {
-		$arrivePointVerticalComponent = $initialPoint->vertical + AbstractTaskDataDrawer::$composedVerticalLineLength;
-		$horizontal = $initialPoint->horizontal +
-			(AbstractTaskDataDrawer::$width / 2);
-		DrawingHelper::LineFromTo(horizontal, $initialPoint->vertical, horizontal, $arrivePointVerticalComponent, $gifImage);
-		return new PointInfo($initialPoint->horizontal, $arrivePointVerticalComponent);
-	}
-}
-
+//class AtomicTaskDataDrawer extends AbstractTaskDataDrawer {
+//	public function __construct($dependency) {
+//		parent::__construct($dependency);
+//	}
+//
+//	public function computeEntryPoint($initialTopLeftCorner) {
+//		return new PointInfo($initialTopLeftCorner->horizontal,
+//		$initialTopLeftCorner->vertical + ($this->computeHeight() / 2));
+//	}
+//
+//	public function computeExitPoint($initialTopLeftCorner) {
+//		return new PointInfo($initialTopLeftCorner->horizontal +
+//		AbstractTaskDataDrawer::$width,
+//		$initialTopLeftCorner->vertical + ($this->computeHeight() / 2));
+//	}
+//}
+//
+//class ComposedTaskDataDrawer extends AbstractTaskDataDrawer {
+//	public function __construct($dependency) {
+//		parent::__construct($dependency);
+//	}
+//
+//	public function computeEntryPoint($initialTopLeftCorner) {
+//		return new PointInfo($initialTopLeftCorner->horizontal +
+//		(AbstractTaskDataDrawer::$width / 2), $initialTopLeftCorner->vertical);
+//	}
+//
+//	public function computeExitPoint($initialTopLeftCorner) {
+//		return new PointInfo($initialTopLeftCorner->horizontal +
+//		(AbstractTaskDataDrawer::$width / 2), $initialTopLeftCorner->vertical + $this->computeHeight());
+//	}
+//
+//	public function computeheight() {
+//		// taking the standard height of the task box
+//		$result = parent::computeHeight();
+//
+//		// adding the top segment to represent the entry dependency if this exists
+//		$result += $this->_dependency->hasFathersDependency() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;
+//
+//		// adding the bottom segment to represent the exit dependency if this exists
+//		$result += $this->_dependency->hasDependentTasks() ? AbstractTaskDataDrawer::$composedVerticalLineLength : 0;
+//
+//		return $result;
+//	}
+//
+//	protected function onDependencySegmentDrawing($gifImage, $initialPoint) {
+//		$arrivePointVerticalComponent = $initialPoint->vertical + AbstractTaskDataDrawer::$composedVerticalLineLength;
+//		$horizontal = $initialPoint->horizontal +
+//			(AbstractTaskDataDrawer::$width / 2);
+//		DrawingHelper::LineFromTo(horizontal, $initialPoint->vertical, horizontal, $arrivePointVerticalComponent, $gifImage);
+//		return new PointInfo($initialPoint->horizontal, $arrivePointVerticalComponent);
+//	}
+//}
+//
 ?>

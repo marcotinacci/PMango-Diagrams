@@ -6,13 +6,15 @@ class DependencyLineInfo {
 	 * 
 	 * @var PointInfo
 	 */
-	var $exitPoint;
+	var $neededTaskboxDrawInformation;
 	
 	/**
 	 * 
 	 * @var PointInfo
 	 */
-	var $entryPoint;
+	var $dependentTaskboxDrawInformation;
+	
+	var $dependencyDescriptor;
 	
 	/**
 	 * pixel
@@ -43,5 +45,7 @@ class DependencyLineInfo {
 	 * @var integer
 	 */
 	var $dotsInPattern;
+	
+	var $replicateArrow;
 }
 ?>
