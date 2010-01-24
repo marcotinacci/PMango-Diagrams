@@ -158,8 +158,9 @@ class GanttChartGenerator extends ChartGenerator{
 	public function __construct(){	
 		parent::__construct();
 		// file di configurazione
-		require dirname(__FILE__).'/../../../../includes/config.php';
-		$this->defWidth = $diagram['default_width'];
+//		require dirname(__FILE__).'/../../../../includes/config.php';
+//		$this->defWidth = $diagram['default_width'];
+		$this->defWidth = 800;
 	}
 
 	/**
