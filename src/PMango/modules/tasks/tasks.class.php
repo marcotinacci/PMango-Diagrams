@@ -886,7 +886,7 @@ class CTask extends CDpObject {
 	 * Metodo per calcolare l'actual Effort personale di una risorsa in un task.
 	 */
 	function getResourceActualEffortInTask($rid, $role){
- 		//DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
+ 		DrawingHelper::debug("Elemento della lista di user del task ".$this->task_id.": ".$list[$i][0]);
  		$result = 0;
 		$sql="
 		 SELECT IF( task_log_creator IS NOT NULL ,
@@ -904,20 +904,20 @@ class CTask extends CDpObject {
 		 AND project_roles.proles_id = user_tasks.proles_id";
 		
 		$res = db_loadList($sql);
-		//DrawingHelper::debug("il Risultato della query è ".$res[0][0]." per la risorsa ".$rid);
+		DrawingHelper::debug("il Risultato della query è ".$res[0][0]." per la risorsa ".$rid);
 		
 		if($res[0][0]=='composed'){
-			//DrawingHelper::debug("Dentro l'IF");
+			DrawingHelper::debug("Dentro l'IF");
 			$children = $this->getChildren();
 			foreach($children as $son){
 				$list = $this->getResourceList($son);
 				for($i=0; $i<sizeOf($list);$i++){
-						//DrawingHelper::debug("ResList Elem(".$i.") -> ".$list[$i][0]);
+						DrawingHelper::debug("ResList Elem(".$i.") -> ".$list[$i][0]);
 				}
-				//DrawingHelper::debug("Checking ".$son);
+				DrawingHelper::debug("Checking ".$son);
 				for($i=0; $i<sizeOf($list); $i++){
 					if($rid==$list[$i][0]){
-						//DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
+						DrawingHelper::debug("Propagazione del metodo da".$this->task_id." a ".$son);
 						$CTask_son = new CTask();
 						$CTask_son->load($son);
 						$curr_result = $CTask_son->getResourceActualEffortInTask($rid, $role);
@@ -927,13 +927,13 @@ class CTask extends CDpObject {
 					}
 				}
 			}
-			//DrawingHelper::debug("ALLA FINE DEL GIRO OTTENIAMO ".$result);
+			DrawingHelper::debug("ALLA FINE DEL GIRO OTTENIAMO ".$result);
 		}
 		else{
-			//DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
+			DrawingHelper::debug("Metto le seguenti ore: ".$res[0][0]);
 			$result = $res[0][0];
 		}
-		//DrawingHelper::debug("Totale: ".$result);
+		DrawingHelper::debug("Totale: ".$result);
 		return $result;
 	}
 	/**
