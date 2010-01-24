@@ -71,10 +71,10 @@ print("almeno sono arrivato fino a qui");
 //	print " " . $leaf->getInfo()->getTaskID();	
 //}
 
-print "<br>preparing the generating process for tn graph: ";
-$tnGenerator = new TaskNetworkChartGenerator();
-$tnGenerator->generateChart();
-print "i task sul chart dovrebbero essere tutti presenti.";
+//print "<br>preparing the generating process for tn graph: ";
+//$tnGenerator = new TaskNetworkChartGenerator();
+//$tnGenerator->generateChart();
+//print "i task sul chart dovrebbero essere tutti presenti.";
 //$tnGenerator->getChart()->draw();
 //print "<img src=\"". $tnGenerator->getChart() . "\">";
 //$tnGenerator->getChart()->saveToFile("/Users/massimonocentini/tmp/tn.gif");

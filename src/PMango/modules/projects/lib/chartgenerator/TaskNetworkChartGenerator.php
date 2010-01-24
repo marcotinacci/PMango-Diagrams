@@ -651,17 +651,26 @@ class DefaultDependency implements IDependency {
 		}
 	}
 	
-	public function hasInnerNeededTasks() {
-		foreach ($this->_dependencies as $dependent) {
-			
-			foreach ($dependent->_dependencyDescriptors
-				as $dependencyDescriptor) {
+	public function hasInnerDependentTasks() {
+		DrawingHelper::debug("hasInnerDependentTasks method for " . 
+			$this->getNeededTask()->getInfo()->getTaskID());
+		
+		foreach ($this->_dependencyDescriptors
+			as $dependentTaskId => $dependencyDescriptors) {
 
-				if ($dependencyDescriptor->neededTaskId == 
-						$this->getNeededTask()->getInfo()->getTaskID() &&
-					$dependencyDescriptor->neededTaskPositionEnum ==
+			foreach ($dependencyDescriptors as $dependencyDescriptor) {
+				
+				DrawingHelper::debug("found descriptor " . 
+							$dependencyDescriptor);
+							
+				DrawingHelper::debug("needed task for the descritor are  " . 
+							$dependencyDescriptor->neededTaskId);
+				
+				if ($dependencyDescriptor->neededTaskPositionEnum ==
 						TaskLevelPositionEnum::$inner) {
 
+					DrawingHelper::debug("inner found!");
+							
 					return true;
 							
 				}
@@ -671,19 +680,33 @@ class DefaultDependency implements IDependency {
 		return false;
 	}
 	
-	public function hasInnerDependentTasks() {
+	public function hasInnerNeededTasks() {
+		DrawingHelper::debug("hasInnerNeededTask method for " . 
+			$this->getNeededTask()->getInfo()->getTaskID());
+			
 		foreach ($this->_fathersDependencies as $fatherDependency) {
 			
+			DrawingHelper::debug("found father " . 
+				$fatherDependency->getNeededTask()->getInfo()->getTaskID());
+			
 			foreach ($fatherDependency->_dependencyDescriptors
-				as $dependencyDescriptor) {
+				as $dependentTaskId => $dependencyDescriptors) {
 
-				if ($dependencyDescriptor->dependentTaskId == 
-						$this->getNeededTask()->getInfo()->getTaskID() &&
-					$dependencyDescriptor->dependentTaskPositionEnum ==
-						TaskLevelPositionEnum::$inner) {
-
-					return true;
+				if ($dependentTaskId == $this->getNeededTask()->getInfo()->getTaskID()) {
+					
+					foreach ($dependencyDescriptors as $dependencyDescriptor) {
+						DrawingHelper::debug("found descriptor " . 
+							$dependencyDescriptor);
 							
+						if ($dependencyDescriptor->dependentTaskPositionEnum ==
+								TaskLevelPositionEnum::$inner) {
+		
+							DrawingHelper::debug("inner found!");
+									
+							return true;
+									
+						}
+					}
 				}
 			}
 		}
@@ -770,7 +793,7 @@ abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
 	}
 
 	public function drawOn(& $gifImage, $initialPoint) {
-		$drawingPoint = $initialPoint;
+		$drawingPoint = clone $initialPoint;
 		$drawingPoint = $this->onEntryDependencySegmentDrawing($gifImage, $drawingPoint);
 		$drawingPoint = $this->onTaskBoxDrawing($gifImage, $drawingPoint);
 		$drawingPoint = $this->onExitDependencySegmentDrawing($gifImage, $drawingPoint);
@@ -786,7 +809,6 @@ abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {
 
 	private function onTaskBoxDrawing(& $gifImage, $initialPoint) {
 
-		DrawingHelper::debug("private drawing of gifimage with dimension: " . $gifImage->getWidth());
 		$gifTaskbox = new GifTaskBox($gifImage, 
 				$initialPoint->horizontal, 
 				$initialPoint->vertical, 
@@ -828,16 +850,77 @@ class CommonTaskDataDrawer extends AbstractTaskDataDrawer {
 		return parent::computeHeight() + 
 			($innersCount * AbstractTaskDataDrawer::$composedVerticalLineLength);
 	}
-
-//	public function computeEntryPoint($initialTopLeftCorner) {
-//		return new PointInfo(0, 0);
-//	}
-//
-//	public function computeExitPoint($initialTopLeftCorner) {
-//		return new PointInfo(0, 0);
-//	}
 	
-	//onDependencySegmentDrawing($gifImage, $drawingPoint)
+	private function computeInnerExitPoint($initialPoint) {
+		$clonedPoint = $this->computeInnerEntryPoint($initialPoint);
+		
+		$clonedPoint->vertical += AbstractTaskDataDrawer::$composedVerticalLineLength;
+		
+		return $clonedPoint;
+	}
+	
+	private function computeInnerEntryPoint($initialPoint) {
+		$clonedPoint = clone $initialPoint;
+		
+		$clonedPoint->horizontal += AbstractTaskDataDrawer::$width / 2;
+		
+		return $clonedPoint;
+	}
+	
+	private function computeStartingEntryPoint($initialPoint) {
+		$clonedPoint = clone $initialPoint;
+		
+		$clonedPoint->vertical += $this->computeHeight() / 2;
+		
+		return $clonedPoint;
+	}
+	
+	protected function onEntryDependencySegmentDrawing(& $gifImage, $initialPoint) {
+		$returnPoint = clone $initialPoint;
+		DrawingHelper::debug("ma almeno ci arrivo?");
+		if($this->_dependency->hasInnerNeededTasks()) {
+			DrawingHelper::debug("ho almeno un needed task che entra nel mio top?");	
+			$startingPoint = $this->computeInnerEntryPoint($initialPoint);
+			
+			$endPoint = new PointInfo(
+				$startingPoint->horizontal,
+				$startingPoint->vertical + 
+					AbstractTaskDataDrawer::$composedVerticalLineLength);
+					
+			DrawingHelper::LineFromTo(
+				$startingPoint->horizontal, 
+				$startingPoint->vertical, 
+				$endPoint->horizontal, 
+				$endPoint->vertical,
+				$gifImage);
+				
+			$returnPoint->vertical = $endPoint->vertical;//AbstractTaskDataDrawer::$composedVerticalLineLength;
+		}
+		
+		return $returnPoint;
+	}
+	
+	protected function onExitDependencySegmentDrawing(& $gifImage, $initialPoint) {
+		$returnPoint = clone $initialPoint;
+		DrawingHelper::debug("ma almeno ci arrivo?");
+		if($this->_dependency->hasInnerDependentTasks()) {
+			DrawingHelper::debug("ho almeno un dependent task che esce dal mio bottom?");	
+			$startingPoint = $this->computeInnerEntryPoint($initialPoint);
+			
+			$endPoint = $this->computeInnerExitPoint($initialPoint);
+					
+			DrawingHelper::LineFromTo(
+				$startingPoint->horizontal, 
+				$startingPoint->vertical, 
+				$endPoint->horizontal, 
+				$endPoint->vertical,
+				$gifImage);
+				
+			$returnPoint->vertical = $endPoint->vertical;//AbstractTaskDataDrawer::$composedVerticalLineLength;
+		}
+		
+		return $returnPoint;
+	}
 }
 
 class StartMilestoneDrawer extends AbstractTaskDataDrawer {
