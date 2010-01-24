@@ -230,7 +230,7 @@ class GifGanttTask extends GifArea
 				$gifImage,
 				$this->x + $xPlanned, // x
 				$this->y, // y
-				$wPlanned == 0 ? 1 : $wPlanned, // width
+				$wPlanned < 2 ? 2 : $wPlanned, // width
 				$hPlanned // height
 				);
 			$plannedGifBox->setForeColor($cPlanned);
@@ -244,7 +244,7 @@ class GifGanttTask extends GifArea
 				$gifImage,				
 				$this->x + $xActual,
 				$this->y + $hPlanned,
-				$wActual == 0 ? 1 : $wActual,
+				$wActual < 2 ? 2 : $wActual,
 				intval($height/3),
 				$this->td->getInfo()->getPercentage()
 			);
@@ -263,8 +263,8 @@ class GifGanttTask extends GifArea
 			// adatta larghezza triangoli in casi degeneri
 			if($xRight - $xLeft < 2 * $this->wTri){
 				$this->wTri = intval(($xRight - $xLeft)/2);
-				if($this->wTri == 0){
-					$this->wTri = 1;
+				if($this->wTri < 2){
+					$this->wTri = 2;
 				}
 			}
 			
