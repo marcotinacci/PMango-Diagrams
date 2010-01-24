@@ -230,7 +230,7 @@ class GifGanttTask extends GifArea
 				$gifImage,
 				$this->x + $xPlanned, // x
 				$this->y, // y
-				$wPlanned, // width
+				$wPlanned == 0 ? 1 : $wPlanned, // width
 				$hPlanned // height
 				);
 			$plannedGifBox->setForeColor($cPlanned);
@@ -244,7 +244,7 @@ class GifGanttTask extends GifArea
 				$gifImage,				
 				$this->x + $xActual,
 				$this->y + $hPlanned,
-				$wActual,
+				$wActual == 0 ? 1 : $wActual,
 				intval($height/3),
 				$this->td->getInfo()->getPercentage()
 			);
@@ -263,6 +263,9 @@ class GifGanttTask extends GifArea
 			// adatta larghezza triangoli in casi degeneri
 			if($xRight - $xLeft < 2 * $this->wTri){
 				$this->wTri = intval(($xRight - $xLeft)/2);
+				if($this->wTri == 0){
+					$this->wTri = 1;
+				}
 			}
 			
 			// altezza triangoli			
@@ -272,14 +275,24 @@ class GifGanttTask extends GifArea
 			if($xLeft >= 0){
 				// genero triangolo sinistro
 				$leftGifTriangle = new GifTriangle(
-					$gifImage, $this->x + $xLeft, $this->y + $hPlanned, $this->wTri, $hTri, 'left');
+					$gifImage, 
+					$this->x + $xLeft, 
+					$this->y + $hPlanned, 
+					$this->wTri, 
+					$hTri, 
+					'left');
 				$leftGifTriangle->setForeColor($cPlanned);
 			}
 			// se il triangolo destro è visibile
 			if($xRight - $this->wTri <= $xFinish - $xStart){
 				// genero triangolo destro 
 				$rightGifTriangle = new GifTriangle(
-				$gifImage, $this->x + $xRight - $this->wTri, $this->y + $hPlanned, $this->wTri, $hTri, 'right');
+				$gifImage, 
+				$this->x + $xRight - $this->wTri, 
+				$this->y + $hPlanned, 
+				$this->wTri, 
+				$hTri, 
+				'right');
 				$rightGifTriangle->setForeColor($cPlanned);
 			}
 		}

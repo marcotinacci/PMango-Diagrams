@@ -8,6 +8,7 @@ require_once dirname(__FILE__).'/../gifarea/DrawingHelper.php';
 require_once dirname(__FILE__).'/../gifarea/LineStyle.php';
 require_once dirname(__FILE__).'/../utils/TimeUtils.php';
 require_once dirname(__FILE__).'/../useroptionschoice/UserOptionsChoice.php';
+require_once dirname(__FILE__).'/../useroptionschoice/UserOptionEnumeration.php';
 require_once dirname(__FILE__).'/../taskdatatree/Project.php';
 require_once dirname(__FILE__).'/ChartTypesEnum.php';
 
@@ -146,21 +147,21 @@ class GanttChartGenerator extends ChartGenerator{
 	protected $gTasks = array();
 	
 	/**
+	 * larghezza di default del diagramma
+	 * @var int
+	 */
+	protected $defWidth;
+	
+	/**
 	 * Costruttore
 	 */
 	public function __construct(){	
 		parent::__construct();
+		// file di configurazione
+		require dirname(__FILE__).'/../../../../includes/config.php';
+		$this->defWidth = $diagram['default_width'];
 	}
-/*	DEBUG
-	protected function testVisit(){
-		foreach($this->tasks as $task){
-			echo "testVisit<br>";			
-			echo "task ".$task->getInfo()->getWBSId()."<br>";
-			echo "atomico? ".($task->isAtomic()?"si":"no")."<br>";
-			echo "numero figli: ".count($task->getChildren())."<br><br>";
-		}
-	}
-*/	
+
 	/**
 	 * Funzione di generazione grafica del diagramma Gantt
 	 * @see chartgenerator/ChartGenerator#generateChart()
@@ -199,11 +200,11 @@ class GanttChartGenerator extends ChartGenerator{
 		$this->makeFront();
 		$this->makeTitle();
 		$this->makeGanttTaskBox();
-		// TODO: attendere l'opzione utente
-		//if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->
-		//	showFinishToStartDependenciesUserOption()){
+
+		if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->
+			showFinishToStartDependenciesUserOption()){
 			$this->makeGanttDependencies();			
-		//}
+		}
 		$this->makeTodayLine();
 		$this->makeLeftColumn();
 		$this->borderRemark();
@@ -261,7 +262,12 @@ class GanttChartGenerator extends ChartGenerator{
 			case 2: $tolM = 1; break;
 			case 1: $tolY = 1; break;						
 		}
-		
+		$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
+		if($dates['today'] == ''){
+			$tempToday = ymdToDate($_GET[UserOptionEnumeration::$TodayDateUserOption]);
+		}else{
+			$tempToday = ymdToDate($dates['today']);
+		}		
 		// ricava date start finish e today da opzioni utente
 		switch(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getTimeRangeUserOption()){
 			
@@ -275,9 +281,6 @@ class GanttChartGenerator extends ChartGenerator{
 			default:
 			// inizio e fine del progetto
 			case TimeRange::$WholeProjectRangeUserOption: 
-				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$tempToday = ymdToDate($dates['today']);
-//				echo "today: ".$dates['today']."<br>";
 				$sProj = null;
 				$fProj = null;
 				for($i=0; $i<$this->numTasks; $i++){
@@ -312,8 +315,7 @@ class GanttChartGenerator extends ChartGenerator{
 			
 			// inizio project e fine today
 			case TimeRange::$FromStartToNowRangeUserOption:
-				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$sProj = $dates['today'];
+				$sProj = $tempToday;
 				for($i=0; $i<$this->numTasks; $i++){
 					$td = $this->tasks[$i];
 					$planned = $td->getInfo()->getPlannedTimeFrame();
@@ -329,13 +331,12 @@ class GanttChartGenerator extends ChartGenerator{
 					}
 				}
 				$start = add_date($sProj,-$tolH,-$tolD,-$tolM,-$tolY);				
-				$end = add_date($dates['today'],$tolH,$tolD,$tolM,$tolY);
+				$end = add_date($tempToday,$tolH,$tolD,$tolM,$tolY);
 			break;
 			
 			// inizio today e fine project
 			case TimeRange::$FromNowToEndRangeUserOption:
-				$dates = UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getCustomRangeValues();
-				$fProj = ymdToDate($dates['today']);;
+				$fProj = $tempToday;
 				for($i=0; $i<$this->numTasks; $i++){
 					$td = $this->tasks[$i];
 					$planned = $td->getInfo()->getPlannedTimeFrame();
@@ -353,7 +354,7 @@ class GanttChartGenerator extends ChartGenerator{
 		
 		$this->sDate = $start;
 		$this->fDate = $end;
-		$this->today = ymdToDate($dates['today']);	
+		$this->today = $tempToday;
 	}
 	
 	/**
@@ -366,7 +367,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$width = $values['width'];
 				if($width == ''){
 					// TODO: prendere il valore di default da opzioni di configurazione
-					$width = 800;
+					$width = $this->defWidth;
 				}
 			break;			
 			case ImageDimension::$FitInWindowDimUserOption:
@@ -409,7 +410,7 @@ class GanttChartGenerator extends ChartGenerator{
 			default:
 			case ImageDimension::$DefaultDimUserOption:
 			// TODO: acquisire da file di configurazione
-				$width =	800;
+				$width =	$this->defWidth;
 			break;
 		}		
 		// se non viene scelta la optimal view adatta la grana
@@ -597,13 +598,13 @@ class GanttChartGenerator extends ChartGenerator{
 //		}
 		
 		$lineList = array();
-//		if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+		if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
 			$depOffset = array();
 			foreach($this->tasks as $taskKey =>$task){
 				$depOffset[$taskKey]['up'] = $this->gTasks[$taskKey]->getPlannedTopMiddlePoint();
 				$depOffset[$taskKey]['left'] = $this->gTasks[$taskKey]->getPlannedLeftMiddlePoint();
 			}
-//		}
+		}
 		foreach($this->tasks as $needKey => $needTask){
 			if(!array_key_exists($needTask->getInfo()->getTaskID(),$this->dep)){
 				continue;
@@ -630,8 +631,7 @@ class GanttChartGenerator extends ChartGenerator{
 					}
 					if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
 						// starting
-						// TODO: attendere uoc
-//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
 							$point2 = $depOffset[$depKey]['left'];
 							if(isset($depOffset[$depKey]['arrow'])){
 								if($depOffset[$depKey]['arrow'] == 'up'){
@@ -641,14 +641,13 @@ class GanttChartGenerator extends ChartGenerator{
 								}
 							}
 
-//						}else{
-//							$point2 = $this->gTasks[$taskKey]->getPlannedLeftMiddlePoint();
-//						}
+						}else{
+							$point2 = $this->gTasks[$depKey]->getPlannedLeftMiddlePoint();
+						}
 						$middleIn = false;
 					}else{
 						// inner
-						// TODO: attendere uoc						
-//						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+						if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
 							$point2 = $depOffset[$depKey]['up'];
 							if(isset($depOffset[$depKey]['arrow'])){
 								if($depOffset[$depKey]['arrow'] == 'left'){
@@ -657,10 +656,9 @@ class GanttChartGenerator extends ChartGenerator{
 									DrawingHelper::drawArrow($point2['x'],$point2['y'],10,6,'right',$this->chart);
 								}
 							}							
-
-//						}else{
-//							$point2 = $this->gTasks[$taskKey]->getPlannedTopMiddlePoint();							
-//						}
+						}else{
+							$point2 = $this->gTasks[$depKey]->getPlannedTopMiddlePoint();							
+						}
 						$middleIn = true;						
 					}
 
@@ -706,9 +704,9 @@ class GanttChartGenerator extends ChartGenerator{
 						$middleOut,
 						$this->chart,
 						$style
-					);			
-						// TODO: attendere uoc					
-//					if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
+					);	
+							
+					if(UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->showReplicateArrowUserOption()){
 						if($desc->dependentTaskPositionEnum == TaskLevelPositionEnum::$starting){
 							// starting
 							$depOffset[$depKey]['left']['x'] -= 
@@ -737,7 +735,7 @@ class GanttChartGenerator extends ChartGenerator{
 								$depOffset[$depKey]['arrow'] = 'left';									
 							}								
 						}					
-//					}
+					}
 				}
 			}
 		}
