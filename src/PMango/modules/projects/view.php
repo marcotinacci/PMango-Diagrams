@@ -319,7 +319,6 @@ function delIt() {
 	<td width="50%" rowspan="9" valign="top" style="border: outset #d1d1cd 1px">
 		<strong><?php echo $AppUI->_('Details');?></strong><br>
 		<table cellspacing="1" cellpadding="2" border="0" width="100%">
-			
 			<tr>
 				<td align="right"  nowrap width="25%"><?php echo $AppUI->_('Status');?>:</td>
 				<td class="hilite"  nowrap width="25%"><?php echo $AppUI->_($pstatus[$obj->project_status]);?></td>

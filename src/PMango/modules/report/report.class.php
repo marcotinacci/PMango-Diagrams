@@ -277,6 +277,17 @@ class CReport extends CDpObject {
 		return $string;	
 	}
 	
+	private static function BooleanOption($txt,$value)
+	{
+		$string = "<tr><td>$txt</td><td>";
+		if($value==true)
+			$string.="<img border='0' src='./images/icons/stock_ok-16.gif'>";
+		else
+			$string.="<img border='0' src='./images/icons/stock_cancel-16.gif'>";
+		$string.="</td></tr>";
+		return $string;
+	}
+	
 	function getGanttChartReport($pid){
 		
 		GLOBAL $AppUI;
@@ -286,42 +297,43 @@ class CReport extends CDpObject {
 		$sql="SELECT gantt_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
 		$wbs_param = db_loadList($sql);
 
-		$string = "<b>Selected options:</b><br>";
-		
+		$string = "";
 		if($wbs_param[0]['gantt_user_options']!=null){
+			//Retrive the Uoc from the db
 			$uoc = &UserOptionsChoice::GetInstance("report_gantt");
 			$uoc->loadFromString($wbs_param[0]['gantt_user_options']);
+			$string.="<table>";
 			//$uoc = new UserOptionsChoice();
-			if($uoc->showTaskNameUserOption())
-				$string.=" - Show TaskNames<br>";
-			if($uoc->showResourcesUserOption())
-				$string.=" - Show Resources<br>";
+			$string.=CReport::BooleanOption("Show TaskNames",$uoc->showTaskNameUserOption());
+			$string.=CReport::BooleanOption("Show Resources",$uoc->showResourcesUserOption());
+			$string.=CReport::BooleanOption("Show Dependences",$uoc->showFinishToStartDependenciesUserOption());
+			$string.=CReport::BooleanOption("Replicate Arrows",$uoc->showReplicateArrowUserOption());
 			if($uoc->getTimeRangeUserOption()==TimeRange::$CustomRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
-				$string.=" - Time range is from ".$dates['start']." to ".$dates['end'];
+				$string.="<tr><td>Time range</td><td>From ".$dates['start']." to ".$dates['end']."</td></tr>";
 			}
 			if($uoc->getTimeRangeUserOption()==TimeRange::$WholeProjectRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
-				$string.=" - Time range is the whole project";
+				$string.="<tr><td>Time range</td><td>Whole project"."</td></tr>";
 			}
 			if($uoc->getTimeRangeUserOption()==TimeRange::$FromStartToNowRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
-				$string.=" - Time range is from ".$dates['start']." to ".$dates['today'];
+				$string.="<tr><td>Time range</td><td>From ".$dates['start']." to ".$dates['today']."</td></tr>";
 			}
 			if($uoc->getTimeRangeUserOption()==TimeRange::$FromNowToEndRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
-				$string.=" - Time range is from ".$dates['today']." to ".$dates['end'];
+				$string.="<tr><td>Time range</td><td>From ".$dates['today']." to ".$dates['end']."</td></tr>";
 			}
+			$string.="</table>";
 		}
 		else
 		{
 			return "No Gantt chart requested";
 		}
-		
 		return $string;	
 	}
 	
@@ -333,27 +345,22 @@ class CReport extends CDpObject {
 		
 		$sql="SELECT wbs_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
 		$wbs_param = db_loadList($sql);
-
-		$string = "<b>Selected options:</b><br>";
 		
+		$string = "";
 		if($wbs_param[0]['wbs_user_options']!=null){
 			$uoc = &UserOptionsChoice::GetInstance("report_wbs");
 			$uoc->loadFromString($wbs_param[0]['wbs_user_options']);
 			//$uoc = new UserOptionsChoice();
-			if($uoc->showTaskNameUserOption())
-				$string.=" - Show TaskNames<br>";
-			if($uoc->showAlertMarkUserOption())
-				$string.=" - Show AlertMarks<br>";
-			if($uoc->showPlannedDataUserOption())
-				$string.=" - Show PlannedData<br>";
-			if($uoc->showPlannedTimeFrameUserOption())
-				$string.=" - Show PlannedTimeFrame<br>";	
-			if($uoc->showActualDataUserOption())
-				$string.=" - Show ActualData<br>";
-			if($uoc->showActualTimeFrameUserOption())
-				$string.=" - Show ActualTimeFrame<br>";
-			if($uoc->showResourcesUserOption())
-				$string.=" - Show Resources<br>";
+			
+			$string="<table>";
+			$string.=CReport::BooleanOption("Show TaskNames",$uoc->showTaskNameUserOption());
+			$string.=CReport::BooleanOption("Show AlertMarks",$uoc->showAlertMarkUserOption());
+			$string.=CReport::BooleanOption("Show PlannedData",$uoc->showPlannedDataUserOption());
+			$string.=CReport::BooleanOption("Show PlannedTimeFrame",$uoc->showPlannedTimeFrameUserOption());	
+			$string.=CReport::BooleanOption("Show ActualData",$uoc->showActualDataUserOption());
+			$string.=CReport::BooleanOption("Show ActualTimeFrame",$uoc->showActualTimeFrameUserOption());
+			$string.=CReport::BooleanOption("Show Resources",$uoc->showResourcesUserOption());
+			$string.="</table>";
 		}
 		else
 		{

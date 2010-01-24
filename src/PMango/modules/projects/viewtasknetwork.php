@@ -62,9 +62,23 @@ require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionEnumeration.php
 require_once dirname(__FILE__)."/lib/useroptionschoice/UserOptionsChoice.php";
 
 //$uoc = new UserOptionsChoice();
-$uoc = UserOptionsChoice::GetInstance();
-$uoc->setFromArray($_POST);
-$_SESSION['uoc'] = serialize($uoc);
+$uoc = UserOptionsChoice::GetInstance(ChartTypesEnum::$TaskNetwork);
+$uoc->saveOnSession();
+
+$produceReport = dPgetParam( $_POST, 'addreport', '' );
+if($produceReport==1)
+{
+	$textUoc = $uoc->saveToString();
+	$sql="UPDATE
+			reports
+		  SET
+		  	tasknet_user_options='$textUoc'
+		  WHERE 
+		  	reports.project_id=".$project_id." 
+		  AND 
+		  	reports.user_id=".$AppUI->user_id;
+	$db_roles = db_loadList($sql);
+}
 ?>
 
 <script language="javascript">
@@ -83,7 +97,8 @@ function getPageWidth()
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	divImage.innerHTML = "<img src='<?php echo "./modules/projects/lib/chartGenerator/testTN.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestTN.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$TaskNetwork.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
 </script>
 
@@ -98,19 +113,27 @@ function BuildImage(placeHolder)
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">                          
                     <input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "TaskNames"; ?><br>
-                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>" <?php echo $uoc->showAlertMarkUserOption()?"checked":""; ?>> <?php echo "AlertMarks"; ?>
+                	<input type="checkbox" value='7' name="<?php echo UserOptionEnumeration::$AlertMarkUserOption ?>" <?php echo $uoc->showAlertMarkUserOption()?"checked":""; ?>> <?php echo "AlertMarks"; ?><br>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?><br>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$TimeGapsUserOption ?>" <?php echo $uoc->showTimeGapsUserOption()?"checked":""; ?>> <?php echo "TimeGaps"; ?>
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">
                     <input type="checkbox" value='1' name="<?php echo UserOptionEnumeration::$PlannedDataUserOption ?>" <?php echo $uoc->showPlannedDataUserOption()?"checked":""; ?>> <?php echo "Planned Data"; ?><br>
-                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>" <?php echo $uoc->showPlannedTimeFrameUserOption()?"checked":""; ?>> <?php echo "Planned TimeFrame"; ?>      
-                </td>   
-                <td valign="top" align="left" nowrap="nowrap">      
+                    <input type="checkbox" value='2' name="<?php echo UserOptionEnumeration::$PlannedTimeFrameUserOption ?>" <?php echo $uoc->showPlannedTimeFrameUserOption()?"checked":""; ?>> <?php echo "Planned TimeFrame"; ?><br>    
                 	<input type="checkbox" value='5' name="<?php echo UserOptionEnumeration::$ActualDataUserOption ?>" <?php echo $uoc->showActualDataUserOption()?"checked":""; ?>> <?php echo "Actual Data"; ?><br>
-                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>" <?php echo $uoc->showActualTimeFrameUserOption()?"checked":""; ?>> <?php echo "Actual TimeFrame"; ?>
+                	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>" <?php echo $uoc->showActualTimeFrameUserOption()?"checked":""; ?>> <?php echo "Actual TimeFrame"; ?><br>
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">
-                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?>
-                	<input type="hidden" name="<?php echo  UserOptionEnumeration::$TodayDateUserOption;?>" value="<?php echo date("Ymd"); ?>";/>;
+                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ShowCompleteDiagramDependencies; ?>" <?php echo $uoc->showShowCompleteDiagramDependencies()?"checked":""; ?>> <?php echo "Dependences"; ?><br>
+                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ReplicateArrowUserOption; ?>" <?php echo $uoc->showReplicateArrowUserOption()?"checked":""; ?>> <?php echo "Replicated Arrows"; ?><br>
+                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption; ?>" <?php echo $uoc->showUseDifferentPatternForCrossingLinesUserOption()?"checked":""; ?>> <?php echo "Use Different Pattern For Crossing Lines"; ?><br>	
+                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$CriticalPathUserOption; ?>" <?php echo $uoc->showCriticalPathUserOption()?"checked":""; ?>> <?php echo "Show Critical Paths"; ?>
+                <?php
+                $val = 1;
+                if($uoc->getMaxCriticalPathNumberUserOption()!="")
+                	$val = $uoc->getMaxCriticalPathNumberUserOption();
+                ?>
+                (if yes show maximum: <input size="2" type="text" name="<?php echo UserOptionEnumeration::$MaxCriticalPathNumberUserOption; ?>" value="<?php echo $val;?>"/>)	
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
@@ -126,36 +149,60 @@ function BuildImage(placeHolder)
 						<option value="<?php echo ImageDimension::$OptimalDimUserOption; ?>" <?php echo $v==ImageDimension::$OptimalDimUserOption?"selected=\"selected\"":"";?>>Optimal</option>
 						<option value="<?php echo ImageDimension::$DefaultDimUserOption; ?>" <?php echo $v==ImageDimension::$DefaultDimUserOption?"selected=\"selected\"":"";?>>Default</option>
 					</select>
-				</td>
-				<td valign="top" align="left" nowrap="nowrap">
+					<br>
 					<?php $wh = $uoc->getCustomDimValues(); ?>
 					width: <input size="4" type="text" name="<?php echo UserOptionEnumeration::$CustomWidthUserOption; ?>" value="<?php echo $wh['width'];?>"/> px <br>
-					height:<input size="4" type="text" name="<?php echo UserOptionEnumeration::$DefaultHeightUserOption; ?>" value="<?php echo $wh['height'];?>"/> px
 					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowWidthUserOption; ?>" value="0"/>
 					<input type="hidden" name="<?php echo UserOptionEnumeration::$FitInWindowHeightUserOption; ?>" value="0"/>
+					<?php print $uoc->getRefreshHiddenField();?>
                 </td>
                 <td width="100%"></td>
                 <td valign="bottom" align="right">
                 	<input type="button" class="button"
-					value="<?php echo $AppUI->_( 'submit' );?>"
+					value="<?php echo $AppUI->_( 'refresh' );?>"
 					onclick='submit();'>
                 </td>		
-                </form>  		
+                </form>  
+                <!-- REPORT -->		
+				<td align="right" valign='bottom'>
+				<form name='pdf_options' method='POST' action='<?php echo $query_string; ?>'>
+				<?if ($_POST['make_pdf']=="true")	{
+					include('modules/report/makePDF.php');
+
+					$q  = new DBQuery;
+					$q->addQuery('projects.project_name');
+					$q->addTable('projects');
+					$q->addWhere("project_id = $project_id ");
+					$name = $q->loadList();
+					
+					$q  = new DBQuery;
+					$q->addTable('groups');
+					$q->addTable('projects');
+					$q->addQuery('groups.group_name');
+					$q->addWhere("projects.project_group = groups.group_id and projects.project_id = '$project_id'");
+					$group = $q->loadList();
+					
+					foreach ($group as $g){
+						$group_name=$g['group_name'];
+					}
+					
+					$pdf = PM_headerPdf($name[0]['project_name'],'L',1,$group_name);
+					PM_makeTaskNetworkPdf($pdf,"pdf");
+					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 8);
+					?>
+					<a href="<?echo $filename;?>"><img src="./modules/report/images/pdf_report.gif" alt="PDF Report" border="0" align="absbottom"></a><?
+				}?>
+				
+					<input type="hidden" name="make_pdf" value="false" />
+					<input type="button" class="button" value="<?php echo $AppUI->_( 'Make PDF ' );?>" onclick='document.pdf_options.make_pdf.value="true"; document.pdf_options.submit();'>
+					<br><br>
+					<input type="hidden" name="addreport" value="-1" />
+					<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report ' );?>" onclick='document.pdf_options.addreport.value="1"; document.pdf_options.submit();'>
+				</td>
 			</tr>
-		</table> 
+		</table>
 				
 				<?php 
-				
-				//uoc debug
-				/*
-				echo UserOptionEnumeration::$PlannedDataUserOption.":".$uoc->showPlannedDataUserOption()."<br>";
-				echo UserOptionEnumeration::$PlannedTimeFrameUserOption .":".$uoc->showPlannedTimeFrameUserOption()."<br>";
-				echo UserOptionEnumeration::$TaskNameUserOption.":".$uoc->showTaskNameUserOption()."<br>";
-				echo UserOptionEnumeration::$ActualDataUserOption.":".$uoc->showActualDataUserOption()."<br>";
-				echo UserOptionEnumeration::$ActualTimeFrameUserOption.":".$uoc->showActualTimeFrameUserOption()."<br>";
-				echo UserOptionEnumeration::$AlertMarkUserOption.":".$uoc->showAlertMarkUserOption()."<br>";
-				echo UserOptionEnumeration::$ResourcesUserOption.":".$uoc->showResourcesUserOption()."<br>";
-				*/
 				
 				require_once dirname(__FILE__) . '/lib/taskdatatree/UnitTests.php';
 				 

@@ -190,7 +190,7 @@ function BuildImage(placeHolder)
                 <td valign="top" align="left" nowrap="nowrap">
                 	<input type="checkbox" value='4' name="<?php echo UserOptionEnumeration::$TaskNameUserOption; ?>" <?php echo $uoc->showTaskNameUserOption()?"checked":""; ?>> <?php echo "TaskName"; ?><br>
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ResourcesUserOption; ?>" <?php echo $uoc->showResourcesUserOption()?"checked":""; ?>> <?php echo "Resources"; ?><br>
-                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$FinishToStartDependenciesUserOption; ?>" <?php echo $uoc->showFinishToStartDependenciesUserOption()?"checked":""; ?>> <?php echo "Dependencies"; ?><br>
+                	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$FinishToStartDependenciesUserOption; ?>" <?php echo $uoc->showFinishToStartDependenciesUserOption()?"checked":""; ?>> <?php echo "Dependences"; ?><br>
                 	<input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ReplicateArrowUserOption; ?>" <?php echo $uoc->showReplicateArrowUserOption()?"checked":""; ?>> <?php echo "Replicated Arrows"; ?><br>
                 </td>
                 <td>&nbsp;&nbsp;</td>
@@ -275,7 +275,7 @@ function BuildImage(placeHolder)
 				<td width="100%"></td>
 				<td align="right" valign="bottom">
 				<input type="button" class="button"
-					value="<?php echo $AppUI->_( 'submit' );?>"
+					value="<?php echo $AppUI->_( 'refresh' );?>"
 					onclick='if (document.editFrm.<?php echo UserOptionEnumeration::$CustomEndDateUserOption; ?>.value < document.editFrm.<?php echo UserOptionEnumeration::$CustomStartDateUserOption; ?>.value) alert("Start date must before end date"); else submit();'>
 				</td>
 				</form>	

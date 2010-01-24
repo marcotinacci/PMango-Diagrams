@@ -152,7 +152,7 @@ function BuildImage(placeHolder)
                 <td width="100%"></td>
                 <td valign="bottom" align="right">
                 	<input type="button" class="button"
-					value="<?php echo $AppUI->_( 'submit' );?>"
+					value="<?php echo $AppUI->_( 'refresh' );?>"
 					onclick='submit();'>
                 </td>		
                 </form>  

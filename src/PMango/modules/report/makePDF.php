@@ -1309,7 +1309,7 @@ function PM_makeTaskNetworkPdf(&$pdf,$filePrefix)
 {
 	global $AppUI, $brd, $orient;
 	
-	$generatorUrl = "./modules/projects/lib/chartGenerator/".$filePrefix."_gif_tn_".$AppUI->user_id.".gif";
+	$generatorUrl = "./modules/projects/lib/chartGenerator/".$filePrefix."_gif_TaskNetwork_".$AppUI->user_id.".gif";
 	
 	$size = PM_GetBestSize($generatorUrl);
 	
@@ -1321,13 +1321,34 @@ function PM_makeTaskNetworkPdf(&$pdf,$filePrefix)
 
 function PM_GetBestSize($gifPath)
 {
+	$maxH = 145;
+	$maxWidth = 277;
+	
 	$size = getimagesize($gifPath);
+	//Se l'immagine è già abbastanza piccola nulla
 	if($size[0]<1000 && $size[1]<1000)
+	{
 		return array("width"=>0,"height"=>0);
+	}
+	//Se è in verticale
 	if($size[0]<$size[1])
-		return array("width"=>0,"height"=>160);
-			
-	return array("width"=>277,"height"=>0);
+	{
+		$w = ($maxWidth*$size[1])/$maxH;
+		if($w > $maxWidth)
+			$w = $maxWidth;
+		else
+			$w = 0;
+		return array("width"=>$w,"height"=>$maxH);
+	}		
+	else
+	{
+		$h = ($maxH*$size[0])/$maxWidth;
+		if($h > $maxH)
+			$h = $maxH;
+		else
+			$h = 0;
+		return array("width"=>$maxWidth,"height"=>$h);
+	}
 }
 
 ?>

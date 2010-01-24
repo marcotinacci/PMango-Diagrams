@@ -612,71 +612,53 @@ function showFullProject() {
  if ($project_id) { ?>
 
 <form name='task_list_options' method='POST' action='<?php echo $query_string; ?>'>
-<table width='100%' border='0' cellpadding='1' cellspacing='0'>
+<table width='100%' border='0' cellpadding='4' cellspacing='0'>
 <input type='hidden' name='show_task_options' value='1'>
 <tr>
 	<td align='left'valign="top"  width='50%' style="border-right: outset #d1d1cd 1px">
-		<table border="0" cellpadding="1" cellspacing="0">
+		<table border="0" cellpadding="4" cellspacing="0">
 			<tr>
-				<td><?php echo $AppUI->_('Show');?>:</td>
-				<td>
+				<td valign='top'><b><?php echo $AppUI->_('Show');?>:</b>&nbsp;&nbsp;</td>
+				<td valign='top' nowrap>
 					<input type='checkbox' name='show_incomplete' <?php echo $showIncomplete ? 'checked="checked"' : '';?> />
+					<?php echo $AppUI->_('Incomplete tasks only'); ?>
 				</td>
-				<td>
-					<?php echo $AppUI->_('Incomplete tasks only'); ?></td>
+				<td>&nbsp;&nbsp;&nbsp;</td>
+				<td valign='top' nowrap="nowrap">
+				<?php echo "<b>".$AppUI->_('Explode tasks').":</b> ";?>
 				</td>
-				<td>
-				<?php echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$AppUI->_('Explode tasks').": ";?>
-				</td>
-				<td>
+				<td valign='top'>
 					<select name="explode_tasks" class="text">
 					<?selector($explodeTasks,$maxLevel);?>
 					</select>
 				</td> 				
-				<td nowrap>
-				</td>
-				<td>
-					
-				</td>
-			</tr>
-		</table><br>		
-		<table border="0" cellpadding="1" cellspacing="0"  width='100%'>
-			<input type="hidden" name="display_option" value="<?php echo $display_option;?>" />
-			<input type="hidden" name="roles" value="<? echo $roles?>" />
+					<input type="hidden" name="display_option" value="<?php echo $display_option;?>" />
+					<input type="hidden" name="roles" value="<? echo $roles?>" />
+                <td valign='top' align="left" nowrap="nowrap"><?php echo $AppUI->_( 'From' );?>:</td>
+                <td valign='top' align="left" nowrap="nowrap">
+                	<input type="hidden" name="sdate" value="<?php echo $start_date->format( FMT_TIMESTAMP_DATE );?>" />
+                    <input type="text" class="text" name="show_sdate" value="<?php echo $start_date->format( $df );?>" size="12" onchange='document.task_list_options.show_sdate.value=this.value; validateDate(this);'/>
+                    <a href="javascript:popCalendar('sdate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
+                </td>
 
-                <tr> 
-                        <td align="left" nowrap="nowrap"><?php echo $AppUI->_( 'From' );?>:</td>
-                        <td align="left" nowrap="nowrap">
-                                <input type="hidden" name="sdate" value="<?php echo $start_date->format( FMT_TIMESTAMP_DATE );?>" />
-                                <input type="text" class="text" name="show_sdate" value="<?php echo $start_date->format( $df );?>" size="12" onchange='document.task_list_options.show_sdate.value=this.value; validateDate(this);'/>
-                                <a href="javascript:popCalendar('sdate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
-                        </td>
-
-                        <td align="right" nowrap="nowrap"><?php echo $AppUI->_( 'To' );?>:</td>
-                        <td align="left" nowrap="nowrap">
-                                <input type="hidden" name="edate" value="<?php echo $end_date->format( FMT_TIMESTAMP_DATE );?>" />
-                                <input type="text" class="text" name="show_edate" value="<?php echo $end_date->format( $df );?>" size="12" onchange='document.task_list_options.show_edate.value=this.value; validateDate(this);' />
-                                <a href="javascript:popCalendar('edate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
-                        <td valign="middle" nowrap="nowrap">
-                        <a href="javascript:showFullProject()"><img src="./images/calendar2.gif" alt="Show Whole Project" title="Show Whole Project" border="0"></a>
-                        </td>
-                        <input type="hidden" name="reset_level" value="1" />
-                        <td align="right" nowrap="nowrap" width='40%'>&nbsp;&nbsp;<input type="button" class="button" value="<?php echo $AppUI->_( 'refresh' );?>" onclick='document.task_list_options.display_option.value="custom"; if(compareDate(document.task_list_options.show_sdate,document.task_list_options.show_edate)) submit();'>
+                <td valign='top' align="right" nowrap="nowrap">
+                	<?php echo $AppUI->_( 'To' );?>:
+                </td>
+                <td valign='top' align="left" nowrap="nowrap">
+                	<input type="hidden" name="edate" value="<?php echo $end_date->format( FMT_TIMESTAMP_DATE );?>" />
+                    <input type="text" class="text" name="show_edate" value="<?php echo $end_date->format( $df );?>" size="12" onchange='document.task_list_options.show_edate.value=this.value; validateDate(this);' />
+                	<a href="javascript:popCalendar('edate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
+                </td>
+                <td valign='top' nowrap="nowrap">
+                	<a href="javascript:showFullProject()"><img src="./images/calendar2.gif" alt="Show Whole Project" title="Show Whole Project" border="0"></a>
+                </td>
+                <input type="hidden" name="reset_level" value="1" />
+                <td width="100%"></td>
+                <td align="right" valign="bottom" nowrap="nowrap" width='40%'>
+                &nbsp;&nbsp;<input type="button" class="button" value="<?php echo $AppUI->_( 'refresh' );?>" onclick='document.task_list_options.display_option.value="custom"; if(compareDate(document.task_list_options.show_sdate,document.task_list_options.show_edate)) submit();'>
 				</td>
-                </tr>
-		</table>
-				               
-	</td>
-	</form>
-	<form name='pdf_options' method='POST' action='<?php echo $query_string; ?>'>
-	<td valign="bottom">
-		<table width='100%' border='0' cellpadding='1' cellspacing='0'>
-			<tr align="right">
-				<td align="right">
-				
-				</td>
-			</tr>
-			<tr>
+		</form>
+		<form name='pdf_options' method='POST' action='<?php echo $query_string; ?>'>
 				<td align="right">
 				<?if ($_POST['make_pdf']=="true")	{
 					include('modules/report/makePDF.php');
@@ -710,6 +692,7 @@ function showFullProject() {
 				
 					<input type="hidden" name="make_pdf" value="false" />
 					<input type="button" class="button" value="<?php echo $AppUI->_( 'Make PDF ' );?>" onclick='document.pdf_options.make_pdf.value="true"; document.pdf_options.submit();'>
+					<br><br>
 				<? if($tview==0){?>
 					<input type="hidden" name="addreport" value="-1" />
 					<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report ' );?>" onclick='document.pdf_options.addreport.value="1"; document.pdf_options.submit();'><?}

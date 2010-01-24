@@ -181,7 +181,7 @@ function showhide(layer_ref) {
 }
 
 function check(){
-	if((!document.make_pdf_options.add_properties.checked)&&(!document.make_pdf_options.add_planned.checked)&&(!document.make_pdf_options.add_actual.checked)&&(!document.make_pdf_options.add_log.checked)&&(!document.make_pdf_options.add_gantt.checked)&&(!document.make_pdf_options.add_wbs.checked))
+	if((!document.make_pdf_options.add_properties.checked)&&(!document.make_pdf_options.add_planned.checked)&&(!document.make_pdf_options.add_actual.checked)&&(!document.make_pdf_options.add_log.checked)&&(!document.make_pdf_options.add_gantt.checked)&&(!document.make_pdf_options.add_wbs.checked)&&(!document.make_pdf_options.add_tasknet.checked))
 	{
 		alert("Please, select a Report.");
 	}
