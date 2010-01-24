@@ -105,7 +105,7 @@ class DataArrayBuilder {
   		$a = $this->_CTaskObject->getAssignedUsers();
   		for($i=0; $i<sizeOf($a); $i++)
   		{
-  			DrawingHelper::debug("Builder: Stiamo costruendo la risorsa ".$a[$i]['ID']);
+  			//DrawingHelper::debug("Builder: Stiamo costruendo la risorsa ".$a[$i]['ID']);
   			$res[$i]['LastName'] = $a[$i]['LastName'];
   			$res[$i]['Effort'] = $a[$i]['Effort'];
   			$res[$i]['ActualEffort'] = $this->_CTaskObject->getResourceActualEffortInTask($a[$i]['ID'], $a[$i]['Role']);
