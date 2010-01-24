@@ -93,6 +93,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		//print("ho finito la ricorsione!");
 		
 		$this->printTaskBoxes();
+
+		$this->drawDependencyLine();
 		
 		$this->chart->draw();
 	}
@@ -313,11 +315,63 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				
 			if(count($positionsArray[TaskLevelPositionEnum::$starting] > 0)) {
 				
+				$first = true;
+				$dependentEntryPointInfo = null;
+				foreach ($positionsArray[TaskLevelPositionEnum::$starting] as 
+					$dependencyLineInfo) {
+					
+					if ($first) {
+						$first = false;
+						
+						$entryPoint = $dependencyLineInfo->
+							computeDependentEntryPointInfo();
+							
+						$exitPoint = $dependencyLineInfo->
+							computeNeededExitPointInfo();
+							
+						$brokerHorizontal = $dependencyLineInfo->
+							computeHorizontal();
+							
+						$this->drawLineOnChart($exitPoint, $entryPoint, 
+							$brokerHorizontal - $exitPoint->horizontal, true);
+							
+						DrawingHelper::debug("drawed line for a first dependency");
+							
+						$dependentEntryPointInfo = new PointInfo(
+							$brokerHorizontal, 
+							$entryPoint->vertical);
+						
+					}
+					else {
+						$exitPoint = $dependencyLineInfo->
+							computeNeededExitPointInfo();
+
+						$entryPoint = clone $dependentEntryPointInfo;
+							
+						$dependentEntryPointInfo->horizontal -= 
+							$this->getHorizontalGapForExistingDependency();
+							
+						$this->drawLineOnChart($exitPoint, 
+							$entryPoint,
+							$dependentEntryPointInfo->horizontal - 
+								$exitPoint->horizontal, false);
+						
+					}			
+				}
 			}	
 			else if(count($positionsArray[TaskLevelPositionEnum::$inner] > 0)) {
 				
 			}
 		}
+	}
+	
+	private function drawLineOnChart($fromPoint, 
+		$toPoint, 
+		$horizontalOffset, 	
+		$replicateArrow) {
+		DrawingHelper::segmentedOffsetLine($fromPoint->horizontal, $fromPoint->vertical, 
+			$horizontalOffset, $toPoint->vertical - $fromPoint->vertical, 
+			$toPoint->horizontal, $toPoint->vertical, $this->chart);
 	}
 	
 	private function isDependencyAlreadyConsidered($dependency_task_id) {
@@ -851,7 +905,7 @@ class CommonTaskDataDrawer extends AbstractTaskDataDrawer {
 			($innersCount * AbstractTaskDataDrawer::$composedVerticalLineLength);
 	}
 	
-	private function computeInnerExitPoint($initialPoint) {
+	public function computeInnerExitPoint($initialPoint) {
 		$clonedPoint = $this->computeInnerEntryPoint($initialPoint);
 		
 		$clonedPoint->vertical += AbstractTaskDataDrawer::$composedVerticalLineLength;
@@ -859,7 +913,7 @@ class CommonTaskDataDrawer extends AbstractTaskDataDrawer {
 		return $clonedPoint;
 	}
 	
-	private function computeInnerEntryPoint($initialPoint) {
+	public function computeInnerEntryPoint($initialPoint) {
 		$clonedPoint = clone $initialPoint;
 		
 		$clonedPoint->horizontal += AbstractTaskDataDrawer::$width / 2;
@@ -867,9 +921,18 @@ class CommonTaskDataDrawer extends AbstractTaskDataDrawer {
 		return $clonedPoint;
 	}
 	
-	private function computeStartingEntryPoint($initialPoint) {
+	public function computeStartingEntryPoint($initialPoint) {
 		$clonedPoint = clone $initialPoint;
 		
+		$clonedPoint->vertical += $this->computeHeight() / 2;
+		
+		return $clonedPoint;
+	}
+	
+	public function computeEndingExitPoint($initialPoint) {
+		$clonedPoint = clone $initialPoint;
+
+		$clonedPoint->horizontal += AbstractTaskDataDrawer::$width;
 		$clonedPoint->vertical += $this->computeHeight() / 2;
 		
 		return $clonedPoint;
