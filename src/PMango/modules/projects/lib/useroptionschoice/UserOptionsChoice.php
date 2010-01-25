@@ -115,7 +115,7 @@ class UserOptionsChoice {
 		$pieces[]=$this->array[UserOptionEnumeration::$TimeGapsUserOption];
 		$pieces[]=isset($this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies])?1:0;
 		$pieces[]=isset($this->array[UserOptionEnumeration::$CriticalPathUserOption])?1:0;
-		$pieces[]=$this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
+		$pieces[]=$this->array[UserOptionEnumeration::$SelectedCriticalPathNumberUserOption];
 		
 		return implode("|", $pieces);
 	}
@@ -182,7 +182,7 @@ class UserOptionsChoice {
 			$this->array[UserOptionEnumeration::$ShowCompleteDiagramDependencies]=true; //bool
 		if($pieces[26]==1)
 			$this->array[UserOptionEnumeration::$CriticalPathUserOption]=true; //bool
-		$pieces[27]=$this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
+		$this->array[UserOptionEnumeration::$SelectedCriticalPathNumberUserOption]=$pieces[27];
 	}
 
 	// metodi che mostrano quali useroption ha selezionato l'utente
@@ -279,9 +279,18 @@ class UserOptionsChoice {
 		return $this->array[UserOptionEnumeration::$TimeRangeUserOption];
 	}
 
-	function getCustomRangeValues(){
-		$custom_range = array("start"=>$this->array[UserOptionEnumeration::$CustomStartDateUserOption],
-							"end"=>$this->array[UserOptionEnumeration::$CustomEndDateUserOption],
+	function getCustomRangeValues()
+	{
+		if(isset($this->array[UserOptionEnumeration::$CustomStartDateUserOption]))
+			$start = $this->array[UserOptionEnumeration::$CustomStartDateUserOption];
+		else
+			$start = "";
+		if(isset($this->array[UserOptionEnumeration::$CustomEndDateUserOption]))
+			$end = $this->array[UserOptionEnumeration::$CustomEndDateUserOption];
+		else
+			$end = "";
+		$custom_range = array("start"=>$start,
+							"end"=>$end,
 							"today"=>$this->array[UserOptionEnumeration::$TodayDateUserOption]
 		);
 		return $custom_range;
@@ -313,8 +322,8 @@ class UserOptionsChoice {
 		return isset($this->array[UserOptionEnumeration::$CriticalPathUserOption]);
 	}
 
-	function getMaxCriticalPathNumberUserOption() {
-		return $this->array[UserOptionEnumeration::$MaxCriticalPathNumberUserOption];
+	function getSelectedCriticalPathNumberUserOption() {
+		return $this->array[UserOptionEnumeration::$SelectedCriticalPathNumberUserOption];
 	}
 
 

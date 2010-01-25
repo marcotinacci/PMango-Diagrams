@@ -308,22 +308,23 @@ class CReport extends CDpObject {
 			$string.=CReport::BooleanOption("Show Resources",$uoc->showResourcesUserOption());
 			$string.=CReport::BooleanOption("Show Dependences",$uoc->showFinishToStartDependenciesUserOption());
 			$string.=CReport::BooleanOption("Replicate Arrows",$uoc->showReplicateArrowUserOption());
-			if($uoc->getTimeRangeUserOption()==TimeRange::$CustomRangeUserOption)
+			
+			$TimeRange = $uoc->getTimeRangeUserOption();
+			if($TimeRange==TimeRange::$CustomRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
 				$string.="<tr><td>Time range</td><td>From ".$dates['start']." to ".$dates['end']."</td></tr>";
 			}
-			if($uoc->getTimeRangeUserOption()==TimeRange::$WholeProjectRangeUserOption)
+			if($TimeRange==TimeRange::$WholeProjectRangeUserOption || isset($TimeRange))
 			{
-				$dates=$uoc->getCustomRangeValues();
 				$string.="<tr><td>Time range</td><td>Whole project"."</td></tr>";
 			}
-			if($uoc->getTimeRangeUserOption()==TimeRange::$FromStartToNowRangeUserOption)
+			if($TimeRange==TimeRange::$FromStartToNowRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
 				$string.="<tr><td>Time range</td><td>From ".$dates['start']." to ".$dates['today']."</td></tr>";
 			}
-			if($uoc->getTimeRangeUserOption()==TimeRange::$FromNowToEndRangeUserOption)
+			if($TimeRange==TimeRange::$FromNowToEndRangeUserOption)
 			{
 				$dates=$uoc->getCustomRangeValues();
 				$string.="<tr><td>Time range</td><td>From ".$dates['today']." to ".$dates['end']."</td></tr>";
@@ -377,15 +378,36 @@ class CReport extends CDpObject {
 		
 		$sql="SELECT tasknet_user_options FROM reports WHERE reports.project_id=".$project_id." AND user_id=".$user_id;
 		$wbs_param = db_loadList($sql);
-
-		$string = "<b>Selected options:</b><br>";
 		
+		$string = "";
 		if($wbs_param[0]['tasknet_user_options']!=null){
+			$uoc = &UserOptionsChoice::GetInstance("report_tasknet");
+			$uoc->loadFromString($wbs_param[0]['tasknet_user_options']);
+			//$uoc = new UserOptionsChoice();
+			
+			$string="<table>";
+			$string.=CReport::BooleanOption("Show TaskNames",$uoc->showTaskNameUserOption());
+			$string.=CReport::BooleanOption("Show AlertMarks",$uoc->showAlertMarkUserOption());
+			$string.=CReport::BooleanOption("Show PlannedData",$uoc->showPlannedDataUserOption());
+			$string.=CReport::BooleanOption("Show PlannedTimeFrame",$uoc->showPlannedTimeFrameUserOption());	
+			$string.=CReport::BooleanOption("Show ActualData",$uoc->showActualDataUserOption());
+			$string.=CReport::BooleanOption("Show ActualTimeFrame",$uoc->showActualTimeFrameUserOption());
+			$string.=CReport::BooleanOption("Show Resources",$uoc->showResourcesUserOption());
+			$string.=CReport::BooleanOption("Show Complete Dependencies",$uoc->showShowCompleteDiagramDependencies());
+			$string.=CReport::BooleanOption("Replicate Arrows",$uoc->showReplicateArrowUserOption());
+			$string.=CReport::BooleanOption("Show Time Gaps",$uoc->showTimeGapsUserOption());
+			$string.=CReport::BooleanOption("Use Different Pattern For Crossing Lines",$uoc->showUseDifferentPatternForCrossingLinesUserOption());
+			$string.=CReport::BooleanOption("Show Critical Path",$uoc->showCriticalPathUserOption());
+			if($uoc->showCriticalPathUserOption())
+				$string.="<td>Selected Critical Path</td><td>".$uoc->getSelectedCriticalPathNumberUserOption()."</td>";
+			
+			$string.="</table>";
 		}
 		else
 		{
 			return "No Task Network chart requested";
 		}
+		return $string;
 	}
 }
 ?>

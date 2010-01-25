@@ -50,7 +50,7 @@ Class UserOptionEnumeration {
 	public static $TimeGapsUserOption = "TimeGapsUserOption";
 	public static $ShowCompleteDiagramDependencies = "ShowCompleteDiagramDependencies";
 	public static $CriticalPathUserOption = "CriticalPathUserOption";
-	public static $MaxCriticalPathNumberUserOption = "MaxCriticalPathNumberUserOption";
+	public static $SelectedCriticalPathNumberUserOption = "SelectedCriticalPathNumberUserOption";
 } 
 
 ?>

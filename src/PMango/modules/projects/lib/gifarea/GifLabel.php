@@ -242,7 +242,8 @@ class GifLabel extends GifArea
 		$c = new CanvasGraph(30,30);
 		$c->img->SetFont($font,$fontStyle,$fontSize);
 		$w = $c->img->GetTextWidth(GifLabel::DeleteSpecialCharacters($txt));
-		$c->img->Destroy();
+		//$c->img->Destroy();
+		unset($c);
 		return $w;
 	}
 

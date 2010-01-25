@@ -124,16 +124,16 @@ function BuildImage(placeHolder)
                 	<input type="checkbox" value='6' name="<?php echo UserOptionEnumeration::$ActualTimeFrameUserOption ?>" <?php echo $uoc->showActualTimeFrameUserOption()?"checked":""; ?>> <?php echo "Actual TimeFrame"; ?><br>
                 </td>
                 <td valign="top" align="left" nowrap="nowrap">
-                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ShowCompleteDiagramDependencies; ?>" <?php echo $uoc->showShowCompleteDiagramDependencies()?"checked":""; ?>> <?php echo "Dependences"; ?><br>
+                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ShowCompleteDiagramDependencies; ?>" <?php echo $uoc->showShowCompleteDiagramDependencies()?"checked":""; ?>> <?php echo "Complete Dependencies"; ?><br>
                 <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ReplicateArrowUserOption; ?>" <?php echo $uoc->showReplicateArrowUserOption()?"checked":""; ?>> <?php echo "Replicated Arrows"; ?><br>
                 <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption; ?>" <?php echo $uoc->showUseDifferentPatternForCrossingLinesUserOption()?"checked":""; ?>> <?php echo "Use Different Pattern For Crossing Lines"; ?><br>	
-                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$CriticalPathUserOption; ?>" <?php echo $uoc->showCriticalPathUserOption()?"checked":""; ?>> <?php echo "Show Critical Paths"; ?>
+                <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$CriticalPathUserOption; ?>" <?php echo $uoc->showCriticalPathUserOption()?"checked":""; ?>> <?php echo "Critical Paths"; ?>
                 <?php
                 $val = 1;
-                if($uoc->getMaxCriticalPathNumberUserOption()!="")
-                	$val = $uoc->getMaxCriticalPathNumberUserOption();
+                if($uoc->getSelectedCriticalPathNumberUserOption()!="")
+                	$val = $uoc->getSelectedCriticalPathNumberUserOption();
                 ?>
-                (if yes show maximum: <input size="2" type="text" name="<?php echo UserOptionEnumeration::$MaxCriticalPathNumberUserOption; ?>" value="<?php echo $val;?>"/>)	
+                (if yes show maximum: <input size="2" type="text" name="<?php echo UserOptionEnumeration::$SelectedCriticalPathNumberUserOption; ?>" value="<?php echo $val;?>"/>)	
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">
