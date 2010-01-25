@@ -1,0 +1,6 @@
+
+Dove non compare l'input actual, è implicito che il progetto è futuro e non c'è stato alcun log (la actual è vuota).
+
+La notazione del tipo 4.1 - 1.2 è da interpretarsi:
+	4.1 fa riferimento al paragrafo del piano dei test dove il test è pianificato.
+	1.2 fa riferimento al secondo esempio del primo punto del paragrafo dove il test è pianificato (4.1).
