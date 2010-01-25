@@ -7,6 +7,7 @@ require_once dirname(__FILE__) . "/../gifarea/GifTaskBox.php";
 require_once dirname(__FILE__) . "/../gifarea/DrawingHelper.php";
 require_once dirname(__FILE__) . "/DependencyLineInfo.php";
 require_once dirname(__FILE__) . "/ChartTypesEnum.php";
+require_once dirname(__FILE__) . "/../gifarea/GifCircle.php";
 
 class TaskboxDrawInformation {
 	var $dependency;
@@ -15,6 +16,9 @@ class TaskboxDrawInformation {
 
 class TaskNetworkChartGenerator extends ChartGenerator {
 
+	public static $gapBetweenHorizontalAdiacentTaskBoxes;
+	public static $horizontalGapForSwappedNeededTaskbox = 5;
+	
 	/**
 	 * Maps to retrieve the objects which model one critical path respectively.
 	 * The key of the map are a string representation of the chain of task, from the
@@ -80,11 +84,14 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		AbstractTaskDataDrawer::$singleRowHeight = 20;
 			
 		AbstractTaskDataDrawer::$userOptionChoice = $userOptionChoice;
+		
+		TaskNetworkChartGenerator::$gapBetweenHorizontalAdiacentTaskBoxes = 
+			AbstractTaskDataDrawer::$width;
 
 		//print "<br>the best width for taskboxes is " . AbstractTaskDataDrawer::$width;
 
 		// building the canvas
-		$this->chart = new GifImage(2000, 800);
+		$this->chart = new GifImage(2000, 1500);
 
 		// start the generation from (5, 5) point
 		$this->vertical = 5;
@@ -92,11 +99,42 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		
 		//print("ho finito la ricorsione!");
 		
+		$this->printStartMilestone($root);
+		
 		$this->printTaskBoxes();
 
 		$this->drawDependencyLine();
 		
 		$this->chart->draw();
+	}
+	
+	private function printStartMilestone($root) {
+		$freezedVertical = 5;
+		$freezedVertical += $this->calculateSpan($root, $freezedVertical);
+		
+		$horizontal = 5;
+		
+		$rootPointInfo = new PointInfo(
+			$horizontal + (StartMilestoneDataDrawer::$diameter / 2),
+			$freezedVertical
+		);
+		
+		$root->getDrawer()->drawOn($this->chart, 
+			$rootPointInfo);
+		
+		$rootPointInfo->horizontal += StartMilestoneDataDrawer::$diameter; 
+		
+		foreach ($root->getDependentTasks() as $dependent) {
+			$dependentPointInfo = clone $this->taskboxes[$dependent->getNeededTask()->
+				getInfo()->getTaskID()]->pointInfo;
+				
+			$dependentPointInfo->vertical += ($dependent->getDrawer()->computeHeight() / 2);
+			
+			$this->drawLineOnChart($rootPointInfo, $dependentPointInfo, 
+				($dependentPointInfo->horizontal - $rootPointInfo->horizontal) / 2,
+				true);
+			
+		}
 	}
 	
 	private function printTaskBoxes() {
@@ -222,29 +260,31 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				
 				$this->appendTaskBox($dependency, new PointInfo($horizontal, $freezeVertical));
 				
-				$this->vertical += $dependency->getDrawer()->computeHeight() + 
-					$this->getGapBetweenVerticalTasks();
-				
-			}
-		
-			$neededTaskBoxDrawInformation = $this->taskboxes[$dependencyTaskId];
+				$composedVertical = $freezeVertical + $dependency->getDrawer()->computeHeight();
+				if($this->vertical < $composedVertical) {
+					$this->vertical += $composedVertical - $this->vertical + 
+						$this->getGapBetweenVerticalTasks();
+				}
 			
-			// generating the dependency
-			foreach ($dependency->_dependencyDescriptors as 
-				$dependentTaskId => $dependencyDescriptors) {
-
-				DrawingHelper::debug("analizing dependency descriptors for " . 
-					$dependentTaskId);
+				$neededTaskBoxDrawInformation = $this->taskboxes[$dependencyTaskId];
+				
+				// generating the dependency
+				foreach ($dependency->_dependencyDescriptors as 
+					$dependentTaskId => $dependencyDescriptors) {
+	
+					DrawingHelper::debug("analizing dependency descriptors for " . 
+						$dependentTaskId);
+							
+					$dependentTaskBoxDrawInformation = $this->taskboxes[$dependentTaskId];
+	
+					foreach ($dependencyDescriptors as $dependencyDescriptor) {
+						$dependencyLineInfo = new DependencyLineInfo();
+						$dependencyLineInfo->neededTaskboxDrawInformation = $neededTaskBoxDrawInformation;
+						$dependencyLineInfo->dependentTaskboxDrawInformation = $dependentTaskBoxDrawInformation;
+						$dependencyLineInfo->dependencyDescriptor = $dependencyDescriptor;
 						
-				$dependentTaskBoxDrawInformation = $this->taskboxes[$dependentTaskId];
-
-				foreach ($dependencyDescriptors as $dependencyDescriptor) {
-					$dependencyLineInfo = new DependencyLineInfo();
-					$dependencyLineInfo->neededTaskboxDrawInformation = $neededTaskBoxDrawInformation;
-					$dependencyLineInfo->dependentTaskboxDrawInformation = $dependentTaskBoxDrawInformation;
-					$dependencyLineInfo->dependencyDescriptor = $dependencyDescriptor;
-					
-					$this->appendDependencyLineInfo($dependencyLineInfo);
+						$this->appendDependencyLineInfo($dependencyLineInfo);
+					}
 				}
 			}
 			
@@ -264,12 +304,12 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				
 				//print "<br>Task box drawed for " . $dependency->getNeededTask()->getInfo()->getTaskID();
 
-				$taskDrawer = $dependency->getDrawer();
 				//$taskDrawer->drawOn($this->getChart(), new PointInfo($horizontal, $this->vertical));
 				
 				// the last taskbox put a empty space, but he haven't the information necessary to know that he
 				// is the last and not put the separator gap
-				$this->vertical += $taskDrawer->computeHeight() + $this->getGapBetweenVerticalTasks();
+				$this->vertical += $dependency->getDrawer()->computeHeight() + 
+					$this->getGapBetweenVerticalTasks();
 				
 				// is right to return the new vertical??
 				return $drawPointInfo;
@@ -295,8 +335,26 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			DrawingHelper::debug("Impossible to have exit point for a dependent entry logic!");
 		}
 		
-		$this->dependencyLinesArray[$key][$dependentEntryPosition][] = $dependencyLineInfo;
+//		if(!$this->dependencyLineInfoAlreadyConsidered(
+//			$this->dependencyLinesArray[$key][$dependentEntryPosition], 
+//			$dependencyLineInfo)) {
+				$this->dependencyLinesArray[$key][$dependentEntryPosition][] = 
+					$dependencyLineInfo;
+		//}
 		
+	}
+	
+	private function dependencyLineInfoAlreadyConsidered($arrayOfDependencyLineInfo, 
+		$dependencyLineInfo) {
+		foreach ($arrayOfDependencyLineInfo as $existingLineInfo) {
+			if($dependencyLineInfo->neededTaskboxDrawInformation->
+				dependency->getNeededTask()->getInfo()->getTaskID() == 
+				$existingLineInfo->neededTaskboxDrawInformation->
+					dependency->getNeededTask()->getInfo()->getTaskID()) {
+				return true;			
+			}
+		}
+		return false;
 	}
 	
 	public function appendTaskBox($dependency, $pointInfo) {
@@ -321,6 +379,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				foreach ($positionsArray[TaskLevelPositionEnum::$starting] as 
 					$dependencyLineInfo) {
 					
+					$swappedVerticalGap = 3;
+					$swappedCurrentVerticalGap = $swappedVerticalGap;
 					if ($first) {
 						$first = false;
 						
@@ -334,11 +394,30 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							computeHorizontal();
 
 						// questo while se nn va toglierlo
-						while(in_array($brokerHorizontal, $horizontalsNotAvailable)) {
-							$brokerHorizontal -= $this->getHorizontalGapForExistingDependency();
+//						while(in_array($brokerHorizontal, $horizontalsNotAvailable)) {
+//							$brokerHorizontal -= $this->getHorizontalGapForExistingDependency();
+//						}
+//						// anche questa riga sotto
+//						$horizontalsNotAvailable[] = $brokerHorizontal;
+
+						if($dependencyLineInfo->isSwapped()) {
+							
+							$backwardPointInfo = new PointInfo(
+								$brokerHorizontal, 
+								$dependencyLineInfo->dependentTaskboxDrawInformation->
+									pointInfo->vertical + 
+									$dependencyLineInfo->dependentTaskboxDrawInformation->
+										dependency->getDrawer()->computeHeight() + 
+										$swappedCurrentVerticalGap);
+								
+							$swappedCurrentVerticalGap += $swappedVerticalGap;			
+							
+							$this->drawLineOnChart($exitPoint, $backwardPointInfo, 
+								TaskNetworkChartGenerator::$horizontalGapForSwappedNeededTaskbox, 
+								false);
+								
+							$exitPoint = $backwardPointInfo;
 						}
-						// anche questa riga sotto
-						$horizontalsNotAvailable[] = $brokerHorizontal;
 							
 						$this->drawLineOnChart($exitPoint, $entryPoint, 
 							$brokerHorizontal - $exitPoint->horizontal, true);
@@ -371,10 +450,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 						$entryPoint = clone $dependentEntryPointInfo;
 
 						// se non va lasciare solo il corpo del do-while
-						do {
+						//do {
 							$dependentEntryPointInfo->horizontal -= 
 								$this->getHorizontalGapForExistingDependency();
-						} while(in_array($dependentEntryPointInfo->horizontal, $horizontalsNotAvailable));
+						//} while(in_array($dependentEntryPointInfo->horizontal, $horizontalsNotAvailable));
 							
 						$this->drawLineOnChart($exitPoint, 
 							$entryPoint,
@@ -479,7 +558,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	}
 
 	private function getGapBetweenHorizonalTasks() {
-		return AbstractTaskDataDrawer::$width;
+		//return AbstractTaskDataDrawer::$width;
+		return TaskNetworkChartGenerator::$gapBetweenHorizontalAdiacentTaskBoxes;
 	}
 
 	private function buildDependencyTree($tdt) {
@@ -563,7 +643,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 	private function getHorizontalGapForExistingDependency() {
 		// return a constant
-		return 10;
+		return 7;
 	}
 
 	private function buildDependencyLine($neededTask_id, $task_id, $exitPoint, $entryPoint) {
@@ -615,6 +695,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	//	}
 
 	private function calculateSpan($dependency, $freezedVertical) {
+		if($this->vertical - $freezedVertical == 0) {
+			return 0;
+		}
+		
 		$span = ($this->vertical -
 			$freezedVertical - 
 			$dependency->getDrawer()->computeHeight() - 
@@ -778,6 +862,10 @@ class DefaultDependency implements IDependency {
 	}
 
 	public function getDrawer() {
+		if ($this->_dependencyType == DependencyType::$start) {
+			return new StartMilestoneDataDrawer();
+		}
+		
 		return new CommonTaskDataDrawer($this);
 		
 		if($this->neededTaskIsAtomic()) {
@@ -913,6 +1001,23 @@ interface ITaskDataDrawer {
 	 * @return void
 	 */
 	public function drawOn(& $gifImage, $initialPoint);
+}
+
+class StartMilestoneDataDrawer implements ITaskDataDrawer {
+	public static $diameter = 20;
+	
+	public function computeHeight() {
+		return StartMilestoneDataDrawer::$diameter;
+	}
+	
+	public function drawOn(& $gifImage, $initialPoint) {
+		$circle = new GifCircle($gifImage, 
+			$initialPoint->horizontal, 
+			$initialPoint->vertical, 
+			StartMilestoneDataDrawer::$diameter / 2);
+			
+		$circle->drawOn();
+	}
 }
 
 abstract class AbstractTaskDataDrawer implements ITaskDataDrawer {

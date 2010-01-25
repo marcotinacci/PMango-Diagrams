@@ -16,15 +16,29 @@ class DependencyLineInfo {
 	
 	var $dependencyDescriptor;
 	
+	public function isSwapped() {
+		return $this->computeNeededExitPointInfo()->horizontal >=
+			$this->computeDependentEntryPointInfo()->horizontal;
+	}
+	
 	public function computeHorizontal() {
-		$neededhorizontal = $this->neededTaskboxDrawInformation->pointInfo->horizontal;
 		
-		$neededhorizontal += AbstractTaskDataDrawer::$width;
+		if(!$this->isSwapped()) {
+				
+			$neededhorizontal = $this->neededTaskboxDrawInformation->pointInfo->horizontal;
+			
+			$neededhorizontal += AbstractTaskDataDrawer::$width;
+			
+			$gap = ($this->dependentTaskboxDrawInformation->pointInfo->horizontal - 
+				$neededhorizontal) / 2;
+	
+			return $neededhorizontal + $gap;
+		}
+		else {
+			return $this->dependentTaskboxDrawInformation->pointInfo->horizontal - 
+				(TaskNetworkChartGenerator::$gapBetweenHorizontalAdiacentTaskBoxes / 2);
+		}
 		
-		$gap = ($this->dependentTaskboxDrawInformation->pointInfo->horizontal - 
-			$neededhorizontal) / 2;
-
-		return $neededhorizontal + $gap;
 	}
 	
 	public function computeNeededExitPointInfo() {
@@ -47,7 +61,7 @@ class DependencyLineInfo {
 	}
 	
 	public function computeDependentEntryPointInfo() {
-	if ($this->dependencyDescriptor->dependentTaskPositionEnum == 
+		if ($this->dependencyDescriptor->dependentTaskPositionEnum == 
 			TaskLevelPositionEnum::$starting) {
 			return $this->dependentTaskboxDrawInformation->dependency->getDrawer()->
 				computeStartingEntryPoint($this->dependentTaskboxDrawInformation->pointInfo);		
