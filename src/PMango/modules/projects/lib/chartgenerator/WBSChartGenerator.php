@@ -153,7 +153,7 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 		
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($this->getNumLevel())*($max+$max/2)+50;
+		$height=($this->getNumLevel())*($max+$max/2)-$max+100;
 		
 		$this->chart = new GifImage($this->getWidth(),$height); 
 		
