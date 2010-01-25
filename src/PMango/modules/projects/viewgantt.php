@@ -301,7 +301,7 @@ function BuildImage(placeHolder)
 					foreach ($group as $g){
 						$group_name=$g['group_name'];
 					}
-					
+	
 					$pdf = PM_headerPdf($name[0]['project_name'],'L',1,$group_name);
 					PM_makeGanttPdf($pdf,"pdf");
 					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 6);

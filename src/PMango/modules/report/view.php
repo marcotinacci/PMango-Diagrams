@@ -389,50 +389,6 @@ function check(){
 				<br>
 				</td>
 			</tr>
-			<!-- GANTT REPORT -->
-			<tr>
-				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
-					<input type="checkbox" name="add_gantt" <?echo ($_POST['add_gantt'])?"checked":"";echo ($disable_report[0]['gantt_user_options'])?"":"disabled";?>>
-				</td>
-				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
-					<strong><?php echo $AppUI->_( 'Gantt Chart' );?></strong>
-				</td>
-				<td width="100%" style="border-top: outset #d1d1cd 1px">
-				&nbsp;
-				</td>
-				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
-				<?php echo "<a href='./index.php?m=report&a=view&reset=gantt&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
-				<?php echo "<a href='./index.php?m=projects&a=view&tab=3&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
-				</td>
-				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
-				<select name="append_order_e" class="text">
-					<option value="5" <?echo ($_POST['append_order_e']=="5")? "selected":""?>>5
-					<option value="1" <?echo ($_POST['append_order_e']=="1")? "selected":""?>>1
-					<option value="2" <?echo ($_POST['append_order_e']=="2")? "selected":""?>>2
-					<option value="3" <?echo ($_POST['append_order_e']=="3")? "selected":""?>>3
-					<option value="4" <?echo ($_POST['append_order_e']=="4")? "selected":""?>>4
-					<option value="6" <?echo ($_POST['append_order_e']=="6")? "selected":""?>>6
-					<option value="7" <?echo ($_POST['append_order_e']=="7")? "selected":""?>>7
-				</select>
-				</td>
-				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
-				<input disabled type="checkbox" name="new_page_e" <?echo ($_POST['new_page_e'])?"checked":"checked";?>>
-				</td>
-			</tr>
-			<tr >
-				<td nowrap='nowrap'>
-				</td>
-				<td nowrap='nowrap'>
-				<?php print CReport::getGanttChartReport($project_id); ?>
-				</td>
-				<td nowrap='nowrap' colspan="4">
-				</td>
-			</tr>
-			<tr>
-				<td colspan='6'>
-				<br>
-				</td>
-			</tr>
 			<!-- WBS REPORT -->
 			<tr>
 				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
@@ -450,12 +406,12 @@ function check(){
 				</td>
 				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
 				<select name="append_order_f" class="text">
-					<option value="6" <?echo ($_POST['append_order_f']=="6")? "selected":""?>>6
+					<option value="5" <?echo ($_POST['append_order_f']=="5")? "selected":""?>>5
 					<option value="1" <?echo ($_POST['append_order_f']=="1")? "selected":""?>>1
 					<option value="2" <?echo ($_POST['append_order_f']=="2")? "selected":""?>>2
 					<option value="3" <?echo ($_POST['append_order_f']=="3")? "selected":""?>>3
 					<option value="4" <?echo ($_POST['append_order_f']=="4")? "selected":""?>>4
-					<option value="5" <?echo ($_POST['append_order_f']=="5")? "selected":""?>>5
+					<option value="6" <?echo ($_POST['append_order_f']=="6")? "selected":""?>>6
 					<option value="7" <?echo ($_POST['append_order_f']=="7")? "selected":""?>>7
 				</select>
 				</td>
@@ -468,6 +424,50 @@ function check(){
 				</td>
 				<td nowrap='nowrap'>
 					<?php print CReport::getWBSChartReport($project_id); ?>
+				</td>
+				<td nowrap='nowrap' colspan="4">
+				</td>
+			</tr>
+			<tr>
+				<td colspan='6'>
+				<br>
+				</td>
+			</tr>
+			<!-- GANTT REPORT -->
+			<tr>
+				<td nowrap='nowrap' align="left" style="border-top: outset #d1d1cd 1px">
+					<input type="checkbox" name="add_gantt" <?echo ($_POST['add_gantt'])?"checked":"";echo ($disable_report[0]['gantt_user_options'])?"":"disabled";?>>
+				</td>
+				<td nowrap="nowrap" style="border-top: outset #d1d1cd 1px">
+					<strong><?php echo $AppUI->_( 'Gantt Chart' );?></strong>
+				</td>
+				<td width="100%" style="border-top: outset #d1d1cd 1px">
+				&nbsp;
+				</td>
+				<td nowrap="nowrap" align="left" style="border-top: outset #d1d1cd 1px">
+				<?php echo "<a href='./index.php?m=report&a=view&reset=gantt&project_id=$project_id'>".$AppUI->_('Reset')."</a>";?>&nbsp;&nbsp;&nbsp;
+				<?php echo "<a href='./index.php?m=projects&a=view&tab=3&project_id=$project_id'>".$AppUI->_('Modify')."</a>";?>&nbsp;&nbsp;&nbsp;
+				</td>
+				<td nowrap="nowrap" align="center" style="border-top: outset #d1d1cd 1px">
+				<select name="append_order_e" class="text">
+					<option value="6" <?echo ($_POST['append_order_e']=="6")? "selected":""?>>6
+					<option value="1" <?echo ($_POST['append_order_e']=="1")? "selected":""?>>1
+					<option value="2" <?echo ($_POST['append_order_e']=="2")? "selected":""?>>2
+					<option value="3" <?echo ($_POST['append_order_e']=="3")? "selected":""?>>3
+					<option value="4" <?echo ($_POST['append_order_e']=="4")? "selected":""?>>4
+					<option value="5" <?echo ($_POST['append_order_e']=="5")? "selected":""?>>5
+					<option value="7" <?echo ($_POST['append_order_e']=="7")? "selected":""?>>7
+				</select>
+				</td>
+				<td nowrap='nowrap' align="center" style="border-top: outset #d1d1cd 1px">
+				<input disabled type="checkbox" name="new_page_e" <?echo ($_POST['new_page_e'])?"checked":"checked";?>>
+				</td>
+			</tr>
+			<tr >
+				<td nowrap='nowrap'>
+				</td>
+				<td nowrap='nowrap'>
+				<?php print CReport::getGanttChartReport($project_id); ?>
 				</td>
 				<td nowrap='nowrap' colspan="4">
 				</td>

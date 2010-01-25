@@ -1322,32 +1322,36 @@ function PM_makeTaskNetworkPdf(&$pdf,$filePrefix)
 function PM_GetBestSize($gifPath)
 {
 	$maxH = 145;
-	$maxWidth = 277;
+	$maxW = 277;
 	
 	$size = getimagesize($gifPath);
-	//Se l'immagine è già abbastanza piccola nulla
-	if($size[0]<1000 && $size[1]<1000)
+	$w = intval($size[0]*($maxH/$size[1]));
+	$h = intval($size[1]*($maxW/$size[0]));
+	//Se l'immagine è già abbastanza piccola non faccio nulla
+	if($size[0]<760 && $size[1]<415)
 	{
 		return array("width"=>0,"height"=>0);
 	}
 	//Se è in verticale
 	if($size[0]<$size[1])
 	{
-		$w = ($maxWidth*$size[1])/$maxH;
-		if($w > $maxWidth)
-			$w = $maxWidth;
+		$w = intval($size[0]*($maxH/$size[1]));
+		//print $w."w";
+		if($w > $maxW)
+			$w = $maxW;
 		else
 			$w = 0;
 		return array("width"=>$w,"height"=>$maxH);
 	}		
 	else
 	{
-		$h = ($maxH*$size[0])/$maxWidth;
+		$h = intval($size[1]*($maxW/$size[0]));
+		//print $h."h";
 		if($h > $maxH)
 			$h = $maxH;
 		else
 			$h = 0;
-		return array("width"=>$maxWidth,"height"=>$h);
+		return array("width"=>$maxW,"height"=>$h);
 	}
 }
 

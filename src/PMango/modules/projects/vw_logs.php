@@ -191,70 +191,60 @@ function showFullProject() {
 </script>
 <script type="text/javascript" src="/js/dateControl.js"></script>
 
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
-<form name="frmFilter" action="./index.php?m=projects&a=view&project_id=<?=$project_id?>&tab=3" method="post">
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+<form name="frmFilter" action="./index.php?m=projects&a=view&project_id=<?=$project_id?>&tab=5" method="post">
 <input type='hidden' name='show_log_options' value='1'>
 <tr>
 	<td align='left'valign="top"  width='50%' style="border-right: outset #d1d1cd 1px">
 		<table border="0" cellpadding="4" cellspacing="0">
 			<tr align="left">
 
-				<td>Show:</td>
-				
-				<td nowrap><input type="checkbox" name="hide_inactive" <?php echo $hide_inactive?'checked="checked"':''?>></td>
-				<td nowrap><?php echo $AppUI->_('Hide Inactive')?></td>
-				<td nowrap><input type="checkbox" name="hide_complete" <?php echo $hide_complete?'checked="checked"':''?>>
-				</td><td nowrap><?php echo $AppUI->_('Incomplete tasks only')?></td>
-				<td nowrap>
-				<?php echo "&nbsp;&nbsp;".$AppUI->_('User Filter').": ";?></td>
-				<td><?php echo arraySelect( $users, 'user_id', 'size="1" class="text" id="medium"', $user_id )?>
-			    
-			</tr>
-		</table>
-	
-		<table border="0" cellpadding="4" cellspacing="0" width='100%'>
-			<input type="hidden" name="display_option" value="<?php echo $display_option;?>" />
-			<input type="hidden" name="roles" value="N" />
-
-                <tr> 
-                        <td align="left" nowrap="nowrap"><?php echo $AppUI->_( 'From' );?>:</td>
-                        <td align="left" nowrap="nowrap">
-                                <input type="hidden" name="sdate" value="<?php echo $start_date->format( FMT_TIMESTAMP_DATE );?>" />
-                                <input type="text" class="text" name="show_sdate" value="<?php echo $start_date->format( $df );?>" size="12" onchange='document.frmFilter.show_sdate.value=this.value; validateDate(this);'/>
-                                <a href="javascript:popCalendar('sdate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
-                        </td>
-
-                        <td align="right" nowrap="nowrap"><?php echo $AppUI->_( 'To' );?>:</td>
-                        <td align="left" nowrap="nowrap">
-                                <input type="hidden" name="edate" value="<?php echo $end_date->format( FMT_TIMESTAMP_DATE );?>" />
-                                <input type="text" class="text" name="show_edate" value="<?php echo $end_date->format( $df );?>" size="12" onchange='document.frmFilter.show_edate.value=this.value; validateDate(this);' />
-                                <a href="javascript:popCalendar('edate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
-                        <td valign="middle" nowrap="nowrap">
-                        <a href="javascript:showFullProject()"><img src="./images/calendar2.gif" alt="Show All Logs" title="Show All Logs" border="0"></a>
-                        </td>
-                        <td align="right" width='40%'>&nbsp;&nbsp;<input type="button" class="button" value="<?php echo $AppUI->_( 'refresh' );?>" onclick='document.frmFilter.display_option.value="custom"; if(compareDate(document.frmFilter.show_sdate,document.frmFilter.show_edate)) submit();'>
+				<td valign="top" align="left">
+					<b>Show:</b>&nbsp;
 				</td>
-                </tr>
-		</table>
-</td>		
-
-	<td valign="bottom">
-		<table width='100%' border='0' cellpadding='4' cellspacing='0'>
-			<tr align="right">
+				<td  valign="top" align="left" nowrap>
+					<input type="checkbox" name="hide_inactive" <?php echo $hide_inactive?'checked="checked"':''?>>
+					<?php echo $AppUI->_('Hide Inactive')?>
+					<br>
+					<input type="checkbox" name="hide_complete" <?php echo $hide_complete?'checked="checked"':''?>>
+					<?php echo $AppUI->_('Incomplete tasks only')?>
+				</td>
+				<td valign="top" align="left" nowrap>
+					<?php echo "<b>".$AppUI->_('User Filter').":</b>&nbsp;";?>
+				</td>
+				<td valign="top" align="left" nowrap>
+					<?php 
+					echo arraySelect( $users, 'user_id', 'size="1" class="text" id="medium"', $user_id )
+					?>
+					<input type="hidden" name="display_option" value="<?php echo $display_option;?>" />
+					<input type="hidden" name="roles" value="N" />
+					<br><br>
+                	<?php echo $AppUI->_( 'From' );?>:
+                	<input type="hidden" name="sdate" value="<?php echo $start_date->format( FMT_TIMESTAMP_DATE );?>" />
+               	 	<input type="text" class="text" name="show_sdate" value="<?php echo $start_date->format( $df );?>" size="12" onchange='document.frmFilter.show_sdate.value=this.value; validateDate(this);'/>
+                	<a href="javascript:popCalendar('sdate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
+                	<?php echo $AppUI->_( 'To' );?>:
+                	<input type="hidden" name="edate" value="<?php echo $end_date->format( FMT_TIMESTAMP_DATE );?>" />
+                	<input type="text" class="text" name="show_edate" value="<?php echo $end_date->format( $df );?>" size="12" onchange='document.frmFilter.show_edate.value=this.value; validateDate(this);' />
+                	<a href="javascript:popCalendar('edate')"><img src="./images/calendar.gif" width="24" height="12" alt="" border="0"></a>
+                    <a href="javascript:showFullProject()"><img src="./images/calendar2.gif" alt="Show All Logs" title="Show All Logs" border="0"></a>
+                </td>
+                <td width="100%"></td>
+                <td valign="bottom" align="right">
+                	&nbsp;&nbsp;<input type="button" class="button" value="<?php echo $AppUI->_( 'refresh' );?>" onclick='document.frmFilter.display_option.value="custom"; if(compareDate(document.frmFilter.show_sdate,document.frmFilter.show_edate)) submit();'>
+				</td>
 				<td align="right" nowrap="nowrap">
-				<input type="hidden" name="m" value="projects"/>
-			<input type="hidden" name="a" value="view"/>
-			<input type="hidden" name="project_id" value="<?php echo $project_id?>"/>
-			<input type="hidden" name="tab" value="<?php echo $tab?>"/>
+					<input type="hidden" name="m" value="projects"/>
+					<input type="hidden" name="a" value="view"/>
+					<input type="hidden" name="project_id" value="<?php echo $project_id?>"/>
+					<input type="hidden" name="tab" value="<?php echo $tab?>"/>
 				</td>
-			</tr>
 			
 			</form>
-			<form name="pdfFilter" action="./index.php?m=projects&a=view&project_id=<?=$project_id?>&tab=3" method="post">
-			<tr>
+			<form name="pdfFilter" action="./index.php?m=projects&a=view&project_id=<?=$project_id?>&tab=5" method="post">
+				
 				<td align="right" valign="bottom">
-				
-				
+
 				<? if($_POST['make_pdf']=="true"){
 					
 					include('modules/report/makePDF.php');
@@ -272,6 +262,7 @@ function showFullProject() {
 				}?>
 				<input type="hidden" name="make_pdf" value="false" />
 				<input type="button" class="button" value="<?php echo $AppUI->_( 'Make PDF' );?>" onclick='document.pdfFilter.make_pdf.value="true"; pdfFilter.submit();'>
+				<br><br>
 				<input type="hidden" name="addreport" value="-1" />
 				<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report' );?>" onclick='document.pdfFilter.addreport.value="3"; pdfFilter.submit();'>
 				</td>
