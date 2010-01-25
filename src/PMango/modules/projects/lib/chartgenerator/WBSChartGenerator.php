@@ -140,20 +140,22 @@ class WBSChartGenerator extends ChartGenerator{
 		 *  quello ad altezza maggiore, che verrà usato come modello per 
 		 *  spaziare i box per livello 
 		 */
-		$max=0;
+		$max=0;					
+
 		for($i=$this->getNumLevel()-1;$i>=0;$i--)
-		{			
+		{	
+			
 			for($j=0;$j<$this->getNumLeaves();$j++)
 			{
 				if ($max < GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,$UOC))
 				{
-					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,$UOC);	
+					$max=GifTaskBox::getEffectiveHeightOfTaskBox($nodi[$j],30,$UOC);
 				}				
 			}
-		}
-		
+		}		
+
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($this->getNumLevel())*($max+$max/2)-$max+100;
+		$height=($this->getNumLevel()-1)*($max+$max/2)+($max/2)+100;
 		
 		$this->chart = new GifImage($this->getWidth(),$height); 
 		
@@ -195,7 +197,7 @@ class WBSChartGenerator extends ChartGenerator{
 
 					$rootWidth = GifLabel::getPixelWidthOfText($project->getProjectName())+20;
 					
-					$alt-=100;					
+					$alt=$max/2;					
 
 
 					/*
