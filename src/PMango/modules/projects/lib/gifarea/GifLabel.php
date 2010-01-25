@@ -5,6 +5,8 @@ require_once dirname(__FILE__)."/GifArea.php";
 /* This class print a text label on the gif. */
 class GifLabel extends GifArea
 {
+	private static $c; //Used for textWidth
+	
 	private $color = "black";
 	private $text = "";
 	private $size = 10;
@@ -239,11 +241,15 @@ class GifLabel extends GifArea
 	public static function getPixelWidthOfText($txt,$fontSize=10,$font=FF_ARIAL,$fontStyle=FS_NORMAL)
 	{
 		$txt.="";
-		$c = new CanvasGraph(30,30);
-		$c->img->SetFont($font,$fontStyle,$fontSize);
-		$w = $c->img->GetTextWidth(GifLabel::DeleteSpecialCharacters($txt));
+		if(!isset(GifLabel::$c))
+		{
+			DrawingHelper::debug("Singleton pixel calculator created");
+			GifLabel::$c = new CanvasGraph(30,30);
+		}
+		GifLabel::$c->img->SetFont($font,$fontStyle,$fontSize);
+		$w = GifLabel::$c->img->GetTextWidth(GifLabel::DeleteSpecialCharacters($txt));
 		//$c->img->Destroy();
-		unset($c);
+		//unset($c);
 		return $w;
 	}
 
