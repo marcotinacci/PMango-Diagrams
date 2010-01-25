@@ -1,5 +1,5 @@
 <?php
-
+ini_set("memory_limit","400M");
 if(!isset($_REQUEST['CHART_TYPE']))
 die("ERROR! NO CHART SPECIFIED");
 
