@@ -94,12 +94,30 @@ function getPageWidth()
 	return window.innerWidth-40;
 }
 
+function getPageHeight()
+{
+	//IE
+	if(!window.innerWidth)
+	{
+		return document.body.clientHeight-45;
+	}
+	//w3c
+	return window.innerHeight-45;
+}
+
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
 	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestTN.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$TaskNetwork.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 }
+
+function OpenInNewWindow()
+{
+	var stile = "top=10, left=10, width="+getPageWidth()+", height="+getPageWidth()+", status=no, menubar=no, toolbar=no scrollbar=yes";
+    window.open("<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$TaskNetwork.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"", "", stile);
+}
+
 </script>
 
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
@@ -198,6 +216,8 @@ function BuildImage(placeHolder)
 					<br><br>
 					<input type="hidden" name="addreport" value="-1" />
 					<input type="button" class="button" value="<?php echo $AppUI->_( 'Add to Report ' );?>" onclick='document.pdf_options.addreport.value="1"; document.pdf_options.submit();'>
+					<br><br>
+					<input type="button" class="button" value="New Window" onclick='OpenInNewWindow();'>
 				</td>
 			</tr>
 		</table>
