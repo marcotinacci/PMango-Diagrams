@@ -56,7 +56,7 @@
 */
 
 ini_set('display_errors', 1); // Ensure errors get to the user.
-//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 // If you experience a 'white screen of death' or other problems,
 // uncomment the following line of code:
@@ -201,8 +201,6 @@ if (isset($_REQUEST['login'])) {
 
 	$username = dPgetParam( $_POST, 'username', '' );
 	$password = dPgetParam( $_POST, 'password', '' );
-	print $username;
-	print $password;
 	$redirect = dPgetParam( $_REQUEST, 'redirect', '' );
 	$AppUI->setUserLocale();
 	@include_once( "$baseDir/locales/$AppUI->user_locale/locales.php" );
@@ -215,7 +213,7 @@ if (isset($_REQUEST['login'])) {
 	           $AppUI->registerLogin();
 	}
     addHistory('login', $AppUI->user_id, 'login', $AppUI->user_first_name . ' ' . $AppUI->user_last_name);
-	//$AppUI->redirect( "$redirect" );
+	$AppUI->redirect( "$redirect" );
 }
 
 // supported since PHP 4.2
