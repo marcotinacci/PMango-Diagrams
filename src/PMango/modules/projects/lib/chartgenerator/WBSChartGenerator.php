@@ -153,7 +153,7 @@ class WBSChartGenerator extends ChartGenerator{
 		}
 		
 		//Altezza della pagina, calcolata dinamicamente	
-		$height=($this->getNumLevel())*($max+$max/2)-$max+50;
+		$height=($this->getNumLevel())*($max+$max/2)+50;
 		
 		$this->chart = new GifImage($this->getWidth(),$height); 
 		
@@ -195,8 +195,8 @@ class WBSChartGenerator extends ChartGenerator{
 
 					$rootWidth = GifLabel::getPixelWidthOfText($project->getProjectName())+20;
 					
-					if($max > 60)
-						$alt+=$max;
+					$alt-=100;					
+
 
 					/*
 					 *  Per posizionare il nodo radice prende le coordinate del primo e
@@ -259,7 +259,9 @@ class WBSChartGenerator extends ChartGenerator{
 				}		
 		}
 		$Livello--;
-		$alt-=$max + $max/2;
+		if($Livello>0)
+			$alt-=$max + $max/2;
+			
 	}
 	
 	//Viene richiamata la funzione che stampa le linee di dipendenza dei box
