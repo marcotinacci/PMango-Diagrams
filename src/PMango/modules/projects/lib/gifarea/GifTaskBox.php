@@ -8,6 +8,7 @@ require_once dirname(__FILE__)."/GifLabel.php";
 require_once dirname(__FILE__)."/GifProgressBar.php";
 require_once dirname(__FILE__)."/GifMark.php";
 require_once dirname(__FILE__)."/GifBoxedLabel.php";
+require_once dirname(__FILE__)."/GifResourcesLabel.php";
 require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
 require_once dirname(__FILE__)."/../chartgenerator/ChartTypesEnum.php";
 
@@ -82,14 +83,18 @@ class GifTaskBox extends GifArea
 			for($i=0; $i<sizeOf($res); $i++)
 			{
 				$curY += 4;
-				$act = 0;
-				if(isset($res[$i]['ActualEffort']) && $res[$i]['ActualEffort'] != "")
-					$act = $res[$i]['ActualEffort'];
-				$txt = $act."/".$res[$i]['Effort'].", ".$res[$i]['LastName'].", ".$res[$i]['Role'];
+				if($uoc->showActualDataUserOption())
+				{
+					if(!isset($res[$i]['ActualEffort']) || $res[$i]['ActualEffort']=="")
+						$res[$i]['ActualEffort']="0";
+				}
+				else
+				{
+					unset($res[$i]['ActualEffort']);
+				}
 					
 				$index = "ResourceLabel_".$i;
-				$this->subAreas[$index] = new GifLabel($gifImage,$this->x+8,$curY,$width-6,$resRowSize,$txt,$fontHeight);
-				$this->subAreas[$index]->setHAlign("left");
+				$this->subAreas[$index] = new GifResourcesLabel($gifImage,$this->x+8,$curY,$width-6,$resRowSize,$fontHeight,$res[$i]);
 				$curY += $resRowSize-4;
 			}
 			if(sizeOf($res)==0)

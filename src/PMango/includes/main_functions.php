@@ -709,6 +709,14 @@ function formatHours($hours)
 	} 
 }
 
+function deleteFileIfExist($file)
+{
+	if(file_exists($file))
+    {
+    	unlink($file);
+    }
+}
+
 
 /**
  * This function is now deprecated and will be removed.

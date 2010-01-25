@@ -151,7 +151,7 @@ class GifLabel extends GifArea
 			}
 			else if(strtoupper($this->hAlign)=="LEFT")
 			{
-				$this->canvas->img->line(2,$cy,$textWidth-3,$cy);
+				$this->canvas->img->line($this->x+2,$cy-1,$this->x+$textWidth-3,$cy-1);
 			}
 			else
 			{

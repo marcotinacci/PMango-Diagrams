@@ -1278,9 +1278,9 @@ return $a_task;
 
 function PM_makeGanttPdf(&$pdf,$filePrefix)
 {
-	global $AppUI, $brd, $orient;
+	global $AppUI, $brd, $orient, $baseDir;
 	
-	$generatorUrl = "./modules/projects/lib/chartGenerator/".$filePrefix."_gif_Gantt_".$AppUI->user_id.".gif";
+	$generatorUrl = "$baseDir/modules/report/pdf_images/".$filePrefix."_gif_Gantt_".$AppUI->user_id.".gif";
 
 	$size = PM_GetBestSize($generatorUrl);
 
@@ -1292,9 +1292,9 @@ function PM_makeGanttPdf(&$pdf,$filePrefix)
 
 function PM_makeWbsPdf(&$pdf,$filePrefix)
 {
-	global $AppUI, $brd, $orient;
+	global $AppUI, $brd, $orient, $baseDir;
 	
-	$generatorUrl = "./modules/projects/lib/chartGenerator/".$filePrefix."_gif_WBS_".$AppUI->user_id.".gif";
+	$generatorUrl = "$baseDir/modules/report/pdf_images/".$filePrefix."_gif_WBS_".$AppUI->user_id.".gif";
 	
 	$size = PM_GetBestSize($generatorUrl);
 	
@@ -1307,9 +1307,9 @@ function PM_makeWbsPdf(&$pdf,$filePrefix)
 
 function PM_makeTaskNetworkPdf(&$pdf,$filePrefix)
 {
-	global $AppUI, $brd, $orient;
+	global $AppUI, $brd, $orient, $baseDir;
 	
-	$generatorUrl = "./modules/projects/lib/chartGenerator/".$filePrefix."_gif_TaskNetwork_".$AppUI->user_id.".gif";
+	$generatorUrl = "$baseDir/modules/report/pdf_images/".$filePrefix."_gif_TaskNetwork_".$AppUI->user_id.".gif";
 	
 	$size = PM_GetBestSize($generatorUrl);
 	

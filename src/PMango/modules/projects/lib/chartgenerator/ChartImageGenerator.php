@@ -139,8 +139,8 @@ if($chart_type == ChartTypesEnum::$TaskNetwork)
 $chart->generateChart();
 if(isset($_REQUEST['CREATE_REPORT']))
 {
-$chart->getChart()->saveToFile("report_gif_".$chart_type."_".$AppUI->user_id.".gif");
+$chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/report_gif_".$chart_type."_".$AppUI->user_id.".gif");
 }
-$chart->getChart()->saveToFile("pdf_gif_".$chart_type."_".$AppUI->user_id.".gif");
+$chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/pdf_gif_".$chart_type."_".$AppUI->user_id.".gif");
 
 ?>
