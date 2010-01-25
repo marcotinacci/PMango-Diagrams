@@ -26,7 +26,7 @@ class GifTaskBox extends GifArea
 		
 		$row=$singleRowHeight;
 		//$module = $height%6;
-		$fontHeight = $row/3;
+		$fontHeight = intval($row/3);
 
 		$curY = $this->y;
 

@@ -379,7 +379,7 @@ function PM_footerPdf(&$pdf, $project_name, $p=0){
 
 	global $AppUI;
 	switch($p){
-	 	case 0: $filename=$project_name."_".$AppUI->user_id.".pdf";
+	 	case 0: $filename=$project_name."_".$AppUI->user_id."_Complete.pdf";
 	 	break;
 		case 1: $filename=$project_name."_".$AppUI->user_id."_Planned.pdf";
 		break;

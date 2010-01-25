@@ -56,7 +56,7 @@
 */
 
 ini_set('display_errors', 1); // Ensure errors get to the user.
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 
 // If you experience a 'white screen of death' or other problems,
 // uncomment the following line of code:
@@ -149,6 +149,32 @@ if (isset($user_id) && isset($_GET['logout'])){
     
     $sql="DELETE FROM reports WHERE user_id=".$user_id;
     db_exec( $sql ); db_error();
+    
+    $pdf_images_path = "$baseDir/modules/report/pdf_images";
+    $pdf_path = "$baseDir/modules/report/pdf";
+    
+    //Delete report files
+    deleteFileIfExist("$pdf_images_path/report_gif_Gantt_$user_id.gif");
+    deleteFileIfExist("$pdf_images_path/report_gif_WBS_$user_id.gif");
+    deleteFileIfExist("$pdf_images_path/report_gif_TaskNetwork_$user_id.gif");
+    //Delete Temporary pdf images files
+    deleteFileIfExist("$pdf_images_path/pdf_gif_Gantt_$user_id.gif");
+    deleteFileIfExist("$pdf_images_path/pdf_gif_WBS_$user_id.gif");
+    deleteFileIfExist("$pdf_images_path/pdf_gif_TaskNetwork_$user_id.gif");
+    //Delete Temporary pdf files
+    //TO DO: Scorrere i file e cancellare chi contiene _id_
+	$Dir=opendir($pdf_path);
+	while($File=readdir($Dir))
+	{
+		if($File!="." && $File!="..")
+		{
+			if(strstr($File,"_".$user_id."_")!=false)
+			{
+				deleteFileIfExist("$pdf_path/$File");
+			}
+		}
+	}
+   
 }
 
 // check is the user needs a new password
@@ -175,6 +201,8 @@ if (isset($_REQUEST['login'])) {
 
 	$username = dPgetParam( $_POST, 'username', '' );
 	$password = dPgetParam( $_POST, 'password', '' );
+	print $username;
+	print $password;
 	$redirect = dPgetParam( $_REQUEST, 'redirect', '' );
 	$AppUI->setUserLocale();
 	@include_once( "$baseDir/locales/$AppUI->user_locale/locales.php" );
@@ -187,7 +215,7 @@ if (isset($_REQUEST['login'])) {
 	           $AppUI->registerLogin();
 	}
     addHistory('login', $AppUI->user_id, 'login', $AppUI->user_first_name . ' ' . $AppUI->user_last_name);
-	$AppUI->redirect( "$redirect" );
+	//$AppUI->redirect( "$redirect" );
 }
 
 // supported since PHP 4.2
