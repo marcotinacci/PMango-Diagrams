@@ -164,9 +164,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 					$endPointInfo->horizontal - $originPoint->horizontal, false);
 			}
 			
-			$this->drawLineOnChart($endPointInfo, $circlePoint, 
-				$circlePoint->horizontal - $endPointInfo->horizontal - 
-				($diameter / 2), true);
+			$beforeCirclePointInfo = clone $circlePoint;
+			$beforeCirclePointInfo->horizontal -= ($diameter / 2); 
+			$this->drawLineOnChart($endPointInfo, $beforeCirclePointInfo, 
+				$beforeCirclePointInfo->horizontal - $endPointInfo->horizontal, true);
 		}	
 			
 		$gifCircle = new GifCircle($this->chart, 
