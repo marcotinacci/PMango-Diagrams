@@ -469,33 +469,13 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 //									$dependencyLineInfo->dependentTaskboxDrawInformation->
 //										dependency->getDrawer()->computeHeight() + 
 //										$swappedCurrentVerticalGap);
+
 							$backwardPointInfo = $dependencyLineInfo->
 								computeBackwardEntryPointInfo();
-								
-							$backwardExitPointInfo = $dependencyLineInfo->
-								computeBackwardExitPointInfo();
-								
-							if($dependencyLineInfo->dependencyDescriptor-> 
-								neededTaskPositionEnum == TaskLevelPositionEnum::$ending) {
-								
-								$toPoint = clone $dependencyLineInfo->
-									dependentTaskboxDrawInformation->pointInfo;
-								
-								$toPoint->vertical += $dependencyLineInfo->
-									dependentTaskboxDrawInformation->dependency->getDrawer()->
-									computeHeight() + DependencyLineInfo::$gapForFirstBackwardEntry;
-								
-								$toPoint->horizontal = $backwardExitPointInfo->horizontal;
-									
-								$this->drawLineOnChart($exitPoint, 
-									$toPoint, 
-									$toPoint->horizontal - 
-										$exitPoint->horizontal, 
-									false);
-									
-								$backwardExitPointInfo = $toPoint;
-							}
-								
+							
+							$backwardExitPointInfo = $this->drawSwappedSyncLine(
+								$dependencyLineInfo, $exitPoint, 0);
+														
 							// non dovrebbe piu servire
 							$swappedCurrentVerticalGap += $swappedVerticalGap;			
 							
@@ -537,6 +517,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 						
 					}
 					else {
+//						if($dependencyLineInfo->isSwapped()) {
+//								
+//						}
+						
 						$exitPoint = $dependencyLineInfo->
 							computeNeededExitPointInfo();
 
@@ -553,6 +537,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							$dependentEntryPointInfo->horizontal - 
 								$exitPoint->horizontal, 
 								$this->replicateArrow());
+						
 					}
 				}
 			}	
@@ -626,6 +611,44 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				}				
 			}
 		}
+	}
+	
+	private function drawSwappedSyncLine($dependencyLineInfo, $exitPoint, 
+		$decrementVerticalTime) {
+		
+		$backwardPointInfo = $dependencyLineInfo->
+			computeBackwardEntryPointInfo();
+			
+		$backwardExitPointInfo = $dependencyLineInfo->
+			computeBackwardExitPointInfo();
+		
+		$toPoint = clone $dependencyLineInfo->
+			neededTaskboxDrawInformation->pointInfo;
+
+		$toPoint->vertical = $backwardPointInfo->vertical;
+		
+		$sign = 0;
+		if($toPoint->vertical > $dependencyLineInfo->
+			dependentTaskboxDrawInformation->pointInfo->vertical) {
+			$sign = 1;
+		}
+		else {
+			$sign = -1;
+		}
+
+		$toPoint->vertical += ($sign * $decrementVerticalTime * 
+			DependencyLineInfo::$gapForFirstBackwardEntry);
+		
+		$toPoint->horizontal += AbstractTaskDataDrawer::$width + 
+			TaskNetworkChartGenerator::$horizontalGapForSwappedNeededTaskbox;
+		
+		$this->drawLineOnChart($exitPoint, 
+				$toPoint, 
+				$toPoint->horizontal - 
+					$exitPoint->horizontal, 
+				false);
+				
+		return $toPoint;
 	}
 	
 	private function replicateArrow() {
