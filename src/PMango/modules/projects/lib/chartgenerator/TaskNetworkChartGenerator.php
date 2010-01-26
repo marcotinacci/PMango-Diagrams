@@ -90,14 +90,16 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 		//print "<br>the best width for taskboxes is " . AbstractTaskDataDrawer::$width;
 
-		// building the canvas
-		$this->chart = new GifImage(2000, 1500);
+		
 
 		// start the generation from (5, 5) point
 		$this->vertical = 5;
 		$this->internalGenerateChart($root, new CriticalPathDomainObject(), 5);
 		
 		//print("ho finito la ricorsione!");
+		
+		// building the canvas
+		$this->chart = new GifImage(2000, 1500);
 		
 		$rootPointInfo = $this->printStartMilestone($root);
 		
@@ -460,21 +462,51 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 						if($dependencyLineInfo->isSwapped()) {
 							
-							$backwardPointInfo = new PointInfo(
-								$brokerHorizontal, 
-								$dependencyLineInfo->dependentTaskboxDrawInformation->
-									pointInfo->vertical + 
-									$dependencyLineInfo->dependentTaskboxDrawInformation->
-										dependency->getDrawer()->computeHeight() + 
-										$swappedCurrentVerticalGap);
+//							$backwardPointInfo = new PointInfo(
+//								$brokerHorizontal, 
+//								$dependencyLineInfo->dependentTaskboxDrawInformation->
+//									pointInfo->vertical + 
+//									$dependencyLineInfo->dependentTaskboxDrawInformation->
+//										dependency->getDrawer()->computeHeight() + 
+//										$swappedCurrentVerticalGap);
+							$backwardPointInfo = $dependencyLineInfo->
+								computeBackwardEntryPointInfo();
 								
+							$backwardExitPointInfo = $dependencyLineInfo->
+								computeBackwardExitPointInfo();
+								
+							if($dependencyLineInfo->dependencyDescriptor-> 
+								neededTaskPositionEnum == TaskLevelPositionEnum::$ending) {
+								
+								$toPoint = clone $dependencyLineInfo->
+									dependentTaskboxDrawInformation->pointInfo;
+								
+								$toPoint->vertical += $dependencyLineInfo->
+									dependentTaskboxDrawInformation->dependency->getDrawer()->
+									computeHeight() + DependencyLineInfo::$gapForFirstBackwardEntry;
+								
+								$toPoint->horizontal = $backwardExitPointInfo->horizontal;
+									
+								$this->drawLineOnChart($exitPoint, 
+									$toPoint, 
+									$toPoint->horizontal - 
+										$exitPoint->horizontal, 
+									false);
+									
+								$backwardExitPointInfo = $toPoint;
+							}
+								
+							// non dovrebbe piu servire
 							$swappedCurrentVerticalGap += $swappedVerticalGap;			
 							
-							$this->drawLineOnChart($exitPoint, $backwardPointInfo, 
-								TaskNetworkChartGenerator::$horizontalGapForSwappedNeededTaskbox, 
+							$this->drawLineOnChart($backwardExitPointInfo, 
+								$backwardPointInfo, 
+								$backwardPointInfo->horizontal - 
+									$backwardExitPointInfo->horizontal, 
 								false);
 								
 							$exitPoint = $backwardPointInfo;
+							$brokerHorizontal = $backwardPointInfo->horizontal;
 						}
 							
 						$this->drawLineOnChart($exitPoint, $entryPoint, 
@@ -484,22 +516,25 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							$brokerHorizontal, 
 							$entryPoint->vertical);
 						
-						$direction = null;
-						if($dependentEntryPointInfo->vertical > $exitPoint->vertical) {
-							$direction = "DOWN";
-						}
-						else if($dependentEntryPointInfo->vertical < $exitPoint->vertical) {
-							$direction = "UP";	
-						} 
-						else {
-							$direction = "RIGHT";
-						}
-						
-						if(count($positionsArray[TaskLevelPositionEnum::$starting]) > 1) {
+						if(count($positionsArray[TaskLevelPositionEnum::$starting]) > 1 &&
+							$this->replicateArrow()) {
+
+							$direction = null;
+							if($dependentEntryPointInfo->vertical > $exitPoint->vertical) {
+								$direction = "DOWN";
+							}
+							else if($dependentEntryPointInfo->vertical < $exitPoint->vertical) {
+								$direction = "UP";	
+							} 
+							else {
+								$direction = "RIGHT";
+							}
+								
 							DrawingHelper::drawArrow($dependentEntryPointInfo->horizontal, 
 								$dependentEntryPointInfo->vertical, 
-								10, 10, $direction, $this->chart);	
+								10, 10, $direction, $this->chart);
 						}
+						
 					}
 					else {
 						$exitPoint = $dependencyLineInfo->
@@ -516,8 +551,9 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 						$this->drawLineOnChart($exitPoint, 
 							$entryPoint,
 							$dependentEntryPointInfo->horizontal - 
-								$exitPoint->horizontal, true);
-					}		
+								$exitPoint->horizontal, 
+								$this->replicateArrow());
+					}
 				}
 			}	
 			else if(count($positionsArray[TaskLevelPositionEnum::$inner]) > 0) {
@@ -590,6 +626,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				}				
 			}
 		}
+	}
+	
+	private function replicateArrow() {
+		return $this->retrieveUserOptionChoice()->showReplicateArrowUserOption();
 	}
 	
 	private function drawLineOnChart($fromPoint, 
