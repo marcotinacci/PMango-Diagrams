@@ -139,10 +139,13 @@ if($chart_type == ChartTypesEnum::$TaskNetwork)
 	$chart = new TaskNetworkChartGenerator();
 }
 $chart->generateChart();
+
+$project_id = defVal(@$_REQUEST['project_id'], 0);
+
 if(isset($_REQUEST['CREATE_REPORT']))
 {
-$chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/report_gif_".$chart_type."_".$AppUI->user_id.".gif");
+$chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/report_prj$project_id"."_gif_".$chart_type."_".$AppUI->user_id.".gif");
 }
-$chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/pdf_gif_".$chart_type."_".$AppUI->user_id.".gif");
+$chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/pdf_prj$project_id"."_gif_".$chart_type."_".$AppUI->user_id.".gif");
 ini_restore("memory_limit");
 ?>

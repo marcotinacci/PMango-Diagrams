@@ -378,24 +378,25 @@ function PM_headerPdf($project_name, $page='P', $border=1, $group='', $image_fil
 function PM_footerPdf(&$pdf, $project_name, $p=0){
 
 	global $AppUI;
+	$project_id = defVal(@$_REQUEST['project_id'], 0);
 	switch($p){
-	 	case 0: $filename=$project_name."_".$AppUI->user_id."_Complete.pdf";
+	 	case 0: $filename="prj".$project_id."_".$AppUI->user_id."_Complete.pdf";
 	 	break;
-		case 1: $filename=$project_name."_".$AppUI->user_id."_Planned.pdf";
+		case 1: $filename="prj".$project_id."_".$AppUI->user_id."_Planned.pdf";
 		break;
-		case 2: $filename=$project_name."_".$AppUI->user_id."_Actual.pdf";
+		case 2: $filename="prj".$project_id."_".$AppUI->user_id."_Actual.pdf";
 		break;
-		case 3: $filename=$project_name."_".$AppUI->user_id."_Log.pdf";
+		case 3: $filename="prj".$project_id."_".$AppUI->user_id."_Log.pdf";
 		break;
-		case 4: $filename=$project_name."_".$AppUI->user_id."_Properties.pdf";
+		case 4: $filename="prj".$project_id."_".$AppUI->user_id."_Properties.pdf";
 		break;
-		case 5: $filename=$project_name."_".$AppUI->user_id."_Wbs.pdf";
+		case 5: $filename="prj".$project_id."_".$AppUI->user_id."_Wbs.pdf";
 		break;
-		case 6: $filename=$project_name."_".$AppUI->user_id."_GanttChart.pdf";
+		case 6: $filename="prj".$project_id."_".$AppUI->user_id."_GanttChart.pdf";
 		break;
-		case 7: $filename=$project_name."_".$AppUI->user_id."_WbsChart.pdf";
+		case 7: $filename="prj".$project_id."_".$AppUI->user_id."_WbsChart.pdf";
 		break;
-		case 8: $filename=$project_name."_".$AppUI->user_id."_TaskNetChart.pdf";
+		case 8: $filename="prj".$project_id."_".$AppUI->user_id."_TaskNetChart.pdf";
 		break;
 	}
 	$pdf->Output("./modules/report/pdf/".$filename,'F');

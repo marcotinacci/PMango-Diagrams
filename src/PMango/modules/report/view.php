@@ -664,21 +664,21 @@ if(($_POST['do']==1)&&(!$_POST['load_image'])){
 		if(isset($_POST['add_gantt'])&&($_POST['append_order_e']==$k)){
 			  $i++;
 			  $pdf->addPage('L');
-			  PM_makeGanttPdf($pdf,"report");
+			  PM_makeGanttPdf($pdf,"report_prj$project_id");
 			  $pdf->Ln(8);
 		}
 		
 		if(isset($_POST['add_wbs'])&&($_POST['append_order_f']==$k)){
 			  $i++;
 			  $pdf->addPage('L');
-			  PM_makeWbsPdf($pdf,"report");
+			  PM_makeWbsPdf($pdf,"report_prj$project_id");
 			  $pdf->Ln(8);
 		}
 		
 		if(isset($_POST['add_tasknet'])&&($_POST['append_order_g']==$k)){
 			  $i++;
 			  $pdf->addPage('L');
-			  PM_makeTaskNetworkPdf($pdf,"report");
+			  PM_makeTaskNetworkPdf($pdf,"report_prj$project_id");
 			  $pdf->Ln(8);
 		}
 }	

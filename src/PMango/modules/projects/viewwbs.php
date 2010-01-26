@@ -215,7 +215,7 @@ function OpenInNewWindow()
 					}
 					
 					$pdf = PM_headerPdf($name[0]['project_name'],'L',1,$group_name);
-					PM_makeWBSPdf($pdf,"pdf");
+					PM_makeWBSPdf($pdf,"pdf_prj$project_id");
 					$filename=PM_footerPdf($pdf, $name[0]['project_name'], 7);
 					?>
 					<a href="<?echo $filename;?>"><img src="./modules/report/images/pdf_report.gif" alt="PDF Report" border="0" align="absbottom"></a><?

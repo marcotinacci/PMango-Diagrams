@@ -153,15 +153,19 @@ if (isset($user_id) && isset($_GET['logout'])){
     $pdf_images_path = "$baseDir/modules/report/pdf_images";
     $pdf_path = "$baseDir/modules/report/pdf";
     
-    //Delete report files
-    deleteFileIfExist("$pdf_images_path/report_gif_Gantt_$user_id.gif");
-    deleteFileIfExist("$pdf_images_path/report_gif_WBS_$user_id.gif");
-    deleteFileIfExist("$pdf_images_path/report_gif_TaskNetwork_$user_id.gif");
-    //Delete Temporary pdf images files
-    deleteFileIfExist("$pdf_images_path/pdf_gif_Gantt_$user_id.gif");
-    deleteFileIfExist("$pdf_images_path/pdf_gif_WBS_$user_id.gif");
-    deleteFileIfExist("$pdf_images_path/pdf_gif_TaskNetwork_$user_id.gif");
-    //Delete Temporary pdf files
+    //Delete report images
+	$Dir=opendir($pdf_images_path);
+	while($File=readdir($Dir))
+	{
+		if($File!="." && $File!="..")
+		{
+			if(strstr($File,"_".$user_id.".gif")!=false)
+			{
+				deleteFileIfExist("$pdf_images_path/$File");
+			}
+		}
+	}
+    //Delete pdf files
     //TO DO: Scorrere i file e cancellare chi contiene _id_
 	$Dir=opendir($pdf_path);
 	while($File=readdir($Dir))
