@@ -20,7 +20,8 @@ class Project{
 	 */
 	public function loadProjectInfo(){
 		$project_id = defVal(@$_REQUEST['project_id'], 0);
-		$sql = "SELECT project_name, project_short_name, project_color_identifier FROM projects WHERE project_id = '$project_id'";
+		$sql = "SELECT project_name, project_short_name, project_color_identifier, " . 
+			"project_start_date, project_finish_date FROM projects WHERE project_id = '$project_id'";
 		$proj = db_loadHash($sql, $projects);
 		$this->project_info =  $projects;
 	}
@@ -35,6 +36,14 @@ class Project{
 	
 	public function getProjectColor(){
 		return $this->project_info[2];
+	}
+	
+	public function getStartDate() {
+		return $this->project_info[3];
+	}
+	
+	public function getEndDate() {
+		return $this->project_info[4];
 	}
 	
 	

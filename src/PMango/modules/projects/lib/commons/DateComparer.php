@@ -4,11 +4,9 @@ require_once dirname(__FILE__).'/../../../../classes/date.class.php';
 
 class DateComparer {
 	private $date;
-	private $comparison;
 	
 	public function __construct($initialDate) {
 		$this->date = new CDate($initialDate);
-		$this->comparison = new CDate();
 	}
 	
 	/**
@@ -18,7 +16,8 @@ class DateComparer {
 	 * @return DateComparisonResult
 	 */
 	public function compare($otherDate) {
-		$res = $this->comparison->compare(
+		$comparison  = new CDate();
+		$res = $comparison->compare(
 			$this->date, new CDate($otherDate));
 			
 		switch($res) {
@@ -32,6 +31,11 @@ class DateComparer {
 		
 		die("DateComparer: impossible to reach this point! " . 
 		"Date comparison not executed.");
+	}
+	
+	public function substract($otherDate) {
+		$otherCDate = new CDate($otherDate);
+		return $this->date->dateDiff($otherCDate);
 	}
 	
 }

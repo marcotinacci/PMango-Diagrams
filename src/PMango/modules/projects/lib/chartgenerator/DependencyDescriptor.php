@@ -1,4 +1,6 @@
 <?php 
+require_once dirname(__FILE__) . "/../commons/DateComparer.php";
+require_once dirname(__FILE__) . "/../../../tasks/tasks.class.php";
 /**
  * This class model a descriptor for a dependency line. The information that are 
  * captured are the position of the entry and exit point for the dependency line
@@ -54,6 +56,24 @@ class DependencyDescriptor {
 			"leaves triple: (needed exit: " . $this->neededTaskPositionEnum . 
 			", dep id: " . $this->dependentTaskId . 
 			", dep entry: " . $this->dependentTaskPositionEnum . ")";
+	}
+	
+	public function getTimeGap() {
+		$neededTask = new CTask();
+		$neededTask->load($this->reallyNeededTaskId);
+		
+		$dependentTask = new CTask();
+		$dependentTask->load($this->reallyDependentTaskId);
+		
+		return TimeGapComputer::computeTimeGap($neededTask->task_finish_date, 
+			$dependentTask->task_start_date);
+	}
+}
+
+class TimeGapComputer {
+	public static function computeTimeGap($from, $to) {
+		$dependentDate = new DateComparer($to);
+		return $dependentDate->substract($from);
 	}
 }
 
