@@ -123,6 +123,8 @@ class GifLabel extends GifArea
 		$txt = GifLabel::TruncateText($this->text,$this->width,$this->truncate,$this->size,$this->font,$this->fontStyle);
 		//$this->canvas->img->SetTransparent("white");
 
+		//$this->vAlign = "TOP";
+		
 		$xc = intval($this->width/2);
 		$yc = intval($this->height/2);
 		if(strtoupper($this->hAlign)=="LEFT")
@@ -138,7 +140,6 @@ class GifLabel extends GifArea
 		$t->SetFont( $this->font, $style,$this->size);
 		$t->SetColor($this->color);
 		$t->Align($this->hAlign,$this->vAlign);
-		//$t->ParagraphAlign($this->vAlign);
 		$this->canvas->add($t);
 		if($this->underlined)
 		{
