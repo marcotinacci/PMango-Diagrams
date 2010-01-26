@@ -51,3 +51,7 @@
 # All entries must be date stamped in the correct format.
 #
 
+alter table reports 
+add `gantt_user_options` text collate latin1_general_ci default NULL,
+add `wbs_user_options` text collate latin1_general_ci default NULL,
+add `tasknet_user_options` text collate latin1_general_ci default NULL

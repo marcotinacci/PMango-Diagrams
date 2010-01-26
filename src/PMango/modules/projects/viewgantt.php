@@ -179,14 +179,30 @@ function scrollNext() {
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestGantt.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
-	divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$Gantt.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
+	divImage.innerHTML = "<img id='generatedImage' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$Gantt.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"' onLoad=\"adjustWidth();\">";
 }
 
 function OpenInNewWindow()
 {
 	var stile = "top=10, left=10, width="+getPageWidth()+", height="+getPageWidth()+", status=no, menubar=no, toolbar=no, scrollbars=yes";
     window.open("<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$Gantt.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$TodayDateUserOption."=".date("Ymd")."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"", "", stile);
+}
+
+function adjustWidth()
+{
+	var img = document.getElementById('generatedImage');
+	var width = img.width;
+	//alert(width);
+	if(width=="0px" || width==null || width=="" || width==0)
+	{
+		//alert('call me later');
+		setTimeout("adjustWidth()", 500);
+	}
+	else if(width > (getPageWidth()-45))
+	{
+		img.style.width = "100%";
+		//alert('adjusted to '+img.style.width);
+	}
 }
 
 </script>

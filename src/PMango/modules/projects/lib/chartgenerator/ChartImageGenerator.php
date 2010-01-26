@@ -1,5 +1,4 @@
 <?php
-ini_set("memory_limit","400M");
 if(!isset($_REQUEST['CHART_TYPE']))
 die("ERROR! NO CHART SPECIFIED");
 
@@ -29,6 +28,9 @@ if (@$pathInfo) {
 }
 
 require_once "$baseDir/includes/config.php";
+
+global $dPconfig;
+ini_set("memory_limit",$dPconfig['chart_default_memorylimit']);
 
 if (! isset($GLOBALS['OS_WIN']))
 $GLOBALS['OS_WIN'] = (stristr(PHP_OS, "WIN") !== false);
@@ -142,5 +144,5 @@ if(isset($_REQUEST['CREATE_REPORT']))
 $chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/report_gif_".$chart_type."_".$AppUI->user_id.".gif");
 }
 $chart->getChart()->saveToFile("$baseDir/modules/report/pdf_images/pdf_gif_".$chart_type."_".$AppUI->user_id.".gif");
-
+ini_restore("memory_limit");
 ?>

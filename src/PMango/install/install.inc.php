@@ -95,8 +95,8 @@ function InstallGetVersion($mode, $db) {
  $result = array(
   'last_db_update' => '',
   'last_code_update' => '',
-  'code_version' => '1.0.2',
-  'db_version' => '1'
+  'code_version' => '3.0',
+  'db_version' => '2'
  );
  if ($mode == 'upgrade') {
   $res = $db->Execute('SELECT * FROM dpversion LIMIT 1');
@@ -104,8 +104,8 @@ function InstallGetVersion($mode, $db) {
    $row = $res->FetchRow();
    $result['last_db_update'] = str_replace('-', '', $row['last_db_update']);
    $result['last_code_update'] = str_replace('-', '', $row['last_code_update']);
-   $result['code_version'] = $row['code_version'] ? $row['code_version'] : '1.0.2';
-   $result['db_version'] = $row['db_version'] ? $row['db_version'] : '1';
+   $result['code_version'] = $row['code_version'] ? $row['code_version'] : '3.0';
+   $result['db_version'] = $row['db_version'] ? $row['db_version'] : '2';
   }
  }
  return $result;

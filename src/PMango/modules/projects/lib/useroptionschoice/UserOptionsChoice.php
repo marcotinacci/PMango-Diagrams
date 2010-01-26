@@ -208,7 +208,9 @@ class UserOptionsChoice {
 	}
 
 	function getDefaultDimValues(){
-		$def_dim = array("width"=>$this->array[UserOptionEnumeration::$DefaultWidthUserOption],
+		global $dPconfig;
+		$w = isset($dPconfig['chart_default_width'])?$dPconfig['chart_default_width']:600;
+		$def_dim = array("width"=>$w,
 							"height"=>$this->array[UserOptionEnumeration::$DefaultHeightUserOption]);
 		return $def_dim;
 	}

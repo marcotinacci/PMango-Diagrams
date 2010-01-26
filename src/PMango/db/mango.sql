@@ -86,6 +86,9 @@ CREATE TABLE `reports` (
 	`l_report_edate` datetime default NULL,
 	`properties` text collate latin1_general_ci,
 	`prop_summary` text collate latin1_general_ci,
+	`gantt_user_options` text collate latin1_general_ci default NULL,
+	`wbs_user_options` text collate latin1_general_ci default NULL,
+	`tasknet_user_options` text collate latin1_general_ci default NULL,
 	PRIMARY KEY  (`report_id`),
 UNIQUE KEY `report_id` (`report_id`)
 ) TYPE=MyISAM;

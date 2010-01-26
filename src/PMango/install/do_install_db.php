@@ -77,6 +77,10 @@ $dbhost = trim( dPInstallGetParam( $_POST, 'dbhost', '' ) );
 $dbname = trim( dPInstallGetParam( $_POST, 'dbname', '' ) );
 $dbuser = trim( dPInstallGetParam( $_POST, 'dbuser', '' ) );
 $dbpass = trim( dPInstallGetParam( $_POST, 'dbpass', '' ) );
+
+$chart_default_width = trim( dPInstallGetParam( $_POST, 'chart_default_width', '600' ) );
+$chart_default_memorylimit = trim( dPInstallGetParam( $_POST, 'chart_default_memorylimit', '256M' ) );
+
 $dbdrop = dPInstallGetParam( $_POST, 'dbdrop', false );
 $mode = dPInstallGetParam( $_POST, 'mode', 'upgrade' );
 $dbpersist = dPInstallGetParam( $_POST, 'dbpersist', false );
@@ -84,6 +88,8 @@ $dobackup = isset($_POST['dobackup']);
 $do_db = isset($_POST['do_db']);
 $do_db_cfg = isset($_POST['do_db_cfg']);
 $do_cfg = isset($_POST['do_cfg']);
+
+
 
 // Create a dPconfig array for dependent code
 $dPconfig = array(
@@ -94,7 +100,9 @@ $dPconfig = array(
  'dbuser' => $dbuser,
  'dbpersist' => $dbpersist,
  'root_dir' => $baseDir,
- 'base_url' => $baseUrl
+ 'base_url' => $baseUrl,
+ 'chart_default_memorylimit' => $chart_default_memorylimit,
+ 'chart_default_width' => $chart_default_width
 );
 
 // Version array for moving from version to version.
@@ -304,6 +312,10 @@ if ($dbc && ($do_db || $do_db_cfg)) {
  $config .= "\$dPconfig['dbpersist'] = " . ($dbpersist ? 'true' : 'false') . ";\n";
  $config .= "\$dPconfig['root_dir'] = \$baseDir;\n";
  $config .= "\$dPconfig['base_url'] = \$baseUrl;\n";
+ 
+ $config .= "\$dPconfig['chart_default_width'] = $chart_default_width;\n";
+ $config .= "\$dPconfig['chart_default_memorylimit'] = \"$chart_default_memorylimit\";\n";
+ 
  $config .= "?>";
  $config = trim($config);
 

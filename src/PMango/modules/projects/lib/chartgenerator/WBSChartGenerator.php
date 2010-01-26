@@ -120,7 +120,8 @@ class WBSChartGenerator extends ChartGenerator{
 		}	
 		if($dimension==ImageDimension::$DefaultDimUserOption)
 		{
-			$this->setWidth(800);
+			$defSize=$UOC->getDefaultDimValues();
+			$this->setWidth($defSize['width']);
 		}	
 		if($dimension==ImageDimension::$FitInWindowDimUserOption)
 		{

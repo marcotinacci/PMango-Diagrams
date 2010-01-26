@@ -178,6 +178,19 @@ else
             <td class="item">Receive XML Backup Schema File</td>
             <td align="left"><input class="button" type="submit" name="dobackup" value="Download XML" title="Click here to retrieve a XML file containing your data that can be stored on your local system." /></td>
         </tr>-->
+        <tr>
+            <td class="title" colspan="2">Diagrams Settings</td>
+        </tr>
+        <tr>
+            <td class="item">Diagrams default image width:</td>
+            <?php $val = isset($dPconfig['chart_default_width'])?$dPconfig['chart_default_width']:"600" ?>
+            <td align="left"><input class="insText" type="text" name="chart_default_width" value="<?php echo $val; ?>" title="Diagrams default image width." /></td>
+        </tr>
+        <tr>
+            <td class="item">Diagrams memory limit:</td>
+            <?php $val = isset($dPconfig['chart_default_memorylimit'])?$dPconfig['chart_default_memorylimit']:"256M" ?>
+            <td align="left"><input class="insText" type="text" name="chart_default_memorylimit" value="<?php echo $val; ?>" title="Max memory usage in image generation." /></td>
+        </tr>
           <tr>
             <td align="left"><br /><input class="button" type="submit" name="do_db" value="<?php //echo $_POST['mode']; ?> db only" title="Try to set up the database with the given information." />
 	    &nbsp;<input class="button" type="submit" name="do_cfg" value="write config file only" title="Write a config file with the details only." /></td>

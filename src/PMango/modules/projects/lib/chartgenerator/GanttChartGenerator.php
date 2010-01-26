@@ -160,7 +160,8 @@ class GanttChartGenerator extends ChartGenerator{
 		// file di configurazione
 //		require dirname(__FILE__).'/../../../../includes/config.php';
 //		$this->defWidth = $diagram['default_width'];
-		$this->defWidth = 800;
+		$defSize=UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt)->getDefaultDimValues();
+		$this->defWidth = $defSize['width'];
 	}
 
 	/**
