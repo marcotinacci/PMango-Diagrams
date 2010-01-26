@@ -99,11 +99,13 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		
 		//print("ho finito la ricorsione!");
 		
-		$this->printStartMilestone($root);
+		$rootPointInfo = $this->printStartMilestone($root);
 		
 		$this->printTaskBoxes();
 
 		$this->drawDependencyLine();
+		
+		$this->printEndMilestone($rootPointInfo);
 		
 		$this->chart->draw();
 	}
@@ -119,22 +121,58 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$freezedVertical
 		);
 		
+		$returnPointInfo = clone $rootPointInfo;
+		
 		$root->getDrawer()->drawOn($this->chart, 
 			$rootPointInfo);
-		
-		$rootPointInfo->horizontal += StartMilestoneDataDrawer::$diameter; 
-		
-		foreach ($root->getDependentTasks() as $dependent) {
-			$dependentPointInfo = clone $this->taskboxes[$dependent->getNeededTask()->
-				getInfo()->getTaskID()]->pointInfo;
+			
+		if ($this->retrieveUserOptionChoice()->showShowCompleteDiagramDependencies()) {
+			$rootPointInfo->horizontal += StartMilestoneDataDrawer::$diameter; 
+			
+			foreach ($root->getDependentTasks() as $dependent) {
+				$dependentPointInfo = clone $this->taskboxes[$dependent->getNeededTask()->
+					getInfo()->getTaskID()]->pointInfo;
+					
+				$dependentPointInfo->vertical += ($dependent->getDrawer()->computeHeight() / 2);
 				
-			$dependentPointInfo->vertical += ($dependent->getDrawer()->computeHeight() / 2);
-			
-			$this->drawLineOnChart($rootPointInfo, $dependentPointInfo, 
-				($dependentPointInfo->horizontal - $rootPointInfo->horizontal) / 2,
-				true);
-			
+				$this->drawLineOnChart($rootPointInfo, $dependentPointInfo, 
+					($dependentPointInfo->horizontal - $rootPointInfo->horizontal) / 2,
+					true);
+			}
 		}
+		
+		return $returnPointInfo;
+	}
+	
+	private function printEndMilestone($rootPointInfo) {
+		
+		$endPointInfo = new PointInfo($this->maxHorizontal, $rootPointInfo->vertical);
+		$circlePoint = clone $endPointInfo;
+		$circlePoint->horizontal += 30;
+		$diameter = 30;
+
+		if ($this->retrieveUserOptionChoice()->showShowCompleteDiagramDependencies()) {
+	
+			foreach ($this->leafTaskboxes as $leafTaskbox) {
+				$originPoint = new PointInfo(
+					$leafTaskbox->pointInfo->horizontal + AbstractTaskDataDrawer::$width, 
+					$leafTaskbox->pointInfo->vertical + 
+						($leafTaskbox->dependency->getDrawer()->computeHeight() / 2)
+				);
+				
+				$this->drawLineOnChart($originPoint, $endPointInfo, 
+					$endPointInfo->horizontal - $originPoint->horizontal, false);
+			}
+			
+			$this->drawLineOnChart($endPointInfo, $circlePoint, 
+				$circlePoint->horizontal - $endPointInfo->horizontal - 
+				($diameter / 2), true);
+		}	
+			
+		$gifCircle = new GifCircle($this->chart, 
+			$circlePoint->horizontal, $circlePoint->vertical, $diameter / 2);
+		
+		$gifCircle->drawOn();
 	}
 	
 	private function printTaskBoxes() {
@@ -158,7 +196,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		}		
 	}
 	
-	
+	private $maxHorizontal = 0;
 
 	/**
 	 * internal method that takes as parameter the root dependency node.
@@ -312,8 +350,27 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 					$this->getGapBetweenVerticalTasks();
 				
 				// is right to return the new vertical??
-				return $drawPointInfo;
+				//return $drawPointInfo;
 			}
+			
+			$drawPointInfo = $this->taskboxes[$dependencyTaskId]->pointInfo;
+			$currentHorizontal = $drawPointInfo->horizontal + 
+				AbstractTaskDataDrawer::$width + $this->getGapBetweenHorizonalTasks();
+				
+			if($currentHorizontal > $this->maxHorizontal) {
+				$this->maxHorizontal = $currentHorizontal;
+			}
+			
+			$this->appendLeafTaskbox($dependencyTaskId);
+			
+			return $drawPointInfo;
+		}
+	}
+	
+	var $leafTaskboxes = array();
+	private function appendLeafTaskbox($dependencyTaskId) {
+		if(!array_key_exists($dependencyTaskId, $this->leafTaskboxes)) {
+			$this->leafTaskboxes[$dependencyTaskId] = $this->taskboxes[$dependencyTaskId];
 		}
 	}
 	
