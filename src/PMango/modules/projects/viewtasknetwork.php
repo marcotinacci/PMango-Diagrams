@@ -79,6 +79,42 @@ if($produceReport==1)
 		  	reports.user_id=".$AppUI->user_id;
 	$db_roles = db_loadList($sql);
 }
+
+function ordinalize( $number )
+{
+    if ( is_numeric( $number ) && 0 <> $number )
+    {
+        if ( in_array( $number % 100, range( 11, 13 ) ) )
+        {
+            return $number . 'th';
+        }
+        switch ( $number % 10 )
+        {
+            case 1:  return $number . 'st';
+            case 2:  return $number . 'nd';
+            case 3:  return $number . 'rd';
+            default: return $number . 'th';
+        }
+    }
+    return $number;
+}  
+
+function getCriticalPathsComboBox($numberOfPaths,&$uoc)
+{
+	$selected = 0;
+    if($uoc->getSelectedCriticalPathNumberUserOption()!="")
+    	$selected = $uoc->getSelectedCriticalPathNumberUserOption();
+	$string = "<select name='".UserOptionEnumeration::$SelectedCriticalPathNumberUserOption."'>\n";
+	for($i=0;$i<$numberOfPaths;$i++)
+	{
+		$string .= "<option value='$i'";
+		if($i==$selected)
+			$string .= " selected";
+		$string .= ">".ordinalize($i+1)."</option>\n";
+	}
+	$string .= "\n</select>";
+	return $string;
+}
 ?>
 
 <script language="javascript">
@@ -108,14 +144,13 @@ function getPageHeight()
 function BuildImage(placeHolder)
 {
 	var divImage = document.getElementById(placeHolder);
-	//divImage.innerHTML = "<img style='max-width:"+(getPageWidth()-45)+"px;' src='<?php echo "./modules/projects/lib/chartGenerator/TestTN.php?project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"'>";
 	divImage.innerHTML = "<img id='generatedImage' src='<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$TaskNetwork.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"' onLoad=\"adjustWidth();\">";
 }
 
 function OpenInNewWindow()
 {
 	var stile = "top=10, left=10, width="+getPageWidth()+", height="+getPageWidth()+", status=no, menubar=no, toolbar=no, scrollbars=yes";
-    window.open("<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$TaskNetwork.($produceReport==1?"&CREATE_REPORT=1":"")."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"", "", stile);
+    window.open("<?php echo "./modules/projects/lib/chartGenerator/ChartImageGenerator.php?CHART_TYPE=".ChartTypesEnum::$TaskNetwork."&project_id=".$_REQUEST['project_id']."&".UserOptionEnumeration::$FitInWindowWidthUserOption."="; ?>"+getPageWidth()+"", "", stile);
 }
 
 function adjustWidth()
@@ -163,12 +198,7 @@ function adjustWidth()
                 <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$ReplicateArrowUserOption; ?>" <?php echo $uoc->showReplicateArrowUserOption()?"checked":""; ?>> <?php echo "Replicated Arrows"; ?><br>
                 <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$UseDifferentPatternForCrossingLinesUserOption; ?>" <?php echo $uoc->showUseDifferentPatternForCrossingLinesUserOption()?"checked":""; ?>> <?php echo "Use Different Pattern For Crossing Lines"; ?><br>	
                 <input type="checkbox" value='8' name="<?php echo UserOptionEnumeration::$CriticalPathUserOption; ?>" <?php echo $uoc->showCriticalPathUserOption()?"checked":""; ?>> <?php echo "Critical Paths"; ?>
-                <?php
-                $val = 1;
-                if($uoc->getSelectedCriticalPathNumberUserOption()!="")
-                	$val = $uoc->getSelectedCriticalPathNumberUserOption();
-                ?>
-                (if yes show maximum: <input size="2" type="text" name="<?php echo UserOptionEnumeration::$SelectedCriticalPathNumberUserOption; ?>" value="<?php echo $val;?>"/>)	
+                (if yes show the: <?php echo getCriticalPathsComboBox(10,$uoc);?>) 	
                 </td>
                 <td>&nbsp;&nbsp;</td>
                 <td valign="top" align="left" nowrap="nowrap">

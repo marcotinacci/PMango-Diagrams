@@ -12,8 +12,6 @@ require_once dirname(__FILE__).'/../useroptionschoice/UserOptionEnumeration.php'
 require_once dirname(__FILE__).'/../taskdatatree/Project.php';
 require_once dirname(__FILE__).'/ChartTypesEnum.php';
 
-$debugging = false;
-
 /**
  * Questa classe implementa il metodo di generazione del diagramma Gantt
  *
@@ -581,7 +579,7 @@ class GanttChartGenerator extends ChartGenerator{
 				$this->fDate, // finishDate
 				$dt, // task data
 				$this->today, // today
-				$this->uoc // opzioni utente
+				UserOptionsChoice::GetInstance(ChartTypesEnum::$Gantt) // opzioni utente
 				);	
 			$this->gTasks[$i]->drawOn();
 		}

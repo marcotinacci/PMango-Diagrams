@@ -13,7 +13,7 @@ class GifLabel extends GifArea
 	private $bold = false;
 	private $vAlign = "center";
 	private $hAlign = "center";
-	private $truncate = true;
+	private $truncate = "...";
 	private $underlined = false;
 
 	private $font;
@@ -45,9 +45,9 @@ class GifLabel extends GifArea
 		return $this->truncate;
 	}
 
-	public function setTruncate($bool)
+	public function setTruncate($value)
 	{
-		$this->truncate=$bool;
+		$this->truncate=$value;
 	}
 
 	public function setText($txt)
@@ -119,8 +119,8 @@ class GifLabel extends GifArea
 		$this->fontStyle = $style;
 
 		$txt=$this->text;
-		if($this->truncate)
-		$txt = $this->TruncateText($this->text,$this->width);
+		if($this->truncate!=false)
+		$txt = GifLabel::TruncateText($this->text,$this->width,$this->truncate,$this->size,$this->font,$this->fontStyle);
 		//$this->canvas->img->SetTransparent("white");
 
 		$xc = intval($this->width/2);
@@ -162,20 +162,23 @@ class GifLabel extends GifArea
 		}
 	}
 
-	private function TruncateText($txt,$width)
+	public static function TruncateText($txt,$width,$truncateRest,$fontSize=10,$font=FF_ARIAL,$fontStyle=FS_NORMAL)
 	{
-		$size = $this->size;
-		$clear = $this->DeleteSpecialCharacters($txt);
+		$size = $fontSize;
+		DrawingHelper::debug("Asking if $txt should be truncated to $width");
+		$clear = GifLabel::DeleteSpecialCharacters($txt);
 
-		if( ($width - GifLabel::getPixelWidthOfText($clear,$this->size,$this->font,$this->fontStyle)) > 0)
-		return $txt;
-
-		$width -= GifLabel::getPixelWidthOfText("00",$this->size,$this->font,$this->fontStyle);
+		if( ($width - GifLabel::getPixelWidthOfText($clear,$size,$font,$fontStyle)) > 0)
+		{
+			DrawingHelper::debug("No need to truncate $txt to $width");
+			return $txt;
+		}
+		$width -= GifLabel::getPixelWidthOfText($truncateRest,$size,$font,$fontStyle);
 
 		$i=0;
 		//Cerco l'ottimo con un binary search
 		$optimalString=$clear;
-		$optimal = GifLabel::getPixelWidthOfText($optimalString,$this->size,$this->font,$this->fontStyle);
+		$optimal = GifLabel::getPixelWidthOfText($optimalString,$size,$font,$fontStyle);
 		$half = intval(strlen($optimalString)/2);
 		DrawingHelper::debug("<b>Optimal width of $txt to fit $width</b>");
 		while(abs($width-$optimal)>5)
@@ -198,7 +201,7 @@ class GifLabel extends GifArea
 				$optimalString = substr($clear,0,strlen($optimalString)+$half);
 				DrawingHelper::debug("Added $half and had: $optimalString");
 			}
-			$optimal = GifLabel::getPixelWidthOfText($optimalString,$this->size,$this->font,$this->fontStyle);
+			$optimal = GifLabel::getPixelWidthOfText($optimalString,$size,$font,$fontStyle);
 			DrawingHelper::debug("Optimal pixels is $optimal and optimal strlen is(".strlen($optimalString).");");
 			$i++;
 			if($i>10)
@@ -214,7 +217,7 @@ class GifLabel extends GifArea
 			{
 				$optimalString = substr($clear,0,strlen($optimalString)-1);
 				DrawingHelper::debug("Subtracted 1 and had: $optimalString");
-				$optimal = GifLabel::getPixelWidthOfText($optimalString,$this->size,$this->font,$this->fontStyle);
+				$optimal = GifLabel::getPixelWidthOfText($optimalString,$size,$font,$fontStyle);
 				DrawingHelper::debug("Optimal pixels is $optimal and optimal strlen is(".strlen($optimalString).");");
 			}
 		}
@@ -224,12 +227,12 @@ class GifLabel extends GifArea
 			{
 				$optimalString = substr($clear,0,strlen($optimalString)+1);
 				DrawingHelper::debug("Added 1 and had: $optimalString");
-				$optimal = GifLabel::getPixelWidthOfText($optimalString,$this->size,$this->font,$this->fontStyle);
+				$optimal = GifLabel::getPixelWidthOfText($optimalString,$size,$font,$fontStyle);
 				DrawingHelper::debug("Optimal pixels is $optimal and optimal strlen is(".strlen($optimalString).");");
 			}	
 			$optimalString = substr($clear,0,strlen($optimalString)-1);
 		}
-		return substr($txt,0,strlen($optimalString))."...";
+		return substr($txt,0,strlen($optimalString)).$truncateRest;
 	}
 
 	private static function DeleteSpecialCharacters($txt)
@@ -248,8 +251,21 @@ class GifLabel extends GifArea
 		}
 		GifLabel::$c->img->SetFont($font,$fontStyle,$fontSize);
 		$w = GifLabel::$c->img->GetTextWidth(GifLabel::DeleteSpecialCharacters($txt));
-		//$c->img->Destroy();
-		//unset($c);
+		return $w;
+	}
+	
+	public static function getTruncatedPixelWidthOfText($txt,$desiredWidth,$truncateRest,$fontSize=10,$font=FF_ARIAL,$fontStyle=FS_NORMAL)
+	{
+		$txt.="";
+		if(!isset(GifLabel::$c))
+		{
+			DrawingHelper::debug("Singleton pixel calculator created");
+			GifLabel::$c = new CanvasGraph(30,30);
+		}
+		GifLabel::$c->img->SetFont($font,$fontStyle,$fontSize);
+		$txt = GifLabel::TruncateText($txt,$desiredWidth,$truncateRest,$fontSize,$font,$fontStyle);
+		$w = GifLabel::$c->img->GetTextWidth($txt);
+		DrawingHelper::debug("Truncated width of $txt is $w");
 		return $w;
 	}
 
