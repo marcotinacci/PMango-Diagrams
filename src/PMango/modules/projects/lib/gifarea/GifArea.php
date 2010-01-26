@@ -1,7 +1,7 @@
 <?php
 
-require_once dirname(__FILE__)."/lib/jpgraph/src/jpgraph.php";
-require_once dirname(__FILE__)."/lib/jpgraph/src/jpgraph_canvas.php";
+require_once "$baseDir/lib/jpgraph/src/jpgraph.php";
+require_once "$baseDir/lib/jpgraph/src/jpgraph_canvas.php";
 
 /*
  * GifArea class is the base to draw something to a gif, all the inherited classes can be
