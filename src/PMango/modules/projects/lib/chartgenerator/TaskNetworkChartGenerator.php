@@ -1069,10 +1069,11 @@ class StartMilestoneDataDrawer implements ITaskDataDrawer {
 	}
 	
 	public function drawOn(& $gifImage, $initialPoint) {
+		$radious = StartMilestoneDataDrawer::$diameter / 2;
 		$circle = new GifCircle($gifImage, 
-			$initialPoint->horizontal, 
+			$initialPoint->horizontal + $radious, 
 			$initialPoint->vertical, 
-			StartMilestoneDataDrawer::$diameter / 2);
+			$radious);
 			
 		$circle->drawOn();
 	}
