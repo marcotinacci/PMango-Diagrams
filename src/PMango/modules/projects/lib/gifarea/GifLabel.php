@@ -22,7 +22,7 @@ class GifLabel extends GifArea
 	public function __construct($gifImage, $x, $y, $width, $height, $text, $size)
 	{
 		parent::__construct($gifImage, $x,$y,$width,$height);
-		$this->text = $text;
+		$this->text = $text."";
 		$this->size = $size;
 		$this->transparent = false;
 
