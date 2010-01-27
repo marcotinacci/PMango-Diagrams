@@ -18,6 +18,124 @@ class TaskboxDrawInformation {
 	var $pointInfo;
 }
 
+class DrawedLine {
+	var $numberOfDots;
+	var $points = array();
+	
+	public static function buildFromPoints($initialPoint, $hOffset, $vOffset, $endPoint) {
+		$object = new DrawedLine();
+		
+		$start = clone $initialPoint;
+		$firstEdge = new PointInfo($start->horizontal + $hOffset, $start->vertical);
+		$secondEdge = new PointInfo($firstEdge->horizontal, $firstEdge->vertical + $vOffset);
+		$last = clone $endPoint;
+		
+		$object->numberOfDots = 0;
+		$object->points[] = $start;
+		$object->points[] = $firstEdge;
+		$object->points[] = $secondEdge;
+		$object->points[] = $last;
+		
+		return $object;
+	}
+	
+	public function resolveConflict($otherDrawedLine, $gifImage) {
+		if (DrawingHelper::linesCross($this->points, $otherDrawedLine->points, 
+				$gifImage)) {
+
+			if($this->numberOfDots == $otherDrawedLine->numberOfDots) {
+				$this->numberOfDots = $otherDrawedLine->numberOfDots + 1;
+			}
+		}
+	}
+}
+
+interface ILineStyleBuilder {
+	public function setStartPoint($startPoint);
+	public function setEndtPoint($endPoint);
+	public function setHorizontalOffset($hOffset);
+	public function setVerticalOffset($vOffset);
+	public function getStyle($gifImage);
+}
+
+class DottedLineStyleBuilder implements ILineStyleBuilder {
+	public function setStartPoint($startPoint) { } 
+	public function setEndtPoint($endPoint) { }
+	public function setHorizontalOffset($hOffset) { }
+	public function setVerticalOffset($vOffset) {}
+	public function getStyle($gifImage) {
+		$lStyle = new LineStyle();
+		$lStyle->style = "dotted";
+		return $lStyle;
+	}
+}
+
+class PatternizedLineStyleBuilder implements ILineStyleBuilder {
+	private $hOffset;
+	private $endPoint;
+	private $startPoint;
+	private $vOffset;
+	private $drawedLines;
+	private $defaultDots;
+	private static $instance;
+	private $lastDrawedLine;
+	
+	private function __construct() { 
+		$this->drawedLines = array();
+	}
+	
+	public static function GetInstance() {
+		if(!isset(PatternizedLineStyleBuilder::$instance) || 
+			PatternizedLineStyleBuilder::$instance == null) {
+			PatternizedLineStyleBuilder::$instance = new PatternizedLineStyleBuilder(); 
+		}
+		return PatternizedLineStyleBuilder::$instance;
+	}
+	
+	public function setInitialDots($dots) {
+		$this->defaultDots = $dots;
+	}
+	
+	public function getLastDrawedLine() {
+		return $this->lastDrawedLine;
+	}
+	
+	public function setStartPoint($startPoint) { 
+		$this->startPoint = $startPoint;
+	} 
+	public function setEndtPoint($endPoint) { 
+		$this->endPoint = $endPoint;
+	}
+	public function setHorizontalOffset($hOffset) { 
+		$this->hOffset = $hOffset;
+	}
+	public function setVerticalOffset($vOffset) {
+		$this->vOffset = $vOffset;
+	}
+	
+	public function getStyle($gifImage) {
+		$drawingLine = DrawedLine::buildFromPoints($this->startPoint, 
+			$this->hOffset, 
+			$this->vOffset, 
+			$this->endPoint);
+			
+		$drawingLine->numberOfDots = $this->defaultDots;
+			
+		foreach ($this->drawedLines as $drawedLine) {
+			$drawingLine->resolveConflict($drawedLine, $gifImage);
+		}
+		
+		$this->drawedLines[] = $drawingLine;
+		$this->lastDrawedLine = $drawingLine;
+		
+		$linestyle = new LineStyle();
+		$linestyle->patterNumberOfDots = $drawingLine->numberOfDots;
+		$linestyle->patternInitialFinalLength = 3;
+		
+		return $linestyle;
+	}
+}
+
 interface ITimeGapDrawer {
 	public function setStartPoint($startPoint);
 	public function setEndtPoint($endPoint);
@@ -569,8 +687,9 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							$backwardPointInfo = $dependencyLineInfo->
 								computeBackwardEntryPointInfo();
 							
+							$dots = 0;
 							$backwardExitPointInfo = $this->drawSwappedSyncLine(
-								$dependencyLineInfo, $exitPoint, $swappedTimes);
+								$dependencyLineInfo, $exitPoint, $swappedTimes, $dots);
 
 							$swappedTimes = $swappedTimes + 1;
 							
@@ -578,14 +697,15 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 								$backwardPointInfo, 
 								$backwardPointInfo->horizontal - 
 									$backwardExitPointInfo->horizontal, 
-								false);
+								false, $this->patternizedLineStyle($dots));
 								
 							$exitPoint = $backwardPointInfo;
 							$brokerHorizontal = $backwardPointInfo->horizontal;
 						}
 							
 						$this->drawLineOnChart($exitPoint, $entryPoint, 
-							$brokerHorizontal - $exitPoint->horizontal, true);
+							$brokerHorizontal - $exitPoint->horizontal, true, 
+							$this->patternizedLineStyle());
 
 						$dependentEntryPointInfo = new PointInfo(
 							$brokerHorizontal, 
@@ -634,7 +754,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							$entryPoint,
 							$dependentEntryPointInfo->horizontal - 
 								$exitPoint->horizontal, 
-								$this->replicateArrow());
+								$this->replicateArrow(), 
+								$this->patternizedLineStyle());
 						
 					}
 				}
@@ -712,7 +833,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	}
 	
 	private function drawSwappedSyncLine($dependencyLineInfo, $exitPoint, 
-		$decrementVerticalTime) {
+		$decrementVerticalTime, & $dots) {
 		
 		$backwardPointInfo = $dependencyLineInfo->
 			computeBackwardEntryPointInfo();
@@ -744,7 +865,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				$toPoint, 
 				$toPoint->horizontal - 
 					$exitPoint->horizontal, 
-				false);
+				false, $this->patternizedLineStyle());
+
+		$dots = PatternizedLineStyleBuilder::GetInstance()->getLastDrawedLine()->
+			numberOfDots;
 				
 		return $toPoint;
 	}
@@ -754,16 +878,39 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	}
 	
 	private function completeDependencyLineStyle() {
-		$lStyle = new LineStyle();
-		$lStyle->style = "dotted";
-		return $lStyle;
+		return new DottedLineStyleBuilder();
+	}
+	
+	private function patternizedLineStyle($dots = 0) {
+		if($this->retrieveUserOptionChoice()->
+			showUseDifferentPatternForCrossingLinesUserOption()) {
+			
+			PatternizedLineStyleBuilder::GetInstance()->setInitialDots($dots);
+			return PatternizedLineStyleBuilder::GetInstance();
+		}
+		return null;
 	}
 	
 	private function drawLineOnChart($fromPoint, 
 		$toPoint, 
-		$horizontalOffset, $drawArrow, $linestyle = null, $iTimeGapDrawer = null) {
+		$horizontalOffset, 
+		$drawArrow, 
+		$iLineStyleBuilder = null, 
+		$iTimeGapDrawer = null) {
+		
+		$vOffset = $toPoint->vertical - $fromPoint->vertical;
+		
+		$linestyle = null;
+		if ($iLineStyleBuilder != null) {
+			$iLineStyleBuilder->setStartPoint($fromPoint);
+			$iLineStyleBuilder->setEndtPoint($toPoint);
+			$iLineStyleBuilder->setHorizontalOffset($horizontalOffset);
+			$iLineStyleBuilder->setVerticalOffset($vOffset);
+			$linestyle = $iLineStyleBuilder->getStyle($this->chart);
+		}
+		
 		DrawingHelper::segmentedOffsetLine($fromPoint->horizontal, $fromPoint->vertical, 
-			$horizontalOffset, $toPoint->vertical - $fromPoint->vertical, 
+			$horizontalOffset, $vOffset, 
 			$toPoint->horizontal, $toPoint->vertical, $this->chart, $linestyle);
 			
 		if($drawArrow) {
@@ -778,10 +925,10 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$iTimeGapDrawer->setStartPoint($fromPoint);
 			$iTimeGapDrawer->setEndtPoint($toPoint);
 			$iTimeGapDrawer->setHorizontalOffset($horizontalOffset);
-			$iTimeGapDrawer->setVerticalOffset($toPoint->vertical - $fromPoint->vertical);
+			$iTimeGapDrawer->setVerticalOffset($vOffset);
 			$iTimeGapDrawer->drawOn($this->chart);
 		}
-						
+		
 	}
 	
 	private function isDependencyAlreadyConsidered($dependency_task_id) {
