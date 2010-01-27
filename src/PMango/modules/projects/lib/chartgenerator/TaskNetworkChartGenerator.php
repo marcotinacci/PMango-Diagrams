@@ -538,7 +538,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				 * to have one object foreach fork of the path
 				 */
 				$cpdoClones = array();
-				if($this->retrieveUserOptionChoice()->showCriticalPathUserOption()) {
+				if(false){//$this->retrieveUserOptionChoice()->showCriticalPathUserOption()) {
 					$cpdoClones = $this->buildNewCriticalPathDomainObjectsFrom(
 					$criticalPathDomainObjects,
 					$dependency);
