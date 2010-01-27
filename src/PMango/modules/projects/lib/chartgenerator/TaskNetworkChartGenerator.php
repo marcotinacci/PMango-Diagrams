@@ -365,6 +365,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				$wbsPathBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
 					$maxWBSWidth, $vOffset, $criticalPath->getWBSChain());
 				
+				$wbsPathBox->drawOn();
+				
 				$horizontal += $maxWBSWidth;
 			}
 			
@@ -372,7 +374,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getDuration());
 			$durationBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
 					$currentWidth, $vOffset, $criticalPath->getDuration());
-			$durationBox->draw();
+			$durationBox->drawOn();
 					
 			$horizontal += $hOffset;
 					
@@ -380,7 +382,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getTotalEffort());
 			$effortBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
 					$currentWidth, $vOffset, $criticalPath->getTotalEffort());
-			$effortBox->draw();
+			$effortBox->drawOn();
 			
 			$horizontal += $hOffset;
 			
@@ -388,7 +390,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getTotalCost());
 			$costBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
 					$currentWidth, $vOffset, $criticalPath->getTotalCost());
-			$costBox->draw();
+			$costBox->drawOn();
 			
 			$horizontal += $hOffset;
 			
@@ -396,7 +398,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getLastGap());
 			$lastGapBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
 					$currentWidth, $vOffset, $criticalPath->getLastGap());
-			$lastGapBox->draw();
+			$lastGapBox->drawOn();
 			
 			$horizontal = $startHorizontal;
 			$vertical += $vOffset;
@@ -535,9 +537,12 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				 * cloning the critical path domain object to duplicate the info
 				 * to have one object foreach fork of the path
 				 */
-				$cpdoClones = $this->buildNewCriticalPathDomainObjectsFrom(
+				$cpdoClones = array();
+				if($this->retrieveUserOptionChoice()->showCriticalPathUserOption()) {
+					$cpdoClones = $this->buildNewCriticalPathDomainObjectsFrom(
 					$criticalPathDomainObjects,
 					$dependency);
+				}
 
 				/*
 				 * Move the recursive call before the above conditional logic, keep the result point and manage
@@ -1176,7 +1181,17 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		
 		// adding the path to the table
 		foreach ($criticalPathDomainObjects as $cpdo) {
-			$this->criticalPathTable[] = $cpdo;
+			
+			$present = false;
+			foreach ($this->criticalPathTable as $cp) {
+				if($cp->getWBSChain() == $cpdo->getWBSChain()) {
+					$present = true;
+				}
+			}
+			if(!$present) {
+				DrawingHelper::debug("----------> append : " . $cpdo->getWBSChain());
+				$this->criticalPathTable[] = $cpdo;
+			}
 		}
 		//$this->criticalPathTable[$criticalPathDomainObject->getImplodedChain(" - ")] = $criticalPathDomainObject;
 	}
