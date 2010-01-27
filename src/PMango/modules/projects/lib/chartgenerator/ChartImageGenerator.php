@@ -1,4 +1,5 @@
 <?php
+set_time_limit(60);
 if(!isset($_REQUEST['CHART_TYPE']))
 die("ERROR! NO CHART SPECIFIED");
 
