@@ -1,62 +1,96 @@
 <?php
+require_once dirname(__FILE__) . "/../commons/DateComparer.php";
+require_once dirname(__FILE__) . "/../taskdatatree/Task.php";
+
 class CriticalPathDomainObject {
-	private $duration;
-	private $totalEffort;
-	private $totalCost;
-	private $lastGap;
-	private $isShowed;
-	private $chain = array();
-
-	public function increaseDurationOf($days) {
-		$this->duration += $days;
-	}
-
-	public function increaseTotalEffortOf($efforts) {
-		$this->totalEffort += $efforts;
-	}
-
-	public function increaseTotalCostOf($cost) {
-		$this->totalCost += $cost;
-	}
-
-	public function setLastGap($lastGap) {
-		$this->lastGap = $lastGap;
-	}
-
-	public function appendTaskNode($task_id) {
-		$this->chain[] = $task_id;
+	public static $lastGap;
+	public static $firstGap;
+	var $chain = array();
+	
+	public function getClone() {
+		$clone = new CriticalPathDomainObject();
+		
+		$clone->chain = array();
+		
+		foreach ($this->chain as $task_id) {
+			$clone->chain[] = $task_id;
+		}
+		
+		return $clone;
 	}
 
 	public function getDuration() {
-		return $this->duration;
+		
+		if(count($this->chain) == 0) {
+			$dateComparer = new DateComparer(CriticalPathDomainObject::$lastGap);
+			return $dateComparer->substract(CriticalPathDomainObject::$firstGap);
+		}
+		
+		$result = 0;
+		$previousDate = CriticalPathDomainObject::$firstGap;
+		
+		for ($runner = 0; $runner < count($this->chain); $runner++) {
+			$task_id = $this->chain[$runner];
+			$task = Task::MakeTask($task_id);
+			$currentDate = $task->getCTask()->task_finish_date;
+			
+			$comparer = new DateComparer($currentDate);
+			$result += $comparer->substract($previousDate); 
+			
+			$previousDate = $currentDate;	
+		}
+		
+		$dateComparer = new DateComparer(CriticalPathDomainObject::$lastGap);
+		return $dateComparer->substract($previousDate);
+		
+		return $result;
 	}
 
 	public function getTotalEffort() {
-		return $this->totalEffort;
+		$result = 0;
+		foreach ($this->chain as $task_id) {
+			$task = Task::MakeTask($task_id);
+			$result += $task->getPlannedEffort();
+		}
+		return $result;
 	}
 
 	public function getTotalCost() {
-		return $this->totalCost;
+		$result = 0;
+		foreach ($this->chain as $task_id) {
+			$task = Task::MakeTask($task_id);
+			$result += $task->getPlannedCost();
+		}
+		return $result;
 	}
 
 	public function getLastGap() {
-		return $this->lastGap;
+		if(count($this->chain) == 0) {
+			$dateComparer = new DateComparer(CriticalPathDomainObject::$lastGap);
+			return $dateComparer->substract(CriticalPathDomainObject::$firstGap);
+		}
+		else {
+			$dateComparer = new DateComparer(CriticalPathDomainObject::$lastGap);
+			$lastTask = Task::MakeTask($this->chain[count($this->chain) - 1]);
+			return $dateComparer->substract($lastTask->getCTask()->task_finish_date);
+		}
 	}
 
 	public function getChain() {
 		return $this->chain;
 	}
-
-	public function isShowed() {
-		return $this->isShowed;
-	}
-
-	public function setIsShowed($isShowed) {
-		$this->isShowed = $isShowed;
-	}
-
+	
 	public function getImplodedChain($glue) {
 		return implode($glue, $this->chain);
+	}
+	
+	public function getWBSChain() {
+		$array = array();
+		foreach ($this->chain as $task_id) {
+			$task = Task::MakeTask($task_id);
+			$array[] = $task->getWBSId();
+		}
+		return implode(" -> ", $array);
 	}
 }
 ?>

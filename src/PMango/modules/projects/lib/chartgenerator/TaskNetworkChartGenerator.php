@@ -12,6 +12,7 @@ require_once dirname(__FILE__) . "/../gifarea/LineStyle.php";
 require_once dirname(__FILE__) . "/../gifarea/GifLabel.php";
 require_once dirname(__FILE__) . "/../commons/DateComparer.php";
 require_once dirname(__FILE__) . "/../taskdatatree/Project.php";
+require_once dirname(__FILE__) . "/../gifarea/GifBoxedLabel.php";
 
 class TaskboxDrawInformation {
 	var $dependency;
@@ -291,7 +292,14 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 
 		// start the generation from (5, 5) point
 		$this->vertical = 5;
-		$this->internalGenerateChart($root, new CriticalPathDomainObject(), 5);
+		
+		$project = new Project();
+		$project->loadProjectInfo();
+		CriticalPathDomainObject::$firstGap = $project->getStartDate();
+		CriticalPathDomainObject::$lastGap = $project->getEndDate();
+		$criticalPaths = array();
+		$criticalPaths[] = new CriticalPathDomainObject();
+		$this->internalGenerateChart($root, $criticalPaths, 5);
 		
 		//print("ho finito la ricorsione!");
 		
@@ -306,7 +314,82 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		
 		$this->printEndMilestone($rootPointInfo);
 		
+		$this->printCriticalPathTable();
+		
 		$this->chart->draw();
+	}
+	
+	private function getSelectedCriticalPath() {
+		return 0;
+	}
+	
+	private function showWBSPathColumns() {
+		return true;
+	}
+	
+	private function printCriticalPathTable() {
+//		if(! $this->retrieveUserOptionChoice()->showCriticalPathUserOption()) {
+//			return;
+//		}
+		
+		$maxWBSWidth = 0;
+		if($this->showWBSPathColumns()) {
+			foreach ($this->criticalPathTable as $criticalPath) {
+				$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getWBSChain());
+				if($maxWBSWidth < $currentWidth) {
+					$maxWBSWidth = $currentWidth;
+				}
+			}
+		}
+	
+		$startHorizontal = 10;
+		$horizontal = $startHorizontal;
+		$vertical = $this->vertical + 50;
+		$hOffset = 100;
+		$vOffset = 30;
+		
+		foreach ($this->criticalPathTable as $criticalPath) {
+			if($this->showWBSPathColumns()) { 
+				$wbsPathBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
+					$maxWBSWidth, $vOffset, $criticalPath->getWBSChain());
+				
+				$horizontal += $maxWBSWidth;
+			}
+			
+			// printing the duration
+			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getDuration());
+			$durationBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
+					$currentWidth, $vOffset, $criticalPath->getDuration());
+			$durationBox->draw();
+					
+			$horizontal += $hOffset;
+					
+			// printing the effort
+			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getTotalEffort());
+			$effortBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
+					$currentWidth, $vOffset, $criticalPath->getTotalEffort());
+			$effortBox->draw();
+			
+			$horizontal += $hOffset;
+			
+			// printing the cost
+			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getTotalCost());
+			$costBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
+					$currentWidth, $vOffset, $criticalPath->getTotalCost());
+			$costBox->draw();
+			
+			$horizontal += $hOffset;
+			
+			// printing the last gap
+			$currentWidth = GifLabel::getPixelWidthOfText($criticalPath->getLastGap());
+			$lastGapBox = new GifBoxedLabel($this->chart, $horizontal, $vertical, 
+					$currentWidth, $vOffset, $criticalPath->getLastGap());
+			$lastGapBox->draw();
+			
+			$horizontal = $startHorizontal;
+			$vertical += $vOffset;
+			
+		}
 	}
 	
 	private function printStartMilestone($root) {
@@ -372,9 +455,9 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				$this->drawLineOnChart($originPoint, $endPointInfo, 
 					$endPointInfo->horizontal - $originPoint->horizontal, false, 
 					$this->completeDependencyLineStyle(), 
-					new EndMilestoneTimeGapDrawer($project->getStartDate(), 
+					new EndMilestoneTimeGapDrawer( 
 						$leafTaskbox->getNeededTask()->getInfo()->getCTask()->
-							task_finish_date));
+							task_finish_date, $project->getEndDate()));
 			}
 			
 			$beforeCirclePointInfo = clone $circlePoint;
@@ -421,7 +504,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 * @param int $horizontal
 	 * @return void
 	 */
-	private function internalGenerateChart($dependency, $criticalPathDomainObject, $horizontal) {
+	private function internalGenerateChart($dependency, $criticalPathDomainObjects, $horizontal) {
 		//var_dump($dependency);
 		//print "<br>Drawing " . $dependency->getNeededTask()->getInfo()->getTaskID();
 		if ($dependency->hasDependentTasks()) {
@@ -440,10 +523,9 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				 * cloning the critical path domain object to duplicate the info
 				 * to have one object foreach fork of the path
 				 */
-				$cpdoClone = $this->buildNewCriticalPathDomainObjectFrom(
-					$criticalPathDomainObject,
-					$dependency->getNeededTask()->getInfo(),
-					$dependentTask->getNeededTask()->getInfo());
+				$cpdoClones = $this->buildNewCriticalPathDomainObjectsFrom(
+					$criticalPathDomainObjects,
+					$dependency);
 
 				/*
 				 * Move the recursive call before the above conditional logic, keep the result point and manage
@@ -451,7 +533,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				 */
 				$dependentPointInfo = $this->internalGenerateChart(
 					$dependentTask, 
-					$cpdoClone, 
+					$cpdoClones, 
 					$horizontal + 
 						$this->getGapBetweenHorizonalTasks() + 
 						AbstractTaskDataDrawer::$width);
@@ -544,7 +626,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 			return $this->taskboxes[$dependencyTaskId]->pointInfo;
 		}
 		else {
-			$this->appendCriticalPathDomainObject($criticalPathDomainObject, $dependency);
+			$this->appendCriticalPathDomainObjects($criticalPathDomainObjects);
 
 			$dependencyTaskId = $dependency->getNeededTask()->getInfo()->getTaskID();
 			//if (!array_key_exists($dependency->getNeededTask()->getInfo()->getTaskID(), $this->drawedTasksMap)) {
@@ -1053,15 +1135,19 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		$this->dependencyLinesArray[] = $dependencyLine;
 	}
 
-	private function appendCriticalPathDomainObject($criticalPathDomainObject, $dependency) {
+	private function appendCriticalPathDomainObjects($criticalPathDomainObjects) {
 		// calculating the last time gap and add this information to the domain object
 		// --> pass the information relative to the end milestone of the project, may be
 		// --> istantiating a project entity (if exists) and get the two dates, start and end.
 		// --> pass to the method the end date or the entire project entity
-		$criticalPathDomainObject->setLastGap($dependency->getNeededTask()->getInfo());
+		//$criticalPathDomainObject->setLastGap($dependency->getNeededTask()->getInfo());
 
+		
 		// adding the path to the table
-		$this->criticalPathTable[$criticalPathDomainObject->getImplodedChain(" - ")] = $criticalPathDomainObject;
+		foreach ($criticalPathDomainObjects as $cpdo) {
+			$this->criticalPathTable[] = $cpdo;
+		}
+		//$this->criticalPathTable[$criticalPathDomainObject->getImplodedChain(" - ")] = $criticalPathDomainObject;
 	}
 
 	//	private function connectEntryPointToCurrentVertical($entryPoint) {
@@ -1100,25 +1186,50 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	 * @param Task $dependentTask
 	 * @return CriticalPathObjectDomain
 	 */
-	private function buildNewCriticalPathDomainObjectFrom(
-		$criticalPathDomainObject, $dependency, $dependentTask) {
-		//print "<br>original duration: " . $criticalPathDomainObject->getDuration();
-		$result = clone $criticalPathDomainObject;
+	private function buildNewCriticalPathDomainObjectsFrom(
+		$criticalPathDomainObjects, $dependency) {
+			
+		$array = array();
 
-		$result->increaseDurationOf($this->ComputeDuration($dependentTask));
-
-		//print " / still original duration: " .
-		$criticalPathDomainObject->getDuration();
-
-		//print " / cloned duration " . $result->getDuration();
-
-		$result->increaseDurationOf($this->ComputeTimeGap($dependency, $dependentTask));
-		$result->increaseTotalEffortOf($this->ComputeTotalEffort($dependentTask));
-		$result->increaseTotalCostOf($this->computeTotalCost($dependentTask));
-		$result->appendTaskNode($dependentTask->getCTask()->task_id);
-
-		//var_dump($result);
-		return $result;
+		foreach ($criticalPathDomainObjects as $cpdo) {
+			foreach ($dependency->_dependencyDescriptors
+				as $dependentTaskId => $dependencyDescriptors) {
+				
+				foreach($dependencyDescriptors as $dependencyDescriptor) {
+				
+					$clone = $cpdo->getClone();
+					if(!in_array($dependencyDescriptor->reallyNeededTaskId, 
+						$clone->chain)) {
+						$clone->chain[] = $dependencyDescriptor->reallyNeededTaskId;
+					}
+					
+					$clone->chain[] = $dependencyDescriptor->reallyDependentTaskId;
+					
+					$array[] = $clone;
+				
+				}
+			}
+		}
+		
+		return $array;
+//	
+//		//print "<br>original duration: " . $criticalPathDomainObject->getDuration();
+//		$result = clone $criticalPathDomainObject;
+//
+//		$result->increaseDurationOf($this->ComputeDuration($dependentTask));
+//
+//		//print " / still original duration: " .
+//		$criticalPathDomainObject->getDuration();
+//
+//		//print " / cloned duration " . $result->getDuration();
+//
+//		$result->increaseDurationOf($this->ComputeTimeGap($dependency, $dependentTask));
+//		$result->increaseTotalEffortOf($this->ComputeTotalEffort($dependentTask));
+//		$result->increaseTotalCostOf($this->computeTotalCost($dependentTask));
+//		$result->appendTaskNode($dependentTask->getCTask()->task_id);
+//
+//		//var_dump($result);
+//		return $result;
 	}
 
 
