@@ -12,7 +12,7 @@ require_once dirname(__FILE__)."/../useroptionschoice/UserOptionsChoice.php";
  * Questa classe implementa il metodo di generazione delle WBS
  *
  * @author: Daniele Poggi
- * @version: 0.8
+ * @version: 1.0
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @copyright Copyright (c) 2009, Kiwi Team
  */
