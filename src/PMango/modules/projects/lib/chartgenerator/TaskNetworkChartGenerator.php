@@ -71,6 +71,18 @@ class DottedLineStyleBuilder implements ILineStyleBuilder {
 	}
 }
 
+class CriticalPathLineStyleBuilder implements ILineStyleBuilder {
+	public function setStartPoint($startPoint) { } 
+	public function setEndtPoint($endPoint) { }
+	public function setHorizontalOffset($hOffset) { }
+	public function setVerticalOffset($vOffset) {}
+	public function getStyle($gifImage) {
+		$lStyle = new LineStyle();
+		$lStyle->$weight = 3;
+		return $lStyle;
+	}
+}
+
 class PatternizedLineStyleBuilder implements ILineStyleBuilder {
 	private $hOffset;
 	private $endPoint;
@@ -169,7 +181,7 @@ class StartMilestoneTimeGapDrawer implements ITimeGapDrawer {
 		$middle = ($this->endPoint->horizontal - $this->hOffset) / 2;
 		$label = new GifLabel($gifImage, $this->endPoint->horizontal - $middle, 
 			$this->endPoint->vertical - 3, 
-			GifLabel::getPixelWidthOfText($this->getText()), 13, $this->getText(), 10);
+			GifLabel::getPixelWidthOfText($this->getText()) + 10, 13, $this->getText(), 10);
 		$label->drawOn();
 	}
 	
@@ -737,6 +749,17 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 //					$dependencyLineInfo) {
 				foreach ($dependencyLineInfos as $dependencyLineInfo) {
 					
+					$isOnCriticalPath = false;
+					$criticalPathDomainObject = $this->getSelectedCriticalPath();
+					if($criticalPathDomainObject->isValid) {
+						if($criticalPathDomainObject->pairIsOntoCriticalPath(
+							$dependencyLineInfo->dependencyDescriptor->reallyNeededTaskId, 
+							$dependencyLineInfo->dependencyDescriptor->reallyDependentTaskId)) {
+
+							$isOnCriticalPath = true;
+						}
+					}
+					
 					if ($first) {
 						$first = false;
 						
@@ -771,7 +794,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							
 							$dots = 0;
 							$backwardExitPointInfo = $this->drawSwappedSyncLine(
-								$dependencyLineInfo, $exitPoint, $swappedTimes, $dots);
+								$dependencyLineInfo, $exitPoint, $swappedTimes, $dots, 
+								$isOnCriticalPath);
 
 							$swappedTimes = $swappedTimes + 1;
 							
@@ -779,7 +803,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 								$backwardPointInfo, 
 								$backwardPointInfo->horizontal - 
 									$backwardExitPointInfo->horizontal, 
-								false, $this->patternizedLineStyle($dots));
+								false, 
+								$this->patternizedLineStyle($isOnCriticalPath, $dots));
 								
 							$exitPoint = $backwardPointInfo;
 							$brokerHorizontal = $backwardPointInfo->horizontal;
@@ -787,7 +812,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							
 						$this->drawLineOnChart($exitPoint, $entryPoint, 
 							$brokerHorizontal - $exitPoint->horizontal, true, 
-							$this->patternizedLineStyle());
+							$this->patternizedLineStyle($isOnCriticalPath));
 
 						$dependentEntryPointInfo = new PointInfo(
 							$brokerHorizontal, 
@@ -824,7 +849,8 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 								computeBackwardEntryPointInfo();
 								
 							$exitPoint = $this->drawSwappedSyncLine(
-								$dependencyLineInfo, $exitPoint, $swappedTimes);
+								$dependencyLineInfo, $exitPoint, $swappedTimes, $nullValue, 
+								$isOnCriticalPath);
 
 							$swappedTimes = $swappedTimes + 1;
 						}
@@ -837,7 +863,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 							$dependentEntryPointInfo->horizontal - 
 								$exitPoint->horizontal, 
 								$this->replicateArrow(), 
-								$this->patternizedLineStyle());
+								$this->patternizedLineStyle($isOnCriticalPath));
 						
 					}
 				}
@@ -915,7 +941,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	}
 	
 	private function drawSwappedSyncLine($dependencyLineInfo, $exitPoint, 
-		$decrementVerticalTime, & $dots) {
+		$decrementVerticalTime, & $dots, $isCriticalPath) {
 		
 		$backwardPointInfo = $dependencyLineInfo->
 			computeBackwardEntryPointInfo();
@@ -947,7 +973,7 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 				$toPoint, 
 				$toPoint->horizontal - 
 					$exitPoint->horizontal, 
-				false, $this->patternizedLineStyle());
+				false, $this->patternizedLineStyle($isCriticalPath));
 
 		$dots = PatternizedLineStyleBuilder::GetInstance()->getLastDrawedLine()->
 			numberOfDots;
@@ -963,13 +989,18 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 		return new DottedLineStyleBuilder();
 	}
 	
-	private function patternizedLineStyle($dots = 0) {
+	private function patternizedLineStyle($isOnCriticalPath, $dots = 0) {
+		if($isOnCriticalPath) {
+			return new CriticalPathLineStyleBuilder();
+		}
+		
 		if($this->retrieveUserOptionChoice()->
 			showUseDifferentPatternForCrossingLinesUserOption()) {
 			
 			PatternizedLineStyleBuilder::GetInstance()->setInitialDots($dots);
 			return PatternizedLineStyleBuilder::GetInstance();
 		}
+		
 		return null;
 	}
 	
@@ -1189,24 +1220,36 @@ class TaskNetworkChartGenerator extends ChartGenerator {
 	private function buildNewCriticalPathDomainObjectsFrom(
 		$criticalPathDomainObjects, $dependency) {
 			
+		if($dependency->getNeededTask() instanceof StartMilestoneDependencyProxy) {
+			return $criticalPathDomainObjects;
+		}
+		
 		$array = array();
-
+		
 		foreach ($criticalPathDomainObjects as $cpdo) {
+		DrawingHelper::debug("---------------> almost one object for " . 
+							$dependencyDescriptor->reallyNeededTaskId);
 			foreach ($dependency->_dependencyDescriptors
 				as $dependentTaskId => $dependencyDescriptors) {
-				
+
 				foreach($dependencyDescriptors as $dependencyDescriptor) {
-				
-					$clone = $cpdo->getClone();
-					if(!in_array($dependencyDescriptor->reallyNeededTaskId, 
-						$clone->chain)) {
-						$clone->chain[] = $dependencyDescriptor->reallyNeededTaskId;
-					}
+
+						DrawingHelper::debug("---------------> added a clone for " . 
+							$dependencyDescriptor->reallyNeededTaskId);
+							
+						$clone = $cpdo->getClone();
+						if(!in_array($dependencyDescriptor->reallyNeededTaskId, 
+							$clone->chain)) {
+							$clone->chain[] = $dependencyDescriptor->reallyNeededTaskId;
+						}
+						
+						$clone->chain[] = $dependencyDescriptor->reallyDependentTaskId;
+						
+						$clone->isValid = ! ($dependency->getNeededTask() instanceof 
+							StartMilestoneDependencyProxy);
+						
+						$array[] = $clone;
 					
-					$clone->chain[] = $dependencyDescriptor->reallyDependentTaskId;
-					
-					$array[] = $clone;
-				
 				}
 			}
 		}

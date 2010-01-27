@@ -6,6 +6,7 @@ class CriticalPathDomainObject {
 	public static $lastGap;
 	public static $firstGap;
 	var $chain = array();
+	var $isValid = false;
 	
 	public function getClone() {
 		$clone = new CriticalPathDomainObject();
@@ -91,6 +92,17 @@ class CriticalPathDomainObject {
 			$array[] = $task->getWBSId();
 		}
 		return implode(" -> ", $array);
+	}
+	
+	public function pairIsOntoCriticalPath($needed_task_id, $dependent_task_id) {
+		$ret = false;
+		for($runner = 0; $runner < count($this->chain) - 1; $runner++) {
+			if($this->chain[$runner] == $needed_task_id &&
+				$this->chain[$runner + 1] == $dependent_task_id) {
+				return true;		
+			}
+		}	
+		return $ret;
 	}
 }
 ?>
