@@ -14,6 +14,8 @@ function myerrorhandler($errno,$errstr,$errfile,$errline)
 }
 set_error_handler("myerrorhandler");
 $debugging=false;
+if(isset($_REQUEST['DEBUG']))
+$debugging=true;
 
 //ErrorHandler to ensure the image drawing when there is no fatal errors
 $baseDir = dirname(__FILE__)."/../../../..";
